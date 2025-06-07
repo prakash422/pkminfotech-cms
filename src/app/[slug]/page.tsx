@@ -252,10 +252,60 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
-          <div className="lg:grid lg:grid-cols-12 lg:gap-8">
-            {/* Main Content */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="lg:grid lg:grid-cols-12 lg:gap-6 py-8 lg:py-12">
+            
+            {/* Left Sidebar - Desktop Only */}
+            <aside className="hidden lg:block lg:col-span-2" role="complementary">
+              <div className="sticky top-24 space-y-6">
+                {/* Left Sidebar Ad 1 */}
+                <AdSpace 
+                  id="left-sidebar-ad-1" 
+                  className="min-h-[600px]"
+                  {...AdConfigs.sidebarBanner}
+                >
+                  <div className="text-center">
+                    <div className="w-12 h-12 bg-gray-200 rounded-lg mx-auto mb-3 flex items-center justify-center">
+                      <span className="text-lg">📰</span>
+                    </div>
+                    <p className="font-medium text-xs">Left Ad</p>
+                    <p className="text-xs text-gray-300 mt-1">160x600</p>
+                    <p className="text-xs text-gray-300">Skyscraper</p>
+                  </div>
+                </AdSpace>
+
+                {/* Left Sidebar Ad 2 */}
+                <AdSpace id="left-sidebar-ad-2" className="min-h-[300px]">
+                  <div className="text-center">
+                    <div className="w-10 h-10 bg-gray-200 rounded-lg mx-auto mb-2 flex items-center justify-center">
+                      <span className="text-sm">💡</span>
+                    </div>
+                    <p className="font-medium text-xs">Square Ad</p>
+                    <p className="text-xs text-gray-300 mt-1">160x300</p>
+                  </div>
+                </AdSpace>
+              </div>
+            </aside>
+
+            {/* Main Content - Centered */}
             <main className="lg:col-span-8" role="main">
+              {/* Mobile Ad After Hero */}
+              <div className="lg:hidden mb-8">
+                <AdSpace
+                  id="blog-mobile-ad"
+                  className="min-h-[250px]"
+                  {...AdConfigs.contentAd}
+                >
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-gray-200 rounded-lg mx-auto mb-4 flex items-center justify-center">
+                      <span className="text-2xl">📱</span>
+                    </div>
+                    <p className="font-medium text-gray-600">Mobile Ad</p>
+                    <p className="text-xs text-gray-400 mt-1">320x250 Mobile Banner</p>
+                  </div>
+                </AdSpace>
+              </div>
+
               {/* Breadcrumb */}
               <nav className="mb-6 lg:mb-8" aria-label="Breadcrumb">
                 <ol className="flex items-center space-x-2 text-sm text-gray-500">
@@ -518,34 +568,34 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
               </article>
             </main>
 
-            {/* Sidebar - Desktop Only */}
-            <aside className="hidden lg:block lg:col-span-4" role="complementary">
+            {/* Right Sidebar - Desktop Only */}
+            <aside className="hidden lg:block lg:col-span-2" role="complementary">
               <div className="sticky top-24 space-y-6">
-                {/* Sidebar Ad */}
+                {/* Right Sidebar Ad */}
                 <AdSpace 
-                  id="sidebar-ad-1" 
+                  id="right-sidebar-ad-1" 
                   className="min-h-[600px]"
                   {...AdConfigs.sidebarBanner}
                 >
                   <div className="text-center">
-                    <div className="w-16 h-16 bg-gray-200 rounded-lg mx-auto mb-4 flex items-center justify-center">
-                      <span className="text-2xl">📱</span>
+                    <div className="w-12 h-12 bg-gray-200 rounded-lg mx-auto mb-3 flex items-center justify-center">
+                      <span className="text-lg">🎯</span>
                     </div>
-                    <p className="font-medium">Sidebar Ad</p>
-                    <p className="text-xs text-gray-300 mt-1">300x600 Banner</p>
-                    <p className="text-xs text-gray-300">Google AdSense</p>
+                    <p className="font-medium text-xs">Right Ad</p>
+                    <p className="text-xs text-gray-300 mt-1">160x600</p>
+                    <p className="text-xs text-gray-300">Skyscraper</p>
                   </div>
                 </AdSpace>
 
-                {/* Related Articles */}
-                <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Related Articles</h3>
-                  <div className="space-y-4">
+                {/* Related Articles - Compact */}
+                <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4">
+                  <h3 className="text-sm font-semibold text-gray-900 mb-3">Related</h3>
+                  <div className="space-y-3">
                     {[1, 2, 3].map((i) => (
-                      <div key={i} className="flex space-x-3">
-                        <div className="w-16 h-16 bg-gray-200 rounded-lg flex-shrink-0"></div>
+                      <div key={i} className="flex flex-col space-y-2">
+                        <div className="w-full h-12 bg-gray-200 rounded flex-shrink-0"></div>
                         <div className="flex-1">
-                          <h4 className="text-sm font-medium text-gray-900 line-clamp-2 mb-1">
+                          <h4 className="text-xs font-medium text-gray-900 line-clamp-2 mb-1">
                             Sample Related Article Title {i}
                           </h4>
                           <p className="text-xs text-gray-500">2 days ago</p>
@@ -555,28 +605,28 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
                   </div>
                 </div>
 
-                {/* Second Sidebar Ad */}
-                <AdSpace id="sidebar-ad-2" className="min-h-[300px]">
+                {/* Right Sidebar Ad 2 */}
+                <AdSpace id="right-sidebar-ad-2" className="min-h-[300px]">
                   <div className="text-center">
-                    <div className="w-12 h-12 bg-gray-200 rounded-lg mx-auto mb-3 flex items-center justify-center">
-                      <span className="text-lg">🎯</span>
+                    <div className="w-10 h-10 bg-gray-200 rounded-lg mx-auto mb-2 flex items-center justify-center">
+                      <span className="text-sm">📊</span>
                     </div>
-                    <p className="font-medium">Square Ad</p>
-                    <p className="text-xs text-gray-300 mt-1">300x300 Banner</p>
+                    <p className="font-medium text-xs">Square Ad</p>
+                    <p className="text-xs text-gray-300 mt-1">160x300</p>
                   </div>
                 </AdSpace>
 
-                {/* Newsletter Signup */}
-                <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-6 border border-blue-200">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Stay Updated</h3>
-                  <p className="text-sm text-gray-600 mb-4">Get the latest tech news and updates delivered to your inbox.</p>
-                  <div className="space-y-3">
+                {/* Newsletter Signup - Compact */}
+                <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
+                  <h3 className="text-sm font-semibold text-gray-900 mb-2">Stay Updated</h3>
+                  <p className="text-xs text-gray-600 mb-3">Get latest updates.</p>
+                  <div className="space-y-2">
                     <input
                       type="email"
-                      placeholder="Enter your email"
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Your email"
+                      className="w-full px-2 py-2 border border-gray-200 rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
-                    <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white text-sm">
+                    <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs py-2">
                       Subscribe
                     </Button>
                   </div>

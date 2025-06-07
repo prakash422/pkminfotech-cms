@@ -246,83 +246,61 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
           </div>
         </header>
 
-        {/* Ultra Compact Hero Section */}
-        <section className="relative bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-6 lg:py-8 overflow-hidden">
-          {/* Background Pattern */}
-          <div className="absolute inset-0">
-            <div className="absolute inset-0 opacity-20" style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
-            }}></div>
-          </div>
-          
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            {/* Main Heading */}
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 mb-2 lg:mb-3 leading-tight">
-              Welcome to{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-800">
-                Pkminfotech
-              </span>
-            </h1>
-            
-            {/* Subtitle */}
-            <p className="text-sm sm:text-base lg:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed mb-4 lg:mb-6 font-light">
-              Latest tech news, business updates & travel guides from India and worldwide.
-            </p>
-            
-            {/* Feature Highlights */}
-            <div className="flex flex-wrap justify-center gap-2 lg:gap-3 mb-4 lg:mb-6">
-              <div className="flex items-center bg-white/70 backdrop-blur-sm rounded-full px-3 py-1.5 shadow-sm hover:shadow-md transition-shadow">
-                <div className="w-1.5 h-1.5 bg-blue-600 rounded-full mr-2"></div>
-                <span className="text-gray-700 font-medium text-xs">Tech News</span>
-              </div>
-              <div className="flex items-center bg-white/70 backdrop-blur-sm rounded-full px-3 py-1.5 shadow-sm hover:shadow-md transition-shadow">
-                <div className="w-1.5 h-1.5 bg-green-600 rounded-full mr-2"></div>
-                <span className="text-gray-700 font-medium text-xs">Business Updates</span>
-              </div>
-              <div className="flex items-center bg-white/70 backdrop-blur-sm rounded-full px-3 py-1.5 shadow-sm hover:shadow-md transition-shadow">
-                <div className="w-1.5 h-1.5 bg-orange-600 rounded-full mr-2"></div>
-                <span className="text-gray-700 font-medium text-xs">Travel Guides</span>
-              </div>
-              <div className="flex items-center bg-white/70 backdrop-blur-sm rounded-full px-3 py-1.5 shadow-sm hover:shadow-md transition-shadow">
-                <div className="w-1.5 h-1.5 bg-purple-600 rounded-full mr-2"></div>
-                <span className="text-gray-700 font-medium text-xs">Digital Trends</span>
-              </div>
-            </div>
-            
-            {/* CTA Button */}
-            <div className="mb-2">
-              <Button className="bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white px-5 py-2.5 text-sm font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-                Explore Latest Articles
-                <ArrowLeft className="h-3 w-3 ml-2 rotate-180" />
-              </Button>
-            </div>
-          </div>
-        </section>
-
-        {/* Top Banner Ad - Full Width */}
-        <section className="bg-gray-100 py-6 lg:py-8">
+        {/* Top Banner Ad - Direct after header */}
+        <section className="bg-gray-100 py-4">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <AdSpace 
               id="hero-banner-ad" 
-              className="min-h-[120px] lg:min-h-[250px]"
+              className="min-h-[90px] lg:min-h-[200px]"
               {...AdConfigs.headerBanner}
             >
               <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-gray-200 to-gray-300 rounded-xl mx-auto mb-4 flex items-center justify-center shadow-sm">
-                  <span className="text-2xl">🚀</span>
+                <div className="w-12 h-12 bg-gradient-to-br from-gray-200 to-gray-300 rounded-lg mx-auto mb-2 flex items-center justify-center">
+                  <span className="text-lg">🚀</span>
                 </div>
-                <p className="font-medium text-gray-600 mb-2">Premium Banner Ad Space</p>
-                <p className="text-sm text-gray-400 mb-1">Perfect placement after hero section</p>
-                <p className="text-xs text-gray-300">High visibility & engagement</p>
+                <p className="font-medium text-gray-600 text-sm">Banner Ad Space</p>
+                <p className="text-xs text-gray-400">High visibility placement</p>
               </div>
             </AdSpace>
           </div>
         </section>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="lg:grid lg:grid-cols-12 lg:gap-8 py-8 lg:py-12">
+          <div className="lg:grid lg:grid-cols-12 lg:gap-6 py-8 lg:py-12">
             
-            {/* Main Content */}
+            {/* Left Sidebar - Desktop Only */}
+            <aside className="hidden lg:block lg:col-span-2" role="complementary">
+              <div className="sticky top-24 space-y-6">
+                {/* Left Sidebar Ad 1 */}
+                <AdSpace 
+                  id="homepage-left-sidebar-ad-1" 
+                  className="min-h-[600px]"
+                  {...AdConfigs.sidebarBanner}
+                >
+                  <div className="text-center">
+                    <div className="w-12 h-12 bg-gray-200 rounded-lg mx-auto mb-3 flex items-center justify-center">
+                      <span className="text-lg">🏠</span>
+                    </div>
+                    <p className="font-medium text-xs">Home Left Ad</p>
+                    <p className="text-xs text-gray-300 mt-1">160x600</p>
+                    <p className="text-xs text-gray-300">Skyscraper</p>
+                  </div>
+                </AdSpace>
+
+                {/* Left Sidebar Ad 2 */}
+                <AdSpace id="homepage-left-sidebar-ad-2" className="min-h-[300px]">
+                  <div className="text-center">
+                    <div className="w-10 h-10 bg-gray-200 rounded-lg mx-auto mb-2 flex items-center justify-center">
+                      <span className="text-sm">📊</span>
+                    </div>
+                    <p className="font-medium text-xs">Square Ad</p>
+                    <p className="text-xs text-gray-300 mt-1">160x300</p>
+                  </div>
+                </AdSpace>
+              </div>
+            </aside>
+
+            {/* Main Content - Centered */}
             <main className="lg:col-span-8" role="main">
               {/* Mobile Ad After Hero */}
               <div className="lg:hidden mb-8">
@@ -330,7 +308,15 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                   id="homepage-mobile-ad"
                   className="min-h-[250px]"
                   {...AdConfigs.contentAd}
-                />
+                >
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-gray-200 rounded-lg mx-auto mb-4 flex items-center justify-center">
+                      <span className="text-2xl">📱</span>
+                    </div>
+                    <p className="font-medium text-gray-600">Mobile Home Ad</p>
+                    <p className="text-xs text-gray-400 mt-1">320x250 Mobile Banner</p>
+                  </div>
+                </AdSpace>
               </div>
 
               {/* Category Navigation */}
@@ -487,53 +473,53 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
               )}
             </main>
 
-            {/* Sidebar - Desktop Only */}
-            <aside className="hidden lg:block lg:col-span-4" role="complementary">
+            {/* Right Sidebar - Desktop Only */}
+            <aside className="hidden lg:block lg:col-span-2" role="complementary">
               <div className="sticky top-24 space-y-6">
-                {/* Sidebar Ad */}
-                <AdSpace
-                  id="homepage-sidebar-ad"
+                {/* Right Sidebar Ad 1 */}
+                <AdSpace 
+                  id="homepage-right-sidebar-ad-1" 
                   className="min-h-[600px]"
                   {...AdConfigs.sidebarBanner}
-                >
-                  <div className="text-center">
-                    <div className="w-16 h-16 bg-gray-200 rounded-lg mx-auto mb-4 flex items-center justify-center">
-                      <span className="text-2xl">📱</span>
-                    </div>
-                    <p className="font-medium">Sidebar Ad</p>
-                    <p className="text-xs text-gray-300 mt-1">300x600 Banner</p>
-                    <p className="text-xs text-gray-300">Google AdSense</p>
-                  </div>
-                </AdSpace>
-
-                {/* Newsletter Signup */}
-                <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-6 border border-blue-200">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Stay Updated</h3>
-                  <p className="text-sm text-gray-600 mb-4">Get the latest tech news and updates delivered to your inbox.</p>
-                  <div className="space-y-3">
-                    <input
-                      type="email"
-                      placeholder="Enter your email"
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                    <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white text-sm">
-                      Subscribe
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Second Sidebar Ad */}
-                <AdSpace
-                  id="homepage-sidebar-ad-2"
-                  className="min-h-[300px]"
-                  {...AdConfigs.squareAd}
                 >
                   <div className="text-center">
                     <div className="w-12 h-12 bg-gray-200 rounded-lg mx-auto mb-3 flex items-center justify-center">
                       <span className="text-lg">🎯</span>
                     </div>
-                    <p className="font-medium">Square Ad</p>
-                    <p className="text-xs text-gray-300 mt-1">300x300 Banner</p>
+                    <p className="font-medium text-xs">Home Right Ad</p>
+                    <p className="text-xs text-gray-300 mt-1">160x600</p>
+                    <p className="text-xs text-gray-300">Skyscraper</p>
+                  </div>
+                </AdSpace>
+
+                {/* Newsletter Signup - Compact */}
+                <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
+                  <h3 className="text-sm font-semibold text-gray-900 mb-2">Stay Updated</h3>
+                  <p className="text-xs text-gray-600 mb-3">Get latest updates.</p>
+                  <div className="space-y-2">
+                    <input
+                      type="email"
+                      placeholder="Your email"
+                      className="w-full px-2 py-2 border border-gray-200 rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs py-2">
+                      Subscribe
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Right Sidebar Ad 2 */}
+                <AdSpace
+                  id="homepage-right-sidebar-ad-2"
+                  className="min-h-[300px]"
+                  {...AdConfigs.squareAd}
+                >
+                  <div className="text-center">
+                    <div className="w-10 h-10 bg-gray-200 rounded-lg mx-auto mb-2 flex items-center justify-center">
+                      <span className="text-sm">📊</span>
+                    </div>
+                    <p className="font-medium text-xs">Square Ad</p>
+                    <p className="text-xs text-gray-300 mt-1">160x300</p>
                   </div>
                 </AdSpace>
               </div>
