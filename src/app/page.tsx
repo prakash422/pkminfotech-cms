@@ -383,12 +383,6 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                   <p className="text-base lg:text-lg text-gray-600 mb-6 lg:mb-8 max-w-md mx-auto px-4">
                     We&apos;re working on exciting content including tech news, business updates, and travel guides. Check back soon for our latest articles.
                   </p>
-                  <Link href="/admin">
-                    <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 lg:px-8 py-3 text-base lg:text-lg">
-                      <Home className="h-4 w-4 lg:h-5 lg:w-5 mr-2" aria-hidden="true" />
-                      Admin Panel
-                    </Button>
-                  </Link>
                 </section>
               ) : (
                 <>
