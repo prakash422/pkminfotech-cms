@@ -31,30 +31,116 @@ interface ImageProcessResult {
 
 // Helper function to extract images from HTML content with alt text and titles
 function extractImagesFromContent(content: string): Array<{url: string, alt?: string, title?: string}> {
-  const imageRegex = /<img[^>]*>/gi
   const images: Array<{url: string, alt?: string, title?: string}> = []
-  let match
+  
+  // Multiple regex patterns to catch different image formats
+  const imagePatterns = [
+    // Standard img tags
+    /<img[^>]*>/gi,
+    // Self-closing img tags
+    /<img[^>]*\/>/gi,
+    // Images with various quote styles
+    /<img[^>]*src\s*=\s*['"][^'"]*['"][^>]*>/gi,
+    // Images without quotes (rare but possible)
+    /<img[^>]*src\s*=\s*[^\s>]+[^>]*>/gi
+  ]
 
-  while ((match = imageRegex.exec(content)) !== null) {
-    const imgTag = match[0]
+  // Use a Set to avoid duplicates
+  const foundImages = new Set<string>()
+
+  imagePatterns.forEach(pattern => {
+    let match
+    while ((match = pattern.exec(content)) !== null) {
+      const imgTag = match[0]
+      
+      // Extract src with multiple patterns
+      let srcMatch = imgTag.match(/src\s*=\s*["']([^"']+)["']/i) ||
+                    imgTag.match(/src\s*=\s*([^\s>]+)/i)
+      
+      if (!srcMatch || !srcMatch[1]) continue
+      
+      let src = srcMatch[1].trim()
+      
+      // Skip data URLs, relative URLs, and invalid URLs
+      if (!src || 
+          src.startsWith('data:') || 
+          src.startsWith('#') ||
+          src.startsWith('javascript:') ||
+          (!src.startsWith('http') && !src.startsWith('//'))) {
+        continue
+      }
+      
+      // Handle protocol-relative URLs
+      if (src.startsWith('//')) {
+        src = 'https:' + src
+      }
+      
+      // Skip if we've already found this image
+      if (foundImages.has(src)) continue
+      foundImages.add(src)
+      
+      // Extract alt text with multiple patterns
+      const altMatch = imgTag.match(/alt\s*=\s*["']([^"']*)["']/i) ||
+                      imgTag.match(/alt\s*=\s*([^\s>]+)/i)
+      
+      // Extract title attribute with multiple patterns  
+      const titleMatch = imgTag.match(/title\s*=\s*["']([^"']*)["']/i) ||
+                        imgTag.match(/title\s*=\s*([^\s>]+)/i)
+      
+      images.push({
+        url: src,
+        alt: altMatch ? altMatch[1].trim() : undefined,
+        title: titleMatch ? titleMatch[1].trim() : undefined
+      })
+    }
+  })
+
+  // Also look for images in href attributes (linked images)
+  const linkPattern = /<a[^>]*href\s*=\s*["']([^"']*\.(jpg|jpeg|png|gif|webp|bmp|svg)(\?[^"']*)?)["'][^>]*>/gi
+  let linkMatch
+  while ((linkMatch = linkPattern.exec(content)) !== null) {
+    let src = linkMatch[1].trim()
     
-    // Extract src
-    const srcMatch = imgTag.match(/src="([^">]+)"/i)
-    if (!srcMatch || !srcMatch[1].startsWith('http')) continue
+    if (!src.startsWith('http') && !src.startsWith('//')) continue
     
-    // Extract alt text
-    const altMatch = imgTag.match(/alt="([^">]*)"/i)
+    if (src.startsWith('//')) {
+      src = 'https:' + src
+    }
     
-    // Extract title attribute
-    const titleMatch = imgTag.match(/title="([^">]*)"/i)
-    
-    images.push({
-      url: srcMatch[1],
-      alt: altMatch ? altMatch[1] : undefined,
-      title: titleMatch ? titleMatch[1] : undefined
-    })
+    if (!foundImages.has(src)) {
+      foundImages.add(src)
+      images.push({
+        url: src,
+        alt: undefined,
+        title: undefined
+      })
+    }
   }
 
+  // Look for images in background-image CSS properties
+  const bgImagePattern = /background-image\s*:\s*url\s*\(\s*["']?([^"')]+)["']?\s*\)/gi
+  let bgMatch
+  while ((bgMatch = bgImagePattern.exec(content)) !== null) {
+    let src = bgMatch[1].trim()
+    
+    if (!src.startsWith('http') && !src.startsWith('//')) continue
+    
+    if (src.startsWith('//')) {
+      src = 'https:' + src
+    }
+    
+    if (!foundImages.has(src)) {
+      foundImages.add(src)
+      images.push({
+        url: src,
+        alt: undefined,
+        title: undefined
+      })
+    }
+  }
+
+  console.log(`Extracted ${images.length} images from content:`, images.map(img => img.url))
+  
   return images
 }
 
@@ -109,18 +195,39 @@ async function processImage(
   postTitle: string = ''
 ): Promise<ImageProcessResult> {
   try {
+    let cleanUrl = imageData.url
+    
+    // Comprehensive Blogger URL cleaning
+    if (imageData.url.includes('blogspot.com') || 
+        imageData.url.includes('googleusercontent.com') ||
+        imageData.url.includes('blogger.com')) {
+      
+      // Remove size parameters in various formats
+      cleanUrl = cleanUrl
+        // Remove /s320/, /s640/, etc.
+        .replace(/\/s\d+(-c)?\//, '/')
+        // Remove =s320, =s640, etc. at end of URL
+        .replace(/=s\d+(-c)?$/, '')
+        // Remove =w320, =h320 parameters
+        .replace(/[?&]w=\d+/g, '')
+        .replace(/[?&]h=\d+/g, '')
+        // Remove blogger resize parameters
+        .replace(/[?&]imgmax=\d+/g, '')
+        // Remove other blogger-specific parameters
+        .replace(/[?&]resize=\d+/g, '')
+        // Clean up multiple slashes
+        .replace(/([^:]\/)\/+/g, '$1')
+    }
+    
+    // Validate URL format
+    try {
+      new URL(cleanUrl)
+    } catch (urlError) {
+      console.warn(`Invalid URL format: ${cleanUrl}, keeping original: ${imageData.url}`)
+      cleanUrl = imageData.url
+    }
+    
     if (!downloadImages) {
-      // Just return the original URL for external hosting
-      let cleanUrl = imageData.url
-      
-      // Clean up Blogger image URLs (remove size parameters for better quality)
-      if (imageData.url.includes('blogspot.com') || imageData.url.includes('googleusercontent.com')) {
-        // Remove size parameters like /s320/ or /s640/ for full resolution
-        cleanUrl = imageData.url.replace(/\/s\d+(-c)?\//, '/')
-        // Remove other Blogger-specific parameters
-        cleanUrl = cleanUrl.replace(/=s\d+(-c)?$/, '')
-      }
-      
       return {
         originalUrl: imageData.url,
         newUrl: cleanUrl,
@@ -135,7 +242,7 @@ async function processImage(
     
     return {
       originalUrl: imageData.url,
-      newUrl: imageData.url,
+      newUrl: cleanUrl,
       downloaded: false,
       altText: improveImageAltText(imageData.alt, imageData.title, postTitle),
       title: imageData.title || imageData.alt

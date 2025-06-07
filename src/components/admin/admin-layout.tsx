@@ -40,11 +40,11 @@ export default function AdminLayout({ children, title, description }: AdminLayou
   }
 
   return (
-    <div className="h-screen flex bg-gray-900">
+    <div className="h-screen flex bg-gray-50">
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header title={title} description={description} />
-        <main className="flex-1 overflow-y-auto p-6 bg-gray-800">
+        <main className="flex-1 overflow-y-auto p-6 bg-gray-50">
           {children}
         </main>
       </div>
