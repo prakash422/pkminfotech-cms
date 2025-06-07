@@ -128,7 +128,7 @@ export default function SettingsPage() {
         <div className="flex items-center justify-between bg-white p-6 rounded-lg shadow-sm border border-gray-200">
           <div>
             <h2 className="text-2xl font-bold text-gray-900">Website Settings</h2>
-            <p className="text-sm text-gray-600 mt-1">Configure your website preferences and options</p>
+            <p className="text-sm text-gray-700 mt-1">Configure your website preferences and options</p>
           </div>
           <Button 
             onClick={handleSave}
@@ -257,7 +257,7 @@ export default function SettingsPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <Label>Enable Comments</Label>
-                  <p className="text-sm text-gray-600">Allow users to comment on blog posts</p>
+                  <p className="text-sm text-gray-700">Allow users to comment on blog posts</p>
                 </div>
                 <Switch
                   checked={settings.enableComments}
@@ -268,7 +268,7 @@ export default function SettingsPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <Label>Enable Analytics</Label>
-                  <p className="text-sm text-gray-600">Track website analytics with Google Analytics</p>
+                  <p className="text-sm text-gray-700">Track website analytics with Google Analytics</p>
                 </div>
                 <Switch
                   checked={settings.enableAnalytics}

@@ -17,7 +17,7 @@ export default function Header({ title, description }: HeaderProps) {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
           {description && (
-            <p className="text-sm text-gray-600 mt-1">{description}</p>
+            <p className="text-sm text-gray-700 mt-1">{description}</p>
           )}
         </div>
         

@@ -168,7 +168,7 @@ export default function AdsPage() {
         <div className="flex items-center justify-between bg-white p-6 rounded-lg shadow-sm border border-gray-200">
           <div>
             <h2 className="text-2xl font-bold text-gray-900">Advertisement Management</h2>
-            <p className="text-sm text-gray-600 mt-1">{ads.length} total ads</p>
+            <p className="text-sm text-gray-700 mt-1">{ads.length} total ads</p>
           </div>
           <Button 
             onClick={() => setShowForm(true)}

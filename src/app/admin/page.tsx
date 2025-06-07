@@ -99,7 +99,7 @@ export default function AdminDashboard() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">{card.title}</p>
+                    <p className="text-sm font-medium text-gray-700">{card.title}</p>
                     <p className="text-3xl font-bold text-gray-900">{card.value}</p>
                   </div>
                   <div className={`p-3 rounded-full ${card.bgColor}`}>
@@ -115,24 +115,24 @@ export default function AdminDashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Card>
             <CardHeader>
-              <CardTitle>Recent Blogs</CardTitle>
+              <CardTitle className="text-gray-900 font-semibold">Recent Blogs</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
-                <p className="text-sm text-gray-500">No recent blogs found.</p>
-                <p className="text-sm text-gray-400">Create your first blog post to get started.</p>
+                <p className="text-sm text-gray-700 font-medium">No recent blogs found.</p>
+                <p className="text-sm text-gray-600">Create your first blog post to get started.</p>
               </div>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle>Active Ads</CardTitle>
+              <CardTitle className="text-gray-900 font-semibold">Active Ads</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
-                <p className="text-sm text-gray-500">No active ads found.</p>
-                <p className="text-sm text-gray-400">Create your first ad to get started.</p>
+                <p className="text-sm text-gray-700 font-medium">No active ads found.</p>
+                <p className="text-sm text-gray-600">Create your first ad to get started.</p>
               </div>
             </CardContent>
           </Card>
