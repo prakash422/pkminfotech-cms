@@ -56,7 +56,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     }
 
     const body = await request.json()
-    const { title, slug, content, excerpt, coverImage, category, status } = body
+    const { title, slug, content, excerpt, coverImage, category, status, focusKeyword, metaDescription } = body
 
     // Validate required fields
     if (!title || !content) {
@@ -95,24 +95,30 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       }
     }
 
+    const updateData: any = {
+      title,
+      slug: slug || title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
+      content,
+      excerpt,
+      category: category || existingBlog.category,
+      status: status || existingBlog.status,
+      publishedAt: status === "published" && existingBlog.status !== "published" 
+        ? new Date() 
+        : status === "draft" 
+          ? null 
+          : existingBlog.publishedAt
+    }
+
+    // Add optional fields if they exist
+    if (coverImage !== undefined) updateData.coverImage = coverImage
+    if (focusKeyword !== undefined) updateData.focusKeyword = focusKeyword
+    if (metaDescription !== undefined) updateData.metaDescription = metaDescription
+
     const blog = await prisma.blog.update({
       where: {
         id: params.id
       },
-      data: {
-        title,
-        slug: slug || title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
-        content,
-        excerpt,
-        coverImage,
-        category: category || existingBlog.category,
-        status: status || existingBlog.status,
-        publishedAt: status === "published" && existingBlog.status !== "published" 
-          ? new Date() 
-          : status === "draft" 
-            ? null 
-            : existingBlog.publishedAt
-      },
+      data: updateData,
       include: {
         author: {
           select: {
