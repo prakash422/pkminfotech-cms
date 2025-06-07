@@ -5,6 +5,7 @@ import { Calendar, User, Search, Home } from "lucide-react"
 import { formatDate, truncateText } from "@/lib/utils"
 import { Metadata } from "next"
 import MobileMenu from "@/components/MobileMenu"
+import AdSpace, { AdConfigs } from "@/components/AdSpace"
 
 export const metadata: Metadata = {
   title: "Pkminfotech - Latest Tech News, Business Updates & Travel Guides",
@@ -176,170 +177,262 @@ export default async function HomePage({ searchParams }: { searchParams: { categ
           </div>
         </header>
 
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12" role="main">
-                    {/* Hero Section */}
-          <section className="text-center mb-8 lg:mb-12">
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 lg:mb-6">
-              Welcome to <span className="text-blue-600">Pkminfotech</span>
-            </h1>
-                         <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed px-4 mb-8 lg:mb-12">
-               Your go-to source for latest tech news, business updates, travel guides, and insights from India and around the world. Stay informed with daily updates on technology and digital trends.
-             </p>
+        {/* Header Ad Space - Desktop Only */}
+        <div className="hidden lg:block bg-gray-50 py-4">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <AdSpace
+              id="homepage-header-ad"
+              className="min-h-[120px]"
+              {...AdConfigs.headerBanner}
+            />
+          </div>
+        </div>
 
-            {/* Category Navigation */}
-            <div className="flex flex-wrap justify-center gap-3 lg:gap-4 mb-8">
-              <Link 
-                href="/"
-                className={`px-4 lg:px-6 py-2 lg:py-3 rounded-full font-medium text-sm lg:text-base transition-all duration-200 ${
-                  selectedCategory === 'all' 
-                    ? 'bg-blue-600 text-white shadow-lg' 
-                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-gray-400'
-                }`}
-              >
-                All Blogs
-              </Link>
-              <Link 
-                href="/?category=latest"
-                className={`px-4 lg:px-6 py-2 lg:py-3 rounded-full font-medium text-sm lg:text-base transition-all duration-200 ${
-                  selectedCategory === 'latest' 
-                    ? 'bg-blue-600 text-white shadow-lg' 
-                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-gray-400'
-                }`}
-              >
-                Latest Blog
-              </Link>
-              <Link 
-                href="/?category=english"
-                className={`px-4 lg:px-6 py-2 lg:py-3 rounded-full font-medium text-sm lg:text-base transition-all duration-200 ${
-                  selectedCategory === 'english' 
-                    ? 'bg-blue-600 text-white shadow-lg' 
-                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-gray-400'
-                }`}
-              >
-                English Blog
-              </Link>
-              <Link 
-                href="/?category=hindi"
-                className={`px-4 lg:px-6 py-2 lg:py-3 rounded-full font-medium text-sm lg:text-base transition-all duration-200 ${
-                  selectedCategory === 'hindi' 
-                    ? 'bg-blue-600 text-white shadow-lg' 
-                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-gray-400'
-                }`}
-              >
-                हिंदी Blog
-              </Link>
-            </div>
-          </section>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="lg:grid lg:grid-cols-12 lg:gap-8 py-8 lg:py-12">
 
-          {/* Blog Content */}
-          {blogs.length === 0 ? (
-            <section className="text-center py-16 lg:py-20" aria-labelledby="no-posts-heading">
-              <div className="mx-auto w-24 h-24 lg:w-32 lg:h-32 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center mb-6 lg:mb-8">
-                <Search className="h-12 w-12 lg:h-16 lg:w-16 text-blue-600" aria-hidden="true" />
+            {/* Main Content */}
+            <main className="lg:col-span-8" role="main">
+              {/* Hero Section */}
+              <section className="text-center mb-8 lg:mb-12">
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 lg:mb-6">
+                  Welcome to <span className="text-blue-600">Pkminfotech</span>
+                </h1>
+                <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed px-4 mb-8 lg:mb-12">
+                  Your go-to source for latest tech news, business updates, travel guides, and insights from India and around the world. Stay informed with daily updates on technology and digital trends.
+                </p>
+              </section>
+
+              {/* Mobile Ad After Hero */}
+              <div className="lg:hidden mb-8">
+                <AdSpace
+                  id="homepage-mobile-ad"
+                  className="min-h-[250px]"
+                  {...AdConfigs.contentAd}
+                />
               </div>
-              <h2 id="no-posts-heading" className="text-2xl lg:text-3xl font-bold text-gray-900 mb-4">Coming Soon!</h2>
-              <p className="text-base lg:text-lg text-gray-600 mb-6 lg:mb-8 max-w-md mx-auto px-4">
-                We're working on exciting content including tech news, business updates, and travel guides. Check back soon for our latest articles.
-              </p>
-              <Link href="/admin">
-                <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 lg:px-8 py-3 text-base lg:text-lg">
-                  <Home className="h-4 w-4 lg:h-5 lg:w-5 mr-2" aria-hidden="true" />
-                  Admin Panel
-                </Button>
-              </Link>
-            </section>
-          ) : (
-            <>
-              <section className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8 lg:mb-12 gap-4" aria-labelledby="articles-heading">
-                <div>
-                  <h2 id="articles-heading" className="text-xl lg:text-2xl font-semibold text-gray-900">
-                    {selectedCategory === 'all' && 'All Articles'}
-                    {selectedCategory === 'latest' && 'Latest Articles'}
-                    {selectedCategory === 'english' && 'English Articles'}
-                    {selectedCategory === 'hindi' && 'हिंदी Articles'}
-                  </h2>
-                  <p className="text-gray-600 text-sm lg:text-base">
-                    {blogs.length} article{blogs.length !== 1 ? 's' : ''} {selectedCategory !== 'all' ? `in ${selectedCategory}` : 'published'}
+
+              {/* Category Navigation */}
+              <div className="flex flex-wrap justify-center gap-3 lg:gap-4 mb-8">
+                <Link
+                  href="/"
+                  className={`px-4 lg:px-6 py-2 lg:py-3 rounded-full font-medium text-sm lg:text-base transition-all duration-200 ${selectedCategory === 'all'
+                      ? 'bg-blue-600 text-white shadow-lg'
+                      : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-gray-400'
+                    }`}
+                >
+                  All Blogs
+                </Link>
+                <Link
+                  href="/?category=latest"
+                  className={`px-4 lg:px-6 py-2 lg:py-3 rounded-full font-medium text-sm lg:text-base transition-all duration-200 ${selectedCategory === 'latest'
+                      ? 'bg-blue-600 text-white shadow-lg'
+                      : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-gray-400'
+                    }`}
+                >
+                  Latest Blog
+                </Link>
+                <Link
+                  href="/?category=english"
+                  className={`px-4 lg:px-6 py-2 lg:py-3 rounded-full font-medium text-sm lg:text-base transition-all duration-200 ${selectedCategory === 'english'
+                      ? 'bg-blue-600 text-white shadow-lg'
+                      : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-gray-400'
+                    }`}
+                >
+                  English Blog
+                </Link>
+                <Link
+                  href="/?category=hindi"
+                  className={`px-4 lg:px-6 py-2 lg:py-3 rounded-full font-medium text-sm lg:text-base transition-all duration-200 ${selectedCategory === 'hindi'
+                      ? 'bg-blue-600 text-white shadow-lg'
+                      : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-gray-400'
+                    }`}
+                >
+                  हिंदी Blog
+                </Link>
+              </div>
+
+              {/* Blog Content */}
+              {blogs.length === 0 ? (
+                <section className="text-center py-16 lg:py-20" aria-labelledby="no-posts-heading">
+                  <div className="mx-auto w-24 h-24 lg:w-32 lg:h-32 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center mb-6 lg:mb-8">
+                    <Search className="h-12 w-12 lg:h-16 lg:w-16 text-blue-600" aria-hidden="true" />
+                  </div>
+                  <h2 id="no-posts-heading" className="text-2xl lg:text-3xl font-bold text-gray-900 mb-4">Coming Soon!</h2>
+                  <p className="text-base lg:text-lg text-gray-600 mb-6 lg:mb-8 max-w-md mx-auto px-4">
+                    We're working on exciting content including tech news, business updates, and travel guides. Check back soon for our latest articles.
                   </p>
-                </div>
-              </section>
+                  <Link href="/admin">
+                    <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 lg:px-8 py-3 text-base lg:text-lg">
+                      <Home className="h-4 w-4 lg:h-5 lg:w-5 mr-2" aria-hidden="true" />
+                      Admin Panel
+                    </Button>
+                  </Link>
+                </section>
+              ) : (
+                <>
+                  <section className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8 lg:mb-12 gap-4" aria-labelledby="articles-heading">
+                    <div>
+                      <h2 id="articles-heading" className="text-xl lg:text-2xl font-semibold text-gray-900">
+                        {selectedCategory === 'all' && 'All Articles'}
+                        {selectedCategory === 'latest' && 'Latest Articles'}
+                        {selectedCategory === 'english' && 'English Articles'}
+                        {selectedCategory === 'hindi' && 'हिंदी Articles'}
+                      </h2>
+                      <p className="text-gray-600 text-sm lg:text-base">
+                        {blogs.length} article{blogs.length !== 1 ? 's' : ''} {selectedCategory !== 'all' ? `in ${selectedCategory}` : 'published'}
+                      </p>
+                    </div>
+                  </section>
 
-              <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8" aria-label="Blog posts">
-                {blogs.map((blog: any) => (
-                  <article key={blog.id} className="group" itemScope itemType="http://schema.org/BlogPosting">
-                    <Card className="h-full hover:shadow-xl transition-all duration-300 border-0 bg-white/80 backdrop-blur-sm">
-                      {blog.coverImage && (
-                        <div className="aspect-video w-full overflow-hidden rounded-t-lg">
-                          <img
-                            src={blog.coverImage}
-                            alt={blog.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                            loading="lazy"
-                            itemProp="image"
-                          />
-                        </div>
-                      )}
-                                            <CardHeader className="p-4 lg:p-6">
-                        <div className="flex items-start justify-between gap-2 mb-2">
-                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            blog.category === 'hindi' 
-                              ? 'bg-orange-100 text-orange-800' 
-                              : blog.category === 'english'
-                                ? 'bg-green-100 text-green-800'
-                                : 'bg-blue-100 text-blue-800'
-                          }`}>
-                            {blog.category === 'hindi' ? 'हिंदी' : 
-                             blog.category === 'english' ? 'English' : 'Latest'}
-                          </span>
-                        </div>
-                        <CardTitle className="line-clamp-2 text-lg lg:text-xl" itemProp="headline">
-                          <Link 
-                            href={`/${blog.slug}`}
-                            className="hover:text-blue-600 transition-colors group-hover:text-blue-600"
-                            itemProp="url"
-                          >
-                            {blog.title}
-                          </Link>
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="flex-1 flex flex-col p-4 lg:p-6 pt-0">
-                        {blog.excerpt && (
-                          <p className="text-gray-600 mb-4 lg:mb-6 line-clamp-3 flex-1 text-sm lg:text-base" itemProp="description">
-                            {truncateText(blog.excerpt, 120)}
-                          </p>
-                        )}
-
-                        <div className="mt-auto">
-                          <div className="flex items-center text-xs lg:text-sm text-gray-500 mb-4">
-                            <div className="flex items-center mr-4" itemProp="author" itemScope itemType="http://schema.org/Person">
-                              <User className="h-3 w-3 lg:h-4 lg:w-4 mr-1" aria-hidden="true" />
-                              <span className="font-medium" itemProp="name">Pkminfotech Team</span>
+                  <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8" aria-label="Blog posts">
+                    {blogs.map((blog: any) => (
+                      <article key={blog.id} className="group" itemScope itemType="http://schema.org/BlogPosting">
+                        <Card className="h-full hover:shadow-xl transition-all duration-300 border-0 bg-white/80 backdrop-blur-sm">
+                          {blog.coverImage && (
+                            <div className="aspect-video w-full overflow-hidden rounded-t-lg">
+                              <img
+                                src={blog.coverImage}
+                                alt={blog.title}
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                loading="lazy"
+                                itemProp="image"
+                              />
                             </div>
-                            <div className="flex items-center">
-                              <Calendar className="h-3 w-3 lg:h-4 lg:w-4 mr-1" aria-hidden="true" />
-                              <time
-                                dateTime={blog.publishedAt || blog.createdAt}
-                                itemProp="datePublished"
+                          )}
+                          <CardHeader className="p-4 lg:p-6">
+                            <div className="flex items-start justify-between gap-2 mb-2">
+                              <span className={`px-2 py-1 rounded-full text-xs font-medium ${blog.category === 'hindi'
+                                  ? 'bg-orange-100 text-orange-800'
+                                  : blog.category === 'english'
+                                    ? 'bg-green-100 text-green-800'
+                                    : 'bg-blue-100 text-blue-800'
+                                }`}>
+                                {blog.category === 'hindi' ? 'हिंदी' :
+                                  blog.category === 'english' ? 'English' : 'Latest'}
+                              </span>
+                            </div>
+                            <CardTitle className="line-clamp-2 text-lg lg:text-xl" itemProp="headline">
+                              <Link
+                                href={`/${blog.slug}`}
+                                className="hover:text-blue-600 transition-colors group-hover:text-blue-600"
+                                itemProp="url"
                               >
-                                {formatDate(blog.publishedAt || blog.createdAt)}
-                              </time>
-                            </div>
-                          </div>
+                                {blog.title}
+                              </Link>
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent className="flex-1 flex flex-col p-4 lg:p-6 pt-0">
+                            {blog.excerpt && (
+                              <p className="text-gray-600 mb-4 lg:mb-6 line-clamp-3 flex-1 text-sm lg:text-base" itemProp="description">
+                                {truncateText(blog.excerpt, 120)}
+                              </p>
+                            )}
 
-                          <Link href={`/${blog.slug}`}>
-                            <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white transition-colors text-sm lg:text-base py-2 lg:py-3">
-                              Read Article
-                            </Button>
-                          </Link>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </article>
-                ))}
-              </section>
-            </>
-          )}
-        </main>
+                            <div className="mt-auto">
+                              <div className="flex items-center text-xs lg:text-sm text-gray-500 mb-4">
+                                <div className="flex items-center mr-4" itemProp="author" itemScope itemType="http://schema.org/Person">
+                                  <User className="h-3 w-3 lg:h-4 lg:w-4 mr-1" aria-hidden="true" />
+                                  <span className="font-medium" itemProp="name">Pkminfotech Team</span>
+                                </div>
+                                <div className="flex items-center">
+                                  <Calendar className="h-3 w-3 lg:h-4 lg:w-4 mr-1" aria-hidden="true" />
+                                  <time
+                                    dateTime={blog.publishedAt || blog.createdAt}
+                                    itemProp="datePublished"
+                                  >
+                                    {formatDate(blog.publishedAt || blog.createdAt)}
+                                  </time>
+                                </div>
+                              </div>
+
+                              <Link href={`/${blog.slug}`}>
+                                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white transition-colors text-sm lg:text-base py-2 lg:py-3">
+                                  Read Article
+                                </Button>
+                              </Link>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </article>
+                    ))}
+                  </section>
+                </>
+              )}
+            </main>
+
+            {/* Sidebar - Desktop Only */}
+            <aside className="hidden lg:block lg:col-span-4" role="complementary">
+              <div className="sticky top-24 space-y-6">
+                {/* Sidebar Ad */}
+                <AdSpace
+                  id="homepage-sidebar-ad"
+                  className="min-h-[600px]"
+                  {...AdConfigs.sidebarBanner}
+                >
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-gray-200 rounded-lg mx-auto mb-4 flex items-center justify-center">
+                      <span className="text-2xl">📱</span>
+                    </div>
+                    <p className="font-medium">Sidebar Ad</p>
+                    <p className="text-xs text-gray-300 mt-1">300x600 Banner</p>
+                    <p className="text-xs text-gray-300">Google AdSense</p>
+                  </div>
+                </AdSpace>
+
+                {/* Newsletter Signup */}
+                <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-6 border border-blue-200">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Stay Updated</h3>
+                  <p className="text-sm text-gray-600 mb-4">Get the latest tech news and updates delivered to your inbox.</p>
+                  <div className="space-y-3">
+                    <input
+                      type="email"
+                      placeholder="Enter your email"
+                      className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white text-sm">
+                      Subscribe
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Second Sidebar Ad */}
+                <AdSpace
+                  id="homepage-sidebar-ad-2"
+                  className="min-h-[300px]"
+                  {...AdConfigs.squareAd}
+                >
+                  <div className="text-center">
+                    <div className="w-12 h-12 bg-gray-200 rounded-lg mx-auto mb-3 flex items-center justify-center">
+                      <span className="text-lg">🎯</span>
+                    </div>
+                    <p className="font-medium">Square Ad</p>
+                    <p className="text-xs text-gray-300 mt-1">300x300 Banner</p>
+                  </div>
+                </AdSpace>
+              </div>
+            </aside>
+          </div>
+        </div>
+
+        {/* Footer Ad Section */}
+        <div className="bg-gray-100 py-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <AdSpace
+              id="homepage-footer-ad"
+              className="min-h-[200px] bg-white"
+              {...AdConfigs.footerBanner}
+            >
+              <div className="text-center">
+                <div className="w-16 h-16 bg-gray-200 rounded-lg mx-auto mb-4 flex items-center justify-center">
+                  <span className="text-2xl">🌟</span>
+                </div>
+                <p className="font-medium text-gray-600">Footer Banner Ad</p>
+                <p className="text-xs text-gray-400 mt-1">728x90 Leaderboard</p>
+              </div>
+            </AdSpace>
+          </div>
+        </div>
 
         {/* Enhanced Footer */}
         <footer className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white" role="contentinfo">
