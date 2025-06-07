@@ -94,8 +94,8 @@ interface BlogPost {
   }
 }
 
-// Server-side data fetching
-async function getBlogs(category?: string) {
+// Server-side data fetching with pagination
+async function getBlogs(category?: string, page: number = 1, limit: number = 15) {
   try {
     const where: { status: string; category?: string } = {
       status: 'published'
@@ -105,24 +105,51 @@ async function getBlogs(category?: string) {
       where.category = category
     }
 
-    return await prisma.blog.findMany({
-      where,
-      include: {
-        author: {
-          select: {
-            id: true,
-            name: true,
-            email: true
+    const skip = (page - 1) * limit
+
+    const [blogs, totalCount] = await Promise.all([
+      prisma.blog.findMany({
+        where,
+        include: {
+          author: {
+            select: {
+              id: true,
+              name: true,
+              email: true
+            }
           }
-        }
-      },
-      orderBy: {
-        publishedAt: 'desc'
+        },
+        orderBy: {
+          publishedAt: 'desc'
+        },
+        skip,
+        take: limit
+      }),
+      prisma.blog.count({ where })
+    ])
+
+    return {
+      blogs,
+      pagination: {
+        currentPage: page,
+        totalPages: Math.ceil(totalCount / limit),
+        totalCount,
+        hasNextPage: page < Math.ceil(totalCount / limit),
+        hasPrevPage: page > 1
       }
-    })
+    }
   } catch (error) {
     console.error('Error fetching blogs:', error)
-    return []
+    return {
+      blogs: [],
+      pagination: {
+        currentPage: 1,
+        totalPages: 0,
+        totalCount: 0,
+        hasNextPage: false,
+        hasPrevPage: false
+      }
+    }
   }
 }
 
@@ -185,11 +212,12 @@ function generateStructuredData(blogs: BlogPost[]) {
   }
 }
 
-export default async function HomePage({ searchParams }: { searchParams: Promise<{ category?: string }> }) {
+export default async function HomePage({ searchParams }: { searchParams: Promise<{ category?: string; page?: string }> }) {
   const params = await searchParams
   const selectedCategory = params.category || 'all'
-  const blogs = await getBlogs(selectedCategory)
-  const structuredData = generateStructuredData(blogs)
+  const currentPage = parseInt(params.page || '1', 10)
+  const blogsData = await getBlogs(selectedCategory, currentPage)
+  const structuredData = generateStructuredData(blogsData.blogs)
 
   return (
     <>
@@ -227,6 +255,43 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                   <Home className="h-4 w-4 mr-2" aria-hidden="true" />
                   Home
                 </Link>
+                
+                {/* Categories Dropdown */}
+                <div className="relative group">
+                  <button className="text-gray-600 hover:text-gray-900 font-medium transition-colors flex items-center">
+                    Categories
+                    <svg className="w-4 h-4 ml-1 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                  <div className="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                    <Link 
+                      href="/" 
+                      className={`block px-4 py-2 text-sm hover:bg-gray-50 transition-colors ${selectedCategory === 'all' ? 'text-blue-600 bg-blue-50' : 'text-gray-700'}`}
+                    >
+                      All Blogs
+                    </Link>
+                    <Link 
+                      href="/?category=latest" 
+                      className={`block px-4 py-2 text-sm hover:bg-gray-50 transition-colors ${selectedCategory === 'latest' ? 'text-blue-600 bg-blue-50' : 'text-gray-700'}`}
+                    >
+                      Latest Blog
+                    </Link>
+                    <Link 
+                      href="/?category=english" 
+                      className={`block px-4 py-2 text-sm hover:bg-gray-50 transition-colors ${selectedCategory === 'english' ? 'text-blue-600 bg-blue-50' : 'text-gray-700'}`}
+                    >
+                      English Blog
+                    </Link>
+                    <Link 
+                      href="/?category=hindi" 
+                      className={`block px-4 py-2 text-sm hover:bg-gray-50 rounded-b-lg transition-colors ${selectedCategory === 'hindi' ? 'text-blue-600 bg-blue-50' : 'text-gray-700'}`}
+                    >
+                      हिंदी Blog
+                    </Link>
+                  </div>
+                </div>
+                
                 <div className="hidden lg:flex items-center space-x-6">
                   <a href="#about" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">
                     About
@@ -319,48 +384,8 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                 </AdSpace>
               </div>
 
-              {/* Category Navigation */}
-              <div className="flex flex-wrap justify-center gap-3 lg:gap-4 mb-8">
-                <Link
-                  href="/"
-                  className={`px-4 lg:px-6 py-2 lg:py-3 rounded-full font-medium text-sm lg:text-base transition-all duration-200 ${selectedCategory === 'all'
-                      ? 'bg-blue-600 text-white shadow-lg'
-                      : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-gray-400'
-                    }`}
-                >
-                  All Blogs
-                </Link>
-                <Link
-                  href="/?category=latest"
-                  className={`px-4 lg:px-6 py-2 lg:py-3 rounded-full font-medium text-sm lg:text-base transition-all duration-200 ${selectedCategory === 'latest'
-                      ? 'bg-blue-600 text-white shadow-lg'
-                      : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-gray-400'
-                    }`}
-                >
-                  Latest Blog
-                </Link>
-                <Link
-                  href="/?category=english"
-                  className={`px-4 lg:px-6 py-2 lg:py-3 rounded-full font-medium text-sm lg:text-base transition-all duration-200 ${selectedCategory === 'english'
-                      ? 'bg-blue-600 text-white shadow-lg'
-                      : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-gray-400'
-                    }`}
-                >
-                  English Blog
-                </Link>
-                <Link
-                  href="/?category=hindi"
-                  className={`px-4 lg:px-6 py-2 lg:py-3 rounded-full font-medium text-sm lg:text-base transition-all duration-200 ${selectedCategory === 'hindi'
-                      ? 'bg-blue-600 text-white shadow-lg'
-                      : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-gray-400'
-                    }`}
-                >
-                  हिंदी Blog
-                </Link>
-              </div>
-
               {/* Blog Content */}
-              {blogs.length === 0 ? (
+              {blogsData.blogs.length === 0 ? (
                 <section className="text-center py-16 lg:py-20" aria-labelledby="no-posts-heading">
                   <div className="mx-auto w-24 h-24 lg:w-32 lg:h-32 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center mb-6 lg:mb-8">
                     <Search className="h-12 w-12 lg:h-16 lg:w-16 text-blue-600" aria-hidden="true" />
@@ -371,105 +396,158 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                   </p>
                 </section>
               ) : (
-                <>
-                  <section className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8 lg:mb-12 gap-4" aria-labelledby="articles-heading">
-                    <div>
-                      <h2 id="articles-heading" className="text-xl lg:text-2xl font-semibold text-gray-900">
-                        {selectedCategory === 'all' && 'All Articles'}
-                        {selectedCategory === 'latest' && 'Latest Articles'}
-                        {selectedCategory === 'english' && 'English Articles'}
-                        {selectedCategory === 'hindi' && 'हिंदी Articles'}
-                      </h2>
-                      <p className="text-gray-600 text-sm lg:text-base">
-                        {blogs.length} article{blogs.length !== 1 ? 's' : ''} {selectedCategory !== 'all' ? `in ${selectedCategory}` : 'published'}
-                      </p>
-                    </div>
-                  </section>
-
-                                <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" aria-label="Blog posts">
-                                    {blogs.map((blog: BlogPost) => (
-                  <article key={blog.id} className="group" itemScope itemType="http://schema.org/BlogPosting">
-                                        <Card className="h-full flex flex-col hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-200 bg-white rounded-lg overflow-hidden">
-                      {blog.coverImage && (
-                        <div className="aspect-[16/10] w-full overflow-hidden">
-                          <img
-                            src={blog.coverImage}
-                            alt={blog.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                            loading="lazy"
-                            itemProp="image"
-                          />
-                        </div>
-                      )}
-                      
-                      <div className="flex flex-col flex-1 p-4">
-                        {/* Category Badge */}
-                        <div className="flex items-center justify-between mb-3">
-                          <span className={`px-2 py-1 rounded-md text-xs font-medium ${blog.category === 'hindi'
-                              ? 'bg-orange-100 text-orange-700'
-                              : blog.category === 'english'
-                                ? 'bg-green-100 text-green-700'
-                                : 'bg-blue-100 text-blue-700'
-                            }`}>
-                            {blog.category === 'hindi' ? 'हिंदी' :
-                              blog.category === 'english' ? 'English' : 'Latest'}
-                          </span>
-                          <div className="flex items-center text-gray-400 text-xs">
-                            <Calendar className="h-3 w-3 mr-1" />
-                            <time
-                              dateTime={blog.publishedAt?.toISOString() || blog.createdAt.toISOString()}
-                              itemProp="datePublished"
-                            >
-                              {blog.publishedAt ? formatDate(blog.publishedAt) : formatDate(blog.createdAt)}
-                            </time>
+                <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" aria-label="Blog posts">
+                  {blogsData.blogs.map((blog: BlogPost) => (
+                    <article key={blog.id} className="group" itemScope itemType="http://schema.org/BlogPosting">
+                      <Card className="h-full flex flex-col hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-200 bg-white rounded-lg overflow-hidden">
+                        {blog.coverImage && (
+                          <div className="aspect-[16/10] w-full overflow-hidden">
+                            <img
+                              src={blog.coverImage}
+                              alt={blog.title}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              loading="lazy"
+                              itemProp="image"
+                            />
                           </div>
-                        </div>
-
-                        {/* Title */}
-                        <h3 className="font-bold text-gray-900 mb-3 line-clamp-2 text-lg leading-tight" itemProp="headline">
-                          <Link 
-                            href={`/${blog.slug}`}
-                            className="hover:text-blue-600 transition-colors"
-                            itemProp="url"
-                          >
-                            {blog.title}
-                          </Link>
-                        </h3>
-
-                        {/* Excerpt */}
-                        {blog.excerpt && (
-                          <p className="text-gray-600 text-sm line-clamp-3 mb-4 flex-1 leading-relaxed" itemProp="description">
-                            {truncateText(blog.excerpt, 120)}
-                          </p>
                         )}
-
-                        {/* Footer */}
-                        <div className="mt-auto pt-3 border-t border-gray-100">
+                        
+                        <div className="flex flex-col flex-1 p-4">
+                          {/* Category Badge */}
                           <div className="flex items-center justify-between mb-3">
-                            <div className="flex items-center text-xs text-gray-500" itemProp="author" itemScope itemType="http://schema.org/Person">
-                              <div className="w-5 h-5 bg-blue-100 rounded-full flex items-center justify-center mr-2">
-                                <User className="h-3 w-3 text-blue-600" />
-                              </div>
-                              <span itemProp="name">Pkminfotech Team</span>
-                            </div>
-                            <div className="text-xs text-gray-400">
-                              5 min read
+                            <span className={`px-2 py-1 rounded-md text-xs font-medium ${blog.category === 'hindi'
+                                ? 'bg-orange-100 text-orange-700'
+                                : blog.category === 'english'
+                                  ? 'bg-green-100 text-green-700'
+                                  : 'bg-blue-100 text-blue-700'
+                              }`}>
+                              {blog.category === 'hindi' ? 'हिंदी' :
+                                blog.category === 'english' ? 'English' : 'Latest'}
+                            </span>
+                            <div className="flex items-center text-gray-400 text-xs">
+                              <Calendar className="h-3 w-3 mr-1" />
+                              <time
+                                dateTime={blog.publishedAt?.toISOString() || blog.createdAt.toISOString()}
+                                itemProp="datePublished"
+                              >
+                                {blog.publishedAt ? formatDate(blog.publishedAt) : formatDate(blog.createdAt)}
+                              </time>
                             </div>
                           </div>
 
-                          <Link href={`/${blog.slug}`} className="block">
-                            <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white transition-colors text-sm py-2 rounded-md font-medium">
-                              Read Article
-                              <ArrowLeft className="h-3 w-3 ml-2 rotate-180" />
-                            </Button>
-                          </Link>
+                          {/* Title */}
+                          <h3 className="font-bold text-gray-900 mb-3 line-clamp-2 text-lg leading-tight" itemProp="headline">
+                            <Link 
+                              href={`/${blog.slug}`}
+                              className="hover:text-blue-600 transition-colors"
+                              itemProp="url"
+                            >
+                              {blog.title}
+                            </Link>
+                          </h3>
+
+                          {/* Excerpt */}
+                          {blog.excerpt && (
+                            <p className="text-gray-600 text-sm line-clamp-3 mb-4 flex-1 leading-relaxed" itemProp="description">
+                              {truncateText(blog.excerpt, 120)}
+                            </p>
+                          )}
+
+                          {/* Footer */}
+                          <div className="mt-auto pt-3 border-t border-gray-100">
+                            <div className="flex items-center justify-between mb-3">
+                              <div className="flex items-center text-xs text-gray-500" itemProp="author" itemScope itemType="http://schema.org/Person">
+                                <div className="w-5 h-5 bg-blue-100 rounded-full flex items-center justify-center mr-2">
+                                  <User className="h-3 w-3 text-blue-600" />
+                                </div>
+                                <span itemProp="name">Pkminfotech Team</span>
+                              </div>
+                              <div className="text-xs text-gray-400">
+                                5 min read
+                              </div>
+                            </div>
+
+                            <Link href={`/${blog.slug}`} className="block">
+                              <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white transition-colors text-sm py-2 rounded-md font-medium">
+                                Read Article
+                                <ArrowLeft className="h-3 w-3 ml-2 rotate-180" />
+                              </Button>
+                            </Link>
+                          </div>
                         </div>
-                      </div>
-                        </Card>
-                      </article>
-                    ))}
-                  </section>
-                </>
+                      </Card>
+                    </article>
+                  ))}
+                </section>
+              )}
+
+              {/* Pagination */}
+              {blogsData.pagination.totalPages > 1 && (
+                <div className="mt-12 flex justify-center">
+                  <nav className="flex items-center space-x-2" aria-label="Pagination">
+                    {/* Previous Page */}
+                    {blogsData.pagination.hasPrevPage ? (
+                      <Link
+                        href={`/?${new URLSearchParams({
+                          ...(selectedCategory !== 'all' && { category: selectedCategory }),
+                          page: (blogsData.pagination.currentPage - 1).toString()
+                        }).toString()}`}
+                        className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 hover:text-gray-700 transition-colors"
+                      >
+                        Previous
+                      </Link>
+                    ) : (
+                      <span className="px-3 py-2 text-sm font-medium text-gray-300 bg-gray-100 border border-gray-200 rounded-md cursor-not-allowed">
+                        Previous
+                      </span>
+                    )}
+
+                    {/* Page Numbers */}
+                    {Array.from({ length: Math.min(5, blogsData.pagination.totalPages) }, (_, i) => {
+                      const startPage = Math.max(1, blogsData.pagination.currentPage - 2);
+                      const pageNumber = startPage + i;
+                      
+                      if (pageNumber > blogsData.pagination.totalPages) return null;
+                      
+                      const isCurrentPage = pageNumber === blogsData.pagination.currentPage;
+                      
+                      return (
+                        <Link
+                          key={pageNumber}
+                          href={`/?${new URLSearchParams({
+                            ...(selectedCategory !== 'all' && { category: selectedCategory }),
+                            page: pageNumber.toString()
+                          }).toString()}`}
+                          className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                            isCurrentPage
+                              ? 'bg-blue-600 text-white border border-blue-600'
+                              : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 hover:text-gray-900'
+                          }`}
+                          aria-current={isCurrentPage ? 'page' : undefined}
+                        >
+                          {pageNumber}
+                        </Link>
+                      );
+                    })}
+
+                    {/* Next Page */}
+                    {blogsData.pagination.hasNextPage ? (
+                      <Link
+                        href={`/?${new URLSearchParams({
+                          ...(selectedCategory !== 'all' && { category: selectedCategory }),
+                          page: (blogsData.pagination.currentPage + 1).toString()
+                        }).toString()}`}
+                        className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 hover:text-gray-700 transition-colors"
+                      >
+                        Next
+                      </Link>
+                    ) : (
+                      <span className="px-3 py-2 text-sm font-medium text-gray-300 bg-gray-100 border border-gray-200 rounded-md cursor-not-allowed">
+                        Next
+                      </span>
+                    )}
+                  </nav>
+                </div>
               )}
             </main>
 
