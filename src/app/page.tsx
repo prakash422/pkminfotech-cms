@@ -185,8 +185,9 @@ function generateStructuredData(blogs: BlogPost[]) {
   }
 }
 
-export default async function HomePage({ searchParams }: { searchParams: { category?: string } }) {
-  const selectedCategory = searchParams.category || 'all'
+export default async function HomePage({ searchParams }: { searchParams: Promise<{ category?: string }> }) {
+  const params = await searchParams
+  const selectedCategory = params.category || 'all'
   const blogs = await getBlogs(selectedCategory)
   const structuredData = generateStructuredData(blogs)
 
