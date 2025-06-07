@@ -17,6 +17,7 @@ interface ImportResult {
   errors: string[]
   imagesProcessed: number
   imagesDownloaded: number
+  seoOptimized: number
 }
 
 export default function ImportPage() {
@@ -297,16 +298,16 @@ export default function ImportPage() {
                             <p className="text-gray-600">Imported</p>
                           </div>
                           <div>
-                            <p className="font-medium text-yellow-600">{result.skipped}</p>
-                            <p className="text-gray-600">Skipped</p>
-                          </div>
-                          <div>
                             <p className="font-medium text-blue-600">{result.imagesProcessed}</p>
                             <p className="text-gray-600">Images</p>
                           </div>
                           <div>
-                            <p className="font-medium text-gray-600">{result.total}</p>
-                            <p className="text-gray-600">Total Found</p>
+                            <p className="font-medium text-purple-600">{result.seoOptimized}</p>
+                            <p className="text-gray-600">SEO Optimized</p>
+                          </div>
+                          <div>
+                            <p className="font-medium text-yellow-600">{result.skipped}</p>
+                            <p className="text-gray-600">Skipped</p>
                           </div>
                         </div>
                         
@@ -371,6 +372,18 @@ export default function ImportPage() {
                 <div className="flex items-start">
                   <CheckCircle className="h-4 w-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
                   <p>First image in each post becomes the featured/cover image</p>
+                </div>
+                <div className="flex items-start">
+                  <CheckCircle className="h-4 w-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                  <p>Titles optimized for SEO (60 character limit)</p>
+                </div>
+                <div className="flex items-start">
+                  <CheckCircle className="h-4 w-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                  <p>Meta descriptions generated automatically (160 characters)</p>
+                </div>
+                <div className="flex items-start">
+                  <CheckCircle className="h-4 w-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                  <p>Image alt text and title attributes added for accessibility</p>
                 </div>
               </CardContent>
             </Card>

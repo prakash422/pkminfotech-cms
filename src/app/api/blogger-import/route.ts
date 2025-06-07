@@ -17,77 +17,187 @@ interface BloggerPost {
     email: string
   }
   images?: string[]
+  metaDescription?: string
+  seoTitle?: string
 }
 
 interface ImageProcessResult {
   originalUrl: string
   newUrl: string
   downloaded: boolean
+  altText?: string
+  title?: string
 }
 
-// Helper function to extract images from HTML content
-function extractImagesFromContent(content: string): string[] {
-  const imageRegex = /<img[^>]+src="([^">]+)"/gi
-  const images: string[] = []
+// Helper function to extract images from HTML content with alt text and titles
+function extractImagesFromContent(content: string): Array<{url: string, alt?: string, title?: string}> {
+  const imageRegex = /<img[^>]*>/gi
+  const images: Array<{url: string, alt?: string, title?: string}> = []
   let match
 
   while ((match = imageRegex.exec(content)) !== null) {
-    images.push(match[1])
+    const imgTag = match[0]
+    
+    // Extract src
+    const srcMatch = imgTag.match(/src="([^">]+)"/i)
+    if (!srcMatch || !srcMatch[1].startsWith('http')) continue
+    
+    // Extract alt text
+    const altMatch = imgTag.match(/alt="([^">]*)"/i)
+    
+    // Extract title attribute
+    const titleMatch = imgTag.match(/title="([^">]*)"/i)
+    
+    images.push({
+      url: srcMatch[1],
+      alt: altMatch ? altMatch[1] : undefined,
+      title: titleMatch ? titleMatch[1] : undefined
+    })
   }
 
-  return images.filter(url => url.startsWith('http'))
+  return images
+}
+
+// Helper function to generate SEO-friendly meta description
+function generateMetaDescription(content: string, excerpt?: string): string {
+  if (excerpt) {
+    return excerpt.replace(/<[^>]*>/g, '').substring(0, 160)
+  }
+  
+  // Remove HTML tags and extract first 160 characters
+  const cleanContent = content
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+  
+  return cleanContent.substring(0, 157) + (cleanContent.length > 157 ? '...' : '')
+}
+
+// Helper function to generate SEO title (limit 60 characters)
+function generateSEOTitle(title: string): string {
+  if (title.length <= 60) return title
+  
+  // Try to cut at word boundary
+  const truncated = title.substring(0, 57)
+  const lastSpace = truncated.lastIndexOf(' ')
+  
+  if (lastSpace > 40) {
+    return truncated.substring(0, lastSpace) + '...'
+  }
+  
+  return truncated + '...'
+}
+
+// Helper function to improve image alt text
+function improveImageAltText(alt: string | undefined, title: string | undefined, postTitle: string): string {
+  if (alt && alt.trim() && alt.toLowerCase() !== 'image') {
+    return alt.trim()
+  }
+  
+  if (title && title.trim() && title.toLowerCase() !== 'image') {
+    return title.trim()
+  }
+  
+  // Generate basic alt text based on post title
+  return `Image from ${postTitle}`
 }
 
 // Helper function to download and save image (optional - can be enabled/disabled)
-async function processImage(imageUrl: string, downloadImages: boolean = false): Promise<ImageProcessResult> {
+async function processImage(
+  imageData: {url: string, alt?: string, title?: string}, 
+  downloadImages: boolean = false,
+  postTitle: string = ''
+): Promise<ImageProcessResult> {
   try {
     if (!downloadImages) {
       // Just return the original URL for external hosting
+      let cleanUrl = imageData.url
+      
+      // Clean up Blogger image URLs (remove size parameters for better quality)
+      if (imageData.url.includes('blogspot.com') || imageData.url.includes('googleusercontent.com')) {
+        // Remove size parameters like /s320/ or /s640/ for full resolution
+        cleanUrl = imageData.url.replace(/\/s\d+(-c)?\//, '/')
+        // Remove other Blogger-specific parameters
+        cleanUrl = cleanUrl.replace(/=s\d+(-c)?$/, '')
+      }
+      
       return {
-        originalUrl: imageUrl,
-        newUrl: imageUrl,
-        downloaded: false
+        originalUrl: imageData.url,
+        newUrl: cleanUrl,
+        downloaded: false,
+        altText: improveImageAltText(imageData.alt, imageData.title, postTitle),
+        title: imageData.title || imageData.alt
       }
     }
 
     // If downloading is enabled, you could implement image download logic here
     // For now, we'll keep images as external links but clean up the URLs
     
-    // Clean up Blogger image URLs (remove size parameters for better quality)
-    let cleanUrl = imageUrl
-    if (imageUrl.includes('blogspot.com') || imageUrl.includes('googleusercontent.com')) {
-      // Remove size parameters like /s320/ or /s640/ for full resolution
-      cleanUrl = imageUrl.replace(/\/s\d+(-c)?\//, '/')
-      // Remove other Blogger-specific parameters
-      cleanUrl = cleanUrl.replace(/=s\d+(-c)?$/, '')
-    }
-
     return {
-      originalUrl: imageUrl,
-      newUrl: cleanUrl,
-      downloaded: false
+      originalUrl: imageData.url,
+      newUrl: imageData.url,
+      downloaded: false,
+      altText: improveImageAltText(imageData.alt, imageData.title, postTitle),
+      title: imageData.title || imageData.alt
     }
   } catch (error) {
-    console.error(`Error processing image ${imageUrl}:`, error)
+    console.error(`Error processing image ${imageData.url}:`, error)
     return {
-      originalUrl: imageUrl,
-      newUrl: imageUrl,
-      downloaded: false
+      originalUrl: imageData.url,
+      newUrl: imageData.url,
+      downloaded: false,
+      altText: improveImageAltText(imageData.alt, imageData.title, postTitle),
+      title: imageData.title || imageData.alt
     }
   }
 }
 
-// Helper function to update content with new image URLs
+// Helper function to update content with new image URLs and improved alt text
 function updateContentWithNewImages(content: string, imageResults: ImageProcessResult[]): string {
   let updatedContent = content
 
   imageResults.forEach(result => {
-    if (result.originalUrl !== result.newUrl) {
-      updatedContent = updatedContent.replace(
-        new RegExp(result.originalUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'),
-        result.newUrl
-      )
-    }
+    // Create regex to match the original img tag
+    const escapedUrl = result.originalUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    const imgRegex = new RegExp(`<img[^>]*src="${escapedUrl}"[^>]*>`, 'gi')
+    
+    updatedContent = updatedContent.replace(imgRegex, (match) => {
+      // Update the image tag with improved attributes
+      let newImgTag = match
+      
+      // Update src if URL changed
+      if (result.originalUrl !== result.newUrl) {
+        newImgTag = newImgTag.replace(
+          /src="[^"]*"/i,
+          `src="${result.newUrl}"`
+        )
+      }
+      
+      // Add or update alt text
+      if (result.altText) {
+        if (/alt="[^"]*"/i.test(newImgTag)) {
+          newImgTag = newImgTag.replace(/alt="[^"]*"/i, `alt="${result.altText}"`)
+        } else {
+          newImgTag = newImgTag.replace(/<img/i, `<img alt="${result.altText}"`)
+        }
+      }
+      
+      // Add or update title attribute
+      if (result.title) {
+        if (/title="[^"]*"/i.test(newImgTag)) {
+          newImgTag = newImgTag.replace(/title="[^"]*"/i, `title="${result.title}"`)
+        } else {
+          newImgTag = newImgTag.replace(/<img/i, `<img title="${result.title}"`)
+        }
+      }
+      
+      // Add loading="lazy" for performance
+      if (!/loading="/i.test(newImgTag)) {
+        newImgTag = newImgTag.replace(/<img/i, '<img loading="lazy"')
+      }
+      
+      return newImgTag
+    })
   })
 
   return updatedContent
@@ -147,10 +257,11 @@ export async function POST(request: NextRequest) {
       if (isDraft) continue
 
       const content = entry.content?.[0]._ || entry.content?.[0] || ''
+      const title = entry.title[0]._ || entry.title[0] || 'Untitled'
       
       const post: BloggerPost = {
         id: entry.id[0].split('.post-')[1] || entry.id[0],
-        title: entry.title[0]._ || entry.title[0] || 'Untitled',
+        title,
         content,
         published: entry.published[0],
         updated: entry.updated[0],
@@ -160,8 +271,13 @@ export async function POST(request: NextRequest) {
         }
       }
 
-      // Extract images from content
-      post.images = extractImagesFromContent(content)
+      // Extract images from content with alt text and titles
+      const imageData = extractImagesFromContent(content)
+      post.images = imageData.map(img => img.url)
+
+      // Generate SEO metadata
+      post.seoTitle = generateSEOTitle(title)
+      post.metaDescription = generateMetaDescription(content)
 
       // Extract categories/labels
       const categories = entry.category
@@ -182,7 +298,8 @@ export async function POST(request: NextRequest) {
       skipped: 0,
       errors: [] as string[],
       imagesProcessed: 0,
-      imagesDownloaded: 0
+      imagesDownloaded: 0,
+      seoOptimized: 0
     }
 
     for (const post of posts) {
@@ -209,13 +326,15 @@ export async function POST(request: NextRequest) {
           continue
         }
 
-        // Process images
+        // Process images with enhanced metadata
         let updatedContent = post.content
         const imageResults: ImageProcessResult[] = []
 
         if (post.images && post.images.length > 0) {
-          for (const imageUrl of post.images) {
-            const result = await processImage(imageUrl, downloadImages)
+          const imageData = extractImagesFromContent(post.content)
+          
+          for (const imgData of imageData) {
+            const result = await processImage(imgData, downloadImages, post.title)
             imageResults.push(result)
             importResults.imagesProcessed++
             if (result.downloaded) {
@@ -223,7 +342,7 @@ export async function POST(request: NextRequest) {
             }
           }
 
-          // Update content with new image URLs
+          // Update content with new image URLs and improved attributes
           updatedContent = updateContentWithNewImages(post.content, imageResults)
         }
 
@@ -239,7 +358,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Generate excerpt from content (without HTML tags)
-        const excerpt = updatedContent
+        const excerpt = post.metaDescription || updatedContent
           .replace(/<[^>]*>/g, '') // Remove HTML tags
           .substring(0, 200) + '...'
 
@@ -249,10 +368,10 @@ export async function POST(request: NextRequest) {
           coverImage = imageResults[0].newUrl
         }
 
-        // Create blog post
+        // Create blog post with SEO optimization
         await prisma.blog.create({
           data: {
-            title: post.title,
+            title: post.seoTitle || post.title,
             slug,
             content: updatedContent,
             excerpt,
@@ -267,6 +386,7 @@ export async function POST(request: NextRequest) {
         })
 
         importResults.imported++
+        importResults.seoOptimized++
       } catch (error) {
         console.error(`Error importing post "${post.title}":`, error)
         importResults.errors.push(`Failed to import: ${post.title}`)
@@ -303,13 +423,23 @@ export async function GET() {
       supportedFormats: ["Blogger XML export"],
       maxFileSize: "50MB",
       endpoint: "/api/blogger-import",
+      seoFeatures: {
+        supported: true,
+        features: [
+          "SEO-optimized titles (60 char limit)",
+          "Meta descriptions (160 char limit)",
+          "Image alt text and title attributes",
+          "Lazy loading for images",
+          "Clean, semantic HTML"
+        ]
+      },
       imageHandling: {
         supported: true,
         options: [
           "Keep images as external links (recommended)",
           "Download images to server (coming soon)"
         ],
-        note: "Images from Blogger will be optimized for better quality"
+        note: "Images from Blogger will be optimized for better quality with proper alt text"
       }
     }
   })
