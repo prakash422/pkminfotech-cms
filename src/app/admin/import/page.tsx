@@ -2,13 +2,13 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import AdminLayout from "@/components/admin/admin-layout"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Progress } from "@/components/ui/progress"
-import { Upload, FileText, CheckCircle, AlertCircle, ArrowLeft } from "lucide-react"
-import Link from "next/link"
+import { Upload, FileText, CheckCircle, AlertCircle } from "lucide-react"
 
 interface ImportResult {
   total: number
@@ -71,22 +71,7 @@ export default function ImportPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4">
-        {/* Header */}
-        <div className="mb-8">
-          <Link 
-            href="/admin" 
-            className="inline-flex items-center text-blue-600 hover:text-blue-800 mb-4"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Dashboard
-          </Link>
-          <h1 className="text-3xl font-bold text-gray-900">Import from Blogger</h1>
-          <p className="text-gray-600 mt-2">
-            Migrate your existing blog posts from Google Blogger to your new CMS
-          </p>
-        </div>
+    <AdminLayout title="Import from Blogger" description="Migrate your existing blog posts from Google Blogger to your new CMS">
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Instructions */}
@@ -389,7 +374,6 @@ export default function ImportPage() {
             </Card>
           </div>
         </div>
-      </div>
-    </div>
+    </AdminLayout>
   )
 } 
