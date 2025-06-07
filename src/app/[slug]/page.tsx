@@ -9,9 +9,9 @@ import MobileMenu from "@/components/MobileMenu"
 import AdSpace, { AdConfigs } from "@/components/AdSpace"
 
 interface BlogPageProps {
-  params: {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
 interface Blog {
@@ -37,7 +37,27 @@ interface Blog {
 async function getBlogBySlug(slug: string): Promise<Blog | null> {
   try {
     const response = await fetch(`${process.env.NEXTAUTH_URL}/api/blogs`)
-    const blogs: Blog[] = await response.json()
+    
+    if (!response.ok) {
+      console.error('API response not OK:', response.status, response.statusText)
+      return null
+    }
+    
+    const data = await response.json()
+    
+    // Check if the response is an error object
+    if (data.error) {
+      console.error('API returned error:', data.error)
+      return null
+    }
+    
+    // Ensure data is an array
+    if (!Array.isArray(data)) {
+      console.error('API did not return an array:', data)
+      return null
+    }
+    
+    const blogs: Blog[] = data
     return blogs.find((blog: Blog) => blog.slug === slug && blog.status === 'published') || null
   } catch (error) {
     console.error('Error fetching blog:', error)
@@ -47,7 +67,8 @@ async function getBlogBySlug(slug: string): Promise<Blog | null> {
 
 // Enhanced SEO metadata
 export async function generateMetadata({ params }: BlogPageProps): Promise<Metadata> {
-  const blog = await getBlogBySlug(params.slug)
+  const { slug } = await params
+  const blog = await getBlogBySlug(slug)
 
   if (!blog) {
     return {
@@ -108,7 +129,8 @@ export async function generateMetadata({ params }: BlogPageProps): Promise<Metad
 
 
 export default async function BlogPostPage({ params }: BlogPageProps) {
-  const blog = await getBlogBySlug(params.slug)
+  const { slug } = await params
+  const blog = await getBlogBySlug(slug)
 
   if (!blog) {
     notFound()
