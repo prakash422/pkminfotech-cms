@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { title, slug, content, excerpt, coverImage, category, status, authorId } = body
+    const { title, slug, content, excerpt, coverImage, category, status, authorId, focusKeyword, metaDescription } = body
 
     // Validate required fields
     if (!title || !content) {
@@ -84,18 +84,24 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    const blogData: any = {
+      title,
+      slug: slug || title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
+      content,
+      excerpt,
+      category: category || "latest",
+      status: status || "draft",
+      authorId: authorId || session.user.id,
+      publishedAt: status === "published" ? new Date() : null
+    }
+
+    // Add optional fields if they exist
+    if (coverImage) blogData.coverImage = coverImage
+    if (focusKeyword) blogData.focusKeyword = focusKeyword
+    if (metaDescription) blogData.metaDescription = metaDescription
+
     const blog = await prisma.blog.create({
-      data: {
-        title,
-        slug: slug || title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
-        content,
-        excerpt,
-        coverImage,
-        category: category || "latest",
-        status: status || "draft",
-        authorId: authorId || session.user.id,
-        publishedAt: status === "published" ? new Date() : null
-      },
+      data: blogData,
       include: {
         author: {
           select: {

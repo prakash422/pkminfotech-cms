@@ -264,7 +264,7 @@ export default function ImportPage() {
 
                 {/* Error Display */}
                 {error && (
-                  <Alert variant="destructive">
+                  <Alert className="border-red-500 bg-red-50 text-red-900">
                     <AlertCircle className="h-4 w-4" />
                     <AlertDescription>{error}</AlertDescription>
                   </Alert>

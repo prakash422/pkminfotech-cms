@@ -34,6 +34,8 @@ model Blog {
   coverImage    String?
   category      String    @default("latest") // hindi, english, latest
   status        String    @default("draft") // draft, published
+  focusKeyword  String?   // SEO focus keyword
+  metaDescription String? // SEO meta description
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   publishedAt   DateTime?
