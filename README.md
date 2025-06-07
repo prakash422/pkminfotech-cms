@@ -243,3 +243,4 @@ For support and questions:
 ---
 
 Built with ❤️ using Next.js, TypeScript, and modern web technologies.
+# Updated MongoDB password for Vercel deployment
