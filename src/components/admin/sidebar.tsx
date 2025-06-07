@@ -9,13 +9,15 @@ import {
   Megaphone, 
   Settings,
   LogOut,
-  ExternalLink
+  ExternalLink,
+  Upload
 } from "lucide-react"
 import { signOut } from "next-auth/react"
 
 const navigation = [
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
   { name: "Blogs", href: "/admin/blogs", icon: FileText },
+  { name: "Import Blogger", href: "/admin/import", icon: Upload },
   { name: "Ads", href: "/admin/ads", icon: Megaphone },
   { name: "Settings", href: "/admin/settings", icon: Settings },
 ]
