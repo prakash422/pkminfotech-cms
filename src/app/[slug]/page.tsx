@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation"
 import Link from "next/link"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Calendar, User, ArrowLeft, Home, Share2, Eye, Clock, Bookmark, ChevronRight } from "lucide-react"
 import { formatDate } from "@/lib/utils"
@@ -13,11 +14,31 @@ interface BlogPageProps {
   }
 }
 
-async function getBlogBySlug(slug: string) {
+interface Blog {
+  id: string
+  title: string
+  slug: string
+  content: string
+  excerpt: string | null
+  coverImage: string | null
+  category: string
+  status: string
+  publishedAt: string | null
+  createdAt: string
+  updatedAt: string
+  authorId: string
+  author: {
+    id: string
+    name: string | null
+    email: string | null
+  }
+}
+
+async function getBlogBySlug(slug: string): Promise<Blog | null> {
   try {
     const response = await fetch(`${process.env.NEXTAUTH_URL}/api/blogs`)
-    const blogs = await response.json()
-    return blogs.find((blog: any) => blog.slug === slug && blog.status === 'published')
+    const blogs: Blog[] = await response.json()
+    return blogs.find((blog: Blog) => blog.slug === slug && blog.status === 'published') || null
   } catch (error) {
     console.error('Error fetching blog:', error)
     return null
@@ -161,10 +182,13 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
               {/* Logo */}
               <div className="flex items-center">
                 <Link href="/" className="flex items-center group" aria-label="Pkminfotech Homepage">
-                  <img
+                  <Image
                     src="/favicon-32x32.png"
                     alt="Pkminfotech Logo"
+                    width={32}
+                    height={32}
                     className="w-8 h-8 lg:w-10 lg:h-10 mr-2 lg:mr-3 group-hover:scale-105 transition-transform object-contain"
+                    priority
                   />
                   <span className="text-xl lg:text-2xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
                     Pkminfotech
@@ -556,9 +580,9 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
                     &copy; 2024 Pkminfotech. All rights reserved.
                   </p>
                   <div className="flex flex-wrap justify-center sm:justify-start space-x-3 lg:space-x-6 text-xs lg:text-sm">
-                    <a href="/privacy" className="text-gray-500 hover:text-white transition-colors">Privacy Policy</a>
-                    <a href="/terms" className="text-gray-500 hover:text-white transition-colors">Terms of Service</a>
-                    <a href="/cookies" className="text-gray-500 hover:text-white transition-colors">Cookie Policy</a>
+                    <Link href="/privacy" className="text-gray-500 hover:text-white transition-colors">Privacy Policy</Link>
+                    <Link href="/terms" className="text-gray-500 hover:text-white transition-colors">Terms of Service</Link>
+                    <Link href="/cookies" className="text-gray-500 hover:text-white transition-colors">Cookie Policy</Link>
                   </div>
                 </div>
                 <div className="mt-2 md:mt-0">

@@ -75,7 +75,7 @@ export const metadata: Metadata = {
   }
 }
 
-interface Blog {
+interface BlogPost {
   id: string
   title: string
   slug: string
@@ -97,7 +97,7 @@ interface Blog {
 // Server-side data fetching
 async function getBlogs(category?: string) {
   try {
-    const where: any = {
+    const where: { status: string; category?: string } = {
       status: 'published'
     }
     
@@ -127,7 +127,7 @@ async function getBlogs(category?: string) {
 }
 
 // Generate structured data for SEO
-function generateStructuredData(blogs: any[]) {
+function generateStructuredData(blogs: BlogPost[]) {
   return {
     "@context": "https://schema.org",
     "@type": "Blog",
@@ -380,7 +380,7 @@ export default async function HomePage({ searchParams }: { searchParams: { categ
                   </div>
                   <h2 id="no-posts-heading" className="text-2xl lg:text-3xl font-bold text-gray-900 mb-4">Coming Soon!</h2>
                   <p className="text-base lg:text-lg text-gray-600 mb-6 lg:mb-8 max-w-md mx-auto px-4">
-                    We're working on exciting content including tech news, business updates, and travel guides. Check back soon for our latest articles.
+                    We&apos;re working on exciting content including tech news, business updates, and travel guides. Check back soon for our latest articles.
                   </p>
                   <Link href="/admin">
                     <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 lg:px-8 py-3 text-base lg:text-lg">
@@ -406,7 +406,7 @@ export default async function HomePage({ searchParams }: { searchParams: { categ
                   </section>
 
                                 <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8" aria-label="Blog posts">
-                {blogs.map((blog: any) => (
+                                    {blogs.map((blog: BlogPost) => (
                   <article key={blog.id} className="group" itemScope itemType="http://schema.org/BlogPosting">
                                         <Card className="h-full hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 border border-gray-100 bg-white rounded-2xl overflow-hidden group">
                       {blog.coverImage && (
@@ -463,11 +463,11 @@ export default async function HomePage({ searchParams }: { searchParams: { categ
                             <div className="flex items-center text-gray-500">
                               <Calendar className="h-3 w-3 mr-1" aria-hidden="true" />
                               <time
-                                dateTime={blog.publishedAt || blog.createdAt}
+                                dateTime={blog.publishedAt?.toISOString() || blog.createdAt.toISOString()}
                                 itemProp="datePublished"
                                 className="text-xs"
                               >
-                                {formatDate(blog.publishedAt || blog.createdAt)}
+                                {blog.publishedAt ? formatDate(blog.publishedAt) : formatDate(blog.createdAt)}
                               </time>
                             </div>
                           </div>
@@ -672,9 +672,9 @@ export default async function HomePage({ searchParams }: { searchParams: { categ
                     &copy; 2024 Pkminfotech. All rights reserved.
                   </p>
                   <div className="flex space-x-6 text-sm">
-                    <a href="/privacy" className="text-gray-500 hover:text-white transition-colors">Privacy Policy</a>
-                    <a href="/terms" className="text-gray-500 hover:text-white transition-colors">Terms of Service</a>
-                    <a href="/cookies" className="text-gray-500 hover:text-white transition-colors">Cookie Policy</a>
+                    <Link href="/privacy" className="text-gray-500 hover:text-white transition-colors">Privacy Policy</Link>
+                    <Link href="/terms" className="text-gray-500 hover:text-white transition-colors">Terms of Service</Link>
+                    <Link href="/cookies" className="text-gray-500 hover:text-white transition-colors">Cookie Policy</Link>
                   </div>
                 </div>
                 <div className="mt-4 md:mt-0">
