@@ -110,7 +110,9 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
       "name": "Pkminfotech",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://pkminfotech.com/logo.png"
+        "url": "https://pkminfotech.com/favicon-32x32.png",
+        "width": 32,
+        "height": 32
       }
     },
     "datePublished": blog.publishedAt || blog.createdAt,
@@ -159,9 +161,11 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
               {/* Logo */}
               <div className="flex items-center">
                 <Link href="/" className="flex items-center group" aria-label="Pkminfotech Homepage">
-                  <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center mr-2 lg:mr-3 group-hover:scale-105 transition-transform">
-                    <span className="text-white font-bold text-sm lg:text-lg">P</span>
-                  </div>
+                  <img
+                    src="/favicon-32x32.png"
+                    alt="Pkminfotech Logo"
+                    className="w-8 h-8 lg:w-10 lg:h-10 mr-2 lg:mr-3 group-hover:scale-105 transition-transform object-contain"
+                  />
                   <span className="text-xl lg:text-2xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
                     Pkminfotech
                   </span>

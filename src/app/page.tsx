@@ -1,11 +1,13 @@
+import Image from "next/image"
 import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Calendar, User, Search, Home } from "lucide-react"
+import { prisma } from "@/lib/prisma"
+import { ArrowLeft, Calendar, Home, Search, User } from "lucide-react"
 import { formatDate, truncateText } from "@/lib/utils"
-import { Metadata } from "next"
-import MobileMenu from "@/components/MobileMenu"
 import AdSpace, { AdConfigs } from "@/components/AdSpace"
+import MobileMenu from "@/components/MobileMenu"
+import { Metadata } from "next"
 
 export const metadata: Metadata = {
   title: "Pkminfotech - Latest Tech News, Business Updates & Travel Guides",
@@ -19,6 +21,15 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
+    shortcut: "/favicon.ico",
+  },
   openGraph: {
     title: "Pkminfotech - Latest Tech News, Business Updates & Travel Guides",
     description: "Your source for latest tech news, business updates, travel guides for India and worldwide destinations, and daily insights on technology and digital trends.",
@@ -28,10 +39,16 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
+        url: "/favicon.ico",
+        width: 32,
+        height: 32,
+        alt: "Pkminfotech Logo"
+      },
+      {
         url: "/og-home.jpg",
         width: 1200,
         height: 630,
-        alt: "Pkminfotech"
+        alt: "Pkminfotech - Latest Tech News, Business Updates & Travel Guides"
       }
     ]
   },
@@ -39,7 +56,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Pkminfotech - Latest Tech News, Business Updates & Travel Guides",
     description: "Your source for latest tech news, business updates, travel guides for India and worldwide destinations, and daily insights on technology and digital trends.",
-    images: ["/og-home.jpg"],
+    images: ["/favicon.ico", "/og-home.jpg"],
     creator: "@pkminfotech"
   },
   robots: {
@@ -58,67 +75,113 @@ export const metadata: Metadata = {
   }
 }
 
-async function getBlogs(category?: string) {
-  try {
-    const params = new URLSearchParams({ status: 'published' })
-    if (category && category !== 'all') {
-      params.append('category', category)
-    }
-    const response = await fetch(`${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/blogs?${params}`, {
-      cache: 'no-store'
-    })
-    if (response.ok) {
-      return await response.json()
-    }
-  } catch (error) {
-    console.error('Failed to fetch blogs:', error)
+interface Blog {
+  id: string
+  title: string
+  slug: string
+  excerpt: string | null
+  coverImage: string | null
+  category: string
+  status: string
+  publishedAt: Date | null
+  createdAt: Date
+  updatedAt: Date
+  authorId: string
+  author: {
+    id: string
+    name: string | null
+    email: string | null
   }
-  return []
 }
 
-// JSON-LD Structured Data
-function generateStructuredData(blogs: any[]) {
-  const blogPosts = blogs.map(blog => ({
-    "@type": "BlogPosting",
-    "headline": blog.title,
-    "description": blog.excerpt || blog.title,
-    "image": blog.coverImage || "/default-blog-image.jpg",
-    "author": {
-      "@type": "Person",
-      "name": "Pkminfotech Team"
-    },
-    "publisher": {
-      "@type": "Organization",
-      "name": "Pkminfotech",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "/logo.png"
-      }
-    },
-    "datePublished": blog.publishedAt || blog.createdAt,
-    "dateModified": blog.updatedAt,
-    "url": `https://pkminfotech.com/${blog.slug}`,
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": `https://pkminfotech.com/${blog.slug}`
+// Server-side data fetching
+async function getBlogs(category?: string) {
+  try {
+    const where: any = {
+      status: 'published'
     }
-  }))
+    
+    if (category && category !== 'all') {
+      where.category = category
+    }
 
+    return await prisma.blog.findMany({
+      where,
+      include: {
+        author: {
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
+        }
+      },
+      orderBy: {
+        publishedAt: 'desc'
+      }
+    })
+  } catch (error) {
+    console.error('Error fetching blogs:', error)
+    return []
+  }
+}
+
+// Generate structured data for SEO
+function generateStructuredData(blogs: any[]) {
   return {
     "@context": "https://schema.org",
     "@type": "Blog",
-    "name": "Pkminfotech Blog",
-    "description": "Latest tech news, business updates, travel guides and insights from Pkminfotech",
+    "name": "Pkminfotech",
+    "description": "Latest tech news, business updates & travel guides from India and worldwide",
     "url": "https://pkminfotech.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://pkminfotech.com/favicon.ico",
+      "width": 32,
+      "height": 32
+    },
+    "author": {
+      "@type": "Organization",
+      "name": "Pkminfotech",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://pkminfotech.com/favicon.ico",
+        "width": 32,
+        "height": 32
+      }
+    },
     "publisher": {
       "@type": "Organization",
       "name": "Pkminfotech",
       "logo": {
         "@type": "ImageObject",
-        "url": "/logo.png"
+        "url": "https://pkminfotech.com/favicon.ico",
+        "width": 32,
+        "height": 32
       }
     },
-    "blogPost": blogPosts
+    "blogPost": blogs.map(blog => ({
+      "@type": "BlogPosting",
+      "headline": blog.title,
+      "description": blog.excerpt,
+      "image": blog.coverImage,
+      "datePublished": blog.publishedAt,
+      "dateModified": blog.updatedAt,
+      "author": {
+        "@type": "Person",
+        "name": blog.author.name
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Pkminfotech",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://pkminfotech.com/favicon.ico",
+          "width": 32,
+          "height": 32
+        }
+      }
+    }))
   }
 }
 
@@ -135,7 +198,7 @@ export default async function HomePage({ searchParams }: { searchParams: { categ
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
 
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
+      <div className="min-h-screen bg-gray-50">
         {/* Mobile-First Header */}
         <header className="bg-white shadow-sm border-b sticky top-0 z-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -143,9 +206,14 @@ export default async function HomePage({ searchParams }: { searchParams: { categ
               {/* Logo */}
               <div className="flex items-center">
                 <Link href="/" className="flex items-center group" aria-label="Pkminfotech Homepage">
-                  <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center mr-2 lg:mr-3 group-hover:scale-105 transition-transform">
-                    <span className="text-white font-bold text-sm lg:text-lg">P</span>
-                  </div>
+                  <Image
+                    src="/favicon-32x32.png"
+                    alt="Pkminfotech Logo"
+                    width={32}
+                    height={32}
+                    className="mr-2 lg:mr-3 group-hover:scale-105 transition-transform"
+                    priority
+                  />
                   <span className="text-xl lg:text-2xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
                     Pkminfotech
                   </span>
@@ -177,32 +245,84 @@ export default async function HomePage({ searchParams }: { searchParams: { categ
           </div>
         </header>
 
-        {/* Header Ad Space - Desktop Only */}
-        <div className="hidden lg:block bg-gray-50 py-4">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <AdSpace
-              id="homepage-header-ad"
-              className="min-h-[120px]"
-              {...AdConfigs.headerBanner}
-            />
+        {/* Ultra Compact Hero Section */}
+        <section className="relative bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-6 lg:py-8 overflow-hidden">
+          {/* Background Pattern */}
+          <div className="absolute inset-0">
+            <div className="absolute inset-0 opacity-20" style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+            }}></div>
           </div>
-        </div>
+          
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            {/* Main Heading */}
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 mb-2 lg:mb-3 leading-tight">
+              Welcome to{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-800">
+                Pkminfotech
+              </span>
+            </h1>
+            
+            {/* Subtitle */}
+            <p className="text-sm sm:text-base lg:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed mb-4 lg:mb-6 font-light">
+              Latest tech news, business updates & travel guides from India and worldwide.
+            </p>
+            
+            {/* Feature Highlights */}
+            <div className="flex flex-wrap justify-center gap-2 lg:gap-3 mb-4 lg:mb-6">
+              <div className="flex items-center bg-white/70 backdrop-blur-sm rounded-full px-3 py-1.5 shadow-sm hover:shadow-md transition-shadow">
+                <div className="w-1.5 h-1.5 bg-blue-600 rounded-full mr-2"></div>
+                <span className="text-gray-700 font-medium text-xs">Tech News</span>
+              </div>
+              <div className="flex items-center bg-white/70 backdrop-blur-sm rounded-full px-3 py-1.5 shadow-sm hover:shadow-md transition-shadow">
+                <div className="w-1.5 h-1.5 bg-green-600 rounded-full mr-2"></div>
+                <span className="text-gray-700 font-medium text-xs">Business Updates</span>
+              </div>
+              <div className="flex items-center bg-white/70 backdrop-blur-sm rounded-full px-3 py-1.5 shadow-sm hover:shadow-md transition-shadow">
+                <div className="w-1.5 h-1.5 bg-orange-600 rounded-full mr-2"></div>
+                <span className="text-gray-700 font-medium text-xs">Travel Guides</span>
+              </div>
+              <div className="flex items-center bg-white/70 backdrop-blur-sm rounded-full px-3 py-1.5 shadow-sm hover:shadow-md transition-shadow">
+                <div className="w-1.5 h-1.5 bg-purple-600 rounded-full mr-2"></div>
+                <span className="text-gray-700 font-medium text-xs">Digital Trends</span>
+              </div>
+            </div>
+            
+            {/* CTA Button */}
+            <div className="mb-2">
+              <Button className="bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white px-5 py-2.5 text-sm font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                Explore Latest Articles
+                <ArrowLeft className="h-3 w-3 ml-2 rotate-180" />
+              </Button>
+            </div>
+          </div>
+        </section>
+
+        {/* Top Banner Ad - Full Width */}
+        <section className="bg-gray-100 py-6 lg:py-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <AdSpace 
+              id="hero-banner-ad" 
+              className="min-h-[120px] lg:min-h-[250px]"
+              {...AdConfigs.headerBanner}
+            >
+              <div className="text-center">
+                <div className="w-16 h-16 bg-gradient-to-br from-gray-200 to-gray-300 rounded-xl mx-auto mb-4 flex items-center justify-center shadow-sm">
+                  <span className="text-2xl">🚀</span>
+                </div>
+                <p className="font-medium text-gray-600 mb-2">Premium Banner Ad Space</p>
+                <p className="text-sm text-gray-400 mb-1">Perfect placement after hero section</p>
+                <p className="text-xs text-gray-300">High visibility & engagement</p>
+              </div>
+            </AdSpace>
+          </div>
+        </section>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:grid lg:grid-cols-12 lg:gap-8 py-8 lg:py-12">
-
+            
             {/* Main Content */}
             <main className="lg:col-span-8" role="main">
-              {/* Hero Section */}
-              <section className="text-center mb-8 lg:mb-12">
-                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 lg:mb-6">
-                  Welcome to <span className="text-blue-600">Pkminfotech</span>
-                </h1>
-                <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed px-4 mb-8 lg:mb-12">
-                  Your go-to source for latest tech news, business updates, travel guides, and insights from India and around the world. Stay informed with daily updates on technology and digital trends.
-                </p>
-              </section>
-
               {/* Mobile Ad After Hero */}
               <div className="lg:hidden mb-8">
                 <AdSpace
@@ -285,74 +405,81 @@ export default async function HomePage({ searchParams }: { searchParams: { categ
                     </div>
                   </section>
 
-                  <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8" aria-label="Blog posts">
-                    {blogs.map((blog: any) => (
-                      <article key={blog.id} className="group" itemScope itemType="http://schema.org/BlogPosting">
-                        <Card className="h-full hover:shadow-xl transition-all duration-300 border-0 bg-white/80 backdrop-blur-sm">
-                          {blog.coverImage && (
-                            <div className="aspect-video w-full overflow-hidden rounded-t-lg">
-                              <img
-                                src={blog.coverImage}
-                                alt={blog.title}
-                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                loading="lazy"
-                                itemProp="image"
-                              />
-                            </div>
-                          )}
-                          <CardHeader className="p-4 lg:p-6">
-                            <div className="flex items-start justify-between gap-2 mb-2">
-                              <span className={`px-2 py-1 rounded-full text-xs font-medium ${blog.category === 'hindi'
-                                  ? 'bg-orange-100 text-orange-800'
-                                  : blog.category === 'english'
-                                    ? 'bg-green-100 text-green-800'
-                                    : 'bg-blue-100 text-blue-800'
-                                }`}>
-                                {blog.category === 'hindi' ? 'हिंदी' :
-                                  blog.category === 'english' ? 'English' : 'Latest'}
-                              </span>
-                            </div>
-                            <CardTitle className="line-clamp-2 text-lg lg:text-xl" itemProp="headline">
-                              <Link
-                                href={`/${blog.slug}`}
-                                className="hover:text-blue-600 transition-colors group-hover:text-blue-600"
-                                itemProp="url"
-                              >
-                                {blog.title}
-                              </Link>
-                            </CardTitle>
-                          </CardHeader>
-                          <CardContent className="flex-1 flex flex-col p-4 lg:p-6 pt-0">
-                            {blog.excerpt && (
-                              <p className="text-gray-600 mb-4 lg:mb-6 line-clamp-3 flex-1 text-sm lg:text-base" itemProp="description">
-                                {truncateText(blog.excerpt, 120)}
-                              </p>
-                            )}
+                                <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8" aria-label="Blog posts">
+                {blogs.map((blog: any) => (
+                  <article key={blog.id} className="group" itemScope itemType="http://schema.org/BlogPosting">
+                                        <Card className="h-full hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 border border-gray-100 bg-white rounded-2xl overflow-hidden group">
+                      {blog.coverImage && (
+                        <div className="aspect-video w-full overflow-hidden">
+                          <img
+                            src={blog.coverImage}
+                            alt={blog.title}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            loading="lazy"
+                            itemProp="image"
+                          />
+                        </div>
+                      )}
+                      <CardHeader className="p-5 lg:p-6 bg-white">
+                        <div className="flex items-start justify-between gap-2 mb-4">
+                          <span className={`px-3 py-1.5 rounded-full text-xs font-semibold shadow-sm ${blog.category === 'hindi'
+                              ? 'bg-gradient-to-r from-orange-100 to-orange-200 text-orange-800 border border-orange-200'
+                              : blog.category === 'english'
+                                ? 'bg-gradient-to-r from-green-100 to-green-200 text-green-800 border border-green-200'
+                                : 'bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 border border-blue-200'
+                            }`}>
+                            {blog.category === 'hindi' ? '🇮🇳 हिंदी' :
+                              blog.category === 'english' ? '🇬🇧 English' : '⭐ Latest'}
+                          </span>
+                          <div className="text-xs text-gray-400 mt-1">
+                            <Calendar className="h-3 w-3" />
+                          </div>
+                        </div>
+                        <CardTitle className="line-clamp-2 text-lg lg:text-xl font-bold text-gray-900 leading-tight mb-3" itemProp="headline">
+                          <Link 
+                            href={`/${blog.slug}`}
+                            className="text-gray-900 hover:text-blue-600 transition-colors group-hover:text-blue-600"
+                            itemProp="url"
+                          >
+                            {blog.title}
+                          </Link>
+                        </CardTitle>
+                      </CardHeader>
+                                                <CardContent className="flex-1 flex flex-col p-5 lg:p-6 pt-0 bg-white">
+                        {blog.excerpt && (
+                          <p className="text-gray-700 mb-4 lg:mb-6 line-clamp-3 flex-1 text-sm lg:text-base leading-relaxed" itemProp="description">
+                            {truncateText(blog.excerpt, 120)}
+                          </p>
+                        )}
 
-                            <div className="mt-auto">
-                              <div className="flex items-center text-xs lg:text-sm text-gray-500 mb-4">
-                                <div className="flex items-center mr-4" itemProp="author" itemScope itemType="http://schema.org/Person">
-                                  <User className="h-3 w-3 lg:h-4 lg:w-4 mr-1" aria-hidden="true" />
-                                  <span className="font-medium" itemProp="name">Pkminfotech Team</span>
-                                </div>
-                                <div className="flex items-center">
-                                  <Calendar className="h-3 w-3 lg:h-4 lg:w-4 mr-1" aria-hidden="true" />
-                                  <time
-                                    dateTime={blog.publishedAt || blog.createdAt}
-                                    itemProp="datePublished"
-                                  >
-                                    {formatDate(blog.publishedAt || blog.createdAt)}
-                                  </time>
-                                </div>
+                        <div className="mt-auto pt-4 border-t border-gray-100">
+                          <div className="flex items-center justify-between text-xs lg:text-sm text-gray-500 mb-4">
+                            <div className="flex items-center" itemProp="author" itemScope itemType="http://schema.org/Person">
+                              <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mr-2">
+                                <User className="h-3 w-3 text-blue-600" aria-hidden="true" />
                               </div>
-
-                              <Link href={`/${blog.slug}`}>
-                                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white transition-colors text-sm lg:text-base py-2 lg:py-3">
-                                  Read Article
-                                </Button>
-                              </Link>
+                              <span className="font-medium text-gray-700" itemProp="name">Pkminfotech Team</span>
                             </div>
-                          </CardContent>
+                            <div className="flex items-center text-gray-500">
+                              <Calendar className="h-3 w-3 mr-1" aria-hidden="true" />
+                              <time
+                                dateTime={blog.publishedAt || blog.createdAt}
+                                itemProp="datePublished"
+                                className="text-xs"
+                              >
+                                {formatDate(blog.publishedAt || blog.createdAt)}
+                              </time>
+                            </div>
+                          </div>
+
+                          <Link href={`/${blog.slug}`} className="block">
+                            <Button className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white transition-all duration-300 text-sm lg:text-base py-3 lg:py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl group-hover:scale-105">
+                              Read Article
+                              <ArrowLeft className="h-4 w-4 ml-2 rotate-180 group-hover:translate-x-1 transition-transform" />
+                            </Button>
+                          </Link>
+                        </div>
+                      </CardContent>
                         </Card>
                       </article>
                     ))}
@@ -442,9 +569,13 @@ export default async function HomePage({ searchParams }: { searchParams: { categ
               {/* Company Info */}
               <div className="sm:col-span-2 lg:col-span-2">
                 <div className="flex items-center mb-6">
-                  <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
-                    <span className="text-white font-bold text-lg">P</span>
-                  </div>
+                  <Image
+                    src="/favicon-32x32.png"
+                    alt="Pkminfotech Logo"
+                    width={32}
+                    height={32}
+                    className="mr-3"
+                  />
                   <h3 className="text-2xl font-bold">Pkminfotech</h3>
                 </div>
                 <p className="text-gray-400 mb-6 max-w-md leading-relaxed">
