@@ -126,8 +126,6 @@ export async function generateMetadata({ params }: BlogPageProps): Promise<Metad
   }
 }
 
-
-
 export default async function BlogPostPage({ params }: BlogPageProps) {
   const { slug } = await params
   const blog = await getBlogBySlug(slug)
@@ -363,32 +361,129 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
                 </div>
 
                 {/* Article Content */}
-                <div className="bg-white rounded-lg lg:rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 lg:p-8 xl:p-12 mb-8 lg:mb-12">
-                  <div
-                    className="prose prose-sm sm:prose-base lg:prose-lg prose-gray max-w-none text-gray-800
-                      prose-headings:text-gray-900 prose-headings:font-bold prose-headings:leading-tight prose-headings:mb-4 prose-headings:mt-8 first:prose-headings:mt-0
-                      prose-p:text-gray-800 prose-p:leading-relaxed prose-p:mb-4 lg:prose-p:mb-6 prose-p:text-sm sm:prose-p:text-base
-                      prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline prose-a:font-medium
-                      prose-strong:text-gray-900 prose-strong:font-semibold
-                      prose-em:text-gray-800 prose-em:italic
-                      prose-code:text-blue-700 prose-code:bg-blue-50 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-sm prose-code:font-medium
-                      prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-pre:rounded-lg prose-pre:p-4 lg:prose-pre:p-6 prose-pre:text-sm prose-pre:overflow-x-auto
-                      prose-blockquote:border-l-4 prose-blockquote:border-blue-500 prose-blockquote:bg-blue-50 prose-blockquote:text-gray-800 prose-blockquote:p-4 lg:prose-blockquote:p-6 prose-blockquote:rounded-r-lg prose-blockquote:my-6 lg:prose-blockquote:my-8 prose-blockquote:font-medium
-                      prose-img:rounded-lg prose-img:shadow-md prose-img:my-6 lg:prose-img:my-8 prose-img:w-full prose-img:max-w-full prose-img:h-auto
-                      prose-ul:my-4 lg:prose-ul:my-6 prose-ol:my-4 lg:prose-ol:my-6 prose-ul:text-gray-800 prose-ol:text-gray-800
-                      prose-li:my-1 lg:prose-li:my-2 prose-li:text-gray-800
-                      prose-table:border-collapse prose-table:w-full prose-table:overflow-x-auto prose-table:text-sm lg:prose-table:text-base
-                      prose-th:border prose-th:border-gray-300 prose-th:bg-gray-50 prose-th:p-2 lg:prose-th:p-3 prose-th:text-gray-900 prose-th:font-semibold prose-th:text-left
-                      prose-td:border prose-td:border-gray-300 prose-td:p-2 lg:prose-td:p-3 prose-td:text-gray-800
-                      prose-hr:border-gray-300 prose-hr:my-6 lg:prose-hr:my-8
-                      [&>*]:text-gray-800 [&_p]:text-gray-800 [&_li]:text-gray-800 [&_span]:text-gray-800 [&_div]:text-gray-800
-                      [&_h1]:text-gray-900 [&_h2]:text-gray-900 [&_h3]:text-gray-900 [&_h4]:text-gray-900 [&_h5]:text-gray-900 [&_h6]:text-gray-900
-                      [&_.ProseMirror]:text-gray-800 [&_.ProseMirror_p]:text-gray-800"
-                    style={{ color: '#1f2937' }}
-                    dangerouslySetInnerHTML={{ __html: blog.content }}
-                    itemProp="articleBody"
-                  />
-                </div>
+                <article className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden mb-8">
+                  <div className="p-6 lg:p-8">
+                    <div className="max-w-none">
+                      <div
+                        className="article-content"
+                        style={{
+                          fontSize: '16px',
+                          lineHeight: '1.7',
+                          color: '#374151',
+                          fontFamily: 'system-ui, -apple-system, sans-serif'
+                        }}
+                      >
+                        <style dangerouslySetInnerHTML={{
+                          __html: `
+                            .article-content h1 {
+                              font-size: 32px !important;
+                              font-weight: 700 !important;
+                              color: #1f2937 !important;
+                              margin: 40px 0 24px 0 !important;
+                              line-height: 1.2 !important;
+                              border-bottom: 3px solid #3b82f6 !important;
+                              padding-bottom: 8px !important;
+                            }
+                            
+                            .article-content h2 {
+                              font-size: 28px !important;
+                              font-weight: 700 !important;
+                              color: #1f2937 !important;
+                              margin: 40px 0 20px 0 !important;
+                              line-height: 1.3 !important;
+                            }
+                            
+                            .article-content h3 {
+                              font-size: 24px !important;
+                              font-weight: 700 !important;
+                              color: #1f2937 !important;
+                              margin: 32px 0 16px 0 !important;
+                              line-height: 1.3 !important;
+                            }
+                            
+                            .article-content p {
+                              margin: 16px 0 !important;
+                              color: #374151 !important;
+                              line-height: 1.7 !important;
+                              text-align: justify !important;
+                            }
+                            
+                            .article-content p:first-of-type {
+                              font-size: 18px !important;
+                              font-weight: 400 !important;
+                              margin-bottom: 24px !important;
+                            }
+                            
+                            .article-content p:first-of-type::first-letter {
+                              float: left;
+                              font-size: 56px;
+                              line-height: 48px;
+                              padding-right: 8px;
+                              padding-top: 4px;
+                              font-weight: 700;
+                              color: #3b82f6;
+                            }
+                            
+                            .article-content ul {
+                              margin: 16px 0 !important;
+                              padding-left: 24px !important;
+                              list-style-type: disc !important;
+                            }
+                            
+                            .article-content ul li {
+                              margin: 8px 0 !important;
+                              color: #374151 !important;
+                              line-height: 1.6 !important;
+                            }
+                            
+                            .article-content strong {
+                              font-weight: 600 !important;
+                              color: #1f2937 !important;
+                            }
+                            
+                            .article-content em {
+                              font-style: italic !important;
+                              color: #4b5563 !important;
+                            }
+                          `
+                        }} />
+                        <div 
+                          dangerouslySetInnerHTML={{ 
+                            __html: blog.content
+                              // First, convert markdown-style headings to HTML
+                              .replace(/^### (.*$)/gm, '<h3>$1</h3>')
+                              .replace(/^## (.*$)/gm, '<h2>$1</h2>')
+                              .replace(/^# (.*$)/gm, '<h1>$1</h1>')
+                              
+                              // Convert bullet points to list items first
+                              .replace(/^\* (.*$)/gm, '<li>$1</li>')
+                              .replace(/^- (.*$)/gm, '<li>$1</li>')
+                              
+                              // Wrap consecutive list items in ul tags
+                              .replace(/(<li>.*<\/li>)(\n<li>.*<\/li>)*/g, (match) => {
+                                return '<ul>' + match + '</ul>';
+                              })
+                              
+                              // Convert bold and italic text
+                              .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                              .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                              
+                              // Convert double line breaks to paragraph breaks
+                              .split('\n\n')
+                              .map(paragraph => {
+                                if (paragraph.trim() && !paragraph.startsWith('<h') && !paragraph.startsWith('<ul')) {
+                                  return `<p>${paragraph.trim()}</p>`;
+                                }
+                                return paragraph;
+                              })
+                              .join('\n')
+                          }} 
+                          itemProp="articleBody" 
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </article>
 
                 {/* Bottom Content Ad */}
                 <div className="my-8 lg:my-12">
@@ -512,12 +607,16 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
               {/* Company Info */}
               <div className="sm:col-span-2 lg:col-span-2">
-                <div className="flex items-center mb-4 lg:mb-6">
-                  <div className="w-8 h-8 lg:w-10 lg:h-10 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
-                    <span className="text-white font-bold text-sm lg:text-lg">P</span>
-                  </div>
-                  <h3 className="text-xl lg:text-2xl font-bold">Pkminfotech</h3>
-                </div>
+                <Link href="/" className="flex items-center mb-4 lg:mb-6 group" aria-label="Pkminfotech Homepage">
+                  <Image
+                    src="/favicon-32x32.png"
+                    alt="Pkminfotech Logo"
+                    width={40}
+                    height={40}
+                    className="mr-3 group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <h3 className="text-xl lg:text-2xl font-bold text-white group-hover:text-blue-300 transition-colors duration-300">Pkminfotech</h3>
+                </Link>
                 <p className="text-sm lg:text-base text-gray-400 mb-4 lg:mb-6 max-w-md leading-relaxed">
                   Pkminfotech is a dynamic blogging platform providing the latest tech news, business updates, travel guides for India and worldwide destinations, and daily insights on technology and digital trends.
                 </p>

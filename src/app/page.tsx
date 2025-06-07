@@ -400,81 +400,85 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                     </div>
                   </section>
 
-                                <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8" aria-label="Blog posts">
+                                <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" aria-label="Blog posts">
                                     {blogs.map((blog: BlogPost) => (
                   <article key={blog.id} className="group" itemScope itemType="http://schema.org/BlogPosting">
-                                        <Card className="h-full hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 border border-gray-100 bg-white rounded-2xl overflow-hidden group">
+                                        <Card className="h-full flex flex-col hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-200 bg-white rounded-lg overflow-hidden">
                       {blog.coverImage && (
-                        <div className="aspect-video w-full overflow-hidden">
+                        <div className="aspect-[16/10] w-full overflow-hidden">
                           <img
                             src={blog.coverImage}
                             alt={blog.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                             loading="lazy"
                             itemProp="image"
                           />
                         </div>
                       )}
-                      <CardHeader className="p-5 lg:p-6 bg-white">
-                        <div className="flex items-start justify-between gap-2 mb-4">
-                          <span className={`px-3 py-1.5 rounded-full text-xs font-semibold shadow-sm ${blog.category === 'hindi'
-                              ? 'bg-gradient-to-r from-orange-100 to-orange-200 text-orange-800 border border-orange-200'
+                      
+                      <div className="flex flex-col flex-1 p-4">
+                        {/* Category Badge */}
+                        <div className="flex items-center justify-between mb-3">
+                          <span className={`px-2 py-1 rounded-md text-xs font-medium ${blog.category === 'hindi'
+                              ? 'bg-orange-100 text-orange-700'
                               : blog.category === 'english'
-                                ? 'bg-gradient-to-r from-green-100 to-green-200 text-green-800 border border-green-200'
-                                : 'bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 border border-blue-200'
+                                ? 'bg-green-100 text-green-700'
+                                : 'bg-blue-100 text-blue-700'
                             }`}>
-                            {blog.category === 'hindi' ? '🇮🇳 हिंदी' :
-                              blog.category === 'english' ? '🇬🇧 English' : '⭐ Latest'}
+                            {blog.category === 'hindi' ? 'हिंदी' :
+                              blog.category === 'english' ? 'English' : 'Latest'}
                           </span>
-                          <div className="text-xs text-gray-400 mt-1">
-                            <Calendar className="h-3 w-3" />
+                          <div className="flex items-center text-gray-400 text-xs">
+                            <Calendar className="h-3 w-3 mr-1" />
+                            <time
+                              dateTime={blog.publishedAt?.toISOString() || blog.createdAt.toISOString()}
+                              itemProp="datePublished"
+                            >
+                              {blog.publishedAt ? formatDate(blog.publishedAt) : formatDate(blog.createdAt)}
+                            </time>
                           </div>
                         </div>
-                        <CardTitle className="line-clamp-2 text-lg lg:text-xl font-bold text-gray-900 leading-tight mb-3" itemProp="headline">
+
+                        {/* Title */}
+                        <h3 className="font-bold text-gray-900 mb-3 line-clamp-2 text-lg leading-tight" itemProp="headline">
                           <Link 
                             href={`/${blog.slug}`}
-                            className="text-gray-900 hover:text-blue-600 transition-colors group-hover:text-blue-600"
+                            className="hover:text-blue-600 transition-colors"
                             itemProp="url"
                           >
                             {blog.title}
                           </Link>
-                        </CardTitle>
-                      </CardHeader>
-                                                <CardContent className="flex-1 flex flex-col p-5 lg:p-6 pt-0 bg-white">
+                        </h3>
+
+                        {/* Excerpt */}
                         {blog.excerpt && (
-                          <p className="text-gray-700 mb-4 lg:mb-6 line-clamp-3 flex-1 text-sm lg:text-base leading-relaxed" itemProp="description">
+                          <p className="text-gray-600 text-sm line-clamp-3 mb-4 flex-1 leading-relaxed" itemProp="description">
                             {truncateText(blog.excerpt, 120)}
                           </p>
                         )}
 
-                        <div className="mt-auto pt-4 border-t border-gray-100">
-                          <div className="flex items-center justify-between text-xs lg:text-sm text-gray-500 mb-4">
-                            <div className="flex items-center" itemProp="author" itemScope itemType="http://schema.org/Person">
-                              <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mr-2">
-                                <User className="h-3 w-3 text-blue-600" aria-hidden="true" />
+                        {/* Footer */}
+                        <div className="mt-auto pt-3 border-t border-gray-100">
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center text-xs text-gray-500" itemProp="author" itemScope itemType="http://schema.org/Person">
+                              <div className="w-5 h-5 bg-blue-100 rounded-full flex items-center justify-center mr-2">
+                                <User className="h-3 w-3 text-blue-600" />
                               </div>
-                              <span className="font-medium text-gray-700" itemProp="name">Pkminfotech Team</span>
+                              <span itemProp="name">Pkminfotech Team</span>
                             </div>
-                            <div className="flex items-center text-gray-500">
-                              <Calendar className="h-3 w-3 mr-1" aria-hidden="true" />
-                              <time
-                                dateTime={blog.publishedAt?.toISOString() || blog.createdAt.toISOString()}
-                                itemProp="datePublished"
-                                className="text-xs"
-                              >
-                                {blog.publishedAt ? formatDate(blog.publishedAt) : formatDate(blog.createdAt)}
-                              </time>
+                            <div className="text-xs text-gray-400">
+                              5 min read
                             </div>
                           </div>
 
                           <Link href={`/${blog.slug}`} className="block">
-                            <Button className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white transition-all duration-300 text-sm lg:text-base py-3 lg:py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl group-hover:scale-105">
+                            <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white transition-colors text-sm py-2 rounded-md font-medium">
                               Read Article
-                              <ArrowLeft className="h-4 w-4 ml-2 rotate-180 group-hover:translate-x-1 transition-transform" />
+                              <ArrowLeft className="h-3 w-3 ml-2 rotate-180" />
                             </Button>
                           </Link>
                         </div>
-                      </CardContent>
+                      </div>
                         </Card>
                       </article>
                     ))}
