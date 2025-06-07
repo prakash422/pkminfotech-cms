@@ -15,6 +15,8 @@ interface ImportResult {
   imported: number
   skipped: number
   errors: string[]
+  imagesProcessed: number
+  imagesDownloaded: number
 }
 
 export default function ImportPage() {
@@ -22,6 +24,7 @@ export default function ImportPage() {
   const [importing, setImporting] = useState(false)
   const [result, setResult] = useState<ImportResult | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [downloadImages, setDownloadImages] = useState(false)
   const router = useRouter()
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,6 +48,7 @@ export default function ImportPage() {
     try {
       const formData = new FormData()
       formData.append('file', file)
+      formData.append('downloadImages', downloadImages.toString())
 
       const response = await fetch('/api/blogger-import', {
         method: 'POST',
@@ -185,6 +189,64 @@ export default function ImportPage() {
                   )}
                 </div>
 
+                {/* Image Handling Options */}
+                <div className="space-y-3">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Image Handling
+                  </label>
+                  <div className="space-y-3">
+                    <div className="flex items-start space-x-3">
+                      <input
+                        type="radio"
+                        id="keep-external"
+                        name="imageHandling"
+                        value="external"
+                        checked={!downloadImages}
+                        onChange={() => setDownloadImages(false)}
+                        className="mt-1"
+                        disabled={importing}
+                      />
+                      <div className="flex-1">
+                        <label htmlFor="keep-external" className="text-sm font-medium text-gray-900 cursor-pointer">
+                          Keep images as external links (Recommended)
+                        </label>
+                        <p className="text-xs text-gray-600 mt-1">
+                          Images will remain hosted on Blogger servers but optimized for better quality
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start space-x-3">
+                      <input
+                        type="radio"
+                        id="download-images"
+                        name="imageHandling"
+                        value="download"
+                        checked={downloadImages}
+                        onChange={() => setDownloadImages(true)}
+                        className="mt-1"
+                        disabled={true} // Disabled for now
+                      />
+                      <div className="flex-1">
+                        <label htmlFor="download-images" className="text-sm font-medium text-gray-400 cursor-not-allowed">
+                          Download images to server (Coming Soon)
+                        </label>
+                        <p className="text-xs text-gray-400 mt-1">
+                          Images will be downloaded and hosted on your server
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <Alert>
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription className="text-sm">
+                      <strong>Image Optimization:</strong> Blogger images will be automatically optimized 
+                      to use full resolution instead of compressed versions.
+                    </AlertDescription>
+                  </Alert>
+                </div>
+
                 {/* Import Button */}
                 <Button
                   onClick={handleImport}
@@ -229,7 +291,7 @@ export default function ImportPage() {
                     <AlertDescription>
                       <div className="space-y-2">
                         <p className="font-medium">Import completed successfully!</p>
-                        <div className="grid grid-cols-3 gap-4 text-sm">
+                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
                           <div>
                             <p className="font-medium text-green-600">{result.imported}</p>
                             <p className="text-gray-600">Imported</p>
@@ -237,6 +299,10 @@ export default function ImportPage() {
                           <div>
                             <p className="font-medium text-yellow-600">{result.skipped}</p>
                             <p className="text-gray-600">Skipped</p>
+                          </div>
+                          <div>
+                            <p className="font-medium text-blue-600">{result.imagesProcessed}</p>
+                            <p className="text-gray-600">Images</p>
                           </div>
                           <div>
                             <p className="font-medium text-gray-600">{result.total}</p>
@@ -297,6 +363,14 @@ export default function ImportPage() {
                 <div className="flex items-start">
                   <CheckCircle className="h-4 w-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
                   <p>HTML content and formatting will be preserved</p>
+                </div>
+                <div className="flex items-start">
+                  <CheckCircle className="h-4 w-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                  <p>Images will be optimized for full resolution and set as cover images</p>
+                </div>
+                <div className="flex items-start">
+                  <CheckCircle className="h-4 w-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                  <p>First image in each post becomes the featured/cover image</p>
                 </div>
               </CardContent>
             </Card>

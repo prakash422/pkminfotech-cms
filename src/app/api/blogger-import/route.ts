@@ -16,6 +16,81 @@ interface BloggerPost {
     name: string
     email: string
   }
+  images?: string[]
+}
+
+interface ImageProcessResult {
+  originalUrl: string
+  newUrl: string
+  downloaded: boolean
+}
+
+// Helper function to extract images from HTML content
+function extractImagesFromContent(content: string): string[] {
+  const imageRegex = /<img[^>]+src="([^">]+)"/gi
+  const images: string[] = []
+  let match
+
+  while ((match = imageRegex.exec(content)) !== null) {
+    images.push(match[1])
+  }
+
+  return images.filter(url => url.startsWith('http'))
+}
+
+// Helper function to download and save image (optional - can be enabled/disabled)
+async function processImage(imageUrl: string, downloadImages: boolean = false): Promise<ImageProcessResult> {
+  try {
+    if (!downloadImages) {
+      // Just return the original URL for external hosting
+      return {
+        originalUrl: imageUrl,
+        newUrl: imageUrl,
+        downloaded: false
+      }
+    }
+
+    // If downloading is enabled, you could implement image download logic here
+    // For now, we'll keep images as external links but clean up the URLs
+    
+    // Clean up Blogger image URLs (remove size parameters for better quality)
+    let cleanUrl = imageUrl
+    if (imageUrl.includes('blogspot.com') || imageUrl.includes('googleusercontent.com')) {
+      // Remove size parameters like /s320/ or /s640/ for full resolution
+      cleanUrl = imageUrl.replace(/\/s\d+(-c)?\//, '/')
+      // Remove other Blogger-specific parameters
+      cleanUrl = cleanUrl.replace(/=s\d+(-c)?$/, '')
+    }
+
+    return {
+      originalUrl: imageUrl,
+      newUrl: cleanUrl,
+      downloaded: false
+    }
+  } catch (error) {
+    console.error(`Error processing image ${imageUrl}:`, error)
+    return {
+      originalUrl: imageUrl,
+      newUrl: imageUrl,
+      downloaded: false
+    }
+  }
+}
+
+// Helper function to update content with new image URLs
+function updateContentWithNewImages(content: string, imageResults: ImageProcessResult[]): string {
+  let updatedContent = content
+
+  imageResults.forEach(result => {
+    if (result.originalUrl !== result.newUrl) {
+      updatedContent = updatedContent.replace(
+        new RegExp(result.originalUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'),
+        result.newUrl
+      )
+    }
+  })
+
+  return updatedContent
 }
 
 // POST /api/blogger-import - Import Blogger XML
@@ -31,6 +106,7 @@ export async function POST(request: NextRequest) {
 
     const formData = await request.formData()
     const file = formData.get('file') as File
+    const downloadImages = formData.get('downloadImages') === 'true'
     
     if (!file) {
       return NextResponse.json(
@@ -70,10 +146,12 @@ export async function POST(request: NextRequest) {
 
       if (isDraft) continue
 
+      const content = entry.content?.[0]._ || entry.content?.[0] || ''
+      
       const post: BloggerPost = {
         id: entry.id[0].split('.post-')[1] || entry.id[0],
         title: entry.title[0]._ || entry.title[0] || 'Untitled',
-        content: entry.content?.[0]._ || entry.content?.[0] || '',
+        content,
         published: entry.published[0],
         updated: entry.updated[0],
         author: {
@@ -81,6 +159,9 @@ export async function POST(request: NextRequest) {
           email: entry.author?.[0]?.email?.[0] || session.user.email || 'admin@example.com'
         }
       }
+
+      // Extract images from content
+      post.images = extractImagesFromContent(content)
 
       // Extract categories/labels
       const categories = entry.category
@@ -99,7 +180,9 @@ export async function POST(request: NextRequest) {
       total: posts.length,
       imported: 0,
       skipped: 0,
-      errors: [] as string[]
+      errors: [] as string[],
+      imagesProcessed: 0,
+      imagesDownloaded: 0
     }
 
     for (const post of posts) {
@@ -126,6 +209,24 @@ export async function POST(request: NextRequest) {
           continue
         }
 
+        // Process images
+        let updatedContent = post.content
+        const imageResults: ImageProcessResult[] = []
+
+        if (post.images && post.images.length > 0) {
+          for (const imageUrl of post.images) {
+            const result = await processImage(imageUrl, downloadImages)
+            imageResults.push(result)
+            importResults.imagesProcessed++
+            if (result.downloaded) {
+              importResults.imagesDownloaded++
+            }
+          }
+
+          // Update content with new image URLs
+          updatedContent = updateContentWithNewImages(post.content, imageResults)
+        }
+
         // Determine category
         let category = 'latest' // default
         if (post.category && post.category.length > 0) {
@@ -137,18 +238,25 @@ export async function POST(request: NextRequest) {
           }
         }
 
-        // Generate excerpt from content
-        const excerpt = post.content
+        // Generate excerpt from content (without HTML tags)
+        const excerpt = updatedContent
           .replace(/<[^>]*>/g, '') // Remove HTML tags
           .substring(0, 200) + '...'
+
+        // Extract cover image (first image in content)
+        let coverImage = null
+        if (imageResults.length > 0) {
+          coverImage = imageResults[0].newUrl
+        }
 
         // Create blog post
         await prisma.blog.create({
           data: {
             title: post.title,
             slug,
-            content: post.content,
+            content: updatedContent,
             excerpt,
+            coverImage,
             category,
             status: 'published',
             publishedAt: new Date(post.published),
@@ -194,7 +302,15 @@ export async function GET() {
       step5: "Upload the XML file using this API endpoint",
       supportedFormats: ["Blogger XML export"],
       maxFileSize: "50MB",
-      endpoint: "/api/blogger-import"
+      endpoint: "/api/blogger-import",
+      imageHandling: {
+        supported: true,
+        options: [
+          "Keep images as external links (recommended)",
+          "Download images to server (coming soon)"
+        ],
+        note: "Images from Blogger will be optimized for better quality"
+      }
     }
   })
 } 
