@@ -9,69 +9,91 @@ import AdSpace, { AdConfigs } from "@/components/AdSpace"
 import MobileMenu from "@/components/MobileMenu"
 import { Metadata } from "next"
 
-export const metadata: Metadata = {
-  title: "Pkminfotech - Latest Tech News, Business Updates & Travel Guides",
-  description: "Your source for latest tech news, business updates, travel guides for India and worldwide destinations, and daily insights on technology and digital trends.",
-  keywords: "tech news, business updates, travel guides India, technology news, digital trends, tourist places, daily news, Pkminfotech",
-  authors: [{ name: "Pkminfotech Team" }],
-  creator: "Pkminfotech",
-  publisher: "Pkminfotech",
-  formatDetection: {
-    email: false,
-    address: false,
-    telephone: false,
-  },
-  icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-    ],
-    apple: "/apple-touch-icon.png",
-    shortcut: "/favicon.ico",
-  },
-  openGraph: {
-    title: "Pkminfotech - Latest Tech News, Business Updates & Travel Guides",
-    description: "Your source for latest tech news, business updates, travel guides for India and worldwide destinations, and daily insights on technology and digital trends.",
-    url: "https://pkminfotech.com",
-    siteName: "Pkminfotech",
-    locale: "en_US",
-    type: "website",
-    images: [
-      {
-        url: "/favicon.ico",
-        width: 32,
-        height: 32,
-        alt: "Pkminfotech Logo"
-      },
-      {
-        url: "/og-home.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Pkminfotech - Latest Tech News, Business Updates & Travel Guides"
-      }
-    ]
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Pkminfotech - Latest Tech News, Business Updates & Travel Guides",
-    description: "Your source for latest tech news, business updates, travel guides for India and worldwide destinations, and daily insights on technology and digital trends.",
-    images: ["/favicon.ico", "/og-home.jpg"],
-    creator: "@pkminfotech"
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
+export async function generateMetadata({ searchParams }: { searchParams: Promise<{ category?: string; page?: string }> }): Promise<Metadata> {
+  const params = await searchParams
+  const currentPage = parseInt(params.page || '1', 10)
+  const selectedCategory = params.category || 'all'
+  
+  const pageTitle = currentPage > 1 
+    ? `Latest Blogs - Page ${currentPage} | Pkminfotech`
+    : 'Latest Tech News, Business Updates & Travel Guides | Pkminfotech'
+  
+  const pageDescription = currentPage > 1
+    ? `Browse our latest blog posts on page ${currentPage}. Discover tech news, travel guides, and business insights.`
+    : 'Your source for latest tech news, business updates, travel guides for India and worldwide destinations, and daily insights on technology and digital trends.'
+
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://pkminfotech.com'
+  const canonicalUrl = currentPage > 1 
+    ? `${baseUrl}/page/${currentPage}${selectedCategory !== 'all' ? `?category=${selectedCategory}` : ''}`
+    : `${baseUrl}${selectedCategory !== 'all' ? `/?category=${selectedCategory}` : ''}`
+
+  return {
+    title: pageTitle,
+    description: pageDescription,
+    keywords: "tech news, business updates, travel guides India, technology news, digital trends, tourist places, daily news, Pkminfotech",
+    authors: [{ name: "Pkminfotech Team" }],
+    creator: "Pkminfotech",
+    publisher: "Pkminfotech",
+    alternates: {
+      canonical: canonicalUrl,
     },
-  },
-  verification: {
-    google: "google-site-verification-code-here",
+    robots: {
+      index: currentPage === 1,
+      follow: true,
+      googleBot: {
+        index: currentPage === 1,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
+    },
+    formatDetection: {
+      email: false,
+      address: false,
+      telephone: false,
+    },
+    icons: {
+      icon: [
+        { url: "/favicon.ico", sizes: "any" },
+        { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+        { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      ],
+      apple: "/apple-touch-icon.png",
+      shortcut: "/favicon.ico",
+    },
+    openGraph: {
+      title: pageTitle,
+      description: pageDescription,
+      url: canonicalUrl,
+      siteName: "Pkminfotech",
+      locale: "en_US",
+      type: "website",
+      images: [
+        {
+          url: "/favicon.ico",
+          width: 32,
+          height: 32,
+          alt: "Pkminfotech Logo"
+        },
+        {
+          url: "/og-home.jpg",
+          width: 1200,
+          height: 630,
+          alt: pageTitle
+        }
+      ]
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: pageTitle,
+      description: pageDescription,
+      images: ["/favicon.ico", "/og-home.jpg"],
+      creator: "@pkminfotech"
+    },
+    verification: {
+      google: "google-site-verification-code-here",
+    }
   }
 }
 
@@ -218,6 +240,15 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
   const currentPage = parseInt(params.page || '1', 10)
   const blogsData = await getBlogs(selectedCategory, currentPage)
   const structuredData = generateStructuredData(blogsData.blogs)
+
+  // SEO Meta Data
+  const pageTitle = currentPage > 1 
+    ? `Latest Blogs - Page ${currentPage} | Pkminfotech`
+    : 'Latest Tech News, Travel Guides & Business Updates | Pkminfotech'
+  
+  const pageDescription = currentPage > 1
+    ? `Browse our latest blog posts on page ${currentPage}. Discover tech news, travel guides, and business insights.`
+    : 'Discover latest tech news, business updates, travel guides for India and worldwide destinations. Your source for technology trends and digital insights.'
 
   return (
     <>
@@ -488,10 +519,10 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                     {/* Previous Page */}
                     {blogsData.pagination.hasPrevPage ? (
                       <Link
-                        href={`/?${new URLSearchParams({
-                          ...(selectedCategory !== 'all' && { category: selectedCategory }),
-                          page: (blogsData.pagination.currentPage - 1).toString()
-                        }).toString()}`}
+                        href={blogsData.pagination.currentPage === 2 
+                          ? `/${selectedCategory !== 'all' ? `?category=${selectedCategory}` : ''}`
+                          : `/page/${blogsData.pagination.currentPage - 1}${selectedCategory !== 'all' ? `?category=${selectedCategory}` : ''}`
+                        }
                         className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 hover:text-gray-700 transition-colors"
                       >
                         Previous
@@ -514,10 +545,10 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                       return (
                         <Link
                           key={pageNumber}
-                          href={`/?${new URLSearchParams({
-                            ...(selectedCategory !== 'all' && { category: selectedCategory }),
-                            page: pageNumber.toString()
-                          }).toString()}`}
+                          href={pageNumber === 1 
+                            ? `/${selectedCategory !== 'all' ? `?category=${selectedCategory}` : ''}`
+                            : `/page/${pageNumber}${selectedCategory !== 'all' ? `?category=${selectedCategory}` : ''}`
+                          }
                           className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                             isCurrentPage
                               ? 'bg-blue-600 text-white border border-blue-600'
@@ -533,10 +564,7 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                     {/* Next Page */}
                     {blogsData.pagination.hasNextPage ? (
                       <Link
-                        href={`/?${new URLSearchParams({
-                          ...(selectedCategory !== 'all' && { category: selectedCategory }),
-                          page: (blogsData.pagination.currentPage + 1).toString()
-                        }).toString()}`}
+                        href={`/page/${blogsData.pagination.currentPage + 1}${selectedCategory !== 'all' ? `?category=${selectedCategory}` : ''}`}
                         className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 hover:text-gray-700 transition-colors"
                       >
                         Next
