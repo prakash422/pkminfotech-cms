@@ -207,7 +207,7 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
                     alt="Pkminfotech Logo"
                     width={32}
                     height={32}
-                    className="w-8 h-8 lg:w-10 lg:h-10 mr-2 lg:mr-3 group-hover:scale-105 transition-transform object-contain"
+                    className="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 mr-2 lg:mr-3 group-hover:scale-105 transition-transform object-contain"
                     priority
                   />
                   <span className="text-xl lg:text-2xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
@@ -306,22 +306,49 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
                 </AdSpace>
               </div>
 
-              {/* Breadcrumb */}
+              {/* Breadcrumb - Mobile Optimized */}
               <nav className="mb-6 lg:mb-8" aria-label="Breadcrumb">
-                <ol className="flex items-center space-x-2 text-sm text-gray-500">
+                {/* Mobile: Stacked layout */}
+                <div className="sm:hidden">
+                  <div className="flex items-center space-x-2 text-sm text-gray-500 mb-2">
+                    <Link href="/" className="hover:text-blue-600 transition-colors font-medium">
+                      Home
+                    </Link>
+                    <ChevronRight className="h-4 w-4" aria-hidden="true" />
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getCategoryBadgeColor(blog.category)}`}>
+                      {getCategoryLabel(blog.category)}
+                    </span>
+                  </div>
+                  <div 
+                    className="text-gray-900 font-semibold text-base leading-6"
+                    style={{
+                      wordWrap: 'break-word',
+                      overflowWrap: 'break-word',
+                      whiteSpace: 'normal',
+                      display: 'block',
+                      overflow: 'visible',
+                      textOverflow: 'clip'
+                    }}
+                  >
+                    {blog.title}
+                  </div>
+                </div>
+
+                {/* Desktop: Horizontal layout */}
+                <ol className="hidden sm:flex items-center space-x-2 text-sm text-gray-500 flex-wrap">
                   <li>
                     <Link href="/" className="hover:text-blue-600 transition-colors">
                       Home
                     </Link>
                   </li>
-                  <ChevronRight className="h-4 w-4" aria-hidden="true" />
+                  <ChevronRight className="h-4 w-4 flex-shrink-0" aria-hidden="true" />
                   <li>
                     <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getCategoryBadgeColor(blog.category)}`}>
                       {getCategoryLabel(blog.category)}
                     </span>
                   </li>
-                  <ChevronRight className="h-4 w-4" aria-hidden="true" />
-                  <li className="text-gray-900 truncate max-w-xs" aria-current="page">
+                  <ChevronRight className="h-4 w-4 flex-shrink-0" aria-hidden="true" />
+                  <li className="text-gray-900 truncate max-w-md lg:max-w-lg" aria-current="page">
                     {blog.title}
                   </li>
                 </ol>
@@ -412,8 +439,8 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
 
                 {/* Article Content */}
                 <article className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden mb-8">
-                  <div className="p-6 lg:p-8">
-                    <div className="max-w-none">
+                  <div className="p-4 sm:p-6 lg:p-8">
+                    <div className="max-w-none overflow-x-auto">
                       <div
                         className="article-content"
                         style={{
@@ -425,65 +452,73 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
                       >
                         <style dangerouslySetInnerHTML={{
                           __html: `
+                            .article-content {
+                              word-wrap: break-word;
+                              overflow-wrap: break-word;
+                              max-width: 100%;
+                            }
+                            
                             .article-content h1 {
-                              font-size: 32px !important;
+                              font-size: 24px !important;
                               font-weight: 700 !important;
                               color: #1f2937 !important;
-                              margin: 40px 0 24px 0 !important;
+                              margin: 24px 0 16px 0 !important;
                               line-height: 1.2 !important;
                               border-bottom: 3px solid #3b82f6 !important;
                               padding-bottom: 8px !important;
                             }
                             
                             .article-content h2 {
-                              font-size: 28px !important;
+                              font-size: 20px !important;
                               font-weight: 700 !important;
                               color: #1f2937 !important;
-                              margin: 40px 0 20px 0 !important;
+                              margin: 24px 0 12px 0 !important;
                               line-height: 1.3 !important;
                             }
                             
                             .article-content h3 {
-                              font-size: 24px !important;
+                              font-size: 18px !important;
                               font-weight: 700 !important;
                               color: #1f2937 !important;
-                              margin: 32px 0 16px 0 !important;
+                              margin: 20px 0 12px 0 !important;
                               line-height: 1.3 !important;
                             }
                             
                             .article-content p {
-                              margin: 16px 0 !important;
+                              margin: 12px 0 !important;
                               color: #374151 !important;
-                              line-height: 1.7 !important;
-                              text-align: justify !important;
+                              line-height: 1.6 !important;
+                              text-align: left !important;
+                              font-size: 16px !important;
                             }
                             
                             .article-content p:first-of-type {
-                              font-size: 18px !important;
+                              font-size: 16px !important;
                               font-weight: 400 !important;
-                              margin-bottom: 24px !important;
+                              margin-bottom: 16px !important;
                             }
                             
                             .article-content p:first-of-type::first-letter {
                               float: left;
-                              font-size: 56px;
-                              line-height: 48px;
-                              padding-right: 8px;
-                              padding-top: 4px;
+                              font-size: 40px;
+                              line-height: 32px;
+                              padding-right: 6px;
+                              padding-top: 2px;
                               font-weight: 700;
                               color: #3b82f6;
                             }
                             
                             .article-content ul {
-                              margin: 16px 0 !important;
-                              padding-left: 24px !important;
+                              margin: 12px 0 !important;
+                              padding-left: 20px !important;
                               list-style-type: disc !important;
                             }
                             
                             .article-content ul li {
-                              margin: 8px 0 !important;
+                              margin: 6px 0 !important;
                               color: #374151 !important;
-                              line-height: 1.6 !important;
+                              line-height: 1.5 !important;
+                              font-size: 16px !important;
                             }
                             
                             .article-content strong {
@@ -494,6 +529,51 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
                             .article-content em {
                               font-style: italic !important;
                               color: #4b5563 !important;
+                            }
+
+                            /* Mobile specific styles */
+                            @media (min-width: 768px) {
+                              .article-content h1 {
+                                font-size: 32px !important;
+                                margin: 40px 0 24px 0 !important;
+                              }
+                              
+                              .article-content h2 {
+                                font-size: 28px !important;
+                                margin: 40px 0 20px 0 !important;
+                              }
+                              
+                              .article-content h3 {
+                                font-size: 24px !important;
+                                margin: 32px 0 16px 0 !important;
+                              }
+                              
+                              .article-content p {
+                                margin: 16px 0 !important;
+                                text-align: justify !important;
+                              }
+                              
+                              .article-content p:first-of-type {
+                                font-size: 18px !important;
+                                margin-bottom: 24px !important;
+                              }
+                              
+                              .article-content p:first-of-type::first-letter {
+                                font-size: 56px;
+                                line-height: 48px;
+                                padding-right: 8px;
+                                padding-top: 4px;
+                              }
+                              
+                              .article-content ul {
+                                margin: 16px 0 !important;
+                                padding-left: 24px !important;
+                              }
+                              
+                              .article-content ul li {
+                                margin: 8px 0 !important;
+                                line-height: 1.6 !important;
+                              }
                             }
                           `
                         }} />

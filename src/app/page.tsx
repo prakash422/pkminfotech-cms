@@ -271,7 +271,7 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                     alt="Pkminfotech Logo"
                     width={32}
                     height={32}
-                    className="mr-2 lg:mr-3 group-hover:scale-105 transition-transform"
+                    className="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 mr-2 lg:mr-3 group-hover:scale-105 transition-transform object-contain"
                     priority
                   />
                   <span className="text-xl lg:text-2xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">

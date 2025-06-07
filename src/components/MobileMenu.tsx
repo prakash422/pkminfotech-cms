@@ -72,12 +72,14 @@ export default function MobileMenu() {
             <div className="flex flex-col h-full">
               {/* Header */}
               <div className="flex items-center justify-between p-6 border-b border-gray-200">
-                <div className="flex items-center">
-                  <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center mr-3">
-                    <span className="text-white font-bold text-sm">P</span>
-                  </div>
+                <Link href="/" className="flex items-center" onClick={() => setIsOpen(false)}>
+                  <img
+                    src="/favicon-32x32.png"
+                    alt="Pkminfotech Logo"
+                    className="w-8 h-8 mr-3 object-contain"
+                  />
                   <span className="text-lg font-bold text-gray-900">Pkminfotech</span>
-                </div>
+                </Link>
                 <button
                   onClick={() => setIsOpen(false)}
                   className="p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
@@ -88,8 +90,8 @@ export default function MobileMenu() {
               </div>
 
               {/* Navigation */}
-              <nav className="flex-1 px-6 py-6" role="navigation" aria-label="Mobile navigation">
-                <ul className="space-y-2">
+              <nav className="flex-1 px-6 py-6 overflow-y-auto" role="navigation" aria-label="Mobile navigation">
+                <ul className="space-y-1">
                   <li>
                     <Link 
                       href="/" 
@@ -100,35 +102,93 @@ export default function MobileMenu() {
                       <span>Home</span>
                     </Link>
                   </li>
-                  <li>
-                    <a 
-                      href="#about" 
-                      className="flex items-center py-3 px-4 text-gray-700 rounded-lg font-medium transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      <Info className="h-5 w-5 mr-3 flex-shrink-0" />
-                      <span>About Us</span>
-                    </a>
+                  
+                  {/* Categories Section */}
+                  <li className="pt-4">
+                    <div className="px-4 pb-2">
+                      <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Categories</h3>
+                    </div>
+                    <ul className="space-y-1">
+                      <li>
+                        <Link 
+                          href="/" 
+                          className="flex items-center py-2 px-4 text-gray-700 rounded-lg font-medium transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
+                          onClick={() => setIsOpen(false)}
+                        >
+                          <span className="w-2 h-2 bg-blue-500 rounded-full mr-3 flex-shrink-0"></span>
+                          <span>All Blogs</span>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link 
+                          href="/?category=latest" 
+                          className="flex items-center py-2 px-4 text-gray-700 rounded-lg font-medium transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
+                          onClick={() => setIsOpen(false)}
+                        >
+                          <span className="w-2 h-2 bg-blue-500 rounded-full mr-3 flex-shrink-0"></span>
+                          <span>Latest Blog</span>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link 
+                          href="/?category=english" 
+                          className="flex items-center py-2 px-4 text-gray-700 rounded-lg font-medium transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
+                          onClick={() => setIsOpen(false)}
+                        >
+                          <span className="w-2 h-2 bg-green-500 rounded-full mr-3 flex-shrink-0"></span>
+                          <span>English Blog</span>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link 
+                          href="/?category=hindi" 
+                          className="flex items-center py-2 px-4 text-gray-700 rounded-lg font-medium transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
+                          onClick={() => setIsOpen(false)}
+                        >
+                          <span className="w-2 h-2 bg-orange-500 rounded-full mr-3 flex-shrink-0"></span>
+                          <span>हिंदी Blog</span>
+                        </Link>
+                      </li>
+                    </ul>
                   </li>
-                  <li>
-                    <a 
-                      href="#services" 
-                      className="flex items-center py-3 px-4 text-gray-700 rounded-lg font-medium transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      <Briefcase className="h-5 w-5 mr-3 flex-shrink-0" />
-                      <span>Services</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a 
-                      href="#contact" 
-                      className="flex items-center py-3 px-4 text-gray-700 rounded-lg font-medium transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      <Mail className="h-5 w-5 mr-3 flex-shrink-0" />
-                      <span>Contact</span>
-                    </a>
+
+                  {/* Main Navigation */}
+                  <li className="pt-4">
+                    <div className="px-4 pb-2">
+                      <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Menu</h3>
+                    </div>
+                    <ul className="space-y-1">
+                      <li>
+                        <a 
+                          href="#about" 
+                          className="flex items-center py-2 px-4 text-gray-700 rounded-lg font-medium transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
+                          onClick={() => setIsOpen(false)}
+                        >
+                          <Info className="h-4 w-4 mr-3 flex-shrink-0" />
+                          <span>About Us</span>
+                        </a>
+                      </li>
+                      <li>
+                        <a 
+                          href="#services" 
+                          className="flex items-center py-2 px-4 text-gray-700 rounded-lg font-medium transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
+                          onClick={() => setIsOpen(false)}
+                        >
+                          <Briefcase className="h-4 w-4 mr-3 flex-shrink-0" />
+                          <span>Services</span>
+                        </a>
+                      </li>
+                      <li>
+                        <a 
+                          href="#contact" 
+                          className="flex items-center py-2 px-4 text-gray-700 rounded-lg font-medium transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
+                          onClick={() => setIsOpen(false)}
+                        >
+                          <Mail className="h-4 w-4 mr-3 flex-shrink-0" />
+                          <span>Contact</span>
+                        </a>
+                      </li>
+                    </ul>
                   </li>
                 </ul>
               </nav>
