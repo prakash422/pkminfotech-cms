@@ -24,6 +24,7 @@ export default function NewBlogPage() {
   const [wordCount, setWordCount] = useState(0)
   const [readingTime, setReadingTime] = useState(0)
   const [seoScore, setSeoScore] = useState(0)
+  const [blogId, setBlogId] = useState<string | null>(null)
   const [formData, setFormData] = useState({
     title: "",
     slug: "",
@@ -138,7 +139,15 @@ export default function NewBlogPage() {
       })
 
       if (response.ok) {
-        router.push("/admin/blogs")
+        const result = await response.json()
+        if (status === "draft") {
+          // Save blog ID for future updates
+          setBlogId(result.blog?.id)
+          setFormData(prev => ({ ...prev, status: "draft" }))
+          alert("Blog saved as draft successfully!")
+        } else {
+          router.push("/admin/blogs")
+        }
       } else {
         const error = await response.json()
         alert(error.message || "Failed to create blog")
@@ -325,7 +334,7 @@ export default function NewBlogPage() {
                     <Button
                       type="button"
                       onClick={(e) => handleSubmit(e, "published")}
-                      disabled={loading || !formData.title.trim()}
+                      disabled={loading || !formData.title.trim() || formData.status !== "draft"}
                       className="bg-green-600 hover:bg-green-700"
                     >
                       {loading ? "Publishing..." : "Publish Now"}
@@ -333,7 +342,7 @@ export default function NewBlogPage() {
                   </div>
                   
                   <p className="text-sm text-gray-600">
-                    Auto-save enabled
+                    Save as draft first, then publish when ready
                   </p>
                 </div>
               </div>

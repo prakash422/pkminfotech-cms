@@ -22,12 +22,13 @@ export default function EditBlogPage() {
   const params = useParams()
   const blogId = params.id as string
   
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [initialLoading, setInitialLoading] = useState(true)
   const [wordCount, setWordCount] = useState(0)
   const [readingTime, setReadingTime] = useState(0)
   const [seoScore, setSeoScore] = useState(0)
   const [error, setError] = useState("")
+  const [hasChanges, setHasChanges] = useState(false)
   const [formData, setFormData] = useState({
     title: "",
     slug: "",
@@ -63,6 +64,7 @@ export default function EditBlogPage() {
           const count = calculateWordCount(blog.content || "")
           setWordCount(count)
           setReadingTime(calculateReadingTime(count))
+          setHasChanges(false) // Reset changes after loading
         } else {
           setError("Failed to load blog")
         }
@@ -148,13 +150,20 @@ export default function EditBlogPage() {
       title,
       slug: generateSlug(title)
     }))
+    setHasChanges(true)
   }
 
   const handleContentChange = (content: string) => {
     setFormData(prev => ({ ...prev, content }))
+    setHasChanges(true)
     const count = calculateWordCount(content)
     setWordCount(count)
     setReadingTime(calculateReadingTime(count))
+  }
+
+  const handleFieldChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }))
+    setHasChanges(true)
   }
 
   // Update SEO score when relevant fields change
@@ -182,7 +191,13 @@ export default function EditBlogPage() {
       })
 
       if (response.ok) {
-        router.push("/admin/blogs")
+        setHasChanges(false)
+        setFormData(prev => ({ ...prev, status }))
+        if (status === "published") {
+          alert("Blog updated and published successfully!")
+        } else {
+          alert("Blog saved as draft!")
+        }
       } else {
         const errorData = await response.json()
         setError(errorData.message || "Failed to update blog")
@@ -287,7 +302,7 @@ export default function EditBlogPage() {
                       <Input
                         id="slug"
                         value={formData.slug}
-                        onChange={(e) => setFormData(prev => ({ ...prev, slug: e.target.value }))}
+                        onChange={(e) => handleFieldChange('slug', e.target.value)}
                         placeholder="your-blog-url-slug"
                       />
                     </div>
@@ -298,7 +313,7 @@ export default function EditBlogPage() {
                         <select
                           id="category"
                           value={formData.category}
-                          onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
+                          onChange={(e) => handleFieldChange('category', e.target.value)}
                           className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
                           required
                         >
@@ -311,7 +326,7 @@ export default function EditBlogPage() {
                       <div>
                         <FeaturedImagePicker
                           value={formData.coverImage}
-                          onChange={(url) => setFormData(prev => ({ ...prev, coverImage: url }))}
+                          onChange={(url) => handleFieldChange('coverImage', url)}
                           label="Featured Image"
                           placeholder="Enter image URL or select from media..."
                         />
@@ -323,7 +338,7 @@ export default function EditBlogPage() {
                       <Textarea
                         id="excerpt"
                         value={formData.excerpt}
-                        onChange={(e) => setFormData(prev => ({ ...prev, excerpt: e.target.value }))}
+                        onChange={(e) => handleFieldChange('excerpt', e.target.value)}
                         placeholder="Brief description of your blog post..."
                         rows={3}
                       />
@@ -345,7 +360,7 @@ export default function EditBlogPage() {
                       <Input
                         id="focusKeyword"
                         value={formData.focusKeyword}
-                        onChange={(e) => setFormData(prev => ({ ...prev, focusKeyword: e.target.value }))}
+                        onChange={(e) => handleFieldChange('focusKeyword', e.target.value)}
                         placeholder="Enter your main keyword..."
                       />
                       <p className="text-xs text-gray-600 mt-1">
@@ -358,7 +373,7 @@ export default function EditBlogPage() {
                       <Textarea
                         id="metaDescription"
                         value={formData.metaDescription}
-                        onChange={(e) => setFormData(prev => ({ ...prev, metaDescription: e.target.value }))}
+                        onChange={(e) => handleFieldChange('metaDescription', e.target.value)}
                         placeholder="Write a compelling description for search engines..."
                         rows={3}
                       />
@@ -402,21 +417,22 @@ export default function EditBlogPage() {
                 <div className="flex items-center justify-between bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                   <div className="flex space-x-3">
                     <Button
-                      type="submit"
-                      disabled={loading || !formData.title.trim()}
+                      type="button"
+                      onClick={(e) => handleSubmit(e, "draft")}
+                      disabled={loading || !formData.title.trim() || (!hasChanges && formData.status === "draft")}
                       variant="outline"
                     >
                       <Save className="h-4 w-4 mr-2" />
-                      {loading ? "Updating..." : "Update Blog"}
+                      {loading ? "Saving..." : "Save as Draft"}
                     </Button>
                     
                     <Button
                       type="button"
                       onClick={(e) => handleSubmit(e, "published")}
-                      disabled={loading || !formData.title.trim()}
+                      disabled={loading || !formData.title.trim() || (!hasChanges && formData.status === "published")}
                       className="bg-green-600 hover:bg-green-700"
                     >
-                      {loading ? "Publishing..." : formData.status === "published" ? "Update & Keep Published" : "Publish Now"}
+                      {loading ? "Updating..." : formData.status === "published" ? "Update & Publish" : "Publish"}
                     </Button>
                     
                     {formData.status === "published" && (
@@ -433,7 +449,7 @@ export default function EditBlogPage() {
                   </div>
                   
                   <p className="text-sm text-gray-600">
-                    Auto-save enabled
+                    {loading ? "Processing..." : hasChanges ? "You have unsaved changes" : "All changes saved"}
                   </p>
                 </div>
               </div>
