@@ -4,32 +4,38 @@ Go to your Vercel project → Settings → Environment Variables and add these:
 
 ## Required Environment Variables:
 
-### Database
+### Database Connection
 ```
-DATABASE_URL=mongodb+srv://YOUR_USERNAME:YOUR_PASSWORD@YOUR_CLUSTER.mongodb.net/pkminfotech?retryWrites=true&w=majority
+DATABASE_URL=<Your MongoDB Atlas Connection String>
 ```
-**Note:** Replace YOUR_USERNAME, YOUR_PASSWORD, and YOUR_CLUSTER with your actual MongoDB Atlas credentials.
+**How to get your connection string:**
+1. Go to MongoDB Atlas Dashboard
+2. Click "Connect" on your cluster
+3. Choose "Connect your application"
+4. Copy the connection string
+5. Replace the password placeholder with your actual password
 
-### NextAuth
+### Authentication
 ```
 NEXTAUTH_URL=https://www.pkminfotech.com
-NEXTAUTH_SECRET=your-super-secret-key-here
+NEXTAUTH_SECRET=<Generate a random 32+ character string>
 ```
 
 ### SEO & Analytics
 ```
 NEXT_PUBLIC_BASE_URL=https://www.pkminfotech.com
 NEXT_PUBLIC_GA_ID=G-320370173
-GOOGLE_SITE_VERIFICATION=your-google-verification-code
+GOOGLE_SITE_VERIFICATION=<Your Google verification code>
 ```
 
-### Optional (when you get them)
+### Optional (Add when you get them)
 ```
-NEXT_PUBLIC_ADSENSE_ID=ca-pub-your-adsense-id
+NEXT_PUBLIC_ADSENSE_ID=<Your Google AdSense Publisher ID>
 ```
 
-## Important Notes:
+## Important Security Notes:
 1. Set all variables for "Production", "Preview", and "Development" environments
 2. After adding variables, redeploy your project
-3. The DATABASE_URL should point to your production MongoDB database
-4. **NEVER commit real credentials to git - use Vercel environment variables instead** 
+3. **NEVER commit real credentials to git repositories**
+4. Always use environment variables for sensitive data
+5. Get your actual MongoDB connection string from Atlas dashboard 
