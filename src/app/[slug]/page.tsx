@@ -88,7 +88,7 @@ export async function generateMetadata({ params }: BlogPageProps): Promise<Metad
     openGraph: {
       title: blog.title,
       description: blog.excerpt || `Read ${blog.title} on Pkminfotech`,
-      url: `https://pkminfotech.com/${blog.slug}`,
+      url: `https://www.pkminfotech.com/${blog.slug}`,
       siteName: 'Pkminfotech',
       images: blog.coverImage ? [{
         url: blog.coverImage,

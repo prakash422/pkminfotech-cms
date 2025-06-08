@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   },
   description: "Your trusted source for latest tech news, business updates, travel guides for India and worldwide destinations, and daily insights on technology and digital trends.",
   keywords: "tech news, business updates, travel guides India, technology news, digital trends, latest news, Pkminfotech, hindi news, english news",
-  authors: [{ name: "Pkminfotech Team", url: "https://pkminfotech.com" }],
+  authors: [{ name: "Pkminfotech Team", url: "https://www.pkminfotech.com" }],
   creator: "Pkminfotech",
   publisher: "Pkminfotech",
   formatDetection: {

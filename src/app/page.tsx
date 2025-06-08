@@ -22,7 +22,7 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
     ? `Browse our latest blog posts on page ${currentPage}. Discover tech news, travel guides, and business insights.`
     : 'Your source for latest tech news, business updates, travel guides for India and worldwide destinations, and daily insights on technology and digital trends.'
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://pkminfotech.com'
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.pkminfotech.com'
   const canonicalUrl = currentPage > 1 
     ? `${baseUrl}/page/${currentPage}${selectedCategory !== 'all' ? `?category=${selectedCategory}` : ''}`
     : `${baseUrl}${selectedCategory !== 'all' ? `/?category=${selectedCategory}` : ''}`
@@ -182,10 +182,10 @@ function generateStructuredData(blogs: BlogPost[]) {
     "@type": "Blog",
     "name": "Pkminfotech",
     "description": "Latest tech news, business updates & travel guides from India and worldwide",
-    "url": "https://pkminfotech.com",
+    "url": "https://www.pkminfotech.com",
     "logo": {
       "@type": "ImageObject",
-      "url": "https://pkminfotech.com/favicon.ico",
+      "url": "https://www.pkminfotech.com/favicon.ico",
       "width": 32,
       "height": 32
     },
@@ -194,7 +194,7 @@ function generateStructuredData(blogs: BlogPost[]) {
       "name": "Pkminfotech",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://pkminfotech.com/favicon.ico",
+        "url": "https://www.pkminfotech.com/favicon.ico",
         "width": 32,
         "height": 32
       }
@@ -204,7 +204,7 @@ function generateStructuredData(blogs: BlogPost[]) {
       "name": "Pkminfotech",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://pkminfotech.com/favicon.ico",
+        "url": "https://www.pkminfotech.com/favicon.ico",
         "width": 32,
         "height": 32
       }

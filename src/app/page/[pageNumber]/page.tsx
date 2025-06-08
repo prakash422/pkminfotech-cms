@@ -46,7 +46,7 @@ export async function generateMetadata({ params, searchParams }: PageProps) {
   const pageTitle = `Latest Blogs - Page ${currentPage} | Pkminfotech`
   const pageDescription = `Browse our latest blog posts on page ${currentPage}. Discover tech news, travel guides, and business insights.`
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://pkminfotech.com'
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.pkminfotech.com'
   const canonicalUrl = `${baseUrl}/page/${currentPage}${selectedCategory !== 'all' ? `?category=${selectedCategory}` : ''}`
 
   return {
