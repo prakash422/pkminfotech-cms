@@ -15,7 +15,7 @@ interface PageFormData {
   status: 'draft' | 'published'
   showInMenu: boolean
   menuOrder: number
-  pageType: 'static' | 'about' | 'services' | 'contact' | 'privacy' | 'disclaimers'
+  pageType: 'static' | 'about' | 'contact' | 'privacy' | 'disclaimers'
 }
 
 export default function NewPage() {
@@ -150,7 +150,6 @@ export default function NewPage() {
                   >
                     <option value="static">Static Page</option>
                     <option value="about">About Us</option>
-                    <option value="services">Services</option>
                     <option value="contact">Contact Page</option>
                     <option value="privacy">Privacy Policy</option>
                     <option value="disclaimers">Disclaimers</option>

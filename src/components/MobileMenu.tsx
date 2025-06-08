@@ -170,16 +170,6 @@ export default function MobileMenu() {
                       </li>
                       <li>
                         <Link 
-                          href="/pages/services" 
-                          className="flex items-center py-2 px-4 text-gray-700 rounded-lg font-medium transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
-                          onClick={() => setIsOpen(false)}
-                        >
-                          <Briefcase className="h-4 w-4 mr-3 flex-shrink-0" />
-                          <span>Services</span>
-                        </Link>
-                      </li>
-                      <li>
-                        <Link 
                           href="/pages/contact-us" 
                           className="flex items-center py-2 px-4 text-gray-700 rounded-lg font-medium transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
                           onClick={() => setIsOpen(false)}

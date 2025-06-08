@@ -226,9 +226,6 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
                   <Link href="/pages/about-us" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">
                     About
                   </Link>
-                  <Link href="/pages/services" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">
-                    Services
-                  </Link>
                   <Link href="/pages/contact-us" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
                     Contact
                   </Link>
@@ -779,12 +776,6 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
                     <Link href="/pages/about-us" className="text-sm lg:text-base text-gray-400 hover:text-white transition-colors flex items-center">
                       <span className="w-1.5 h-1.5 lg:w-2 lg:h-2 bg-blue-600 rounded-full mr-2"></span>
                       About Us
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/pages/services" className="text-sm lg:text-base text-gray-400 hover:text-white transition-colors flex items-center">
-                      <span className="w-1.5 h-1.5 lg:w-2 lg:h-2 bg-blue-600 rounded-full mr-2"></span>
-                      Services
                     </Link>
                   </li>
                   <li>
