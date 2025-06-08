@@ -87,10 +87,12 @@ export default async function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://www.google-analytics.com" />
         <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://pagead2.googlesyndication.com" />
         
         {/* DNS prefetch for better performance */}
         <link rel="dns-prefetch" href="//fonts.googleapis.com" />
         <link rel="dns-prefetch" href="//www.google-analytics.com" />
+        <link rel="dns-prefetch" href="//pagead2.googlesyndication.com" />
         
         {/* Google Analytics - Replace GA_MEASUREMENT_ID with your actual ID */}
         {process.env.NEXT_PUBLIC_GA_ID && (
@@ -115,14 +117,24 @@ export default async function RootLayout({
           </>
         )}
         
-        {/* Google AdSense - Replace with your actual publisher ID */}
-        {process.env.NEXT_PUBLIC_ADSENSE_ID && (
-          <script
-            async
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_ID}`}
-            crossOrigin="anonymous"
-          />
-        )}
+        {/* Google AdSense */}
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3361406010222956"
+          crossOrigin="anonymous"
+        />
+        
+        {/* Auto Ads - Easier setup, Google automatically places ads */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (adsbygoogle = window.adsbygoogle || []).push({
+                google_ad_client: "ca-pub-3361406010222956",
+                enable_page_level_ads: true
+              });
+            `
+          }}
+        />
         
         {/* Structured Data for Organization */}
         <script
@@ -198,9 +210,9 @@ export default async function RootLayout({
           <div id="main-content">
             {children}
           </div>
+          <Analytics />
+          <StructuredData />
         </SessionProvider>
-        <Analytics />
-        <StructuredData />
       </body>
     </html>
   );

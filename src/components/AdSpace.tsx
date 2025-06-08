@@ -6,7 +6,7 @@ interface AdSpaceProps {
   id: string
   className?: string
   adSlot?: string
-  adFormat?: 'auto' | 'fluid' | 'fixed'
+  adFormat?: 'auto' | 'fluid' | 'rectangle' | 'vertical' | 'horizontal'
   width?: number
   height?: number
   children?: React.ReactNode
@@ -16,16 +16,16 @@ interface AdSpaceProps {
 export default function AdSpace({ 
   id, 
   className = "", 
-  adSlot = "",
+  adSlot,
   adFormat = "auto",
   width,
   height,
   children,
-  isProduction = false
+  isProduction = true // Changed to true for production
 }: AdSpaceProps) {
   useEffect(() => {
-    // Only load ads in production
-    if (isProduction && window.adsbygoogle && adSlot) {
+    // Load AdSense ads in production
+    if (isProduction && typeof window !== 'undefined' && window.adsbygoogle && adSlot) {
       try {
         (window.adsbygoogle = window.adsbygoogle || []).push({})
       } catch (error) {
@@ -34,92 +34,103 @@ export default function AdSpace({
     }
   }, [isProduction, adSlot])
 
-  // In development or when no ad slot is provided, show placeholder
-  if (!isProduction || !adSlot) {
+  // Show real ads when adSlot is provided
+  if (isProduction && adSlot) {
     return (
       <div 
         id={id}
-        className={`bg-gray-50 border-2 border-dashed border-gray-200 rounded-lg flex items-center justify-center text-gray-400 text-sm font-medium min-h-[200px] transition-all duration-300 hover:border-gray-300 hover:bg-gray-100 ${className}`}
+        className={`${className} relative`}
         role="banner"
-        aria-label="Advertisement space"
+        aria-label="Advertisement"
       >
-        {children || (
-          <div className="text-center p-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-gray-200 to-gray-300 rounded-lg mx-auto mb-3 flex items-center justify-center shadow-sm">
-              <span className="text-lg">📢</span>
-            </div>
-            <p className="font-medium text-gray-600 mb-1">Google Ad Space</p>
-            <p className="text-xs text-gray-400 mb-2">
-              {width && height ? `${width}x${height}` : 'Responsive'}
-            </p>
-            <p className="text-xs text-gray-300">
-              Insert your AdSense code here
-            </p>
-            <div className="mt-3 px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-xs font-medium">
-              ID: {id}
-            </div>
-          </div>
-        )}
+        <ins 
+          className="adsbygoogle"
+          style={{ 
+            display: 'block',
+            width: width ? `${width}px` : '100%',
+            height: height ? `${height}px` : 'auto'
+          }}
+          data-ad-client="ca-pub-3361406010222956"
+          data-ad-slot={adSlot}
+          data-ad-format={adFormat}
+          data-full-width-responsive={adFormat === 'auto' ? 'true' : 'false'}
+        />
       </div>
     )
   }
 
-  // Production AdSense implementation
+  // Development or fallback placeholder
   return (
     <div 
       id={id}
-      className={`${className} relative`}
+      className={`bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-dashed border-gray-200 rounded-lg flex items-center justify-center text-gray-400 text-sm font-medium min-h-[200px] transition-all duration-300 hover:border-gray-300 hover:bg-gray-100 ${className}`}
       role="banner"
-      aria-label="Advertisement"
+      aria-label="Advertisement space"
     >
-      <ins 
-        className="adsbygoogle block"
-        style={{ 
-          display: 'block',
-          width: width ? `${width}px` : '100%',
-          height: height ? `${height}px` : 'auto'
-        }}
-        data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX" // Replace with your AdSense ID
-        data-ad-slot={adSlot}
-        data-ad-format={adFormat}
-        data-full-width-responsive={adFormat === 'auto' ? 'true' : 'false'}
-      />
+      {children || (
+        <div className="text-center p-4">
+          <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg mx-auto mb-3 flex items-center justify-center shadow-sm">
+            <span className="text-lg">💰</span>
+          </div>
+          <p className="font-medium text-gray-600 mb-1">Google AdSense</p>
+          <p className="text-xs text-gray-400 mb-2">
+            {width && height ? `${width}x${height}` : 'Responsive Ad'}
+          </p>
+          <p className="text-xs text-gray-300">
+            {adSlot ? `Slot: ${adSlot}` : 'Configure ad slot'}
+          </p>
+          <div className="mt-3 px-3 py-1 bg-green-100 text-green-600 rounded-full text-xs font-medium">
+            Ready for Ads
+          </div>
+        </div>
+      )}
     </div>
   )
 }
 
-// Common Ad Configurations
+// Pre-configured AdSense Ad Units (You'll need to create these in your AdSense account)
 export const AdConfigs = {
   headerBanner: {
     width: 728,
     height: 90,
-    adFormat: 'fixed' as const
+    adFormat: 'horizontal' as const,
+    adSlot: '1234567890' // Replace with your actual ad slot ID
   },
   sidebarBanner: {
     width: 300,
     height: 600,
-    adFormat: 'fixed' as const
+    adFormat: 'vertical' as const,
+    adSlot: '1234567891' // Replace with your actual ad slot ID
   },
   squareAd: {
     width: 300,
     height: 300,
-    adFormat: 'fixed' as const
+    adFormat: 'rectangle' as const,
+    adSlot: '1234567892' // Replace with your actual ad slot ID
   },
   contentAd: {
-    adFormat: 'fluid' as const
+    adFormat: 'auto' as const,
+    adSlot: '1234567893' // Replace with your actual ad slot ID
   },
   footerBanner: {
     width: 728,
     height: 90,
-    adFormat: 'fixed' as const
+    adFormat: 'horizontal' as const,
+    adSlot: '1234567894' // Replace with your actual ad slot ID
+  },
+  mobileAd: {
+    width: 320,
+    height: 250,
+    adFormat: 'rectangle' as const,
+    adSlot: '1234567895' // Replace with your actual ad slot ID
   }
 }
 
-// Add this to your _document.tsx or layout to load AdSense
+// Component for AdSense Script (use in _document.tsx or layout)
 export const AdSenseScript = () => (
   <script
     async
-    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXXX"
+    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3361406010222956"
     crossOrigin="anonymous"
   />
 ) 
