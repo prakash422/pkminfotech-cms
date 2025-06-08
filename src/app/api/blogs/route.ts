@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
+import { autoGenerateFullSEO, type BlogSEOData } from "@/lib/seo-utils"
 
 // GET /api/blogs - List all blogs
 export async function GET(request: NextRequest) {
@@ -84,21 +85,37 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const blogData: any = {
+    const finalSlug = slug || title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+    const finalCategory = category || "latest"
+
+    // Auto-generate SEO data if not provided
+    const seoData: BlogSEOData = {
       title,
-      slug: slug || title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
       content,
       excerpt,
-      category: category || "latest",
+      category: finalCategory,
+      focusKeyword,
+      slug: finalSlug
+    }
+
+    const autoSEO = autoGenerateFullSEO(seoData)
+
+    const blogData: any = {
+      title,
+      slug: finalSlug,
+      content,
+      excerpt,
+      category: finalCategory,
       status: status || "draft",
       authorId: authorId || session.user.id,
-      publishedAt: status === "published" ? new Date() : null
+      publishedAt: status === "published" ? new Date() : null,
+      // Auto-generated SEO fields (use provided values if available, otherwise use auto-generated)
+      focusKeyword: focusKeyword || autoSEO.focusKeyword,
+      metaDescription: metaDescription || autoSEO.metaDescription
     }
 
     // Add optional fields if they exist
     if (coverImage) blogData.coverImage = coverImage
-    if (focusKeyword) blogData.focusKeyword = focusKeyword
-    if (metaDescription) blogData.metaDescription = metaDescription
 
     const blog = await prisma.blog.create({
       data: blogData,

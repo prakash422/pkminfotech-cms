@@ -1,0 +1,18 @@
+# Add these environment variables to your .env.local file
+
+# Google Analytics ID (provided by user)
+NEXT_PUBLIC_GA_ID=G-320370173
+
+# Base URL for your website (using www version as per current setup)
+NEXT_PUBLIC_BASE_URL=https://www.pkminfotech.com
+
+# Google Site Verification (get from Google Search Console)
+GOOGLE_SITE_VERIFICATION=your-google-verification-code
+
+# Google AdSense ID (when you get approved)
+NEXT_PUBLIC_ADSENSE_ID=ca-pub-your-adsense-id
+
+# Database and other existing variables should remain the same
+DATABASE_URL=your-existing-database-url
+NEXTAUTH_SECRET=your-existing-secret
+NEXTAUTH_URL=https://www.pkminfotech.com 

@@ -1,0 +1,23 @@
+User-agent: *
+Allow: /
+
+# Disallow admin and API routes
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_next/
+Disallow: /auth/
+
+# Allow important pages
+Allow: /
+Allow: /pages/
+Allow: /about-us
+Allow: /contact-us
+
+# Block duplicate content
+Disallow: /*?*
+
+# Sitemap location
+Sitemap: https://www.pkminfotech.com/sitemap.xml
+
+# Crawl delay for better server performance
+Crawl-delay: 1 
