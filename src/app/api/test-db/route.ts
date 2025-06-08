@@ -1,27 +1,27 @@
-import { NextResponse } from "next/server"
-import { prisma } from "@/lib/prisma"
+import { NextResponse } from 'next/server'
+import { PrismaClient } from '@prisma/client'
+
+const prisma = new PrismaClient()
 
 export async function GET() {
   try {
-    // Test database connection
-    await prisma.$connect()
-    
-    // Try to fetch users
+    // Simple test - just count users
     const userCount = await prisma.user.count()
     
-    return NextResponse.json({
+    return NextResponse.json({ 
       success: true,
-      message: "Database connection successful",
-      userCount,
-      timestamp: new Date().toISOString()
+      message: "Database connected successfully",
+      userCount: userCount,
+      environment: process.env.NODE_ENV,
+      hasDatabase: !!process.env.DATABASE_URL
     })
-  } catch (error: any) {
-    console.error("Database test failed:", error)
-    
-    return NextResponse.json({
+  } catch (error) {
+    console.error('Database test error:', error)
+    return NextResponse.json({ 
       success: false,
-      error: error.message,
-      timestamp: new Date().toISOString()
+      error: error instanceof Error ? error.message : 'Unknown error',
+      environment: process.env.NODE_ENV,
+      hasDatabase: !!process.env.DATABASE_URL
     }, { status: 500 })
   } finally {
     await prisma.$disconnect()
