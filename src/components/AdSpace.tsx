@@ -121,41 +121,41 @@ export default function AdSpace({
   )
 }
 
-// Pre-configured AdSense Ad Units (You'll need to create these in your AdSense account)
+// Pre-configured AdSense Ad Units - UPDATE THESE WITH YOUR REAL AD SLOT IDs
 export const AdConfigs = {
   headerBanner: {
     width: 728,
     height: 90,
     adFormat: 'horizontal' as const,
-    adSlot: '1234567890' // Replace with your actual ad slot ID
+    adSlot: process.env.NEXT_PUBLIC_ADSENSE_HEADER_SLOT || undefined
   },
   sidebarBanner: {
     width: 300,
     height: 600,
     adFormat: 'vertical' as const,
-    adSlot: '1234567891' // Replace with your actual ad slot ID
+    adSlot: process.env.NEXT_PUBLIC_ADSENSE_SIDEBAR_SLOT || undefined
   },
   squareAd: {
     width: 300,
     height: 300,
     adFormat: 'rectangle' as const,
-    adSlot: '1234567892' // Replace with your actual ad slot ID
+    adSlot: process.env.NEXT_PUBLIC_ADSENSE_SQUARE_SLOT || undefined
   },
   contentAd: {
     adFormat: 'auto' as const,
-    adSlot: '1234567893' // Replace with your actual ad slot ID
+    adSlot: process.env.NEXT_PUBLIC_ADSENSE_CONTENT_SLOT || undefined
   },
   footerBanner: {
     width: 728,
     height: 90,
     adFormat: 'horizontal' as const,
-    adSlot: '1234567894' // Replace with your actual ad slot ID
+    adSlot: process.env.NEXT_PUBLIC_ADSENSE_FOOTER_SLOT || undefined
   },
   mobileAd: {
     width: 320,
     height: 250,
     adFormat: 'rectangle' as const,
-    adSlot: '1234567895' // Replace with your actual ad slot ID
+    adSlot: process.env.NEXT_PUBLIC_ADSENSE_MOBILE_SLOT || undefined
   }
 }
 
