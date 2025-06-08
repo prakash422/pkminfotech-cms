@@ -7,12 +7,31 @@ import { useEffect } from 'react'
 declare global {
   interface Window {
     gtag: (...args: any[]) => void
+    dataLayer: any[]
   }
 }
 
 export default function Analytics() {
   const pathname = usePathname()
   const GA_ID = process.env.NEXT_PUBLIC_GA_ID
+
+  useEffect(() => {
+    if (GA_ID && typeof window !== 'undefined') {
+      // Initialize dataLayer and gtag
+      window.dataLayer = window.dataLayer || []
+      function gtag(...args: any[]) {
+        window.dataLayer.push(args)
+      }
+      window.gtag = gtag
+      
+      // Configure Google Analytics
+      gtag('js', new Date())
+      gtag('config', GA_ID, {
+        page_title: document.title,
+        page_location: window.location.href,
+      })
+    }
+  }, [GA_ID])
 
   useEffect(() => {
     if (GA_ID && window.gtag) {
@@ -26,26 +45,9 @@ export default function Analytics() {
   if (!GA_ID) return null
 
   return (
-    <>
-      <Script
-        strategy="afterInteractive"
-        src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-      />
-      <Script
-        id="google-analytics"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${GA_ID}', {
-              page_title: document.title,
-              page_location: window.location.href,
-            });
-          `,
-        }}
-      />
-    </>
+    <Script
+      strategy="afterInteractive"
+      src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+    />
   )
 } 

@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { uploadImage } from '@/lib/cloudinary'
+import { uploadImage, type ImageSizeType } from '@/lib/cloudinary'
+import { IMAGE_SIZES } from '@/constants/imageSizes'
 import formidable from 'formidable'
 import { promises as fs } from 'fs'
 
@@ -30,7 +31,9 @@ async function parseForm(req: NextRequest): Promise<{ fields: any; files: any }>
     fields: {
       folder: data.get('folder') || 'blog-images',
       alt: data.get('alt') || '',
-      title: data.get('title') || file.name
+      title: data.get('title') || file.name,
+      sizeType: data.get('sizeType') || 'featured',
+      generateVariants: data.get('generateVariants') === 'true'
     },
     files: {
       file: {
@@ -81,10 +84,12 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Upload to Cloudinary
+    // Upload to Cloudinary with automatic resizing to standard sizes
     const uploadResult = await uploadImage(files.file.data, {
       folder: fields.folder,
       public_id: undefined, // Let Cloudinary generate ID
+      sizeType: fields.sizeType as ImageSizeType,
+      generateVariants: fields.generateVariants
     })
 
     if (!uploadResult.success) {
@@ -94,7 +99,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Return the upload result
+    // Return the upload result with size information
     return NextResponse.json({
       success: true,
       image: {
@@ -105,7 +110,10 @@ export async function POST(request: NextRequest) {
         format: uploadResult.format,
         size: uploadResult.bytes,
         alt: fields.alt,
-        title: fields.title
+        title: fields.title,
+        sizeType: uploadResult.sizeType,
+        variants: uploadResult.variants,
+        standardSizes: IMAGE_SIZES // Return available standard sizes
       }
     })
 

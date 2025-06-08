@@ -1,0 +1,1 @@
+export const IMAGE_SIZES = { featured: { width: 1200, height: 630, quality: 85 }, content: { width: 800, height: 450, quality: 80 }, thumbnail: { width: 400, height: 225, quality: 75 }, square: { width: 500, height: 500, quality: 80 }, mobile: { width: 750, height: 422, quality: 75 } } as const; export type ImageSizeType = keyof typeof IMAGE_SIZES;

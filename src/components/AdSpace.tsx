@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 interface AdSpaceProps {
   id: string
@@ -23,18 +23,51 @@ export default function AdSpace({
   children,
   isProduction = true // Changed to true for production
 }: AdSpaceProps) {
+  const [isClient, setIsClient] = useState(false)
+
   useEffect(() => {
-    // Load AdSense ads in production
-    if (isProduction && typeof window !== 'undefined' && window.adsbygoogle && adSlot) {
+    // Ensure we're on the client side to prevent hydration mismatch
+    setIsClient(true)
+  }, [])
+
+  useEffect(() => {
+    // Load AdSense ads in production only after client-side hydration
+    if (isClient && isProduction && typeof window !== 'undefined' && adSlot) {
       try {
-        (window.adsbygoogle = window.adsbygoogle || []).push({})
+        // Initialize adsbygoogle array if it doesn't exist
+        if (!window.adsbygoogle) {
+          window.adsbygoogle = []
+        }
+        // Push ad configuration after a small delay to ensure DOM is ready
+        const timer = setTimeout(() => {
+          (window.adsbygoogle as any[]).push({})
+        }, 100)
+        
+        return () => clearTimeout(timer)
       } catch (error) {
         console.error('AdSense error:', error)
       }
     }
-  }, [isProduction, adSlot])
+  }, [isClient, isProduction, adSlot])
 
-  // Show real ads when adSlot is provided
+  // Don't render ads until client-side hydration is complete
+  if (!isClient) {
+    return (
+      <div 
+        id={id}
+        className={`bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-dashed border-gray-200 rounded-lg flex items-center justify-center text-gray-400 text-sm font-medium min-h-[200px] ${className}`}
+        role="banner"
+        aria-label="Loading advertisement"
+      >
+        <div className="text-center p-4">
+          <div className="w-6 h-6 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin mx-auto mb-2"></div>
+          <p className="text-xs text-gray-400">Loading ad...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Show real ads when adSlot is provided and we're on client side
   if (isProduction && adSlot) {
     return (
       <div 

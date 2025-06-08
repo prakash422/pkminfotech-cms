@@ -1,9 +1,22 @@
 import { MetadataRoute } from 'next'
-import { prisma } from '@/lib/prisma'
+import { PrismaClient } from '@prisma/client'
+
+const prisma = new PrismaClient()
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.pkminfotech.com'
-  
+
+  // Get all published blog posts
+  const blogs = await prisma.blog.findMany({
+    where: { status: 'published' },
+    select: {
+      slug: true,
+      updatedAt: true,
+      createdAt: true
+    },
+    orderBy: { updatedAt: 'desc' }
+  })
+
   // Static pages
   const staticPages = [
     {
@@ -23,78 +36,54 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: 'monthly' as const,
       priority: 0.8,
-    }
+    },
+    {
+      url: `${baseUrl}/privacy-policy`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly' as const,
+      priority: 0.3,
+    },
+    {
+      url: `${baseUrl}/disclaimer`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly' as const,
+      priority: 0.3,
+    },
   ]
 
-  try {
-    // Get all published blog posts
-    const blogs = await prisma.blog.findMany({
-      where: {
-        status: 'published',
-        publishedAt: {
-          not: null
-        }
-      },
-      select: {
-        slug: true,
-        updatedAt: true,
-        publishedAt: true,
-        category: true
-      },
-      orderBy: {
-        publishedAt: 'desc'
-      }
-    })
+  // Blog posts
+  const blogUrls = blogs.map((blog) => ({
+    url: `${baseUrl}/${blog.slug}`,
+    lastModified: blog.updatedAt,
+    changeFrequency: 'weekly' as const,
+    priority: 0.9,
+  }))
 
-    // Get all published pages
-    const pages = await prisma.page.findMany({
-      where: {
-        status: 'published'
-      },
-      select: {
-        slug: true,
-        updatedAt: true,
-        createdAt: true
-      }
-    })
-
-    // Blog post URLs
-    const blogUrls = blogs.map((blog) => ({
-      url: `${baseUrl}/${blog.slug}`,
-      lastModified: blog.updatedAt || blog.publishedAt || new Date(),
-      changeFrequency: 'weekly' as const,
-      priority: blog.category === 'latest' ? 0.9 : 0.7,
-    }))
-
-    // Page URLs
-    const pageUrls = pages.map((page) => ({
-      url: `${baseUrl}/pages/${page.slug}`,
-      lastModified: page.updatedAt || page.createdAt,
-      changeFrequency: 'monthly' as const,
-      priority: 0.6,
-    }))
-
-    // Category pages
-    const categories = await prisma.blog.findMany({
-      where: {
-        status: 'published'
-      },
-      select: {
-        category: true
-      },
-      distinct: ['category']
-    })
-
-    const categoryUrls = categories.map((cat) => ({
-      url: `${baseUrl}/?category=${cat.category}`,
+  // Category pages
+  const categoryPages = [
+    {
+      url: `${baseUrl}/?category=latest`,
       lastModified: new Date(),
       changeFrequency: 'daily' as const,
-      priority: 0.5,
-    }))
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/?category=english`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/?category=hindi`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.9,
+    },
+  ]
 
-    return [...staticPages, ...blogUrls, ...pageUrls, ...categoryUrls]
-  } catch (error) {
-    console.error('Error generating sitemap:', error)
-    return staticPages
-  }
+  return [
+    ...staticPages,
+    ...blogUrls,
+    ...categoryPages,
+  ]
 } 

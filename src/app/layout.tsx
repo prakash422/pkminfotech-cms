@@ -7,6 +7,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import Analytics from "@/components/analytics";
 import StructuredData from "@/components/structured-data";
+import AdSenseInit from "@/components/AdSenseInit";
+import ClientScripts from "@/components/ClientScripts";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -67,7 +69,7 @@ export const metadata: Metadata = {
     images: ["/og-image.jpg"]
   },
   verification: {
-    google: process.env.GOOGLE_SITE_VERIFICATION,
+    google: "dRJXjKr7fX0vfOh2SUkS-udeG7DPx4XX61rp8xhb8ho",
   },
   category: "News and Media"
 };
@@ -94,102 +96,6 @@ export default async function RootLayout({
         <link rel="dns-prefetch" href="//www.google-analytics.com" />
         <link rel="dns-prefetch" href="//pagead2.googlesyndication.com" />
         
-        {/* Google Analytics - Replace GA_MEASUREMENT_ID with your actual ID */}
-        {process.env.NEXT_PUBLIC_GA_ID && (
-          <>
-            <script
-              async
-              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
-            />
-            <script
-              dangerouslySetInnerHTML={{
-                __html: `
-                  window.dataLayer = window.dataLayer || [];
-                  function gtag(){dataLayer.push(arguments);}
-                  gtag('js', new Date());
-                  gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', {
-                    page_title: document.title,
-                    page_location: window.location.href,
-                  });
-                `,
-              }}
-            />
-          </>
-        )}
-        
-        {/* Google AdSense */}
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3361406010222956"
-          crossOrigin="anonymous"
-        />
-        
-        {/* Auto Ads - Easier setup, Google automatically places ads */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (adsbygoogle = window.adsbygoogle || []).push({
-                google_ad_client: "ca-pub-3361406010222956",
-                enable_page_level_ads: true
-              });
-            `
-          }}
-        />
-        
-        {/* Structured Data for Organization */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "NewsMediaOrganization",
-              "name": "Pkminfotech",
-              "url": "https://pkminfotech.com",
-              "logo": {
-                "@type": "ImageObject",
-                "url": "https://pkminfotech.com/favicon-32x32.png",
-                "width": 32,
-                "height": 32
-              },
-              "description": "Latest tech news, business updates, travel guides for India and worldwide destinations",
-              "sameAs": [
-                "https://twitter.com/pkminfotech",
-                "https://facebook.com/pkminfotech"
-              ],
-              "founder": {
-                "@type": "Person",
-                "name": "Prakash Mahto"
-              },
-              "publishingPrinciples": "https://pkminfotech.com/editorial-guidelines",
-              "diversityPolicy": "https://pkminfotech.com/diversity-policy",
-              "ethicsPolicy": "https://pkminfotech.com/ethics-policy"
-            })
-          }}
-        />
-        
-        {/* Website Structured Data */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "WebSite",
-              "name": "Pkminfotech",
-              "url": "https://pkminfotech.com",
-              "description": "Latest tech news, business updates, travel guides for India and worldwide destinations",
-              "inLanguage": ["en-US", "hi-IN"],
-              "potentialAction": {
-                "@type": "SearchAction",
-                "target": {
-                  "@type": "EntryPoint",
-                  "urlTemplate": "https://pkminfotech.com/search?q={search_term_string}"
-                },
-                "query-input": "required name=search_term_string"
-              }
-            })
-          }}
-        />
-        
         {/* Favicon and Apple Touch Icons */}
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
@@ -212,6 +118,8 @@ export default async function RootLayout({
           </div>
           <Analytics />
           <StructuredData />
+          <AdSenseInit />
+          <ClientScripts />
         </SessionProvider>
       </body>
     </html>

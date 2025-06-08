@@ -3,12 +3,15 @@
 import { useState, useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
 import Image from 'next/image'
+import { IMAGE_SIZES, type ImageSizeType } from '@/constants/imageSizes'
 
 interface ImageUploadProps {
   onImageSelect?: (image: UploadedImage) => void
   folder?: string
   multiple?: boolean
   maxFiles?: number
+  sizeType?: ImageSizeType
+  generateVariants?: boolean
 }
 
 interface UploadedImage {
@@ -20,6 +23,8 @@ interface UploadedImage {
   size: number
   alt?: string
   title?: string
+  sizeType?: string
+  variants?: Record<string, any>
 }
 
 interface UploadResponse {
@@ -32,11 +37,15 @@ export default function ImageUpload({
   onImageSelect, 
   folder = 'blog-images',
   multiple = false,
-  maxFiles = 5
+  maxFiles = 5,
+  sizeType = 'featured',
+  generateVariants = false
 }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false)
   const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([])
   const [error, setError] = useState<string | null>(null)
+  const [selectedSizeType, setSelectedSizeType] = useState<ImageSizeType>(sizeType)
+  const [enableVariants, setEnableVariants] = useState(generateVariants)
 
   const uploadImage = async (file: File): Promise<UploadResponse> => {
     const formData = new FormData()
@@ -44,6 +53,8 @@ export default function ImageUpload({
     formData.append('folder', folder)
     formData.append('alt', '')
     formData.append('title', file.name)
+    formData.append('sizeType', selectedSizeType)
+    formData.append('generateVariants', enableVariants.toString())
 
     try {
       const response = await fetch('/api/upload/image', {
@@ -99,7 +110,7 @@ export default function ImageUpload({
     } finally {
       setUploading(false)
     }
-  }, [folder, multiple, onImageSelect])
+  }, [folder, multiple, onImageSelect, selectedSizeType, enableVariants])
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -123,6 +134,69 @@ export default function ImageUpload({
 
   return (
     <div className="w-full">
+      {/* Image Size Options */}
+      <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+        <h3 className="text-sm font-semibold text-gray-700 mb-3">📏 Automatic Resizing Options</h3>
+        
+        {/* Size Type Selection */}
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-600 mb-2">
+            Standard Size:
+          </label>
+          <select
+            value={selectedSizeType}
+            onChange={(e) => setSelectedSizeType(e.target.value as ImageSizeType)}
+            className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
+            {Object.entries(IMAGE_SIZES).map(([key, config]) => (
+              <option key={key} value={key}>
+                {key.charAt(0).toUpperCase() + key.slice(1)} ({config.width}×{config.height}px)
+              </option>
+            ))}
+          </select>
+          <p className="text-xs text-gray-500 mt-1">
+            Your uploaded image will be automatically resized to: <strong>{IMAGE_SIZES[selectedSizeType].width}×{IMAGE_SIZES[selectedSizeType].height}px</strong>
+          </p>
+        </div>
+
+        {/* Generate Variants Option */}
+        <div className="flex items-center">
+          <input
+            type="checkbox"
+            id="generateVariants"
+            checked={enableVariants}
+            onChange={(e) => setEnableVariants(e.target.checked)}
+            className="mr-2 rounded"
+          />
+          <label htmlFor="generateVariants" className="text-sm text-gray-600">
+            Generate all size variants (Featured, Content, Thumbnail, etc.)
+          </label>
+        </div>
+        
+        {enableVariants && (
+          <div className="mt-2 p-2 bg-blue-50 rounded text-xs text-blue-600">
+            ✨ This will create optimized versions for all standard sizes automatically!
+          </div>
+        )}
+      </div>
+
+      {/* Standard Sizes Preview */}
+      <div className="mb-6 p-4 bg-blue-50 rounded-lg">
+        <h4 className="text-sm font-semibold text-blue-800 mb-2">📐 Standard Image Sizes</h4>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-xs">
+          {Object.entries(IMAGE_SIZES).map(([key, config]) => (
+            <div 
+              key={key} 
+              className={`p-2 bg-white rounded border ${selectedSizeType === key ? 'border-blue-400 bg-blue-50' : 'border-gray-200'}`}
+            >
+              <div className="font-medium text-gray-700">{key.charAt(0).toUpperCase() + key.slice(1)}</div>
+              <div className="text-gray-500">{config.width}×{config.height}px</div>
+              <div className="text-gray-400">Quality: {config.quality}%</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Upload Area */}
       <div
         {...getRootProps()}
@@ -140,16 +214,22 @@ export default function ImageUpload({
           </svg>
           
           {uploading ? (
-            <p className="text-gray-600">Uploading...</p>
+            <div>
+              <p className="text-gray-600 mb-2">🔄 Uploading & Auto-Resizing...</p>
+              <p className="text-sm text-gray-500">Optimizing to {IMAGE_SIZES[selectedSizeType].width}×{IMAGE_SIZES[selectedSizeType].height}px</p>
+            </div>
           ) : isDragActive ? (
             <p className="text-blue-600">Drop the images here...</p>
           ) : (
             <div>
               <p className="text-gray-600 mb-2">
-                Drag & drop images here, or click to select
+                📤 Drag & drop images here, or click to select
               </p>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-gray-500 mb-2">
                 Supports: JPEG, PNG, WebP, GIF (max 10MB each)
+              </p>
+              <p className="text-sm text-blue-600 font-medium">
+                ⚡ Will auto-resize to {IMAGE_SIZES[selectedSizeType].width}×{IMAGE_SIZES[selectedSizeType].height}px
               </p>
             </div>
           )}
@@ -166,7 +246,7 @@ export default function ImageUpload({
       {/* Uploaded Images */}
       {uploadedImages.length > 0 && (
         <div className="mt-6">
-          <h3 className="text-lg font-semibold mb-4">Uploaded Images</h3>
+          <h3 className="text-lg font-semibold mb-4">📸 Uploaded Images (Auto-Resized)</h3>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {uploadedImages.map((image) => (
               <div
@@ -189,6 +269,14 @@ export default function ImageUpload({
                   <p className="text-xs text-gray-500">
                     {Math.round(image.size / 1024)}KB • {image.width}×{image.height}
                   </p>
+                  <p className="text-xs text-blue-600 font-medium">
+                    📏 {image.sizeType || 'Standard'}
+                  </p>
+                  {image.variants && (
+                    <p className="text-xs text-green-600">
+                      ✨ {Object.keys(image.variants).length} variants created
+                    </p>
+                  )}
                 </div>
 
                 {/* Action Buttons */}
