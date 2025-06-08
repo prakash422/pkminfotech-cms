@@ -23,6 +23,7 @@ model User {
   updatedAt     DateTime  @updatedAt
   
   blogs         Blog[]
+  pages         Page[]
 }
 
 model Blog {
@@ -56,4 +57,23 @@ model Ad {
   isActive      Boolean   @default(true)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+}
+
+model Page {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  title         String
+  slug          String    @unique
+  content       String
+  metaTitle     String?
+  metaDescription String?
+  keywords      String?
+  status        String    @default("published") // draft, published
+  showInMenu    Boolean   @default(true)
+  menuOrder     Int       @default(0)
+  pageType      String    @default("static") // static, contact, privacy, terms
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  authorId      String    @db.ObjectId
+  author        User      @relation(fields: [authorId], references: [id])
 }

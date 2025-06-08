@@ -159,34 +159,34 @@ export default function MobileMenu() {
                     </div>
                     <ul className="space-y-1">
                       <li>
-                        <a 
-                          href="#about" 
+                        <Link 
+                          href="/pages/about-us" 
                           className="flex items-center py-2 px-4 text-gray-700 rounded-lg font-medium transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
                           onClick={() => setIsOpen(false)}
                         >
                           <Info className="h-4 w-4 mr-3 flex-shrink-0" />
                           <span>About Us</span>
-                        </a>
+                        </Link>
                       </li>
                       <li>
-                        <a 
-                          href="#services" 
+                        <Link 
+                          href="/pages/services" 
                           className="flex items-center py-2 px-4 text-gray-700 rounded-lg font-medium transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
                           onClick={() => setIsOpen(false)}
                         >
                           <Briefcase className="h-4 w-4 mr-3 flex-shrink-0" />
                           <span>Services</span>
-                        </a>
+                        </Link>
                       </li>
                       <li>
-                        <a 
-                          href="#contact" 
+                        <Link 
+                          href="/pages/contact-us" 
                           className="flex items-center py-2 px-4 text-gray-700 rounded-lg font-medium transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
                           onClick={() => setIsOpen(false)}
                         >
                           <Mail className="h-4 w-4 mr-3 flex-shrink-0" />
                           <span>Contact</span>
-                        </a>
+                        </Link>
                       </li>
                     </ul>
                   </li>
@@ -205,14 +205,14 @@ export default function MobileMenu() {
                     >
                       <Mail className="h-5 w-5 text-white" />
                     </a>
-                    <a 
-                      href="#contact" 
+                    <Link 
+                      href="/pages/contact-us" 
                       className="w-10 h-10 bg-gray-600 hover:bg-gray-700 rounded-lg flex items-center justify-center transition-colors"
                       aria-label="Contact page"
                       onClick={() => setIsOpen(false)}
                     >
                       <Phone className="h-5 w-5 text-white" />
-                    </a>
+                    </Link>
                   </div>
                   <p className="text-xs text-gray-500 mt-3">© 2024 Pkminfotech</p>
                 </div>

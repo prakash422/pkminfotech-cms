@@ -69,3 +69,65 @@ img {
   max-width: 100%;
   height: auto;
 }
+
+/* Custom form input styling for better visibility */
+@layer components {
+  .form-input {
+    @apply block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-gray-900 bg-white px-3 py-2 placeholder-gray-400;
+  }
+  
+  .form-select {
+    @apply block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-gray-900 bg-white px-3 py-2;
+  }
+  
+  .form-textarea {
+    @apply block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-gray-900 bg-white px-3 py-2 placeholder-gray-400;
+  }
+}
+
+/* Ensure good contrast for all form elements */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="url"],
+textarea,
+select {
+  color: #1f2937 !important;
+  background-color: #ffffff !important;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+input[type="url"]:focus,
+textarea:focus,
+select:focus {
+  color: #1f2937 !important;
+  background-color: #ffffff !important;
+  border-color: #3b82f6 !important;
+  ring-color: #3b82f6 !important;
+}
+
+/* Improve placeholder text visibility */
+::placeholder {
+  color: #9ca3af !important;
+  opacity: 1;
+}
+
+/* Better styling for the Tiptap editor */
+.ProseMirror {
+  outline: none !important;
+  color: #1f2937 !important;
+}
+
+.ProseMirror p {
+  margin: 0.5rem 0;
+}
+
+.ProseMirror h1, .ProseMirror h2, .ProseMirror h3, .ProseMirror h4, .ProseMirror h5, .ProseMirror h6 {
+  color: #1f2937 !important;
+  font-weight: 600;
+  margin: 1rem 0 0.5rem 0;
+}
