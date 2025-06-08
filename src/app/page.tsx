@@ -317,10 +317,10 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                 </Link>
                 
                 <div className="hidden lg:flex items-center space-x-4 ml-4 pl-4 border-l border-gray-200">
-                  <Link href="/pages/about-us" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">
+                  <Link href="/about-us" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">
                     About
                   </Link>
-                  <Link href="/pages/contact-us" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                  <Link href="/contact-us" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
                     Contact
                   </Link>
                 </div>
@@ -698,13 +698,13 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                     </Link>
                   </li>
                   <li>
-                    <Link href="/pages/about-us" className="text-gray-400 hover:text-white transition-colors flex items-center">
+                    <Link href="/about-us" className="text-gray-400 hover:text-white transition-colors flex items-center">
                       <span className="w-2 h-2 bg-blue-600 rounded-full mr-2"></span>
                       About Us
                     </Link>
                   </li>
                   <li>
-                    <Link href="/pages/contact-us" className="text-gray-400 hover:text-white transition-colors flex items-center">
+                    <Link href="/contact-us" className="text-gray-400 hover:text-white transition-colors flex items-center">
                       <span className="w-2 h-2 bg-blue-600 rounded-full mr-2"></span>
                       Contact
                     </Link>

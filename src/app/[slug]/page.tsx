@@ -249,10 +249,10 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
                 </Link>
                 
                 <div className="hidden lg:flex items-center space-x-4 ml-4 pl-4 border-l border-gray-200">
-                  <Link href="/pages/about-us" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">
+                  <Link href="/about-us" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">
                     About
                   </Link>
-                  <Link href="/pages/contact-us" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                  <Link href="/contact-us" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
                     Contact
                   </Link>
                 </div>

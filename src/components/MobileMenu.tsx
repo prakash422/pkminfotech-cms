@@ -160,7 +160,7 @@ export default function MobileMenu() {
                     <ul className="space-y-1">
                       <li>
                         <Link 
-                          href="/pages/about-us" 
+                          href="/about-us" 
                           className="flex items-center py-2 px-4 text-gray-700 rounded-lg font-medium transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
                           onClick={() => setIsOpen(false)}
                         >
@@ -170,7 +170,7 @@ export default function MobileMenu() {
                       </li>
                       <li>
                         <Link 
-                          href="/pages/contact-us" 
+                          href="/contact-us" 
                           className="flex items-center py-2 px-4 text-gray-700 rounded-lg font-medium transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
                           onClick={() => setIsOpen(false)}
                         >
@@ -196,7 +196,7 @@ export default function MobileMenu() {
                       <Mail className="h-5 w-5 text-white" />
                     </a>
                     <Link 
-                      href="/pages/contact-us" 
+                      href="/contact-us" 
                       className="w-10 h-10 bg-gray-600 hover:bg-gray-700 rounded-lg flex items-center justify-center transition-colors"
                       aria-label="Contact page"
                       onClick={() => setIsOpen(false)}
