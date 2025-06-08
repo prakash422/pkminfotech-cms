@@ -13,7 +13,7 @@ Perfect for your blog CMS because:
 ### **1. Create Cloudinary Account**
 1. Go to [cloudinary.com](https://cloudinary.com)
 2. Sign up for free account
-3. Go to Dashboard
+3. Go to Dashboard → Settings → API Keys
 4. Copy your credentials:
    - Cloud Name
    - API Key
@@ -23,17 +23,17 @@ Perfect for your blog CMS because:
 Add these to your Vercel environment variables:
 
 ```bash
-CLOUDINARY_CLOUD_NAME=dt5fhzlcv
-CLOUDINARY_API_KEY=762481177423999
-CLOUDINARY_API_SECRET=Is4kP38ahm2lJaURbXJdoEYEaZA
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
 ```
 
 ### **3. For Local Development**
 Add to your `.env.local` file:
 ```bash
-CLOUDINARY_CLOUD_NAME=dt5fhzlcv
-CLOUDINARY_API_KEY=762481177423999
-CLOUDINARY_API_SECRET=your-api-secret
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
 ```
 
 ## **✨ Features Implemented**
@@ -123,4 +123,11 @@ const heroUrl = getOptimizedImageUrl(publicId, {
 - Use descriptive alt text
 - Implement structured data
 - Use responsive images
-- Enable lazy loading 
+- Enable lazy loading
+
+## **🔐 Security Notes**
+
+- ⚠️ **NEVER** commit credentials to Git
+- ✅ Use environment variables only
+- ✅ Keep `.env.local` in `.gitignore`
+- ✅ Use different credentials for development and production 
