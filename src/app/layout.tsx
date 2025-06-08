@@ -118,7 +118,7 @@ export default async function RootLayout({
           </div>
           <Analytics />
           <StructuredData />
-          <AdSenseInit />
+          {/* <AdSenseInit /> */}
           <ClientScripts />
         </SessionProvider>
       </body>

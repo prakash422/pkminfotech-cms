@@ -1,36 +1,54 @@
 "use client"
 
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
+
+// Global flag to prevent multiple initializations
+let globalAdSenseInitialized = false
 
 export default function AdSenseInit() {
+  const localInitialized = useRef(false)
+
   useEffect(() => {
-    // Initialize AdSense only on client side to prevent hydration mismatch
-    if (typeof window !== 'undefined') {
+    // Prevent multiple initializations
+    if (localInitialized.current || globalAdSenseInitialized) {
+      return
+    }
+
+    // Only run on client side
+    if (typeof window === 'undefined') {
+      return
+    }
+
+    const initializeAdSense = () => {
       try {
-        // Initialize the adsbygoogle array
+        // Ensure adsbygoogle array exists
         if (!window.adsbygoogle) {
           window.adsbygoogle = []
         }
-        
-        // Check if page-level ads are already enabled to prevent duplicate initialization
-        if (!(window as any).adsensePageLevelInitialized) {
-          // Enable auto ads after a small delay to ensure script is loaded
-          const timer = setTimeout(() => {
-            (window.adsbygoogle as any[]).push({
-              google_ad_client: "ca-pub-3361406010222956",
-              enable_page_level_ads: true
-            })
-            // Mark as initialized to prevent duplicate calls
-            ;(window as any).adsensePageLevelInitialized = true
-          }, 1000)
 
-          return () => clearTimeout(timer)
+        // Initialize only once
+        if (!globalAdSenseInitialized) {
+          (window.adsbygoogle as any[]).push({
+            google_ad_client: "ca-pub-3361406010222956",
+            enable_page_level_ads: true
+          })
+          
+          globalAdSenseInitialized = true
+          localInitialized.current = true
+          console.log('AdSense Auto Ads initialized')
         }
       } catch (error) {
         console.error('AdSense initialization error:', error)
       }
     }
+
+    // Wait for AdSense script to load
+    const timer = setTimeout(initializeAdSense, 1500)
+    
+    return () => {
+      clearTimeout(timer)
+    }
   }, [])
 
-  return null // This component doesn't render anything
+  return null
 } 
