@@ -15,7 +15,7 @@ interface PageFormData {
   status: 'draft' | 'published'
   showInMenu: boolean
   menuOrder: number
-  pageType: 'static' | 'about' | 'services' | 'contact' | 'privacy' | 'terms'
+  pageType: 'static' | 'about' | 'services' | 'contact' | 'privacy' | 'disclaimers'
 }
 
 interface EditPageProps {
@@ -198,7 +198,7 @@ export default function EditPage({ params }: EditPageProps) {
                     <option value="services">Services</option>
                     <option value="contact">Contact Page</option>
                     <option value="privacy">Privacy Policy</option>
-                    <option value="terms">Terms of Service</option>
+                    <option value="disclaimers">Disclaimers</option>
                   </select>
                 </div>
 

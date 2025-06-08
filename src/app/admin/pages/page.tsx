@@ -127,7 +127,7 @@ export default function PagesManagement() {
                               page.pageType === 'services' ? 'bg-green-100 text-green-800' :
                               page.pageType === 'contact' ? 'bg-purple-100 text-purple-800' :
                               page.pageType === 'privacy' ? 'bg-red-100 text-red-800' :
-                              page.pageType === 'terms' ? 'bg-orange-100 text-orange-800' :
+                              page.pageType === 'disclaimers' ? 'bg-yellow-100 text-yellow-800' :
                               'bg-gray-100 text-gray-800'
                             }`}>
                               {page.pageType}

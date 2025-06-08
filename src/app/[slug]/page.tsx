@@ -831,9 +831,8 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
                     &copy; 2024 Pkminfotech. All rights reserved.
                   </p>
                   <div className="flex flex-wrap justify-center sm:justify-start space-x-3 lg:space-x-6 text-xs lg:text-sm">
-                    <Link href="/privacy" className="text-gray-500 hover:text-white transition-colors">Privacy Policy</Link>
-                    <Link href="/terms" className="text-gray-500 hover:text-white transition-colors">Terms of Service</Link>
-                    <Link href="/cookies" className="text-gray-500 hover:text-white transition-colors">Cookie Policy</Link>
+                    <Link href="/pages/privacy-policy" className="text-gray-500 hover:text-white transition-colors">Privacy Policy</Link>
+                    <Link href="/pages/disclaimers" className="text-gray-500 hover:text-white transition-colors">Disclaimers</Link>
                   </div>
                 </div>
                 <div className="mt-2 md:mt-0">
