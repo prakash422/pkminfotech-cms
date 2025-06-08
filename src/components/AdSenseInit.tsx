@@ -12,15 +12,20 @@ export default function AdSenseInit() {
           window.adsbygoogle = []
         }
         
-        // Enable auto ads after a small delay to ensure script is loaded
-        const timer = setTimeout(() => {
-          (window.adsbygoogle as any[]).push({
-            google_ad_client: "ca-pub-3361406010222956",
-            enable_page_level_ads: true
-          })
-        }, 1000)
+        // Check if page-level ads are already enabled to prevent duplicate initialization
+        if (!(window as any).adsensePageLevelInitialized) {
+          // Enable auto ads after a small delay to ensure script is loaded
+          const timer = setTimeout(() => {
+            (window.adsbygoogle as any[]).push({
+              google_ad_client: "ca-pub-3361406010222956",
+              enable_page_level_ads: true
+            })
+            // Mark as initialized to prevent duplicate calls
+            ;(window as any).adsensePageLevelInitialized = true
+          }, 1000)
 
-        return () => clearTimeout(timer)
+          return () => clearTimeout(timer)
+        }
       } catch (error) {
         console.error('AdSense initialization error:', error)
       }

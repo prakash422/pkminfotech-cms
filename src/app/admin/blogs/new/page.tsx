@@ -12,6 +12,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import RichTextEditor from "@/components/editor/rich-text-editor"
+import FeaturedImagePicker from "@/components/admin/FeaturedImagePicker"
 import { generateSlug } from "@/lib/utils"
 import { Save, ArrowLeft, Eye, Target, FileText, CheckCircle, AlertCircle, BarChart3, Edit } from "lucide-react"
 import Link from "next/link"
@@ -220,12 +221,11 @@ export default function NewBlogPage() {
                       </div>
                       
                       <div>
-                        <Label htmlFor="coverImage">Cover Image URL</Label>
-                        <Input
-                          id="coverImage"
+                        <FeaturedImagePicker
                           value={formData.coverImage}
-                          onChange={(e) => setFormData(prev => ({ ...prev, coverImage: e.target.value }))}
-                          placeholder="https://example.com/image.jpg"
+                          onChange={(url) => setFormData(prev => ({ ...prev, coverImage: url }))}
+                          label="Featured Image"
+                          placeholder="Enter image URL or select from media..."
                         />
                       </div>
                     </div>

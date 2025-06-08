@@ -7,7 +7,10 @@ import { Image as ImageIcon, X } from 'lucide-react'
 
 interface ImagePickerProps {
   onImageSelect: (imageUrl: string) => void
+  onClose?: () => void
   trigger?: React.ReactNode
+  title?: string
+  sizeRecommendation?: string
 }
 
 interface ImageData {
@@ -21,13 +24,31 @@ interface ImageData {
   title?: string
 }
 
-export default function ImagePicker({ onImageSelect, trigger }: ImagePickerProps) {
-  const [isOpen, setIsOpen] = useState(false)
+export default function ImagePicker({ 
+  onImageSelect, 
+  onClose, 
+  trigger,
+  title = "Select Image",
+  sizeRecommendation
+}: ImagePickerProps) {
+  const [isOpen, setIsOpen] = useState(!onClose) // If onClose provided, start open (modal mode)
   const [activeTab, setActiveTab] = useState<'gallery' | 'upload'>('gallery')
 
   const handleImageSelect = (image: ImageData) => {
     onImageSelect(image.url)
-    setIsOpen(false)
+    if (onClose) {
+      onClose()
+    } else {
+      setIsOpen(false)
+    }
+  }
+
+  const handleClose = () => {
+    if (onClose) {
+      onClose()
+    } else {
+      setIsOpen(false)
+    }
   }
 
   const defaultTrigger = (
@@ -37,39 +58,37 @@ export default function ImagePicker({ onImageSelect, trigger }: ImagePickerProps
     </button>
   )
 
-  if (!isOpen) {
+  // If onClose is provided, we're in modal-only mode (always open)
+  if (onClose || isOpen) {
     return (
-      <div onClick={() => setIsOpen(true)}>
-        {trigger || defaultTrigger}
-      </div>
-    )
-  }
-
-  return (
-    <>
-      {/* Backdrop */}
-      <div 
-        className="fixed inset-0 bg-black bg-opacity-50 z-50"
-        onClick={() => setIsOpen(false)}
-      />
-      
-      {/* Modal */}
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[80vh] overflow-hidden">
-          {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b">
-            <h2 className="text-xl font-semibold">Select Image</h2>
-            <button
-              onClick={() => setIsOpen(false)}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              <X className="h-5 w-5" />
-            </button>
-          </div>
-          
-          <div className="flex flex-col h-full">
+      <>
+        {/* Backdrop */}
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-50"
+          onClick={handleClose}
+        />
+        
+        {/* Modal */}
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-hidden">
+          <div className="bg-white rounded-lg shadow-xl max-w-5xl w-full h-[85vh] flex flex-col">
+            {/* Header */}
+            <div className="flex items-center justify-between p-6 border-b flex-shrink-0">
+              <div>
+                <h2 className="text-xl font-semibold">{title}</h2>
+                {sizeRecommendation && (
+                  <p className="text-sm text-gray-600 mt-1">{sizeRecommendation}</p>
+                )}
+              </div>
+              <button
+                onClick={handleClose}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            
             {/* Tab Navigation */}
-            <div className="border-b px-6">
+            <div className="border-b px-6 flex-shrink-0">
               <nav className="flex space-x-8">
                 <button
                   onClick={() => setActiveTab('gallery')}
@@ -94,8 +113,8 @@ export default function ImagePicker({ onImageSelect, trigger }: ImagePickerProps
               </nav>
             </div>
 
-            {/* Content */}
-            <div className="flex-1 overflow-y-auto p-6">
+            {/* Content - This will be scrollable */}
+            <div className="flex-1 overflow-y-auto p-6 min-h-0">
               {activeTab === 'gallery' ? (
                 <ImageGallery 
                   onImageSelect={handleImageSelect}
@@ -113,7 +132,13 @@ export default function ImagePicker({ onImageSelect, trigger }: ImagePickerProps
             </div>
           </div>
         </div>
-      </div>
-    </>
+      </>
+    )
+  }
+
+  return (
+    <div onClick={() => setIsOpen(true)}>
+      {trigger || defaultTrigger}
+    </div>
   )
 } 
