@@ -19,17 +19,22 @@ interface ImageGalleryProps {
   onImageSelect?: (image: ImageData) => void
   folder?: string
   selectable?: boolean
+  allowBulkDelete?: boolean
 }
 
 export default function ImageGallery({ 
   onImageSelect, 
   folder = 'blog-images',
-  selectable = true 
+  selectable = true,
+  allowBulkDelete = true
 }: ImageGalleryProps) {
   const [images, setImages] = useState<ImageData[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
+  const [selectedImages, setSelectedImages] = useState<Set<string>>(new Set())
+  const [bulkSelectMode, setBulkSelectMode] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   const fetchImages = async () => {
     try {

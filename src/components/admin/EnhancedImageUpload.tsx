@@ -8,11 +8,12 @@ import { IMAGE_FOLDERS, getFolderOptions, type ImageFolder } from '@/constants/i
 
 interface ImageUploadProps {
   onImageSelect?: (image: UploadedImage) => void
-  folder?: string
+  initialFolder?: string
   multiple?: boolean
   maxFiles?: number
   sizeType?: ImageSizeType
   generateVariants?: boolean
+  allowFolderSelection?: boolean
 }
 
 interface UploadedImage {
@@ -26,6 +27,7 @@ interface UploadedImage {
   title?: string
   sizeType?: string
   variants?: Record<string, any>
+  folder?: string
 }
 
 interface UploadResponse {
@@ -34,24 +36,29 @@ interface UploadResponse {
   error?: string
 }
 
-export default function ImageUpload({ 
+export default function EnhancedImageUpload({ 
   onImageSelect, 
-  folder = 'blog-images',
+  initialFolder = 'blog-images',
   multiple = false,
   maxFiles = 5,
   sizeType = 'featured',
-  generateVariants = false
+  generateVariants = false,
+  allowFolderSelection = true
 }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false)
   const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([])
   const [error, setError] = useState<string | null>(null)
   const [selectedSizeType, setSelectedSizeType] = useState<ImageSizeType>(sizeType)
   const [enableVariants, setEnableVariants] = useState(generateVariants)
+  const [selectedFolder, setSelectedFolder] = useState<string>(initialFolder)
+
+  const currentFolderConfig = IMAGE_FOLDERS[selectedFolder]
+  const folderOptions = getFolderOptions()
 
   const uploadImage = async (file: File): Promise<UploadResponse> => {
     const formData = new FormData()
     formData.append('file', file)
-    formData.append('folder', folder)
+    formData.append('folder', selectedFolder)
     formData.append('alt', '')
     formData.append('title', file.name)
     formData.append('sizeType', selectedSizeType)
@@ -90,7 +97,10 @@ export default function ImageUpload({
 
       const successfulUploads = results
         .filter(result => result.success && result.image)
-        .map(result => result.image!)
+        .map(result => ({
+          ...result.image!,
+          folder: selectedFolder
+        }))
 
       const failedUploads = results.filter(result => !result.success)
 
@@ -111,16 +121,17 @@ export default function ImageUpload({
     } finally {
       setUploading(false)
     }
-  }, [folder, multiple, onImageSelect, selectedSizeType, enableVariants])
+  }, [selectedFolder, multiple, onImageSelect, selectedSizeType, enableVariants])
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: {
-      'image/*': ['.jpeg', '.jpg', '.png', '.webp', '.gif']
+      'image/*': currentFolderConfig?.allowedTypes?.map(type => `.${type}`) || ['.jpeg', '.jpg', '.png', '.webp', '.gif']
     },
     multiple,
     maxFiles: multiple ? maxFiles : 1,
-    disabled: uploading
+    disabled: uploading,
+    maxSize: (currentFolderConfig?.maxSizeMB || 10) * 1024 * 1024
   })
 
   const selectImage = (image: UploadedImage) => {
@@ -135,11 +146,55 @@ export default function ImageUpload({
 
   return (
     <div className="w-full">
-      {/* Image Size Options */}
+      {allowFolderSelection && (
+        <div className="mb-6 p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg border border-purple-200">
+          <h3 className="text-sm font-semibold text-gray-700 mb-3">📁 Choose Upload Destination</h3>
+          
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-600 mb-2">
+              Folder Category:
+            </label>
+            <select
+              value={selectedFolder}
+              onChange={(e) => setSelectedFolder(e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white"
+            >
+              {folderOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {currentFolderConfig && (
+            <div className="p-3 bg-white rounded-md border border-gray-200">
+              <div className="flex items-start gap-3">
+                <span className="text-2xl">{currentFolderConfig.icon}</span>
+                <div className="flex-1">
+                  <h4 className="font-medium text-gray-900">{currentFolderConfig.name}</h4>
+                  <p className="text-sm text-gray-600 mb-2">{currentFolderConfig.description}</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-gray-500">
+                    <div>
+                      <strong>Suggested Size:</strong> {currentFolderConfig.suggestedSize}
+                    </div>
+                    <div>
+                      <strong>Max Size:</strong> {currentFolderConfig.maxSizeMB}MB
+                    </div>
+                    <div className="md:col-span-2">
+                      <strong>Allowed Types:</strong> {currentFolderConfig.allowedTypes?.join(', ').toUpperCase()}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       <div className="mb-6 p-4 bg-gray-50 rounded-lg">
         <h3 className="text-sm font-semibold text-gray-700 mb-3">📏 Automatic Resizing Options</h3>
         
-        {/* Size Type Selection */}
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-600 mb-2">
             Standard Size:
@@ -155,12 +210,8 @@ export default function ImageUpload({
               </option>
             ))}
           </select>
-          <p className="text-xs text-gray-500 mt-1">
-            Your uploaded image will be automatically resized to: <strong>{IMAGE_SIZES[selectedSizeType].width}×{IMAGE_SIZES[selectedSizeType].height}px</strong>
-          </p>
         </div>
 
-        {/* Generate Variants Option */}
         <div className="flex items-center">
           <input
             type="checkbox"
@@ -170,84 +221,58 @@ export default function ImageUpload({
             className="mr-2 rounded"
           />
           <label htmlFor="generateVariants" className="text-sm text-gray-600">
-            Generate all size variants (Featured, Content, Thumbnail, etc.)
+            Generate all size variants
           </label>
         </div>
-        
-        {enableVariants && (
-          <div className="mt-2 p-2 bg-blue-50 rounded text-xs text-blue-600">
-            ✨ This will create optimized versions for all standard sizes automatically!
-          </div>
-        )}
       </div>
 
-      {/* Standard Sizes Preview */}
-      <div className="mb-6 p-4 bg-blue-50 rounded-lg">
-        <h4 className="text-sm font-semibold text-blue-800 mb-2">📐 Standard Image Sizes</h4>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-xs">
-          {Object.entries(IMAGE_SIZES).map(([key, config]) => (
-            <div 
-              key={key} 
-              className={`p-2 bg-white rounded border ${selectedSizeType === key ? 'border-blue-400 bg-blue-50' : 'border-gray-200'}`}
-            >
-              <div className="font-medium text-gray-700">{key.charAt(0).toUpperCase() + key.slice(1)}</div>
-              <div className="text-gray-500">{config.width}×{config.height}px</div>
-              <div className="text-gray-400">Quality: {config.quality}%</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Upload Area */}
       <div
         {...getRootProps()}
         className={`
           border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors
-          ${isDragActive ? 'border-blue-400 bg-blue-50' : 'border-gray-300 hover:border-gray-400'}
+          ${isDragActive ? 'border-purple-400 bg-purple-50' : 'border-gray-300 hover:border-gray-400'}
           ${uploading ? 'opacity-50 cursor-not-allowed' : ''}
         `}
       >
         <input {...getInputProps()} />
         
         <div className="flex flex-col items-center">
-          <svg className="w-12 h-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-          </svg>
+          <div className="text-4xl mb-4">
+            {currentFolderConfig?.icon || '📤'}
+          </div>
           
           {uploading ? (
             <div>
-              <p className="text-gray-600 mb-2">🔄 Uploading & Auto-Resizing...</p>
+              <p className="text-gray-600 mb-2">🔄 Uploading to {currentFolderConfig?.name}...</p>
               <p className="text-sm text-gray-500">Optimizing to {IMAGE_SIZES[selectedSizeType].width}×{IMAGE_SIZES[selectedSizeType].height}px</p>
             </div>
           ) : isDragActive ? (
-            <p className="text-blue-600">Drop the images here...</p>
+            <p className="text-purple-600">Drop the images here...</p>
           ) : (
             <div>
               <p className="text-gray-600 mb-2">
                 📤 Drag & drop images here, or click to select
               </p>
               <p className="text-sm text-gray-500 mb-2">
-                Supports: JPEG, PNG, WebP, GIF (max 10MB each)
+                Will upload to: <span className="font-medium text-purple-600">{currentFolderConfig?.name}</span>
               </p>
-              <p className="text-sm text-blue-600 font-medium">
-                ⚡ Will auto-resize to {IMAGE_SIZES[selectedSizeType].width}×{IMAGE_SIZES[selectedSizeType].height}px
+              <p className="text-sm text-gray-500 mb-2">
+                Supports: {currentFolderConfig?.allowedTypes?.join(', ').toUpperCase()} (max {currentFolderConfig?.maxSizeMB}MB each)
               </p>
             </div>
           )}
         </div>
       </div>
 
-      {/* Error Message */}
       {error && (
         <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md">
           <p className="text-red-600 text-sm">{error}</p>
         </div>
       )}
 
-      {/* Uploaded Images */}
       {uploadedImages.length > 0 && (
         <div className="mt-6">
-          <h3 className="text-lg font-semibold mb-4">📸 Uploaded Images (Auto-Resized)</h3>
+          <h3 className="text-lg font-semibold mb-4">📸 Uploaded Images</h3>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {uploadedImages.map((image) => (
               <div
@@ -270,17 +295,11 @@ export default function ImageUpload({
                   <p className="text-xs text-gray-500">
                     {Math.round(image.size / 1024)}KB • {image.width}×{image.height}
                   </p>
-                  <p className="text-xs text-blue-600 font-medium">
-                    📏 {image.sizeType || 'Standard'}
+                  <p className="text-xs text-purple-600 font-medium">
+                    📁 {IMAGE_FOLDERS[image.folder || selectedFolder]?.name || 'Unknown'}
                   </p>
-                  {image.variants && (
-                    <p className="text-xs text-green-600">
-                      ✨ {Object.keys(image.variants).length} variants created
-                    </p>
-                  )}
                 </div>
 
-                {/* Action Buttons */}
                 <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                   <button
                     onClick={() => selectImage(image)}

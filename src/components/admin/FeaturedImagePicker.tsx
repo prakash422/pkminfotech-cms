@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import ImagePicker from './ImagePicker';
+import EnhancedImagePicker from './EnhancedImagePicker';
 import { Image as ImageIcon, Upload, X } from 'lucide-react';
 import Image from 'next/image';
 
@@ -106,11 +106,13 @@ export default function FeaturedImagePicker({
 
       {/* Image Picker Modal */}
       {showImagePicker && (
-        <ImagePicker
+        <EnhancedImagePicker
           onImageSelect={handleImageSelect}
           onClose={() => setShowImagePicker(false)}
           title="Select Featured Image"
           sizeRecommendation="Recommended: 1200×630px (Featured size) for optimal social sharing"
+          defaultFolder="featured-images"
+          recommendedFolders={['featured-images', 'thumbnails', 'content-images']}
         />
       )}
     </div>

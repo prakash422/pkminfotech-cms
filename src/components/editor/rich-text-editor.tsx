@@ -18,7 +18,7 @@ import {
   Link as LinkIcon
 } from 'lucide-react'
 import { useCallback, useState } from 'react'
-import ImagePicker from '@/components/admin/ImagePicker'
+import EnhancedImagePicker from '@/components/admin/EnhancedImagePicker'
 
 interface RichTextEditorProps {
   content: string
@@ -191,11 +191,13 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
 
       {/* Image Picker Modal */}
       {showImagePicker && (
-        <ImagePicker
+        <EnhancedImagePicker
           onImageSelect={handleImageSelect}
           onClose={() => setShowImagePicker(false)}
           title="Insert Image"
           sizeRecommendation="Recommended: 800×450px (Content size) for blog articles"
+          defaultFolder="content-images"
+          recommendedFolders={['content-images', 'blog-images', 'featured-images']}
         />
       )}
     </>

@@ -2,12 +2,14 @@
 
 import { useState } from 'react'
 import AdminLayout from '@/components/admin/admin-layout'
-import ImageUpload from '@/components/admin/ImageUpload'
-import ImageGallery from '@/components/admin/ImageGallery'
+import EnhancedImageUpload from '@/components/admin/EnhancedImageUpload'
+import EnhancedImageGallery from '@/components/admin/EnhancedImageGallery'
+import { IMAGE_FOLDERS, getFolderOptions } from '@/constants/imageFolders'
 
 export default function MediaPage() {
   const [activeTab, setActiveTab] = useState<'upload' | 'gallery'>('gallery')
   const [selectedImage, setSelectedImage] = useState<any>(null)
+  const [selectedFolder, setSelectedFolder] = useState<string>('blog-images')
 
   const handleImageSelect = (image: any) => {
     setSelectedImage(image)
@@ -42,22 +44,47 @@ export default function MediaPage() {
             </button>
           </nav>
 
+          {/* Folder Selector for Gallery */}
+          {activeTab === 'gallery' && (
+            <div className="mt-6 mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                📁 Browse Folder:
+              </label>
+              <select
+                value={selectedFolder}
+                onChange={(e) => setSelectedFolder(e.target.value)}
+                className="w-full md:w-64 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                {getFolderOptions().map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+              <p className="text-xs text-gray-500 mt-1">
+                Browsing: {IMAGE_FOLDERS[selectedFolder]?.description}
+              </p>
+            </div>
+          )}
+
           {/* Content */}
           <div className="mt-6">
             {activeTab === 'gallery' ? (
-              <ImageGallery 
+              <EnhancedImageGallery 
                 onImageSelect={handleImageSelect}
-                folder="blog-images"
+                folder={selectedFolder}
                 selectable={true}
+                allowBulkDelete={true}
               />
             ) : (
               <div>
-                <h2 className="text-xl font-semibold mb-4">Upload New Images</h2>
-                <ImageUpload
+                <h2 className="text-xl font-semibold mb-4">📤 Upload New Images</h2>
+                <EnhancedImageUpload
                   onImageSelect={handleImageSelect}
-                  folder="blog-images"
+                  initialFolder={selectedFolder}
                   multiple={true}
                   maxFiles={10}
+                  allowFolderSelection={true}
                 />
               </div>
             )}
