@@ -281,49 +281,42 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
               </div>
 
               {/* Desktop Navigation */}
-              <nav className="hidden md:flex items-center space-x-6 lg:space-x-8" role="navigation" aria-label="Main navigation">
-                <Link href="/" className="text-blue-600 font-medium flex items-center" aria-current="page">
+              <nav className="hidden md:flex items-center space-x-4 lg:space-x-6" role="navigation" aria-label="Main navigation">
+                <Link 
+                  href="/" 
+                  className={`font-medium transition-colors flex items-center px-3 py-2 rounded-lg ${selectedCategory === 'all' ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'}`}
+                  aria-current={selectedCategory === 'all' ? 'page' : undefined}
+                >
                   <Home className="h-4 w-4 mr-2" aria-hidden="true" />
                   Home
                 </Link>
                 
-                {/* Categories Dropdown */}
-                <div className="relative group">
-                  <button className="text-gray-600 hover:text-gray-900 font-medium transition-colors flex items-center">
-                    Categories
-                    <svg className="w-4 h-4 ml-1 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </button>
-                  <div className="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                    <Link 
-                      href="/" 
-                      className={`block px-4 py-2 text-sm hover:bg-gray-50 transition-colors ${selectedCategory === 'all' ? 'text-blue-600 bg-blue-50' : 'text-gray-700'}`}
-                    >
-                      All Blogs
-                    </Link>
-                    <Link 
-                      href="/?category=latest" 
-                      className={`block px-4 py-2 text-sm hover:bg-gray-50 transition-colors ${selectedCategory === 'latest' ? 'text-blue-600 bg-blue-50' : 'text-gray-700'}`}
-                    >
-                      Latest Blog
-                    </Link>
-                    <Link 
-                      href="/?category=english" 
-                      className={`block px-4 py-2 text-sm hover:bg-gray-50 transition-colors ${selectedCategory === 'english' ? 'text-blue-600 bg-blue-50' : 'text-gray-700'}`}
-                    >
-                      English Blog
-                    </Link>
-                    <Link 
-                      href="/?category=hindi" 
-                      className={`block px-4 py-2 text-sm hover:bg-gray-50 rounded-b-lg transition-colors ${selectedCategory === 'hindi' ? 'text-blue-600 bg-blue-50' : 'text-gray-700'}`}
-                    >
-                      हिंदी Blog
-                    </Link>
-                  </div>
-                </div>
+                {/* Category Menu Buttons */}
+                <Link 
+                  href="/?category=latest" 
+                  className={`font-medium transition-colors px-3 py-2 rounded-lg ${selectedCategory === 'latest' ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'}`}
+                  aria-current={selectedCategory === 'latest' ? 'page' : undefined}
+                >
+                  Latest Blog
+                </Link>
                 
-                <div className="hidden lg:flex items-center space-x-6">
+                <Link 
+                  href="/?category=english" 
+                  className={`font-medium transition-colors px-3 py-2 rounded-lg ${selectedCategory === 'english' ? 'text-green-600 bg-green-50' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'}`}
+                  aria-current={selectedCategory === 'english' ? 'page' : undefined}
+                >
+                  English Blog
+                </Link>
+                
+                <Link 
+                  href="/?category=hindi" 
+                  className={`font-medium transition-colors px-3 py-2 rounded-lg ${selectedCategory === 'hindi' ? 'text-orange-600 bg-orange-50' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'}`}
+                  aria-current={selectedCategory === 'hindi' ? 'page' : undefined}
+                >
+                  हिंदी Blog
+                </Link>
+                
+                <div className="hidden lg:flex items-center space-x-4 ml-4 pl-4 border-l border-gray-200">
                   <Link href="/pages/about-us" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">
                     About
                   </Link>

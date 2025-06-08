@@ -217,12 +217,38 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
               </div>
 
               {/* Desktop Navigation */}
-              <nav className="hidden md:flex items-center space-x-6 lg:space-x-8" role="navigation" aria-label="Main navigation">
-                <Link href="/" className="text-blue-600 font-medium flex items-center">
+              <nav className="hidden md:flex items-center space-x-4 lg:space-x-6" role="navigation" aria-label="Main navigation">
+                <Link 
+                  href="/" 
+                  className="text-blue-600 font-medium transition-colors flex items-center px-3 py-2 rounded-lg bg-blue-50"
+                >
                   <Home className="h-4 w-4 mr-2" aria-hidden="true" />
                   Home
                 </Link>
-                <div className="hidden lg:flex items-center space-x-6">
+                
+                {/* Category Menu Buttons */}
+                <Link 
+                  href="/?category=latest" 
+                  className="font-medium transition-colors px-3 py-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                >
+                  Latest Blog
+                </Link>
+                
+                <Link 
+                  href="/?category=english" 
+                  className="font-medium transition-colors px-3 py-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                >
+                  English Blog
+                </Link>
+                
+                <Link 
+                  href="/?category=hindi" 
+                  className="font-medium transition-colors px-3 py-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                >
+                  हिंदी Blog
+                </Link>
+                
+                <div className="hidden lg:flex items-center space-x-4 ml-4 pl-4 border-l border-gray-200">
                   <Link href="/pages/about-us" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">
                     About
                   </Link>
