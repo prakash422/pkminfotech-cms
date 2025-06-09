@@ -7,7 +7,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import Analytics from "@/components/analytics";
 import StructuredData from "@/components/structured-data";
-import AdSenseInit from "@/components/AdSenseInit";
 import ClientScripts from "@/components/ClientScripts";
 
 const inter = Inter({
@@ -107,27 +106,7 @@ export default async function RootLayout({
         <meta name="theme-color" content="#2563eb" />
         <meta name="msapplication-TileColor" content="#2563eb" />
 
-        {/* AdSense Scripts - Must be in head for Auto Ads */}
-        <AdSenseInit />
         <ClientScripts />
-        
-        {/* Direct AdSense Script Injection - Server-side fallback */}
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3361406010222956"
-          crossOrigin="anonymous"
-        />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.adsbygoogle = window.adsbygoogle || [];
-              adsbygoogle.push({
-                google_ad_client: "ca-pub-3361406010222956",
-                enable_page_level_ads: true
-              });
-            `
-          }}
-        />
       </head>
       <body className={inter.className}>
         {/* Skip to content link for accessibility */}

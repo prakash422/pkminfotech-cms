@@ -1,9 +1,20 @@
 "use client"
 
-// This component is now primarily for other client scripts
-// AdSense is handled by AdSenseInit component
+import { useEffect, useState } from 'react'
+
 export default function ClientScripts() {
-  // AdSense scripts are now handled by AdSenseInit component
-  // This component can be used for other client-side scripts in the future
+  const [isClient, setIsClient] = useState(false)
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
+  // Only render on client-side to prevent hydration issues
+  if (!isClient) {
+    return null
+  }
+
+  // Temporarily disable AdSense to stop errors
+  // Will re-enable with a better approach
   return null
 }
