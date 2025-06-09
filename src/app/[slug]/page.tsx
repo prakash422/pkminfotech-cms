@@ -6,7 +6,7 @@ import { Calendar, User, ArrowLeft, Home, Share2, Eye, Clock, Bookmark, ChevronR
 import { formatDate } from "@/lib/utils"
 import { Metadata } from "next"
 import MobileMenu from "@/components/MobileMenu"
-import AdSpace, { AdConfigs } from "@/components/AdSpace"
+import AutoAds from "@/components/AutoAds"
 
 interface BlogPageProps {
   params: Promise<{
@@ -267,10 +267,10 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
         {/* Header Ad Space - Only shown on desktop to avoid mobile irritation */}
         <div className="hidden lg:block">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <AdSpace 
+            <AutoAds 
               id="header-ad" 
               className="min-h-[120px]" 
-              {...AdConfigs.headerBanner}
+              minHeight={120}
             />
           </div>
         </div>
@@ -282,31 +282,31 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
             <aside className="hidden lg:block lg:col-span-2" role="complementary">
               <div className="sticky top-24 space-y-6">
                 {/* Left Sidebar Ad 1 */}
-                <AdSpace 
+                <AutoAds 
                   id="left-sidebar-ad-1" 
                   className="min-h-[600px]"
-                  {...AdConfigs.sidebarBanner}
+                  minHeight={600}
                 >
                   <div className="text-center">
                     <div className="w-12 h-12 bg-gray-200 rounded-lg mx-auto mb-3 flex items-center justify-center">
                       <span className="text-lg">📰</span>
                     </div>
-                    <p className="font-medium text-xs">Left Ad</p>
-                    <p className="text-xs text-gray-300 mt-1">160x600</p>
-                    <p className="text-xs text-gray-300">Skyscraper</p>
+                    <p className="font-medium text-xs">Auto Left Ad</p>
+                    <p className="text-xs text-gray-300 mt-1">Google Auto Ads</p>
+                    <p className="text-xs text-gray-300">Sidebar</p>
                   </div>
-                </AdSpace>
+                </AutoAds>
 
                 {/* Left Sidebar Ad 2 */}
-                <AdSpace id="left-sidebar-ad-2" className="min-h-[300px]">
+                <AutoAds id="left-sidebar-ad-2" className="min-h-[300px]" minHeight={300}>
                   <div className="text-center">
                     <div className="w-10 h-10 bg-gray-200 rounded-lg mx-auto mb-2 flex items-center justify-center">
                       <span className="text-sm">💡</span>
                     </div>
-                    <p className="font-medium text-xs">Square Ad</p>
-                    <p className="text-xs text-gray-300 mt-1">160x300</p>
+                    <p className="font-medium text-xs">Auto Square Ad</p>
+                    <p className="text-xs text-gray-300 mt-1">Google Auto Ads</p>
                   </div>
-                </AdSpace>
+                </AutoAds>
               </div>
             </aside>
 
@@ -314,19 +314,19 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
             <main className="lg:col-span-8" role="main">
               {/* Mobile Ad After Hero */}
               <div className="lg:hidden mb-8">
-                <AdSpace
+                <AutoAds
                   id="blog-mobile-ad"
                   className="min-h-[250px]"
-                  {...AdConfigs.contentAd}
+                  minHeight={250}
                 >
                   <div className="text-center">
                     <div className="w-16 h-16 bg-gray-200 rounded-lg mx-auto mb-4 flex items-center justify-center">
                       <span className="text-2xl">📱</span>
                     </div>
-                    <p className="font-medium text-gray-600">Mobile Ad</p>
-                    <p className="text-xs text-gray-400 mt-1">320x250 Mobile Banner</p>
+                    <p className="font-medium text-gray-600">Auto Mobile Ad</p>
+                    <p className="text-xs text-gray-400 mt-1">Google Auto Ads Mobile</p>
                   </div>
-                </AdSpace>
+                </AutoAds>
               </div>
 
               {/* Breadcrumb - Mobile Optimized */}
@@ -455,9 +455,9 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
                   </div>
                 </header>
 
-                {/* In-Content Ad - After intro, before main content */}
-                <div className="my-8 lg:my-12">
-                  <AdSpace id="content-top-ad" className="min-h-[250px]" />
+                {/* Content Top Ad */}
+                <div className="my-8">
+                  <AutoAds id="content-top-ad" className="min-h-[250px]" minHeight={250} />
                 </div>
 
                 {/* Article Content */}
@@ -638,9 +638,9 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
                   </div>
                 </article>
 
-                {/* Bottom Content Ad */}
-                <div className="my-8 lg:my-12">
-                  <AdSpace id="content-bottom-ad" className="min-h-[300px]" />
+                {/* Content Bottom Ad */}
+                <div className="my-8">
+                  <AutoAds id="content-bottom-ad" className="min-h-[300px]" minHeight={300} />
                 </div>
 
                 {/* Article Footer */}
@@ -674,21 +674,21 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
             {/* Right Sidebar - Desktop Only */}
             <aside className="hidden lg:block lg:col-span-2" role="complementary">
               <div className="sticky top-24 space-y-6">
-                {/* Right Sidebar Ad */}
-                <AdSpace 
+                {/* Right Sidebar Ad 1 */}
+                <AutoAds 
                   id="right-sidebar-ad-1" 
                   className="min-h-[600px]"
-                  {...AdConfigs.sidebarBanner}
+                  minHeight={600}
                 >
                   <div className="text-center">
                     <div className="w-12 h-12 bg-gray-200 rounded-lg mx-auto mb-3 flex items-center justify-center">
-                      <span className="text-lg">🎯</span>
+                      <span className="text-lg">📊</span>
                     </div>
-                    <p className="font-medium text-xs">Right Ad</p>
-                    <p className="text-xs text-gray-300 mt-1">160x600</p>
-                    <p className="text-xs text-gray-300">Skyscraper</p>
+                    <p className="font-medium text-xs">Auto Right Ad</p>
+                    <p className="text-xs text-gray-300 mt-1">Google Auto Ads</p>
+                    <p className="text-xs text-gray-300">Sidebar</p>
                   </div>
-                </AdSpace>
+                </AutoAds>
 
                 {/* Related Articles - Compact */}
                 <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4">
@@ -709,15 +709,15 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
                 </div>
 
                 {/* Right Sidebar Ad 2 */}
-                <AdSpace id="right-sidebar-ad-2" className="min-h-[300px]">
+                <AutoAds id="right-sidebar-ad-2" className="min-h-[300px]" minHeight={300}>
                   <div className="text-center">
                     <div className="w-10 h-10 bg-gray-200 rounded-lg mx-auto mb-2 flex items-center justify-center">
                       <span className="text-sm">📊</span>
                     </div>
-                    <p className="font-medium text-xs">Square Ad</p>
-                    <p className="text-xs text-gray-300 mt-1">160x300</p>
+                    <p className="font-medium text-xs">Auto Square Ad</p>
+                    <p className="text-xs text-gray-300 mt-1">Google Auto Ads</p>
                   </div>
-                </AdSpace>
+                </AutoAds>
 
                 {/* Newsletter Signup - Compact */}
                 <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
@@ -744,15 +744,15 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
           {/* Footer Ad - Before footer content */}
           <div className="bg-gray-100 py-8">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <AdSpace id="footer-ad" className="min-h-[200px] bg-white">
+              <AutoAds id="footer-ad" className="min-h-[200px] bg-white" minHeight={200}>
                 <div className="text-center">
                   <div className="w-16 h-16 bg-gray-200 rounded-lg mx-auto mb-4 flex items-center justify-center">
                     <span className="text-2xl">🌟</span>
                   </div>
-                  <p className="font-medium text-gray-600">Footer Banner Ad</p>
-                  <p className="text-xs text-gray-400 mt-1">728x90 Leaderboard</p>
+                  <p className="font-medium text-gray-600">Auto Footer Ad</p>
+                  <p className="text-xs text-gray-400 mt-1">Google Auto Ads Footer</p>
                 </div>
-              </AdSpace>
+              </AutoAds>
             </div>
           </div>
 

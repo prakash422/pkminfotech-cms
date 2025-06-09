@@ -1,13 +1,9 @@
 "use client"
 
-import Script from "next/script"
-
+// This component is now primarily for other client scripts
+// AdSense is handled by AdSenseInit component
 export default function ClientScripts() {
-  return (
-    <Script 
-      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3361406010222956" 
-      strategy="afterInteractive" 
-      crossOrigin="anonymous"
-    />
-  )
+  // AdSense scripts are now handled by AdSenseInit component
+  // This component can be used for other client-side scripts in the future
+  return null
 }

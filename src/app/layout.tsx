@@ -106,6 +106,28 @@ export default async function RootLayout({
         {/* Theme color for mobile browsers */}
         <meta name="theme-color" content="#2563eb" />
         <meta name="msapplication-TileColor" content="#2563eb" />
+
+        {/* AdSense Scripts - Must be in head for Auto Ads */}
+        <AdSenseInit />
+        <ClientScripts />
+        
+        {/* Direct AdSense Script Injection - Server-side fallback */}
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3361406010222956"
+          crossOrigin="anonymous"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.adsbygoogle = window.adsbygoogle || [];
+              adsbygoogle.push({
+                google_ad_client: "ca-pub-3361406010222956",
+                enable_page_level_ads: true
+              });
+            `
+          }}
+        />
       </head>
       <body className={inter.className}>
         {/* Skip to content link for accessibility */}
@@ -118,8 +140,6 @@ export default async function RootLayout({
           </div>
           <Analytics />
           <StructuredData />
-          <AdSenseInit />
-          <ClientScripts />
         </SessionProvider>
       </body>
     </html>
