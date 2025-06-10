@@ -238,9 +238,35 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
         </header>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="py-8 lg:py-12">
-            {/* Main Content - Full Width */}
-            <main role="main">
+          <div className="lg:grid lg:grid-cols-12 lg:gap-6 py-8 lg:py-12">
+            
+            {/* Left Sidebar - Desktop Only */}
+            <aside className="hidden lg:block lg:col-span-2" role="complementary">
+              <div className="sticky top-24 space-y-4">
+                {/* Ad Space 1 */}
+                <div className="ad-space" data-ad-slot="blog-sidebar-left">
+                  <div className="min-h-[250px] w-full bg-gray-50/30 rounded-lg flex items-center justify-center">
+                    <div className="text-xs text-gray-400 text-center">
+                      <div className="w-8 h-8 bg-gray-200 rounded mx-auto mb-2"></div>
+                      Advertisement
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Ad Space 2 */}
+                <div className="ad-space" data-ad-slot="blog-sidebar-left-bottom">
+                  <div className="min-h-[300px] w-full bg-gray-50/30 rounded-lg flex items-center justify-center">
+                    <div className="text-xs text-gray-400 text-center">
+                      <div className="w-8 h-8 bg-gray-200 rounded mx-auto mb-2"></div>
+                      Advertisement
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </aside>
+
+            {/* Main Content - Centered */}
+            <main className="lg:col-span-8" role="main">
               <nav className="mb-6 lg:mb-8" aria-label="Breadcrumb">
                 <div className="sm:hidden">
                   <div className="flex items-center space-x-2 text-sm text-gray-500 mb-2">
@@ -410,6 +436,31 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
                 </footer>
               </article>
             </main>
+
+            {/* Right Sidebar - Desktop Only */}
+            <aside className="hidden lg:block lg:col-span-2" role="complementary">
+              <div className="sticky top-24 space-y-4">
+                {/* Ad Space 1 */}
+                <div className="ad-space" data-ad-slot="blog-sidebar-right">
+                  <div className="min-h-[250px] w-full bg-gray-50/30 rounded-lg flex items-center justify-center">
+                    <div className="text-xs text-gray-400 text-center">
+                      <div className="w-8 h-8 bg-gray-200 rounded mx-auto mb-2"></div>
+                      Advertisement
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Ad Space 2 */}
+                <div className="ad-space" data-ad-slot="blog-sidebar-right-bottom">
+                  <div className="min-h-[300px] w-full bg-gray-50/30 rounded-lg flex items-center justify-center">
+                    <div className="text-xs text-gray-400 text-center">
+                      <div className="w-8 h-8 bg-gray-200 rounded mx-auto mb-2"></div>
+                      Advertisement
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </aside>
           </div>
         </div>
 
