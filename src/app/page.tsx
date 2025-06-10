@@ -362,27 +362,14 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                   id="homepage-left-sidebar-ad-1" 
                   className="min-h-[600px]"
                   minHeight={600}
-                >
-                  <div className="text-center">
-                    <div className="w-12 h-12 bg-gray-200 rounded-lg mx-auto mb-3 flex items-center justify-center">
-                      <span className="text-lg">🏠</span>
-                    </div>
-                    <p className="font-medium text-xs">Auto Ad Left</p>
-                    <p className="text-xs text-gray-300 mt-1">Google Auto Ads</p>
-                    <p className="text-xs text-gray-300">Sidebar</p>
-                  </div>
-                </AutoAds>
+                />
 
                 {/* Left Sidebar Ad 2 */}
-                <AutoAds id="homepage-left-sidebar-ad-2" className="min-h-[300px]" minHeight={300}>
-                  <div className="text-center">
-                    <div className="w-10 h-10 bg-gray-200 rounded-lg mx-auto mb-2 flex items-center justify-center">
-                      <span className="text-sm">📊</span>
-                    </div>
-                    <p className="font-medium text-xs">Auto Square Ad</p>
-                    <p className="text-xs text-gray-300 mt-1">Google Auto Ads</p>
-                  </div>
-                </AutoAds>
+                <AutoAds 
+                  id="homepage-left-sidebar-ad-2" 
+                  className="min-h-[300px]" 
+                  minHeight={300}
+                />
               </div>
             </aside>
 

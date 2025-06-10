@@ -19,7 +19,16 @@ export default function AutoAds({
 
   useEffect(() => {
     setIsClient(true)
-  }, [])
+    
+    // Push to adsbygoogle queue when component mounts
+    if (typeof window !== 'undefined' && window.adsbygoogle) {
+      try {
+        window.adsbygoogle.push({})
+      } catch (e) {
+        console.log('AdSense push:', e)
+      }
+    }
+  }, [isClient])
 
   // Only render on client-side to prevent hydration issues
   if (!isClient) {
@@ -31,18 +40,21 @@ export default function AutoAds({
     )
   }
 
-  // Render ad space for Google to detect and fill
+  // Render proper AdSense ad unit
   return (
     <div 
       className={`${className}`}
       style={{ minHeight: `${minHeight}px` }}
       id={id}
-      data-ad-client="ca-pub-3361406010222956"
-      data-ad-slot="auto"
-      data-ad-format="auto"
-      data-full-width-responsive="true"
     >
-      {/* Google will automatically insert ads here */}
+      <ins 
+        className="adsbygoogle"
+        style={{ display: 'block', minHeight: `${minHeight}px` }}
+        data-ad-client="ca-pub-3361406010222956"
+        data-ad-slot="auto"
+        data-ad-format="auto"
+        data-full-width-responsive="true"
+      />
     </div>
   )
 } 
