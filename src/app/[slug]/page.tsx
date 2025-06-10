@@ -238,17 +238,9 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
         </header>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="lg:grid lg:grid-cols-12 lg:gap-6 py-8 lg:py-12">
-            
-            {/* Left Sidebar - Desktop Only */}
-            <aside className="hidden lg:block lg:col-span-2" role="complementary">
-              <div className="sticky top-24 space-y-6">
-                {/* Sidebar content if needed */}
-              </div>
-            </aside>
-
-            {/* Main Content - Centered */}
-            <main className="lg:col-span-8" role="main">
+          <div className="py-8 lg:py-12">
+            {/* Main Content - Full Width */}
+            <main role="main">
               <nav className="mb-6 lg:mb-8" aria-label="Breadcrumb">
                 <div className="sm:hidden">
                   <div className="flex items-center space-x-2 text-sm text-gray-500 mb-2">
@@ -418,13 +410,6 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
                 </footer>
               </article>
             </main>
-
-            {/* Right Sidebar - Desktop Only */}
-            <aside className="hidden lg:block lg:col-span-2" role="complementary">
-              <div className="sticky top-24 space-y-6">
-                {/* Sidebar content if needed */}
-              </div>
-            </aside>
           </div>
         </div>
 

@@ -293,17 +293,9 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
         </header>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="lg:grid lg:grid-cols-12 lg:gap-6 py-8 lg:py-12">
-            
-            {/* Left Sidebar - Desktop Only */}
-            <aside className="hidden lg:block lg:col-span-2" role="complementary">
-              <div className="sticky top-24 space-y-6">
-                {/* Sidebar content if needed */}
-              </div>
-            </aside>
-
-            {/* Main Content - Centered */}
-            <main className="lg:col-span-8" role="main">
+          <div className="py-8 lg:py-12">
+            {/* Main Content - Full Width */}
+            <main role="main">
               {/* Blog Content */}
               {blogsData.blogs.length === 0 ? (
                 <section className="text-center py-16 lg:py-20" aria-labelledby="no-posts-heading">
@@ -467,13 +459,6 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                 </div>
               )}
             </main>
-
-            {/* Right Sidebar - Desktop Only */}
-            <aside className="hidden lg:block lg:col-span-2" role="complementary">
-              <div className="sticky top-24 space-y-6">
-                {/* Sidebar content if needed */}
-              </div>
-            </aside>
           </div>
         </div>
 
