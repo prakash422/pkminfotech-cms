@@ -43,6 +43,35 @@ export default function ClientScripts() {
             })
             
             console.log('✅ AdSense Auto Ads initialized')
+            
+            // Trigger ads for any existing ad containers after a short delay
+            setTimeout(() => {
+              const adElements = document.querySelectorAll('[data-ad-client]')
+              adElements.forEach((element: any) => {
+                if (element && !element.querySelector('ins')) {
+                  try {
+                    window.adsbygoogle.push({})
+                  } catch (e) {
+                    console.log('Ad container processed:', element.id)
+                  }
+                }
+              })
+            }, 1000)
+            
+            // Trigger ads for any existing ad containers after a short delay
+            setTimeout(() => {
+              const adElements = document.querySelectorAll('[data-ad-client]')
+              adElements.forEach((element: any) => {
+                if (element && !element.querySelector('ins')) {
+                  try {
+                    window.adsbygoogle.push({})
+                  } catch (e) {
+                    console.log('Ad container processed:', element.id)
+                  }
+                }
+              })
+            }, 1000)
+            
           } catch (error) {
             console.warn('AdSense Auto Ads initialization error:', error)
           }
