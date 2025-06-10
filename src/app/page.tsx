@@ -362,6 +362,8 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                   id="homepage-left-sidebar-ad-1" 
                   className="min-h-[600px]"
                   minHeight={600}
+                  position="sidebar"
+                  priority="high"
                 />
 
                 {/* Left Sidebar Ad 2 */}
@@ -369,6 +371,8 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                   id="homepage-left-sidebar-ad-2" 
                   className="min-h-[300px]" 
                   minHeight={300}
+                  position="sidebar"
+                  priority="medium"
                 />
               </div>
             </aside>
@@ -381,15 +385,9 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                   id="homepage-mobile-ad"
                   className="min-h-[250px]"
                   minHeight={250}
-                >
-                  <div className="text-center">
-                    <div className="w-16 h-16 bg-gray-200 rounded-lg mx-auto mb-4 flex items-center justify-center">
-                      <span className="text-2xl">📱</span>
-                    </div>
-                    <p className="font-medium text-gray-600">Auto Mobile Ad</p>
-                    <p className="text-xs text-gray-400 mt-1">Google Auto Ads Mobile</p>
-                  </div>
-                </AutoAds>
+                  position="content"
+                  priority="high"
+                />
               </div>
 
               {/* Blog Content */}
@@ -564,16 +562,9 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                   id="homepage-right-sidebar-ad-1" 
                   className="min-h-[600px]"
                   minHeight={600}
-                >
-                  <div className="text-center">
-                    <div className="w-12 h-12 bg-gray-200 rounded-lg mx-auto mb-3 flex items-center justify-center">
-                      <span className="text-lg">🎯</span>
-                    </div>
-                    <p className="font-medium text-xs">Auto Right Ad</p>
-                    <p className="text-xs text-gray-300 mt-1">Google Auto Ads</p>
-                    <p className="text-xs text-gray-300">Sidebar</p>
-                  </div>
-                </AutoAds>
+                  position="sidebar"
+                  priority="medium"
+                />
 
                 {/* Newsletter Signup - Compact */}
                 <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
