@@ -5,9 +5,11 @@ import { Button } from "@/components/ui/button"
 import { prisma } from "@/lib/prisma"
 import { ArrowLeft, Calendar, Home, Search, User } from "lucide-react"
 import { formatDate, truncateText } from "@/lib/utils"
-import AutoAds from "@/components/AutoAds"
 import MobileMenu from "@/components/MobileMenu"
 import { Metadata } from "next"
+import { Suspense } from 'react'
+import ClientScripts from '@/components/ClientScripts'
+import { db } from '@/lib/db'
 
 export async function generateMetadata({ searchParams }: { searchParams: Promise<{ category?: string; page?: string }> }): Promise<Metadata> {
   const params = await searchParams
@@ -204,152 +206,91 @@ function generateStructuredData(blogs: BlogPost[]) {
       "name": "Pkminfotech",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://www.pkminfotech.com/favicon.ico",
-        "width": 32,
-        "height": 32
+        "url": "https://www.pkminfotech.com/favicon.ico"
       }
     },
     "blogPost": blogs.map(blog => ({
       "@type": "BlogPosting",
       "headline": blog.title,
-      "description": blog.excerpt,
-      "image": blog.coverImage,
-      "datePublished": blog.publishedAt,
-      "dateModified": blog.updatedAt,
+      "description": blog.excerpt || blog.title,
+      "url": `https://www.pkminfotech.com/${blog.slug}`,
+      "datePublished": blog.publishedAt?.toISOString() || blog.createdAt.toISOString(),
+      "dateModified": blog.updatedAt.toISOString(),
       "author": {
         "@type": "Person",
-        "name": blog.author.name
+        "name": blog.author.name || "Pkminfotech Team"
       },
       "publisher": {
         "@type": "Organization",
-        "name": "Pkminfotech",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://pkminfotech.com/favicon.ico",
-          "width": 32,
-          "height": 32
-        }
-      }
+        "name": "Pkminfotech"
+      },
+      "image": blog.coverImage || "/favicon.ico"
     }))
   }
 }
 
 export default async function HomePage({ searchParams }: { searchParams: Promise<{ category?: string; page?: string }> }) {
   const params = await searchParams
-  const selectedCategory = params.category || 'all'
   const currentPage = parseInt(params.page || '1', 10)
-  const blogsData = await getBlogs(selectedCategory, currentPage)
-  const structuredData = generateStructuredData(blogsData.blogs)
-
-  // SEO Meta Data
-  const pageTitle = currentPage > 1 
-    ? `Latest Blogs - Page ${currentPage} | Pkminfotech`
-    : 'Latest Tech News, Travel Guides & Business Updates | Pkminfotech'
+  const selectedCategory = params.category || 'all'
   
-  const pageDescription = currentPage > 1
-    ? `Browse our latest blog posts on page ${currentPage}. Discover tech news, travel guides, and business insights.`
-    : 'Discover latest tech news, business updates, travel guides for India and worldwide destinations. Your source for technology trends and digital insights.'
-
+  const blogsData = await getBlogs(selectedCategory === 'all' ? undefined : selectedCategory, currentPage)
+  
   return (
     <>
-      {/* Structured Data */}
+      <ClientScripts />
+      
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(generateStructuredData(blogsData.blogs))
+        }}
       />
 
       <div className="min-h-screen bg-gray-50">
-        {/* Mobile-First Header */}
-        <header className="bg-white shadow-sm border-b sticky top-0 z-50">
+        {/* Navigation */}
+        <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50" role="banner">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16 lg:h-20">
               {/* Logo */}
               <div className="flex items-center">
-                <Link href="/" className="flex items-center group" aria-label="Pkminfotech Homepage">
+                <Link href="/" className="flex items-center space-x-3" aria-label="Pkminfotech Home">
                   <Image
                     src="/favicon-32x32.png"
                     alt="Pkminfotech Logo"
                     width={32}
                     height={32}
-                    className="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 mr-2 lg:mr-3 group-hover:scale-105 transition-transform object-contain"
-                    priority
+                    className="w-8 h-8 lg:w-10 lg:h-10"
                   />
-                  <span className="text-xl lg:text-2xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
-                    Pkminfotech
-                  </span>
+                  <div>
+                    <h1 className="text-xl lg:text-2xl font-bold text-gray-900">Pkminfotech</h1>
+                    <p className="text-xs text-gray-500 hidden sm:block">Latest Tech & Travel News</p>
+                  </div>
                 </Link>
               </div>
 
               {/* Desktop Navigation */}
-              <nav className="hidden md:flex items-center space-x-4 lg:space-x-6" role="navigation" aria-label="Main navigation">
-                <Link 
-                  href="/" 
-                  className={`font-medium transition-colors flex items-center px-3 py-2 rounded-lg ${selectedCategory === 'all' ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'}`}
-                  aria-current={selectedCategory === 'all' ? 'page' : undefined}
-                >
-                  <Home className="h-4 w-4 mr-2" aria-hidden="true" />
+              <nav className="hidden md:flex items-center space-x-8" role="navigation" aria-label="Main navigation">
+                <Link href="/" className="flex items-center px-3 py-2 text-blue-600 bg-blue-50 rounded-lg transition-colors">
+                  <Home className="h-4 w-4 mr-2" />
                   Home
                 </Link>
-                
-                {/* Category Menu Buttons */}
-                <Link 
-                  href="/?category=latest" 
-                  className={`font-medium transition-colors px-3 py-2 rounded-lg ${selectedCategory === 'latest' ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'}`}
-                  aria-current={selectedCategory === 'latest' ? 'page' : undefined}
-                >
-                  Latest Blog
+                <Link href="/latest" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors">Latest Blog</Link>
+                <Link href="/english" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors">English Blog</Link>
+                <Link href="/hindi" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors">हिंदी Blog</Link>
+                <Link href="/about-us" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors">About</Link>
+                <Link href="/contact-us">
+                  <Button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">Contact</Button>
                 </Link>
-                
-                <Link 
-                  href="/?category=english" 
-                  className={`font-medium transition-colors px-3 py-2 rounded-lg ${selectedCategory === 'english' ? 'text-green-600 bg-green-50' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'}`}
-                  aria-current={selectedCategory === 'english' ? 'page' : undefined}
-                >
-                  English Blog
-                </Link>
-                
-                <Link 
-                  href="/?category=hindi" 
-                  className={`font-medium transition-colors px-3 py-2 rounded-lg ${selectedCategory === 'hindi' ? 'text-orange-600 bg-orange-50' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'}`}
-                  aria-current={selectedCategory === 'hindi' ? 'page' : undefined}
-                >
-                  हिंदी Blog
-                </Link>
-                
-                <div className="hidden lg:flex items-center space-x-4 ml-4 pl-4 border-l border-gray-200">
-                  <Link href="/about-us" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">
-                    About
-                  </Link>
-                  <Link href="/contact-us" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
-                    Contact
-                  </Link>
-                </div>
               </nav>
 
               {/* Mobile Menu */}
-              <MobileMenu />
+              <div className="md:hidden">
+                <MobileMenu />
+              </div>
             </div>
           </div>
         </header>
-
-        {/* Top Banner Ad - Direct after header */}
-        <section className="bg-gray-100 py-4">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <AutoAds 
-              id="hero-banner-ad" 
-              className="min-h-[90px] lg:min-h-[200px]"
-              minHeight={200}
-            >
-              <div className="text-center">
-                <div className="w-12 h-12 bg-gradient-to-br from-gray-200 to-gray-300 rounded-lg mx-auto mb-2 flex items-center justify-center">
-                  <span className="text-lg">🚀</span>
-                </div>
-                <p className="font-medium text-gray-600 text-sm">Auto Ad Space</p>
-                <p className="text-xs text-gray-400">Google will place ads here</p>
-              </div>
-            </AutoAds>
-          </div>
-        </section>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:grid lg:grid-cols-12 lg:gap-6 py-8 lg:py-12">
@@ -357,37 +298,17 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
             {/* Left Sidebar - Desktop Only */}
             <aside className="hidden lg:block lg:col-span-2" role="complementary">
               <div className="sticky top-24 space-y-6">
-                {/* Left Sidebar Ad 1 */}
-                <AutoAds 
-                  id="homepage-left-sidebar-ad-1" 
-                  className="min-h-[600px]"
-                  minHeight={600}
-                  position="sidebar"
-                  priority="high"
-                />
-
-                {/* Left Sidebar Ad 2 */}
-                <AutoAds 
-                  id="homepage-left-sidebar-ad-2" 
-                  className="min-h-[300px]" 
-                  minHeight={300}
-                  position="sidebar"
-                  priority="medium"
-                />
+                {/* Empty spaces for Google Auto Ads */}
+                <div className="min-h-[600px]"></div>
+                <div className="min-h-[300px]"></div>
               </div>
             </aside>
 
             {/* Main Content - Centered */}
             <main className="lg:col-span-8" role="main">
-              {/* Mobile Ad After Hero */}
+              {/* Mobile Ad Space */}
               <div className="lg:hidden mb-8">
-                <AutoAds
-                  id="homepage-mobile-ad"
-                  className="min-h-[250px]"
-                  minHeight={250}
-                  position="content"
-                  priority="high"
-                />
+                <div className="min-h-[250px]"></div>
               </div>
 
               {/* Blog Content */}
@@ -557,16 +478,10 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
             {/* Right Sidebar - Desktop Only */}
             <aside className="hidden lg:block lg:col-span-2" role="complementary">
               <div className="sticky top-24 space-y-6">
-                {/* Right Sidebar Ad 1 */}
-                <AutoAds 
-                  id="homepage-right-sidebar-ad-1" 
-                  className="min-h-[600px]"
-                  minHeight={600}
-                  position="sidebar"
-                  priority="medium"
-                />
+                {/* Empty space for Google Auto Ads */}
+                <div className="min-h-[600px]"></div>
 
-                {/* Newsletter Signup - Compact */}
+                {/* Newsletter Signup */}
                 <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
                   <h3 className="text-sm font-semibold text-gray-900 mb-2">Stay Updated</h3>
                   <p className="text-xs text-gray-600 mb-3">Get latest updates.</p>
@@ -582,41 +497,17 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                   </div>
                 </div>
 
-                {/* Right Sidebar Ad 2 */}
-                <AutoAds
-                  id="homepage-right-sidebar-ad-2"
-                  className="min-h-[300px]"
-                  minHeight={300}
-                >
-                  <div className="text-center">
-                    <div className="w-10 h-10 bg-gray-200 rounded-lg mx-auto mb-2 flex items-center justify-center">
-                      <span className="text-sm">📊</span>
-                    </div>
-                    <p className="font-medium text-xs">Auto Square Ad</p>
-                    <p className="text-xs text-gray-300 mt-1">Google Auto Ads</p>
-                  </div>
-                </AutoAds>
+                {/* Another empty space for Google Auto Ads */}
+                <div className="min-h-[300px]"></div>
               </div>
             </aside>
           </div>
         </div>
 
-        {/* Footer Ad Section */}
+        {/* Footer Ad Space */}
         <div className="bg-gray-100 py-8">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <AutoAds
-              id="homepage-footer-ad"
-              className="min-h-[200px] bg-white"
-              minHeight={200}
-            >
-              <div className="text-center">
-                <div className="w-16 h-16 bg-gray-200 rounded-lg mx-auto mb-4 flex items-center justify-center">
-                  <span className="text-2xl">🌟</span>
-                </div>
-                <p className="font-medium text-gray-600">Auto Footer Ad</p>
-                <p className="text-xs text-gray-400 mt-1">Google Auto Ads Footer</p>
-              </div>
-            </AutoAds>
+            <div className="min-h-[200px]"></div>
           </div>
         </div>
 
@@ -640,29 +531,6 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                 <p className="text-gray-400 mb-6 max-w-md leading-relaxed">
                   Pkminfotech is a dynamic blogging platform providing the latest tech news, business updates, travel guides for India and worldwide destinations, and daily insights on technology and digital trends.
                 </p>
-                <div className="flex space-x-4">
-                  <a href="#" className="w-10 h-10 bg-gray-800 hover:bg-blue-600 rounded-lg flex items-center justify-center transition-colors" aria-label="Facebook">
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                      <path fillRule="evenodd" d="M20 10C20 4.477 15.523 0 10 0S0 4.477 0 10c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V10h2.54V7.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V10h2.773l-.443 2.89h-2.33v6.988C16.343 19.128 20 14.991 20 10z" clipRule="evenodd" />
-                    </svg>
-                  </a>
-                  <a href="mailto:prakashkr806@gmail.com" className="w-10 h-10 bg-gray-800 hover:bg-blue-600 rounded-lg flex items-center justify-center transition-colors" aria-label="Email">
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                      <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                      <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                    </svg>
-                  </a>
-                  <a href="#" className="w-10 h-10 bg-gray-800 hover:bg-blue-600 rounded-lg flex items-center justify-center transition-colors" aria-label="GitHub">
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                      <path fillRule="evenodd" d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z" clipRule="evenodd" />
-                    </svg>
-                  </a>
-                  <a href="#" className="w-10 h-10 bg-gray-800 hover:bg-blue-600 rounded-lg flex items-center justify-center transition-colors" aria-label="LinkedIn">
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                      <path fillRule="evenodd" d="M16.338 16.338H13.67V12.16c0-.995-.017-2.277-1.387-2.277-1.39 0-1.601 1.086-1.601 2.207v4.248H8.014v-8.59h2.559v1.174h.037c.356-.675 1.227-1.387 2.526-1.387 2.703 0 3.203 1.778 3.203 4.092v4.711zM5.005 6.575a1.548 1.548 0 11-.003-3.096 1.548 1.548 0 01.003 3.096zm-1.337 9.763H6.34v-8.59H3.667v8.59zM17.668 1H2.328C1.595 1 1 1.581 1 2.298v15.403C1 18.418 1.595 19 2.328 19h15.34c.734 0 1.332-.582 1.332-1.299V2.298C19 1.581 18.402 1 17.668 1z" clipRule="evenodd" />
-                    </svg>
-                  </a>
-                </div>
               </div>
 
               {/* Quick Links */}
@@ -695,20 +563,9 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                 <h4 className="text-base lg:text-lg font-semibold mb-4 lg:mb-6">Get in Touch</h4>
                 <ul className="space-y-3 lg:space-y-4">
                   <li className="flex items-start">
-                    <div className="w-5 h-5 lg:w-6 lg:h-6 flex items-center justify-center flex-shrink-0 mr-3 mt-0.5">
-                      <svg className="w-4 h-4 lg:w-5 lg:h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                    </div>
                     <span className="text-sm lg:text-base text-gray-400 leading-relaxed">Gurgaon, Haryana, India</span>
                   </li>
                   <li className="flex items-start">
-                    <div className="w-5 h-5 lg:w-6 lg:h-6 flex items-center justify-center flex-shrink-0 mr-3 mt-0.5">
-                      <svg className="w-4 h-4 lg:w-5 lg:h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                      </svg>
-                    </div>
                     <a href="mailto:prakashkr806@gmail.com" className="text-sm lg:text-base text-gray-400 hover:text-white transition-colors leading-relaxed break-words">
                       prakashkr806@gmail.com
                     </a>

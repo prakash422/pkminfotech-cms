@@ -6,7 +6,6 @@ import { Calendar, User, ArrowLeft, Home, Share2, Eye, Clock, Bookmark, ChevronR
 import { formatDate } from "@/lib/utils"
 import { Metadata } from "next"
 import MobileMenu from "@/components/MobileMenu"
-import AutoAds from "@/components/AutoAds"
 
 interface BlogPageProps {
   params: Promise<{
@@ -45,13 +44,11 @@ async function getBlogBySlug(slug: string): Promise<Blog | null> {
     
     const data = await response.json()
     
-    // Check if the response is an error object
     if (data.error) {
       console.error('API returned error:', data.error)
       return null
     }
     
-    // Ensure data is an array
     if (!Array.isArray(data)) {
       console.error('API did not return an array:', data)
       return null
@@ -65,7 +62,6 @@ async function getBlogBySlug(slug: string): Promise<Blog | null> {
   }
 }
 
-// Enhanced SEO metadata
 export async function generateMetadata({ params }: BlogPageProps): Promise<Metadata> {
   const { slug } = await params
   const blog = await getBlogBySlug(slug)
@@ -134,7 +130,6 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
     notFound()
   }
 
-  // JSON-LD structured data for SEO
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -188,18 +183,15 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
 
   return (
     <>
-      {/* JSON-LD Structured Data */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
 
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
-        {/* Mobile-First Header */}
         <header className="bg-white shadow-sm border-b sticky top-0 z-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16 lg:h-20">
-              {/* Logo */}
               <div className="flex items-center">
                 <Link href="/" className="flex items-center group" aria-label="Pkminfotech Homepage">
                   <Image
@@ -216,38 +208,20 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
                 </Link>
               </div>
 
-              {/* Desktop Navigation */}
               <nav className="hidden md:flex items-center space-x-4 lg:space-x-6" role="navigation" aria-label="Main navigation">
-                <Link 
-                  href="/" 
-                  className="text-blue-600 font-medium transition-colors flex items-center px-3 py-2 rounded-lg bg-blue-50"
-                >
+                <Link href="/" className="font-medium transition-colors flex items-center px-3 py-2 rounded-lg text-blue-600 bg-blue-50">
                   <Home className="h-4 w-4 mr-2" aria-hidden="true" />
                   Home
                 </Link>
-                
-                {/* Category Menu Buttons */}
-                <Link 
-                  href="/?category=latest" 
-                  className="font-medium transition-colors px-3 py-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-50"
-                >
+                <Link href="/latest" className="text-gray-600 hover:text-gray-900 font-medium transition-colors px-3 py-2 rounded-lg hover:bg-gray-50">
                   Latest Blog
                 </Link>
-                
-                <Link 
-                  href="/?category=english" 
-                  className="font-medium transition-colors px-3 py-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-50"
-                >
+                <Link href="/english" className="text-gray-600 hover:text-gray-900 font-medium transition-colors px-3 py-2 rounded-lg hover:bg-gray-50">
                   English Blog
                 </Link>
-                
-                <Link 
-                  href="/?category=hindi" 
-                  className="font-medium transition-colors px-3 py-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-50"
-                >
+                <Link href="/hindi" className="text-gray-600 hover:text-gray-900 font-medium transition-colors px-3 py-2 rounded-lg hover:bg-gray-50">
                   हिंदी Blog
                 </Link>
-                
                 <div className="hidden lg:flex items-center space-x-4 ml-4 pl-4 border-l border-gray-200">
                   <Link href="/about-us" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">
                     About
@@ -258,22 +232,10 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
                 </div>
               </nav>
 
-              {/* Mobile Menu */}
               <MobileMenu />
             </div>
           </div>
         </header>
-
-        {/* Header Ad Space - Only shown on desktop to avoid mobile irritation */}
-        <div className="hidden lg:block">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <AutoAds 
-              id="header-ad" 
-              className="min-h-[120px]" 
-              minHeight={120}
-            />
-          </div>
-        </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:grid lg:grid-cols-12 lg:gap-6 py-8 lg:py-12">
@@ -281,57 +243,18 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
             {/* Left Sidebar - Desktop Only */}
             <aside className="hidden lg:block lg:col-span-2" role="complementary">
               <div className="sticky top-24 space-y-6">
-                {/* Left Sidebar Ad 1 */}
-                <AutoAds 
-                  id="left-sidebar-ad-1" 
-                  className="min-h-[600px]"
-                  minHeight={600}
-                >
-                  <div className="text-center">
-                    <div className="w-12 h-12 bg-gray-200 rounded-lg mx-auto mb-3 flex items-center justify-center">
-                      <span className="text-lg">📰</span>
-                    </div>
-                    <p className="font-medium text-xs">Auto Left Ad</p>
-                    <p className="text-xs text-gray-300 mt-1">Google Auto Ads</p>
-                    <p className="text-xs text-gray-300">Sidebar</p>
-                  </div>
-                </AutoAds>
-
-                {/* Left Sidebar Ad 2 */}
-                <AutoAds id="left-sidebar-ad-2" className="min-h-[300px]" minHeight={300}>
-                  <div className="text-center">
-                    <div className="w-10 h-10 bg-gray-200 rounded-lg mx-auto mb-2 flex items-center justify-center">
-                      <span className="text-sm">💡</span>
-                    </div>
-                    <p className="font-medium text-xs">Auto Square Ad</p>
-                    <p className="text-xs text-gray-300 mt-1">Google Auto Ads</p>
-                  </div>
-                </AutoAds>
+                <div className="min-h-[600px]"></div>
+                <div className="min-h-[300px]"></div>
               </div>
             </aside>
 
             {/* Main Content - Centered */}
             <main className="lg:col-span-8" role="main">
-              {/* Mobile Ad After Hero */}
               <div className="lg:hidden mb-8">
-                <AutoAds
-                  id="blog-mobile-ad"
-                  className="min-h-[250px]"
-                  minHeight={250}
-                >
-                  <div className="text-center">
-                    <div className="w-16 h-16 bg-gray-200 rounded-lg mx-auto mb-4 flex items-center justify-center">
-                      <span className="text-2xl">📱</span>
-                    </div>
-                    <p className="font-medium text-gray-600">Auto Mobile Ad</p>
-                    <p className="text-xs text-gray-400 mt-1">Google Auto Ads Mobile</p>
-                  </div>
-                </AutoAds>
+                <div className="min-h-[250px]"></div>
               </div>
 
-              {/* Breadcrumb - Mobile Optimized */}
               <nav className="mb-6 lg:mb-8" aria-label="Breadcrumb">
-                {/* Mobile: Stacked layout */}
                 <div className="sm:hidden">
                   <div className="flex items-center space-x-2 text-sm text-gray-500 mb-2">
                     <Link href="/" className="hover:text-blue-600 transition-colors font-medium">
@@ -342,22 +265,11 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
                       {getCategoryLabel(blog.category)}
                     </span>
                   </div>
-                  <div 
-                    className="text-gray-900 font-semibold text-base leading-6"
-                    style={{
-                      wordWrap: 'break-word',
-                      overflowWrap: 'break-word',
-                      whiteSpace: 'normal',
-                      display: 'block',
-                      overflow: 'visible',
-                      textOverflow: 'clip'
-                    }}
-                  >
+                  <div className="text-gray-900 font-semibold text-base leading-6">
                     {blog.title}
                   </div>
                 </div>
 
-                {/* Desktop: Horizontal layout */}
                 <ol className="hidden sm:flex items-center space-x-2 text-sm text-gray-500 flex-wrap">
                   <li>
                     <Link href="/" className="hover:text-blue-600 transition-colors">
@@ -385,7 +297,6 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
               </Link>
 
               <article itemScope itemType="http://schema.org/BlogPosting">
-                {/* Cover Image */}
                 {blog.coverImage && (
                   <div className="aspect-video w-full overflow-hidden rounded-lg lg:rounded-xl mb-6 lg:mb-8 shadow-md lg:shadow-lg">
                     <img
@@ -398,7 +309,6 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
                   </div>
                 )}
 
-                {/* Article Header */}
                 <header className="mb-8 lg:mb-12">
                   <div className="flex items-center space-x-3 mb-4">
                     <span className={`px-3 py-1 rounded-full text-sm font-medium border ${getCategoryBadgeColor(blog.category)}`}>
@@ -455,195 +365,48 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
                   </div>
                 </header>
 
-                {/* Content Top Ad */}
+                {/* Content Top Ad Space */}
                 <div className="my-8">
-                  <AutoAds id="content-top-ad" className="min-h-[250px]" minHeight={250} />
+                  <div className="min-h-[250px]"></div>
                 </div>
 
                 {/* Article Content */}
-                <article className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden mb-8">
-                  <div className="p-4 sm:p-6 lg:p-8">
-                    <div className="max-w-none overflow-x-auto">
-                      <div
-                        className="article-content"
-                        style={{
-                          fontSize: '16px',
-                          lineHeight: '1.7',
-                          color: '#374151',
-                          fontFamily: 'system-ui, -apple-system, sans-serif'
-                        }}
-                      >
-                        <style dangerouslySetInnerHTML={{
-                          __html: `
-                            .article-content {
-                              word-wrap: break-word;
-                              overflow-wrap: break-word;
-                              max-width: 100%;
-                            }
-                            
-                            .article-content h1 {
-                              font-size: 24px !important;
-                              font-weight: 700 !important;
-                              color: #1f2937 !important;
-                              margin: 24px 0 16px 0 !important;
-                              line-height: 1.2 !important;
-                              border-bottom: 3px solid #3b82f6 !important;
-                              padding-bottom: 8px !important;
-                            }
-                            
-                            .article-content h2 {
-                              font-size: 20px !important;
-                              font-weight: 700 !important;
-                              color: #1f2937 !important;
-                              margin: 24px 0 12px 0 !important;
-                              line-height: 1.3 !important;
-                            }
-                            
-                            .article-content h3 {
-                              font-size: 18px !important;
-                              font-weight: 700 !important;
-                              color: #1f2937 !important;
-                              margin: 20px 0 12px 0 !important;
-                              line-height: 1.3 !important;
-                            }
-                            
-                            .article-content p {
-                              margin: 12px 0 !important;
-                              color: #374151 !important;
-                              line-height: 1.6 !important;
-                              text-align: left !important;
-                              font-size: 16px !important;
-                            }
-                            
-                            .article-content p:first-of-type {
-                              font-size: 16px !important;
-                              font-weight: 400 !important;
-                              margin-bottom: 16px !important;
-                            }
-                            
-                            .article-content p:first-of-type::first-letter {
-                              float: left;
-                              font-size: 40px;
-                              line-height: 32px;
-                              padding-right: 6px;
-                              padding-top: 2px;
-                              font-weight: 700;
-                              color: #3b82f6;
-                            }
-                            
-                            .article-content ul {
-                              margin: 12px 0 !important;
-                              padding-left: 20px !important;
-                              list-style-type: disc !important;
-                            }
-                            
-                            .article-content ul li {
-                              margin: 6px 0 !important;
-                              color: #374151 !important;
-                              line-height: 1.5 !important;
-                              font-size: 16px !important;
-                            }
-                            
-                            .article-content strong {
-                              font-weight: 600 !important;
-                              color: #1f2937 !important;
-                            }
-                            
-                            .article-content em {
-                              font-style: italic !important;
-                              color: #4b5563 !important;
-                            }
-
-                            /* Mobile specific styles */
-                            @media (min-width: 768px) {
-                              .article-content h1 {
-                                font-size: 32px !important;
-                                margin: 40px 0 24px 0 !important;
+                <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden mb-8">
+                  <div className="p-6 lg:p-8">
+                    <div className="prose prose-lg max-w-none">
+                      <div 
+                        dangerouslySetInnerHTML={{ 
+                          __html: blog.content
+                            .replace(/^### (.*$)/gm, '<h3>$1</h3>')
+                            .replace(/^## (.*$)/gm, '<h2>$1</h2>')
+                            .replace(/^# (.*$)/gm, '<h1>$1</h1>')
+                            .replace(/^\* (.*$)/gm, '<li>$1</li>')
+                            .replace(/^- (.*$)/gm, '<li>$1</li>')
+                            .replace(/(<li>.*<\/li>)(\n<li>.*<\/li>)*/g, (match) => {
+                              return '<ul>' + match + '</ul>';
+                            })
+                            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                            .split('\n\n')
+                            .map(paragraph => {
+                              if (paragraph.trim() && !paragraph.startsWith('<h') && !paragraph.startsWith('<ul')) {
+                                return `<p>${paragraph.trim()}</p>`;
                               }
-                              
-                              .article-content h2 {
-                                font-size: 28px !important;
-                                margin: 40px 0 20px 0 !important;
-                              }
-                              
-                              .article-content h3 {
-                                font-size: 24px !important;
-                                margin: 32px 0 16px 0 !important;
-                              }
-                              
-                              .article-content p {
-                                margin: 16px 0 !important;
-                                text-align: justify !important;
-                              }
-                              
-                              .article-content p:first-of-type {
-                                font-size: 18px !important;
-                                margin-bottom: 24px !important;
-                              }
-                              
-                              .article-content p:first-of-type::first-letter {
-                                font-size: 56px;
-                                line-height: 48px;
-                                padding-right: 8px;
-                                padding-top: 4px;
-                              }
-                              
-                              .article-content ul {
-                                margin: 16px 0 !important;
-                                padding-left: 24px !important;
-                              }
-                              
-                              .article-content ul li {
-                                margin: 8px 0 !important;
-                                line-height: 1.6 !important;
-                              }
-                            }
-                          `
-                        }} />
-                        <div 
-                          dangerouslySetInnerHTML={{ 
-                            __html: blog.content
-                              // First, convert markdown-style headings to HTML
-                              .replace(/^### (.*$)/gm, '<h3>$1</h3>')
-                              .replace(/^## (.*$)/gm, '<h2>$1</h2>')
-                              .replace(/^# (.*$)/gm, '<h1>$1</h1>')
-                              
-                              // Convert bullet points to list items first
-                              .replace(/^\* (.*$)/gm, '<li>$1</li>')
-                              .replace(/^- (.*$)/gm, '<li>$1</li>')
-                              
-                              // Wrap consecutive list items in ul tags
-                              .replace(/(<li>.*<\/li>)(\n<li>.*<\/li>)*/g, (match) => {
-                                return '<ul>' + match + '</ul>';
-                              })
-                              
-                              // Convert bold and italic text
-                              .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                              .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                              
-                              // Convert double line breaks to paragraph breaks
-                              .split('\n\n')
-                              .map(paragraph => {
-                                if (paragraph.trim() && !paragraph.startsWith('<h') && !paragraph.startsWith('<ul')) {
-                                  return `<p>${paragraph.trim()}</p>`;
-                                }
-                                return paragraph;
-                              })
-                              .join('\n')
-                          }} 
-                          itemProp="articleBody" 
-                        />
-                      </div>
+                              return paragraph;
+                            })
+                            .join('\n')
+                        }} 
+                        itemProp="articleBody" 
+                      />
                     </div>
                   </div>
-                </article>
-
-                {/* Content Bottom Ad */}
-                <div className="my-8">
-                  <AutoAds id="content-bottom-ad" className="min-h-[300px]" minHeight={300} />
                 </div>
 
-                {/* Article Footer */}
+                {/* Content Bottom Ad Space */}
+                <div className="my-8">
+                  <div className="min-h-[300px]"></div>
+                </div>
+
                 <footer className="border-t border-gray-200 pt-6 lg:pt-8">
                   <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                     <div className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:space-y-0 sm:space-x-4">
@@ -674,164 +437,70 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
             {/* Right Sidebar - Desktop Only */}
             <aside className="hidden lg:block lg:col-span-2" role="complementary">
               <div className="sticky top-24 space-y-6">
-                {/* Right Sidebar Ad 1 */}
-                <AutoAds 
-                  id="right-sidebar-ad-1" 
-                  className="min-h-[600px]"
-                  minHeight={600}
-                >
-                  <div className="text-center">
-                    <div className="w-12 h-12 bg-gray-200 rounded-lg mx-auto mb-3 flex items-center justify-center">
-                      <span className="text-lg">📊</span>
-                    </div>
-                    <p className="font-medium text-xs">Auto Right Ad</p>
-                    <p className="text-xs text-gray-300 mt-1">Google Auto Ads</p>
-                    <p className="text-xs text-gray-300">Sidebar</p>
-                  </div>
-                </AutoAds>
-
-                {/* Related Articles - Compact */}
-                <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4">
-                  <h3 className="text-sm font-semibold text-gray-900 mb-3">Related</h3>
-                  <div className="space-y-3">
-                    {[1, 2, 3].map((i) => (
-                      <div key={i} className="flex flex-col space-y-2">
-                        <div className="w-full h-12 bg-gray-200 rounded flex-shrink-0"></div>
-                        <div className="flex-1">
-                          <h4 className="text-xs font-medium text-gray-900 line-clamp-2 mb-1">
-                            Sample Related Article Title {i}
-                          </h4>
-                          <p className="text-xs text-gray-500">2 days ago</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Right Sidebar Ad 2 */}
-                <AutoAds id="right-sidebar-ad-2" className="min-h-[300px]" minHeight={300}>
-                  <div className="text-center">
-                    <div className="w-10 h-10 bg-gray-200 rounded-lg mx-auto mb-2 flex items-center justify-center">
-                      <span className="text-sm">📊</span>
-                    </div>
-                    <p className="font-medium text-xs">Auto Square Ad</p>
-                    <p className="text-xs text-gray-300 mt-1">Google Auto Ads</p>
-                  </div>
-                </AutoAds>
-
-                {/* Newsletter Signup - Compact */}
-                <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
-                  <h3 className="text-sm font-semibold text-gray-900 mb-2">Stay Updated</h3>
-                  <p className="text-xs text-gray-600 mb-3">Get latest updates.</p>
-                  <div className="space-y-2">
-                    <input
-                      type="email"
-                      placeholder="Your email"
-                      className="w-full px-2 py-2 border border-gray-200 rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                    <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs py-2">
-                      Subscribe
-                    </Button>
-                  </div>
-                </div>
+                <div className="min-h-[600px]"></div>
+                <div className="min-h-[300px]"></div>
               </div>
             </aside>
           </div>
         </div>
 
-        {/* Footer */}
-        <footer className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white mt-16" role="contentinfo">
-          {/* Footer Ad - Before footer content */}
-          <div className="bg-gray-100 py-8">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <AutoAds id="footer-ad" className="min-h-[200px] bg-white" minHeight={200}>
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-gray-200 rounded-lg mx-auto mb-4 flex items-center justify-center">
-                    <span className="text-2xl">🌟</span>
-                  </div>
-                  <p className="font-medium text-gray-600">Auto Footer Ad</p>
-                  <p className="text-xs text-gray-400 mt-1">Google Auto Ads Footer</p>
-                </div>
-              </AutoAds>
-            </div>
+        {/* Footer Ad Space */}
+        <div className="bg-gray-100 py-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="min-h-[200px]"></div>
           </div>
+        </div>
 
+        <footer className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white" role="contentinfo">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-              {/* Company Info */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
               <div className="sm:col-span-2 lg:col-span-2">
-                <Link href="/" className="flex items-center mb-4 lg:mb-6 group" aria-label="Pkminfotech Homepage">
+                <div className="flex items-center mb-6">
                   <Image
                     src="/favicon-32x32.png"
                     alt="Pkminfotech Logo"
-                    width={40}
-                    height={40}
-                    className="mr-3 group-hover:scale-105 transition-transform duration-300"
+                    width={32}
+                    height={32}
+                    className="mr-3"
                   />
-                  <h3 className="text-xl lg:text-2xl font-bold text-white group-hover:text-blue-300 transition-colors duration-300">Pkminfotech</h3>
-                </Link>
-                <p className="text-sm lg:text-base text-gray-400 mb-4 lg:mb-6 max-w-md leading-relaxed">
+                  <h3 className="text-2xl font-bold">Pkminfotech</h3>
+                </div>
+                <p className="text-gray-400 mb-6 max-w-md leading-relaxed">
                   Pkminfotech is a dynamic blogging platform providing the latest tech news, business updates, travel guides for India and worldwide destinations, and daily insights on technology and digital trends.
                 </p>
-                <div className="flex space-x-3 lg:space-x-4">
-                  <a href="#" className="w-8 h-8 lg:w-10 lg:h-10 bg-gray-800 hover:bg-blue-600 rounded-lg flex items-center justify-center transition-colors" aria-label="Facebook">
-                    <svg className="w-4 h-4 lg:w-5 lg:h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                      <path fillRule="evenodd" d="M20 10C20 4.477 15.523 0 10 0S0 4.477 0 10c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V10h2.54V7.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V10h2.773l-.443 2.89h-2.33v6.988C16.343 19.128 20 14.991 20 10z" clipRule="evenodd" />
-                    </svg>
-                  </a>
-                  <a href="mailto:prakashkr806@gmail.com" className="w-8 h-8 lg:w-10 lg:h-10 bg-gray-800 hover:bg-blue-600 rounded-lg flex items-center justify-center transition-colors" aria-label="Email">
-                    <svg className="w-4 h-4 lg:w-5 lg:h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                      <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                      <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                    </svg>
-                  </a>
-                </div>
               </div>
 
-              {/* Quick Links */}
               <div>
-                <h4 className="text-base lg:text-lg font-semibold mb-4 lg:mb-6">Quick Links</h4>
-                <ul className="grid grid-cols-2 gap-y-3 lg:gap-y-4 gap-x-2">
+                <h4 className="text-lg font-semibold mb-6">Quick Links</h4>
+                <ul className="grid grid-cols-2 gap-y-4 gap-x-2">
                   <li>
-                    <Link href="/" className="text-sm lg:text-base text-gray-400 hover:text-white transition-colors flex items-center">
-                      <span className="w-1.5 h-1.5 lg:w-2 lg:h-2 bg-blue-600 rounded-full mr-2"></span>
+                    <Link href="/" className="text-gray-400 hover:text-white transition-colors flex items-center">
+                      <span className="w-2 h-2 bg-blue-600 rounded-full mr-2"></span>
                       Home
                     </Link>
                   </li>
                   <li>
-                    <Link href="/pages/about-us" className="text-sm lg:text-base text-gray-400 hover:text-white transition-colors flex items-center">
-                      <span className="w-1.5 h-1.5 lg:w-2 lg:h-2 bg-blue-600 rounded-full mr-2"></span>
+                    <Link href="/about-us" className="text-gray-400 hover:text-white transition-colors flex items-center">
+                      <span className="w-2 h-2 bg-blue-600 rounded-full mr-2"></span>
                       About Us
                     </Link>
                   </li>
                   <li>
-                    <Link href="/pages/contact-us" className="text-sm lg:text-base text-gray-400 hover:text-white transition-colors flex items-center">
-                      <span className="w-1.5 h-1.5 lg:w-2 lg:h-2 bg-blue-600 rounded-full mr-2"></span>
+                    <Link href="/contact-us" className="text-gray-400 hover:text-white transition-colors flex items-center">
+                      <span className="w-2 h-2 bg-blue-600 rounded-full mr-2"></span>
                       Contact
                     </Link>
                   </li>
                 </ul>
               </div>
 
-              {/* Contact Info */}
               <div>
                 <h4 className="text-base lg:text-lg font-semibold mb-4 lg:mb-6">Get in Touch</h4>
                 <ul className="space-y-3 lg:space-y-4">
                   <li className="flex items-start">
-                    <div className="w-5 h-5 lg:w-6 lg:h-6 flex items-center justify-center flex-shrink-0 mr-3 mt-0.5">
-                      <svg className="w-4 h-4 lg:w-5 lg:h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                    </div>
                     <span className="text-sm lg:text-base text-gray-400 leading-relaxed">Gurgaon, Haryana, India</span>
                   </li>
                   <li className="flex items-start">
-                    <div className="w-5 h-5 lg:w-6 lg:h-6 flex items-center justify-center flex-shrink-0 mr-3 mt-0.5">
-                      <svg className="w-4 h-4 lg:w-5 lg:h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                      </svg>
-                    </div>
                     <a href="mailto:prakashkr806@gmail.com" className="text-sm lg:text-base text-gray-400 hover:text-white transition-colors leading-relaxed break-words">
                       prakashkr806@gmail.com
                     </a>
@@ -840,20 +509,19 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
               </div>
             </div>
 
-            {/* Bottom Section */}
-            <div className="border-t border-gray-800 mt-8 lg:mt-12 pt-6 lg:pt-8">
-              <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-                <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4 lg:space-x-6">
-                  <p className="text-gray-500 text-xs lg:text-sm text-center sm:text-left">
+            <div className="border-t border-gray-800 mt-12 pt-8">
+              <div className="flex flex-col md:flex-row justify-between items-center">
+                <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-6">
+                  <p className="text-gray-500 text-sm">
                     &copy; 2024 Pkminfotech. All rights reserved.
                   </p>
-                  <div className="flex flex-wrap justify-center sm:justify-start space-x-3 lg:space-x-6 text-xs lg:text-sm">
+                  <div className="flex space-x-6 text-sm">
                     <Link href="/pages/privacy-policy" className="text-gray-500 hover:text-white transition-colors">Privacy Policy</Link>
                     <Link href="/pages/disclaimers" className="text-gray-500 hover:text-white transition-colors">Disclaimers</Link>
                   </div>
                 </div>
-                <div className="mt-2 md:mt-0">
-                  <p className="text-gray-500 text-xs lg:text-sm text-center">
+                <div className="mt-4 md:mt-0">
+                  <p className="text-gray-500 text-sm">
                     Made with ❤️ in India
                   </p>
                 </div>
