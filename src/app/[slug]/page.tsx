@@ -383,26 +383,28 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
                       <div 
                         dangerouslySetInnerHTML={{ 
                           __html: blog.content
-                            .replace(/^### (.*$)/gm, '<h3>$1</h3>')
-                            .replace(/^## (.*$)/gm, '<h2>$1</h2>')
-                            .replace(/^# (.*$)/gm, '<h1>$1</h1>')
-                            .replace(/^\* (.*$)/gm, '<li>$1</li>')
-                            .replace(/^- (.*$)/gm, '<li>$1</li>')
-                            .replace(/(<li>.*<\/li>)(\n<li>.*<\/li>)*/g, (match) => {
-                              return '<ul>' + match + '</ul>';
-                            })
-                            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                            .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                            .split('\n\n')
-                            .map(paragraph => {
-                              if (paragraph.trim() && !paragraph.startsWith('<h') && !paragraph.startsWith('<ul')) {
-                                return `<p>${paragraph.trim()}</p>`;
-                              }
-                              return paragraph;
-                            })
-                            .join('\n')
+                            // Convert line breaks to HTML
+                            .replace(/\n\n/g, '</p><p class="mb-4 text-gray-700 leading-relaxed">')
+                            .replace(/\n/g, '<br>')
+                            // Wrap in paragraph tags
+                            .replace(/^/, '<p class="mb-4 text-gray-700 leading-relaxed">')
+                            .replace(/$/, '</p>')
+                            // Handle headings more simply
+                            .replace(/### (.*?)(<br>|$)/g, '</p><h3 class="text-xl font-bold text-gray-900 mt-8 mb-4">$1</h3><p class="mb-4 text-gray-700 leading-relaxed">')
+                            .replace(/## (.*?)(<br>|$)/g, '</p><h2 class="text-2xl font-bold text-gray-900 mt-8 mb-6">$1</h2><p class="mb-4 text-gray-700 leading-relaxed">')
+                            .replace(/# (.*?)(<br>|$)/g, '</p><h1 class="text-3xl font-bold text-gray-900 mt-8 mb-6">$1</h1><p class="mb-4 text-gray-700 leading-relaxed">')
+                            // Handle subsections like "Summer:", "Winter:", etc.
+                            .replace(/\b(Summer|Winter|Spring|Autumn|Morning|Evening|Day|Night|Activities|Features|Highlights|Location|Address|Destination|Valley of Flowers|Nanda Devi Peak|Joshimath):\s*/g, '</p><div class="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500 p-4 my-6 rounded-r-lg"><h4 class="text-lg font-bold text-blue-900 mb-2 flex items-center"><span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>$1</h4><p class="text-gray-700 leading-relaxed mb-0">')
+                            // Handle bold text
+                            .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-gray-900">$1</strong>')
+                            // Close any open divs and clean up
+                            .replace(/(<p class="text-gray-700 leading-relaxed mb-0">.*?)<\/p>$/g, '$1</p></div><p class="mb-4 text-gray-700 leading-relaxed">')
+                            // Clean up empty paragraphs
+                            .replace(/<p[^>]*><\/p>/g, '')
+                            .replace(/<p[^>]*>\s*<\/p>/g, '')
                         }} 
                         itemProp="articleBody" 
+                        className="text-gray-700 leading-relaxed [&>h1]:text-3xl [&>h1]:font-bold [&>h1]:text-gray-900 [&>h1]:mt-8 [&>h1]:mb-6 [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:text-gray-900 [&>h2]:mt-8 [&>h2]:mb-6 [&>h3]:text-xl [&>h3]:font-bold [&>h3]:text-gray-900 [&>h3]:mt-6 [&>h3]:mb-4 [&>p]:mb-4 [&>p]:leading-relaxed [&>div]:my-6"
                       />
                     </div>
                   </div>
