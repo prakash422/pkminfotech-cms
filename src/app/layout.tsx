@@ -105,6 +105,9 @@ export default async function RootLayout({
         {/* Theme color for mobile browsers */}
         <meta name="theme-color" content="#2563eb" />
         <meta name="msapplication-TileColor" content="#2563eb" />
+        
+        {/* AdSense optimization */}
+        <meta name="google-adsense-account" content="ca-pub-3361406010222956" />
       </head>
       <body className={inter.className}>
         {/* Skip to content link for accessibility */}
