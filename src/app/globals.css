@@ -135,43 +135,61 @@ select:focus {
 /* AdSense Containers */
 .adsense-container {
   min-height: 250px !important;
+  height: 250px !important;
   width: 100% !important;
   display: block !important;
-  overflow: hidden;
-  position: relative;
+  visibility: visible !important;
+  overflow: hidden !important;
+  position: relative !important;
+  background: #f9fafb !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 8px !important;
 }
 
 .adsense-container:empty {
-  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
+  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%) !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 8px !important;
 }
 
 .adsense-container:empty::before {
-  content: "Advertisement Space";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: #9ca3af;
-  font-size: 12px;
-  text-align: center;
+  content: "Advertisement Space" !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  color: #9ca3af !important;
+  font-size: 12px !important;
+  text-align: center !important;
+  font-weight: 500 !important;
 }
 
 /* Ensure AdSense ads are visible */
 ins.adsbygoogle {
   display: block !important;
   min-height: 250px !important;
+  height: 250px !important;
   background: transparent !important;
+  visibility: visible !important;
+}
+
+/* Force visibility on all screen sizes */
+@media (min-width: 1024px) {
+  .adsense-container {
+    display: block !important;
+    visibility: visible !important;
+  }
 }
 
 /* AdSense responsive adjustments */
 @media (max-width: 768px) {
   .adsense-container {
     min-height: 200px !important;
+    height: 200px !important;
   }
   
   ins.adsbygoogle {
     min-height: 200px !important;
+    height: 200px !important;
   }
 }

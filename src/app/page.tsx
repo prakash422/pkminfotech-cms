@@ -306,9 +306,15 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                   style={{ 
                     width: '100%', 
                     minHeight: '250px',
-                    display: 'block'
+                    height: '250px',
+                    display: 'block',
+                    visibility: 'visible',
+                    overflow: 'hidden'
                   }}
                 >
+                  <div style={{ padding: '20px', textAlign: 'center', color: '#9CA3AF', fontSize: '12px' }}>
+                    Advertisement Space
+                  </div>
                 </div>
                 
                 {/* AdSense Auto Ad Container 2 */}
@@ -319,9 +325,15 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                   style={{ 
                     width: '100%', 
                     minHeight: '250px',
-                    display: 'block'
+                    height: '250px',
+                    display: 'block',
+                    visibility: 'visible',
+                    overflow: 'hidden'
                   }}
                 >
+                  <div style={{ padding: '20px', textAlign: 'center', color: '#9CA3AF', fontSize: '12px' }}>
+                    Advertisement Space
+                  </div>
                 </div>
               </div>
             </aside>
@@ -503,9 +515,15 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                   style={{ 
                     width: '100%', 
                     minHeight: '250px',
-                    display: 'block'
+                    height: '250px',
+                    display: 'block',
+                    visibility: 'visible',
+                    overflow: 'hidden'
                   }}
                 >
+                  <div style={{ padding: '20px', textAlign: 'center', color: '#9CA3AF', fontSize: '12px' }}>
+                    Advertisement Space
+                  </div>
                 </div>
                 
                 {/* AdSense Auto Ad Container 2 */}
@@ -516,9 +534,15 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                   style={{ 
                     width: '100%', 
                     minHeight: '250px',
-                    display: 'block'
+                    height: '250px',
+                    display: 'block',
+                    visibility: 'visible',
+                    overflow: 'hidden'
                   }}
                 >
+                  <div style={{ padding: '20px', textAlign: 'center', color: '#9CA3AF', fontSize: '12px' }}>
+                    Advertisement Space
+                  </div>
                 </div>
               </div>
             </aside>
