@@ -300,19 +300,27 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
               <div className="sticky top-24 space-y-4">
                 {/* AdSense Auto Ad Container 1 */}
                 <div 
-                  className="adsense-container" 
+                  className="adsense-container bg-gray-50 border border-gray-200 rounded-lg" 
                   data-ad-format="auto"
                   data-ad-layout-key="-6t+ed+2i-1n-4w"
-                  style={{ width: '100%' }}
+                  style={{ 
+                    width: '100%', 
+                    minHeight: '250px',
+                    display: 'block'
+                  }}
                 >
                 </div>
                 
                 {/* AdSense Auto Ad Container 2 */}
                 <div 
-                  className="adsense-container" 
+                  className="adsense-container bg-gray-50 border border-gray-200 rounded-lg" 
                   data-ad-format="auto"
                   data-ad-layout-key="-6t+ed+2i-1n-4w"
-                  style={{ width: '100%' }}
+                  style={{ 
+                    width: '100%', 
+                    minHeight: '250px',
+                    display: 'block'
+                  }}
                 >
                 </div>
               </div>
@@ -489,19 +497,27 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
               <div className="sticky top-24 space-y-4">
                 {/* AdSense Auto Ad Container 1 */}
                 <div 
-                  className="adsense-container" 
+                  className="adsense-container bg-gray-50 border border-gray-200 rounded-lg" 
                   data-ad-format="auto"
                   data-ad-layout-key="-6t+ed+2i-1n-4w"
-                  style={{ width: '100%' }}
+                  style={{ 
+                    width: '100%', 
+                    minHeight: '250px',
+                    display: 'block'
+                  }}
                 >
                 </div>
                 
                 {/* AdSense Auto Ad Container 2 */}
                 <div 
-                  className="adsense-container" 
+                  className="adsense-container bg-gray-50 border border-gray-200 rounded-lg" 
                   data-ad-format="auto"
                   data-ad-layout-key="-6t+ed+2i-1n-4w"
-                  style={{ width: '100%' }}
+                  style={{ 
+                    width: '100%', 
+                    minHeight: '250px',
+                    display: 'block'
+                  }}
                 >
                 </div>
               </div>
