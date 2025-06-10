@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 
 interface AutoAdsProps {
   children?: React.ReactNode
@@ -16,19 +16,32 @@ export default function AutoAds({
   minHeight = 200 
 }: AutoAdsProps) {
   const [isClient, setIsClient] = useState(false)
+  const adRef = useRef<HTMLModElement>(null)
 
   useEffect(() => {
     setIsClient(true)
-    
-    // Push to adsbygoogle queue when component mounts
-    if (typeof window !== 'undefined' && window.adsbygoogle) {
+  }, [])
+
+  useEffect(() => {
+    if (isClient && adRef.current && typeof window !== 'undefined') {
       try {
-        window.adsbygoogle.push({})
+        // Ensure adsbygoogle is available
+        if (window.adsbygoogle && window.adsbygoogle.push) {
+          // Small delay to ensure DOM is ready
+          setTimeout(() => {
+            if (adRef.current && !adRef.current.hasChildNodes()) {
+              window.adsbygoogle.push({})
+              console.log(`✅ Ad unit pushed for ${id}`)
+            }
+          }, 100)
+        } else {
+          console.log(`⚠️ AdSense not ready for ${id}`)
+        }
       } catch (e) {
-        console.log('AdSense push:', e)
+        console.log(`AdSense error for ${id}:`, e)
       }
     }
-  }, [isClient])
+  }, [isClient, id])
 
   // Only render on client-side to prevent hydration issues
   if (!isClient) {
@@ -48,8 +61,13 @@ export default function AutoAds({
       id={id}
     >
       <ins 
+        ref={adRef}
         className="adsbygoogle"
-        style={{ display: 'block', minHeight: `${minHeight}px` }}
+        style={{ 
+          display: 'block', 
+          minHeight: `${minHeight}px`,
+          width: '100%'
+        }}
         data-ad-client="ca-pub-3361406010222956"
         data-ad-slot="auto"
         data-ad-format="auto"
