@@ -106,7 +106,19 @@ export default async function RootLayout({
         <meta name="theme-color" content="#2563eb" />
         <meta name="msapplication-TileColor" content="#2563eb" />
 
-        <ClientScripts />
+        {/* Google AdSense */}
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=pub-3361406010222956"
+          crossOrigin="anonymous"
+        ></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.adsbygoogle = window.adsbygoogle || [];
+            `
+          }}
+        />
       </head>
       <body className={inter.className}>
         {/* Skip to content link for accessibility */}
@@ -119,6 +131,7 @@ export default async function RootLayout({
           </div>
           <Analytics />
           <StructuredData />
+          <ClientScripts />
         </SessionProvider>
       </body>
     </html>
