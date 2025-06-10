@@ -6,20 +6,20 @@ import { ArrowLeft, Home } from 'lucide-react'
 import MobileMenu from '@/components/MobileMenu'
 
 export const metadata: Metadata = {
-  title: 'About Us - PKMInfotech',
-  description: 'Learn more about PKMInfotech - your source for tech news, travel guides, and business insights.',
+  title: 'Privacy Policy - PKMInfotech',
+  description: 'Read our privacy policy to understand how PKMInfotech collects, uses, and protects your personal information.',
   alternates: {
-    canonical: '/about-us'
+    canonical: '/privacy-policy'
   }
 }
 
 // This will be populated from your database
-async function getAboutUsContent() {
+async function getPrivacyPolicyContent() {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
                    (typeof window === 'undefined' ? 'http://localhost:3000' : window.location.origin)
     
-    const response = await fetch(`${baseUrl}/api/pages/slug/about-us`, {
+    const response = await fetch(`${baseUrl}/api/pages/slug/privacy-policy`, {
       cache: 'no-store',
       headers: {
         'Content-Type': 'application/json',
@@ -33,13 +33,13 @@ async function getAboutUsContent() {
     const data = await response.json()
     return data.page
   } catch (error) {
-    console.error('Error fetching about page:', error)
+    console.error('Error fetching privacy policy page:', error)
     return null
   }
 }
 
-export default async function AboutUsPage() {
-  const page = await getAboutUsContent()
+export default async function PrivacyPolicyPage() {
+  const page = await getPrivacyPolicyContent()
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -77,7 +77,7 @@ export default async function AboutUsPage() {
                 हिंदी Blog
               </Link>
               <div className="hidden lg:flex items-center space-x-4 ml-4 pl-4 border-l border-gray-200">
-                <Link href="/about-us" className="font-medium transition-colors px-3 py-2 rounded-lg text-blue-600 bg-blue-50">
+                <Link href="/about-us" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">
                   About
                 </Link>
                 <Link href="/contact-us" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
@@ -99,7 +99,7 @@ export default async function AboutUsPage() {
               Home
             </Link>
             <span className="mx-2">→</span>
-            <span className="text-gray-900 font-medium">About Us</span>
+            <span className="text-gray-900 font-medium">Privacy Policy</span>
           </nav>
         </div>
       </div>
@@ -137,11 +137,22 @@ export default async function AboutUsPage() {
               ) : (
                 <div>
                   <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
-                    About Us
+                    Privacy Policy
                   </h1>
-                  <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed">
-                    <p>Welcome to PKMInfotech - your trusted source for technology news, business insights, and travel guides.</p>
-                    <p>We are passionate about delivering authentic, informative, and engaging content to keep you updated with the world around you.</p>
+                  <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed space-y-6">
+                    <p className="text-gray-600 mb-6">Last updated: {new Date().toLocaleDateString()}</p>
+                    
+                    <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">Information We Collect</h2>
+                    <p className="mb-4 leading-relaxed">PKMInfotech collects information you provide directly to us, such as when you contact us via email.</p>
+                    
+                    <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">How We Use Your Information</h2>
+                    <p className="mb-4 leading-relaxed">We use the information we collect to provide, maintain, and improve our services and content.</p>
+                    
+                    <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">Information Sharing</h2>
+                    <p className="mb-4 leading-relaxed">We do not sell, trade, or otherwise transfer your personal information to third parties without your consent.</p>
+                    
+                    <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">Contact Us</h2>
+                    <p className="mb-4 leading-relaxed">If you have any questions about this Privacy Policy, please contact us at <a href="mailto:prakash@pkminfotech.com" className="text-blue-600 hover:text-blue-800 font-medium underline">prakash@pkminfotech.com</a></p>
                   </div>
                 </div>
               )}

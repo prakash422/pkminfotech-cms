@@ -580,8 +580,8 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                     &copy; 2024 Pkminfotech. All rights reserved.
                   </p>
                   <div className="flex space-x-6 text-sm">
-                    <Link href="/pages/privacy-policy" className="text-gray-500 hover:text-white transition-colors">Privacy Policy</Link>
-                    <Link href="/pages/disclaimers" className="text-gray-500 hover:text-white transition-colors">Disclaimers</Link>
+                    <Link href="/privacy-policy" className="text-gray-500 hover:text-white transition-colors">Privacy Policy</Link>
+                    <Link href="/disclaimers" className="text-gray-500 hover:text-white transition-colors">Disclaimers</Link>
                   </div>
                 </div>
                 <div className="mt-4 md:mt-0">
