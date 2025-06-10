@@ -31,7 +31,7 @@ export default function ClientScripts() {
         
         // Enable Auto Ads for general placement
         window.adsbygoogle.push({
-          google_ad_client: "ca-pub-3361406010222956",
+          google_ad_client: "pub-3361406010222956",
           enable_page_level_ads: true
         })
         
@@ -43,7 +43,7 @@ export default function ClientScripts() {
             const adDiv = document.createElement('ins')
             adDiv.className = 'adsbygoogle'
             adDiv.style.display = 'block'
-            adDiv.setAttribute('data-ad-client', 'ca-pub-3361406010222956')
+            adDiv.setAttribute('data-ad-client', 'pub-3361406010222956')
             adDiv.setAttribute('data-ad-slot', '1234567890') // You'll need to create ad units in AdSense
             adDiv.setAttribute('data-ad-format', 'auto')
             adDiv.setAttribute('data-full-width-responsive', 'true')

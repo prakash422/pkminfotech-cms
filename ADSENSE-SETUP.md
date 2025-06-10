@@ -2,7 +2,7 @@
 
 ## ✅ **Current Status:**
 - **AdSense Script**: ✅ Added to website
-- **Publisher ID**: `ca-pub-3361406010222956` ✅ Configured
+- **Publisher ID**: `pub-3361406010222956` ✅ Configured
 - **Ad Components**: ✅ Ready for ad slots
 
 ---

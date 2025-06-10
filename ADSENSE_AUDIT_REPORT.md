@@ -2,7 +2,7 @@
 
 **Date:** January 2025  
 **Domain:** https://www.pkminfotech.com  
-**AdSense Publisher ID:** ca-pub-3361406010222956
+**AdSense Publisher ID:** pub-3361406010222956
 
 ---
 
@@ -82,7 +82,7 @@ After your next deployment, AdSense scripts should load correctly. You can verif
 
 1. **Check Page Source:**
    ```bash
-   curl -s "https://www.pkminfotech.com" | grep -i "ca-pub-3361406010222956"
+   curl -s "https://www.pkminfotech.com" | grep -i "pub-3361406010222956"
    ```
 
 2. **Browser DevTools:**
