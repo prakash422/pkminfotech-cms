@@ -243,17 +243,12 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
             {/* Left Sidebar - Desktop Only */}
             <aside className="hidden lg:block lg:col-span-2" role="complementary">
               <div className="sticky top-24 space-y-6">
-                <div className="min-h-[600px]"></div>
-                <div className="min-h-[300px]"></div>
+                {/* Sidebar content if needed */}
               </div>
             </aside>
 
             {/* Main Content - Centered */}
             <main className="lg:col-span-8" role="main">
-              <div className="lg:hidden mb-8">
-                <div className="min-h-[250px]"></div>
-              </div>
-
               <nav className="mb-6 lg:mb-8" aria-label="Breadcrumb">
                 <div className="sm:hidden">
                   <div className="flex items-center space-x-2 text-sm text-gray-500 mb-2">
@@ -365,11 +360,6 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
                   </div>
                 </header>
 
-                {/* Content Top Ad Space */}
-                <div className="my-8">
-                  <div className="min-h-[250px]"></div>
-                </div>
-
                 {/* Article Content */}
                 <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden mb-8">
                   <div className="p-6 lg:p-8">
@@ -402,11 +392,6 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
                   </div>
                 </div>
 
-                {/* Content Bottom Ad Space */}
-                <div className="my-8">
-                  <div className="min-h-[300px]"></div>
-                </div>
-
                 <footer className="border-t border-gray-200 pt-6 lg:pt-8">
                   <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                     <div className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:space-y-0 sm:space-x-4">
@@ -437,17 +422,9 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
             {/* Right Sidebar - Desktop Only */}
             <aside className="hidden lg:block lg:col-span-2" role="complementary">
               <div className="sticky top-24 space-y-6">
-                <div className="min-h-[600px]"></div>
-                <div className="min-h-[300px]"></div>
+                {/* Sidebar content if needed */}
               </div>
             </aside>
-          </div>
-        </div>
-
-        {/* Footer Ad Space */}
-        <div className="bg-gray-100 py-8">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="min-h-[200px]"></div>
           </div>
         </div>
 

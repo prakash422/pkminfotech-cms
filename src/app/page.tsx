@@ -298,19 +298,12 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
             {/* Left Sidebar - Desktop Only */}
             <aside className="hidden lg:block lg:col-span-2" role="complementary">
               <div className="sticky top-24 space-y-6">
-                {/* Empty spaces for Google Auto Ads */}
-                <div className="min-h-[600px]"></div>
-                <div className="min-h-[300px]"></div>
+                {/* Sidebar content if needed */}
               </div>
             </aside>
 
             {/* Main Content - Centered */}
             <main className="lg:col-span-8" role="main">
-              {/* Mobile Ad Space */}
-              <div className="lg:hidden mb-8">
-                <div className="min-h-[250px]"></div>
-              </div>
-
               {/* Blog Content */}
               {blogsData.blogs.length === 0 ? (
                 <section className="text-center py-16 lg:py-20" aria-labelledby="no-posts-heading">
@@ -478,36 +471,9 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
             {/* Right Sidebar - Desktop Only */}
             <aside className="hidden lg:block lg:col-span-2" role="complementary">
               <div className="sticky top-24 space-y-6">
-                {/* Empty space for Google Auto Ads */}
-                <div className="min-h-[600px]"></div>
-
-                {/* Newsletter Signup */}
-                <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
-                  <h3 className="text-sm font-semibold text-gray-900 mb-2">Stay Updated</h3>
-                  <p className="text-xs text-gray-600 mb-3">Get latest updates.</p>
-                  <div className="space-y-2">
-                    <input
-                      type="email"
-                      placeholder="Your email"
-                      className="w-full px-2 py-2 border border-gray-200 rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                    <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs py-2">
-                      Subscribe
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Another empty space for Google Auto Ads */}
-                <div className="min-h-[300px]"></div>
+                {/* Sidebar content if needed */}
               </div>
             </aside>
-          </div>
-        </div>
-
-        {/* Footer Ad Space */}
-        <div className="bg-gray-100 py-8">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="min-h-[200px]"></div>
           </div>
         </div>
 
