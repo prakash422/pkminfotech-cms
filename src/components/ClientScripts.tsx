@@ -14,42 +14,57 @@ export default function ClientScripts() {
   useEffect(() => {
     setIsClient(true)
     
-    // Enhanced AdSense loading with better ad space detection
     if (typeof window !== 'undefined') {
+      // Load AdSense script
       const script = document.createElement('script')
       script.async = true
       script.crossOrigin = 'anonymous'
-      script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3361406010222956'
+      script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=pub-3361406010222956'
       
       script.onload = () => {
+        console.log('✅ Google AdSense script loaded')
+        
         // Initialize AdSense
         if (!window.adsbygoogle) {
           window.adsbygoogle = []
         }
         
-        // Enable Auto Ads with enhanced settings
+        // Enable Auto Ads for general placement
         window.adsbygoogle.push({
           google_ad_client: "ca-pub-3361406010222956",
-          enable_page_level_ads: true,
-          google_ad_slot: "auto",
-          google_ad_format: "auto",
-          google_full_width_responsive: "true"
+          enable_page_level_ads: true
         })
         
-        console.log('✅ Google AdSense Auto Ads loaded with enhanced settings')
-        
-        // Help AdSense find our ad spaces
+        // Wait for containers to be available, then inject ads
         setTimeout(() => {
-          const adSpaces = document.querySelectorAll('.ad-space')
-          adSpaces.forEach((space, index) => {
-            console.log(`📍 Ad space detected: ${space.getAttribute('data-ad-slot')}`)
+          const containers = document.querySelectorAll('.adsense-container')
+          containers.forEach((container, index) => {
+            // Create ad unit for each container
+            const adDiv = document.createElement('ins')
+            adDiv.className = 'adsbygoogle'
+            adDiv.style.display = 'block'
+            adDiv.setAttribute('data-ad-client', 'ca-pub-3361406010222956')
+            adDiv.setAttribute('data-ad-slot', '1234567890') // You'll need to create ad units in AdSense
+            adDiv.setAttribute('data-ad-format', 'auto')
+            adDiv.setAttribute('data-full-width-responsive', 'true')
+            
+            // Clear container and add ad
+            container.innerHTML = ''
+            container.appendChild(adDiv)
+            
+            // Push to AdSense
+            try {
+              (window.adsbygoogle = window.adsbygoogle || []).push({})
+              console.log(`📍 Ad injected into container ${index + 1}`)
+            } catch (e) {
+              console.log(`❌ Ad injection failed for container ${index + 1}:`, e)
+            }
           })
-          
-          // Trigger AdSense to scan for new ad spaces
-          if (window.adsbygoogle && window.adsbygoogle.push) {
-            window.adsbygoogle.push({})
-          }
-        }, 2000)
+        }, 3000)
+      }
+      
+      script.onerror = () => {
+        console.log('❌ Failed to load AdSense script')
       }
       
       document.head.appendChild(script)

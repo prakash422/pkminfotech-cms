@@ -243,24 +243,22 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
             {/* Left Sidebar - Desktop Only */}
             <aside className="hidden lg:block lg:col-span-2" role="complementary">
               <div className="sticky top-24 space-y-4">
-                {/* Ad Space 1 */}
-                <div className="ad-space" data-ad-slot="blog-sidebar-left">
-                  <div className="min-h-[250px] w-full bg-gray-50/30 rounded-lg flex items-center justify-center">
-                    <div className="text-xs text-gray-400 text-center">
-                      <div className="w-8 h-8 bg-gray-200 rounded mx-auto mb-2"></div>
-                      Advertisement
-                    </div>
-                  </div>
+                {/* AdSense Auto Ad Container 1 */}
+                <div 
+                  className="adsense-container" 
+                  data-ad-format="auto"
+                  data-ad-layout-key="-6t+ed+2i-1n-4w"
+                  style={{ width: '100%' }}
+                >
                 </div>
                 
-                {/* Ad Space 2 */}
-                <div className="ad-space" data-ad-slot="blog-sidebar-left-bottom">
-                  <div className="min-h-[300px] w-full bg-gray-50/30 rounded-lg flex items-center justify-center">
-                    <div className="text-xs text-gray-400 text-center">
-                      <div className="w-8 h-8 bg-gray-200 rounded mx-auto mb-2"></div>
-                      Advertisement
-                    </div>
-                  </div>
+                {/* AdSense Auto Ad Container 2 */}
+                <div 
+                  className="adsense-container" 
+                  data-ad-format="auto"
+                  data-ad-layout-key="-6t+ed+2i-1n-4w"
+                  style={{ width: '100%' }}
+                >
                 </div>
               </div>
             </aside>
@@ -440,24 +438,22 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
             {/* Right Sidebar - Desktop Only */}
             <aside className="hidden lg:block lg:col-span-2" role="complementary">
               <div className="sticky top-24 space-y-4">
-                {/* Ad Space 1 */}
-                <div className="ad-space" data-ad-slot="blog-sidebar-right">
-                  <div className="min-h-[250px] w-full bg-gray-50/30 rounded-lg flex items-center justify-center">
-                    <div className="text-xs text-gray-400 text-center">
-                      <div className="w-8 h-8 bg-gray-200 rounded mx-auto mb-2"></div>
-                      Advertisement
-                    </div>
-                  </div>
+                {/* AdSense Auto Ad Container 1 */}
+                <div 
+                  className="adsense-container" 
+                  data-ad-format="auto"
+                  data-ad-layout-key="-6t+ed+2i-1n-4w"
+                  style={{ width: '100%' }}
+                >
                 </div>
                 
-                {/* Ad Space 2 */}
-                <div className="ad-space" data-ad-slot="blog-sidebar-right-bottom">
-                  <div className="min-h-[300px] w-full bg-gray-50/30 rounded-lg flex items-center justify-center">
-                    <div className="text-xs text-gray-400 text-center">
-                      <div className="w-8 h-8 bg-gray-200 rounded mx-auto mb-2"></div>
-                      Advertisement
-                    </div>
-                  </div>
+                {/* AdSense Auto Ad Container 2 */}
+                <div 
+                  className="adsense-container" 
+                  data-ad-format="auto"
+                  data-ad-layout-key="-6t+ed+2i-1n-4w"
+                  style={{ width: '100%' }}
+                >
                 </div>
               </div>
             </aside>
