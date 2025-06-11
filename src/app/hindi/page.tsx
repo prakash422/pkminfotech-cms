@@ -109,116 +109,100 @@ export default async function HindiBlogPage() {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
-        <div className="lg:grid lg:grid-cols-12 lg:gap-6">
-          
-          {/* Left Sidebar */}
-          <aside className="hidden lg:block lg:col-span-2">
-            <div className="sticky top-24 space-y-4">
-              <div className="adsense-container" data-ad-format="auto"></div>
-            </div>
-          </aside>
-
-          {/* Main Content */}
-          <main className="lg:col-span-8">
-            <nav className="mb-6 lg:mb-8">
-              <ol className="flex items-center space-x-2 text-sm text-gray-500">
-                <li>
-                  <Link href="/" className="hover:text-blue-600 transition-colors">
-                    Home
-                  </Link>
-                </li>
-                <ChevronRight className="h-4 w-4" />
-                <li className="text-orange-600 font-medium">
-                  हिंदी Blog
-                </li>
-              </ol>
-            </nav>
-
-            <div className="mb-8">
-              <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                हिंदी ब्लॉग पोस्ट्स
-              </h1>
-              <p className="text-lg text-gray-600">
-                टेक्नोलॉजी, बिजनेस और डिजिटल ट्रेंड्स के बारे में हिंदी में पढ़ें।
-              </p>
-            </div>
-
-            {blogs.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-gray-500 text-lg">कोई हिंदी ब्लॉग पोस्ट नहीं मिला।</p>
-                <Link href="/">
-                  <Button className="mt-4">होम पेज पर वापस जाएं</Button>
+        
+        {/* Main Content - Narrower Container for Auto Ads on Sides */}
+        <main className="max-w-5xl mx-auto" role="main">
+          <nav className="mb-6 lg:mb-8" aria-label="Breadcrumb">
+            <ol className="flex items-center space-x-2 text-sm text-gray-500">
+              <li>
+                <Link href="/" className="hover:text-blue-600 transition-colors">
+                  Home
                 </Link>
-              </div>
-            ) : (
-              <div className="grid gap-8">
-                {blogs.map((blog) => (
-                  <article key={blog.id} className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
-                    <div className="md:flex">
-                      {blog.coverImage && (
-                        <div className="md:w-1/3">
-                          <img
-                            src={blog.coverImage}
-                            alt={blog.title}
-                            className="w-full h-48 md:h-full object-cover"
-                          />
+              </li>
+              <ChevronRight className="h-4 w-4" />
+              <li className="text-orange-600 font-medium" aria-current="page">
+                हिंदी Blog
+              </li>
+            </ol>
+          </nav>
+
+          <div className="mb-8">
+            <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+              हिंदी ब्लॉग पोस्ट्स
+            </h1>
+            <p className="text-lg text-gray-600">
+              टेक्नोलॉजी, बिजनेस और डिजिटल ट्रेंड्स के बारे में हिंदी में पढ़ें।
+            </p>
+          </div>
+
+          {blogs.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-gray-500 text-lg">कोई हिंदी ब्लॉग पोस्ट नहीं मिला।</p>
+              <Link href="/">
+                <Button className="mt-4">होम पेज पर वापस जाएं</Button>
+              </Link>
+            </div>
+          ) : (
+            <div className="grid gap-8">
+              {blogs.map((blog) => (
+                <article key={blog.id} className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
+                  <div className="md:flex">
+                    {blog.coverImage && (
+                      <div className="md:w-1/3">
+                        <img
+                          src={blog.coverImage}
+                          alt={blog.title}
+                          className="w-full h-48 md:h-full object-cover"
+                        />
+                      </div>
+                    )}
+                    <div className={`p-6 ${blog.coverImage ? 'md:w-2/3' : 'w-full'}`}>
+                      <div className="flex items-center space-x-3 mb-3">
+                        <span className="px-3 py-1 rounded-full text-sm font-medium bg-orange-100 text-orange-800">
+                          हिंदी ब्लॉग
+                        </span>
+                        <div className="flex items-center text-gray-500 text-sm">
+                          <Eye className="h-4 w-4 mr-1" />
+                          <span>2.1k views</span>
                         </div>
-                      )}
-                      <div className={`p-6 ${blog.coverImage ? 'md:w-2/3' : 'w-full'}`}>
-                        <div className="flex items-center space-x-3 mb-3">
-                          <span className="px-3 py-1 rounded-full text-sm font-medium bg-orange-100 text-orange-800">
-                            हिंदी ब्लॉग
-                          </span>
-                          <div className="flex items-center text-gray-500 text-sm">
-                            <Eye className="h-4 w-4 mr-1" />
-                            <span>2.1k views</span>
-                          </div>
-                          <div className="flex items-center text-gray-500 text-sm">
-                            <Clock className="h-4 w-4 mr-1" />
-                            <span>5 min read</span>
-                          </div>
-                        </div>
-                        
-                        <h2 className="text-xl lg:text-2xl font-bold text-gray-900 mb-3">
-                          <Link href={`/${blog.slug}`} className="hover:text-blue-600 transition-colors">
-                            {blog.title}
-                          </Link>
-                        </h2>
-                        
-                        {blog.excerpt && (
-                          <p className="text-gray-600 mb-4 leading-relaxed">
-                            {blog.excerpt}
-                          </p>
-                        )}
-                        
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center text-gray-500 text-sm">
-                            <Calendar className="h-4 w-4 mr-2" />
-                            <time dateTime={blog.publishedAt || blog.createdAt}>
-                              {formatDate(blog.publishedAt || blog.createdAt)}
-                            </time>
-                          </div>
-                          <Link href={`/${blog.slug}`}>
-                            <Button variant="outline" size="sm">
-                              पूरा पढ़ें
-                            </Button>
-                          </Link>
+                        <div className="flex items-center text-gray-500 text-sm">
+                          <Clock className="h-4 w-4 mr-1" />
+                          <span>5 min read</span>
                         </div>
                       </div>
+                      
+                      <h2 className="text-xl lg:text-2xl font-bold text-gray-900 mb-3">
+                        <Link href={`/${blog.slug}`} className="hover:text-blue-600 transition-colors">
+                          {blog.title}
+                        </Link>
+                      </h2>
+                      
+                      {blog.excerpt && (
+                        <p className="text-gray-600 mb-4 leading-relaxed">
+                          {blog.excerpt}
+                        </p>
+                      )}
+                      
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center text-gray-500 text-sm">
+                          <Calendar className="h-4 w-4 mr-2" />
+                          <time dateTime={blog.publishedAt || blog.createdAt}>
+                            {formatDate(blog.publishedAt || blog.createdAt)}
+                          </time>
+                        </div>
+                        <Link href={`/${blog.slug}`}>
+                          <Button variant="outline" size="sm">
+                            पूरा पढ़ें
+                          </Button>
+                        </Link>
+                      </div>
                     </div>
-                  </article>
-                ))}
-              </div>
-            )}
-          </main>
-
-          {/* Right Sidebar */}
-          <aside className="hidden lg:block lg:col-span-2">
-            <div className="sticky top-24 space-y-4">
-              <div className="adsense-container" data-ad-format="auto"></div>
+                  </div>
+                </article>
+              ))}
             </div>
-          </aside>
-        </div>
+          )}
+        </main>
       </div>
     </div>
   )

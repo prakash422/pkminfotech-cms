@@ -240,8 +240,8 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="py-8 lg:py-12">
             
-            {/* Main Content - Full Width */}
-            <main role="main">
+            {/* Main Content - Narrower Container for Auto Ads on Sides */}
+            <main role="main" className="max-w-4xl mx-auto">
               <nav className="mb-6 lg:mb-8" aria-label="Breadcrumb">
                 <div className="sm:hidden">
                   <div className="flex items-center space-x-2 text-sm text-gray-500 mb-2">

@@ -125,118 +125,100 @@ export default async function EnglishBlogPage() {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
-        <div className="lg:grid lg:grid-cols-12 lg:gap-6">
-          
-          {/* Left Sidebar - Desktop Only */}
-          <aside className="hidden lg:block lg:col-span-2" role="complementary">
-            <div className="sticky top-24 space-y-4">
-              <div className="adsense-container" data-ad-format="auto" data-ad-layout-key="-6t+ed+2i-1n-4w"></div>
-              <div className="adsense-container" data-ad-format="auto" data-ad-layout-key="-6t+ed+2i-1n-4w"></div>
-            </div>
-          </aside>
-
-          {/* Main Content */}
-          <main className="lg:col-span-8" role="main">
-            <nav className="mb-6 lg:mb-8" aria-label="Breadcrumb">
-              <ol className="flex items-center space-x-2 text-sm text-gray-500">
-                <li>
-                  <Link href="/" className="hover:text-blue-600 transition-colors">
-                    Home
-                  </Link>
-                </li>
-                <ChevronRight className="h-4 w-4" />
-                <li className="text-green-600 font-medium" aria-current="page">
-                  English Blog
-                </li>
-              </ol>
-            </nav>
-
-            <div className="mb-8">
-              <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                English Blog Posts
-              </h1>
-              <p className="text-lg text-gray-600">
-                Read our English articles about technology, business insights, and digital trends.
-              </p>
-            </div>
-
-            {blogs.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-gray-500 text-lg">No English blog posts found.</p>
-                <Link href="/">
-                  <Button className="mt-4">Back to Home</Button>
+        
+        {/* Main Content - Narrower Container for Auto Ads on Sides */}
+        <main className="max-w-5xl mx-auto" role="main">
+          <nav className="mb-6 lg:mb-8" aria-label="Breadcrumb">
+            <ol className="flex items-center space-x-2 text-sm text-gray-500">
+              <li>
+                <Link href="/" className="hover:text-blue-600 transition-colors">
+                  Home
                 </Link>
-              </div>
-            ) : (
-              <div className="grid gap-8">
-                {blogs.map((blog) => (
-                  <article key={blog.id} className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
-                    <div className="md:flex">
-                      {blog.coverImage && (
-                        <div className="md:w-1/3">
-                          <img
-                            src={blog.coverImage}
-                            alt={blog.title}
-                            className="w-full h-48 md:h-full object-cover"
-                          />
+              </li>
+              <ChevronRight className="h-4 w-4" />
+              <li className="text-green-600 font-medium" aria-current="page">
+                English Blog
+              </li>
+            </ol>
+          </nav>
+
+          <div className="mb-8">
+            <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+              English Blog Posts
+            </h1>
+            <p className="text-lg text-gray-600">
+              Read our English articles about technology, business insights, and digital trends.
+            </p>
+          </div>
+
+          {blogs.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-gray-500 text-lg">No English blog posts found.</p>
+              <Link href="/">
+                <Button className="mt-4">Back to Home</Button>
+              </Link>
+            </div>
+          ) : (
+            <div className="grid gap-8">
+              {blogs.map((blog) => (
+                <article key={blog.id} className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
+                  <div className="md:flex">
+                    {blog.coverImage && (
+                      <div className="md:w-1/3">
+                        <img
+                          src={blog.coverImage}
+                          alt={blog.title}
+                          className="w-full h-48 md:h-full object-cover"
+                        />
+                      </div>
+                    )}
+                    <div className={`p-6 ${blog.coverImage ? 'md:w-2/3' : 'w-full'}`}>
+                      <div className="flex items-center space-x-3 mb-3">
+                        <span className="px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 border border-green-200">
+                          English Blog
+                        </span>
+                        <div className="flex items-center text-gray-500 text-sm">
+                          <Eye className="h-4 w-4 mr-1" />
+                          <span>2.1k views</span>
                         </div>
-                      )}
-                      <div className={`p-6 ${blog.coverImage ? 'md:w-2/3' : 'w-full'}`}>
-                        <div className="flex items-center space-x-3 mb-3">
-                          <span className="px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 border border-green-200">
-                            English Blog
-                          </span>
-                          <div className="flex items-center text-gray-500 text-sm">
-                            <Eye className="h-4 w-4 mr-1" />
-                            <span>2.1k views</span>
-                          </div>
-                          <div className="flex items-center text-gray-500 text-sm">
-                            <Clock className="h-4 w-4 mr-1" />
-                            <span>5 min read</span>
-                          </div>
-                        </div>
-                        
-                        <h2 className="text-xl lg:text-2xl font-bold text-gray-900 mb-3 hover:text-blue-600 transition-colors">
-                          <Link href={`/${blog.slug}`}>
-                            {blog.title}
-                          </Link>
-                        </h2>
-                        
-                        {blog.excerpt && (
-                          <p className="text-gray-600 mb-4 leading-relaxed">
-                            {blog.excerpt}
-                          </p>
-                        )}
-                        
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center text-gray-500 text-sm">
-                            <Calendar className="h-4 w-4 mr-2" />
-                            <time dateTime={blog.publishedAt || blog.createdAt}>
-                              {formatDate(blog.publishedAt || blog.createdAt)}
-                            </time>
-                          </div>
-                          <Link href={`/${blog.slug}`}>
-                            <Button variant="outline" size="sm">
-                              Read More
-                            </Button>
-                          </Link>
+                        <div className="flex items-center text-gray-500 text-sm">
+                          <Clock className="h-4 w-4 mr-1" />
+                          <span>5 min read</span>
                         </div>
                       </div>
+                      
+                      <h2 className="text-xl lg:text-2xl font-bold text-gray-900 mb-3 hover:text-blue-600 transition-colors">
+                        <Link href={`/${blog.slug}`}>
+                          {blog.title}
+                        </Link>
+                      </h2>
+                      
+                      {blog.excerpt && (
+                        <p className="text-gray-600 mb-4 leading-relaxed">
+                          {blog.excerpt}
+                        </p>
+                      )}
+                      
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center text-gray-500 text-sm">
+                          <Calendar className="h-4 w-4 mr-2" />
+                          <time dateTime={blog.publishedAt || blog.createdAt}>
+                            {formatDate(blog.publishedAt || blog.createdAt)}
+                          </time>
+                        </div>
+                        <Link href={`/${blog.slug}`}>
+                          <Button variant="outline" size="sm">
+                            Read More
+                          </Button>
+                        </Link>
+                      </div>
                     </div>
-                  </article>
-                ))}
-              </div>
-            )}
-          </main>
-
-          {/* Right Sidebar - Desktop Only */}
-          <aside className="hidden lg:block lg:col-span-2" role="complementary">
-            <div className="sticky top-24 space-y-4">
-              <div className="adsense-container" data-ad-format="auto" data-ad-layout-key="-6t+ed+2i-1n-4w"></div>
-              <div className="adsense-container" data-ad-format="auto" data-ad-layout-key="-6t+ed+2i-1n-4w"></div>
+                  </div>
+                </article>
+              ))}
             </div>
-          </aside>
-        </div>
+          )}
+        </main>
       </div>
     </div>
   )

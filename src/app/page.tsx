@@ -295,8 +295,8 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="py-8 lg:py-12">
             
-            {/* Main Content - Full Width */}
-            <main role="main">
+            {/* Main Content - Narrower Container for Auto Ads on Sides */}
+            <main role="main" className="max-w-5xl mx-auto">
               {/* Blog Content */}
               {blogsData.blogs.length === 0 ? (
                 <section className="text-center py-16 lg:py-20" aria-labelledby="no-posts-heading">

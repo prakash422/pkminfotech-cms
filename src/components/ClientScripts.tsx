@@ -47,30 +47,31 @@ export default function ClientScripts() {
         console.log('✅ AdSense script loaded - Auto Ads will activate automatically')
         console.log('📊 AdSense Array:', window.adsbygoogle?.length || 0, 'items')
         
-        // Enhanced debugging
+        // Enhanced debugging for Auto Ads
         setTimeout(() => {
-          const adContainers = document.querySelectorAll('.adsense-container')
-          console.log('📦 Ad Containers Found:', adContainers.length)
-          
-          console.log('🔍 AdSense Diagnostic:')
+          console.log('🤖 Auto Ads Diagnostic:')
           console.log('- Live Site:', isLivesite)
           console.log('- Cookies:', navigator.cookieEnabled)
-          console.log('- Third-party cookies:', document.cookie.length > 0)
           console.log('- Ad Blocker Check:', !window.adsbygoogle ? 'Possible blocker' : 'OK')
           console.log('- Current URL:', window.location.href)
+          console.log('- Layout: Narrower main content for side ads')
           
           if (!isLivesite) {
             console.log('⚠️ AdSense may not work on localhost - deploy to see ads')
           }
           
-          adContainers.forEach((container, index) => {
-            const rect = container.getBoundingClientRect()
-            console.log(`📦 Container ${index + 1}:`, {
-              visible: rect.width > 0 && rect.height > 0,
-              dimensions: `${rect.width}x${rect.height}`,
-              position: window.getComputedStyle(container).position
+          // Check available space for Auto Ads
+          const mainContent = document.querySelector('main')
+          if (mainContent) {
+            const rect = mainContent.getBoundingClientRect()
+            const viewportWidth = window.innerWidth
+            const sideSpace = (viewportWidth - rect.width) / 2
+            console.log('📐 Layout Info:', {
+              viewport: `${viewportWidth}px`,
+              content: `${rect.width}px`,
+              sideSpace: `${sideSpace}px each side`
             })
-          })
+          }
         }, 2000)
       }
       
