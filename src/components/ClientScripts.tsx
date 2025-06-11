@@ -40,7 +40,7 @@ export default function ClientScripts() {
       // Load AdSense script
       const script = document.createElement('script')
       script.async = true
-      script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=pub-3361406010222956'
+      script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3361406010222956'
       script.crossOrigin = 'anonymous'
       
       script.onload = () => {
