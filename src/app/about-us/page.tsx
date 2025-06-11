@@ -105,54 +105,37 @@ export default async function AboutUsPage() {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
-        <div className="flex gap-8">
-          {/* Left Sidebar Ad */}
-          <div className="hidden xl:block w-64 flex-shrink-0">
-            <div className="sticky top-24">
-              <div className="adsense-container" data-ad-format="auto"></div>
-            </div>
-          </div>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="py-8 lg:py-12">
+          <Link href="/">
+            <Button variant="outline" className="mb-6">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Home
+            </Button>
+          </Link>
 
-          {/* Main Content */}
-          <div className="flex-1 max-w-4xl">
-            <Link href="/">
-              <Button variant="outline" className="mb-6">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Home
-              </Button>
-            </Link>
-
-            <div className="bg-white rounded-2xl shadow-sm border p-8 lg:p-12">
-              {page ? (
-                <div>
-                  <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
-                    {page.title}
-                  </h1>
-                  <div 
-                    className="prose prose-lg max-w-none text-gray-700 leading-relaxed [&>h1]:text-3xl [&>h1]:font-bold [&>h1]:text-gray-900 [&>h1]:mt-8 [&>h1]:mb-6 [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:text-gray-900 [&>h2]:mt-8 [&>h2]:mb-6 [&>h3]:text-xl [&>h3]:font-bold [&>h3]:text-gray-900 [&>h3]:mt-6 [&>h3]:mb-4 [&>p]:mb-4 [&>p]:leading-relaxed [&>div]:my-6 [&>ul]:my-4 [&>ol]:my-4 [&>li]:mb-2 [&>strong]:font-semibold [&>strong]:text-gray-900"
-                    dangerouslySetInnerHTML={{ __html: page.content }}
-                  />
+          <div className="bg-white rounded-2xl shadow-sm border p-8 lg:p-12">
+            {page ? (
+              <div>
+                <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
+                  {page.title}
+                </h1>
+                <div 
+                  className="prose prose-lg max-w-none text-gray-700 leading-relaxed [&>h1]:text-3xl [&>h1]:font-bold [&>h1]:text-gray-900 [&>h1]:mt-8 [&>h1]:mb-6 [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:text-gray-900 [&>h2]:mt-8 [&>h2]:mb-6 [&>h3]:text-xl [&>h3]:font-bold [&>h3]:text-gray-900 [&>h3]:mt-6 [&>h3]:mb-4 [&>p]:mb-4 [&>p]:leading-relaxed [&>div]:my-6 [&>ul]:my-4 [&>ol]:my-4 [&>li]:mb-2 [&>strong]:font-semibold [&>strong]:text-gray-900"
+                  dangerouslySetInnerHTML={{ __html: page.content }}
+                />
+              </div>
+            ) : (
+              <div>
+                <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
+                  About Us
+                </h1>
+                <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed">
+                  <p>Welcome to PKMInfotech - your trusted source for technology news, business insights, and travel guides.</p>
+                  <p>We are passionate about delivering authentic, informative, and engaging content to keep you updated with the world around you.</p>
                 </div>
-              ) : (
-                <div>
-                  <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
-                    About Us
-                  </h1>
-                  <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed">
-                    <p>Welcome to PKMInfotech - your trusted source for technology news, business insights, and travel guides.</p>
-                    <p>We are passionate about delivering authentic, informative, and engaging content to keep you updated with the world around you.</p>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Right Sidebar Ad */}
-          <div className="hidden xl:block w-64 flex-shrink-0">
-            <div className="sticky top-24">
-              <div className="adsense-container" data-ad-format="auto"></div>
-            </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

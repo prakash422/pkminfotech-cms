@@ -293,53 +293,10 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
         </header>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="lg:grid lg:grid-cols-12 lg:gap-6 py-8 lg:py-12">
+          <div className="py-8 lg:py-12">
             
-            {/* Left Sidebar - Desktop Only */}
-            <aside className="hidden lg:block lg:col-span-2" role="complementary">
-              <div className="sticky top-24 space-y-4">
-                {/* AdSense Auto Ad Container 1 */}
-                <div 
-                  className="adsense-container bg-gray-50 border border-gray-200 rounded-lg" 
-                  data-ad-format="auto"
-                  data-ad-layout-key="-6t+ed+2i-1n-4w"
-                  style={{ 
-                    width: '100%', 
-                    minHeight: '250px',
-                    height: '250px',
-                    display: 'block',
-                    visibility: 'visible',
-                    overflow: 'hidden'
-                  }}
-                >
-                  <div style={{ padding: '20px', textAlign: 'center', color: '#9CA3AF', fontSize: '12px' }}>
-                    Advertisement Space
-                  </div>
-                </div>
-                
-                {/* AdSense Auto Ad Container 2 */}
-                <div 
-                  className="adsense-container bg-gray-50 border border-gray-200 rounded-lg" 
-                  data-ad-format="auto"
-                  data-ad-layout-key="-6t+ed+2i-1n-4w"
-                  style={{ 
-                    width: '100%', 
-                    minHeight: '250px',
-                    height: '250px',
-                    display: 'block',
-                    visibility: 'visible',
-                    overflow: 'hidden'
-                  }}
-                >
-                  <div style={{ padding: '20px', textAlign: 'center', color: '#9CA3AF', fontSize: '12px' }}>
-                    Advertisement Space
-                  </div>
-                </div>
-              </div>
-            </aside>
-
-            {/* Main Content - Centered */}
-            <main className="lg:col-span-8" role="main">
+            {/* Main Content - Full Width */}
+            <main role="main">
               {/* Blog Content */}
               {blogsData.blogs.length === 0 ? (
                 <section className="text-center py-16 lg:py-20" aria-labelledby="no-posts-heading">
@@ -503,49 +460,6 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                 </div>
               )}
             </main>
-
-            {/* Right Sidebar - Desktop Only */}
-            <aside className="hidden lg:block lg:col-span-2" role="complementary">
-              <div className="sticky top-24 space-y-4">
-                {/* AdSense Auto Ad Container 1 */}
-                <div 
-                  className="adsense-container bg-gray-50 border border-gray-200 rounded-lg" 
-                  data-ad-format="auto"
-                  data-ad-layout-key="-6t+ed+2i-1n-4w"
-                  style={{ 
-                    width: '100%', 
-                    minHeight: '250px',
-                    height: '250px',
-                    display: 'block',
-                    visibility: 'visible',
-                    overflow: 'hidden'
-                  }}
-                >
-                  <div style={{ padding: '20px', textAlign: 'center', color: '#9CA3AF', fontSize: '12px' }}>
-                    Advertisement Space
-                  </div>
-                </div>
-                
-                {/* AdSense Auto Ad Container 2 */}
-                <div 
-                  className="adsense-container bg-gray-50 border border-gray-200 rounded-lg" 
-                  data-ad-format="auto"
-                  data-ad-layout-key="-6t+ed+2i-1n-4w"
-                  style={{ 
-                    width: '100%', 
-                    minHeight: '250px',
-                    height: '250px',
-                    display: 'block',
-                    visibility: 'visible',
-                    overflow: 'hidden'
-                  }}
-                >
-                  <div style={{ padding: '20px', textAlign: 'center', color: '#9CA3AF', fontSize: '12px' }}>
-                    Advertisement Space
-                  </div>
-                </div>
-              </div>
-            </aside>
           </div>
         </div>
 
