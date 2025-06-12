@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { useState, useEffect } from "react"
 import { Menu, X, Home, Info, Briefcase, Mail, Phone } from "lucide-react"
+import OptimizedImage from '@/components/OptimizedImage'
 
 export default function MobileMenu() {
   const [isOpen, setIsOpen] = useState(false)
@@ -73,11 +74,14 @@ export default function MobileMenu() {
               {/* Header */}
               <div className="flex items-center justify-between p-6 border-b border-gray-200">
                 <Link href="/" className="flex items-center" onClick={() => setIsOpen(false)}>
-                  <img
-                    src="/favicon-32x32.png"
-                    alt="Pkminfotech Logo"
-                    className="w-8 h-8 mr-3 object-contain"
-                  />
+                  <OptimizedImage
+              src={"/favicon-32x32.png"}
+              alt={"Pkminfotech Logo"}
+              width={800}
+              height={600}
+              className="w-8 h-8 mr-3 object-contain"
+              sizes="100vw"
+            />
                   <span className="text-lg font-bold text-gray-900">Pkminfotech</span>
                 </Link>
                 <button

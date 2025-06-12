@@ -5,6 +5,7 @@ import AdminLayout from '@/components/admin/admin-layout'
 import EnhancedImageUpload from '@/components/admin/EnhancedImageUpload'
 import EnhancedImageGallery from '@/components/admin/EnhancedImageGallery'
 import { IMAGE_FOLDERS, getFolderOptions } from '@/constants/imageFolders'
+import OptimizedImage from '@/components/OptimizedImage'
 
 export default function MediaPage() {
   const [activeTab, setActiveTab] = useState<'upload' | 'gallery'>('gallery')
@@ -97,11 +98,14 @@ export default function MediaPage() {
             <h3 className="text-lg font-semibold mb-4">Selected Image</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <img
-                  src={selectedImage.url}
-                  alt={selectedImage.alt || 'Selected image'}
-                  className="w-full h-48 object-cover rounded-lg border"
-                />
+                <OptimizedImage
+              src={"selectedImage.url"}
+              alt={"selectedImage.alt || 'Selected image'"}
+              width={300}
+              height={192}
+              className="w-full h-48 object-cover rounded-lg border"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
               </div>
               <div className="space-y-3">
                 <div>

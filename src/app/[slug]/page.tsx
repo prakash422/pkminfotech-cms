@@ -6,6 +6,7 @@ import { Calendar, User, ArrowLeft, Home, Share2, Eye, Clock, Bookmark, ChevronR
 import { formatDate } from "@/lib/utils"
 import { Metadata } from "next"
 import MobileMenu from "@/components/MobileMenu"
+import OptimizedImage from '@/components/OptimizedImage'
 
 interface BlogPageProps {
   params: Promise<{
@@ -287,12 +288,13 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
               <article itemScope itemType="http://schema.org/BlogPosting">
                 {blog.coverImage && (
                   <div className="aspect-video w-full overflow-hidden rounded-lg lg:rounded-xl mb-6 lg:mb-8 shadow-md lg:shadow-lg">
-                    <img
+                    <OptimizedImage
                       src={blog.coverImage}
                       alt={blog.title}
+                      width={800}
+                      height={600}
                       className="w-full h-full object-cover"
-                      itemProp="image"
-                      loading="eager"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                   </div>
                 )}

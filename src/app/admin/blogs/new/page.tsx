@@ -16,6 +16,7 @@ import FeaturedImagePicker from "@/components/admin/FeaturedImagePicker"
 import { generateSlug } from "@/lib/utils"
 import { Save, ArrowLeft, Eye, Target, FileText, CheckCircle, AlertCircle, BarChart3, Edit } from "lucide-react"
 import Link from "next/link"
+import OptimizedImage from '@/components/OptimizedImage'
 
 export default function NewBlogPage() {
   const { data: session } = useSession()
@@ -463,11 +464,14 @@ export default function NewBlogPage() {
                   {formData.coverImage && (
                     <div className="mt-3">
                       <span className="text-gray-600 text-sm">Cover Image Preview:</span>
-                      <img 
-                        src={formData.coverImage} 
-                        alt="Cover preview" 
-                        className="mt-1 w-full h-24 object-cover rounded border"
-                        onError={(e) => {
+                      <OptimizedImage
+              src={"formData.coverImage"}
+              alt={"Cover preview"}
+              width={800}
+              height={600}
+              className="mt-1 w-full h-24 object-cover rounded border"
+              sizes="100vw"
+            /> {
                           e.currentTarget.style.display = 'none'
                         }}
                       />

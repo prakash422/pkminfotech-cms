@@ -6,6 +6,7 @@ import { Calendar, User, Home, ChevronRight, Clock, Eye } from "lucide-react"
 import { formatDate } from "@/lib/utils"
 import { Metadata } from "next"
 import MobileMenu from "@/components/MobileMenu"
+import OptimizedImage from '@/components/OptimizedImage'
 
 export const metadata: Metadata = {
   title: 'Latest Blog Posts | Pkminfotech - Tech News & Updates',
@@ -165,11 +166,14 @@ export default async function LatestBlogPage() {
                   <div className="md:flex">
                     {blog.coverImage && (
                       <div className="md:w-1/3">
-                        <img
-                          src={blog.coverImage}
-                          alt={blog.title}
-                          className="w-full h-48 md:h-full object-cover"
-                        />
+                        <OptimizedImage
+              src={blog.coverImage}
+              alt={blog.title}
+              width={300}
+              height={192}
+              className="w-full h-48 md:h-full object-cover"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
                       </div>
                     )}
                     <div className={`p-6 ${blog.coverImage ? 'md:w-2/3' : 'w-full'}`}>

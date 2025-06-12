@@ -10,6 +10,7 @@ import { Metadata } from "next"
 import { Suspense } from 'react'
 import ClientScripts from '@/components/ClientScripts'
 import { db } from '@/lib/db'
+import OptimizedImage from '@/components/OptimizedImage'
 
 export async function generateMetadata({ searchParams }: { searchParams: Promise<{ category?: string; page?: string }> }): Promise<Metadata> {
   const params = await searchParams
@@ -315,13 +316,14 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                       <Card className="h-full flex flex-col hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-200 bg-white rounded-lg overflow-hidden">
                         {blog.coverImage && (
                           <div className="aspect-[16/10] w-full overflow-hidden">
-                            <img
-                              src={blog.coverImage}
-                              alt={blog.title}
-                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                              loading="lazy"
-                              itemProp="image"
-                            />
+                            <OptimizedImage
+              src={blog.coverImage}
+              alt={blog.title}
+              width={800}
+              height={600}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
                           </div>
                         )}
                         

@@ -9,13 +9,15 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
-    domains: ['localhost', 'images.unsplash.com', 'via.placeholder.com'],
+    domains: ['localhost', 'images.unsplash.com', 'via.placeholder.com', 'res.cloudinary.com'],
     remotePatterns: [
       {
         protocol: 'https',
         hostname: '**',
       },
     ],
+    // Enable next-gen image formats
+    formats: ['image/webp', 'image/avif'],
   },
   // Enable static exports for better performance
   output: 'standalone',
