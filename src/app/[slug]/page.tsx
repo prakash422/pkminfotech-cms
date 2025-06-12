@@ -295,6 +295,7 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
                       height={600}
                       className="w-full h-full object-cover"
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      priority={true}
                     />
                   </div>
                 )}

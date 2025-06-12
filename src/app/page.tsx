@@ -1,3 +1,4 @@
+export const revalidate = 60
 import Image from "next/image"
 import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -12,6 +13,7 @@ import ClientScripts from '@/components/ClientScripts'
 import { db } from '@/lib/db'
 import OptimizedImage from '@/components/OptimizedImage'
 
+// Enable ISR with 60 second revalidation
 export async function generateMetadata({ searchParams }: { searchParams: Promise<{ category?: string; page?: string }> }): Promise<Metadata> {
   const params = await searchParams
   const currentPage = parseInt(params.page || '1', 10)
@@ -119,7 +121,7 @@ interface BlogPost {
   }
 }
 
-// Server-side data fetching with pagination
+// Server-side data fetching with pagination and caching
 async function getBlogs(category?: string, page: number = 1, limit: number = 15) {
   try {
     const where: { status: string; category?: string } = {
@@ -135,7 +137,18 @@ async function getBlogs(category?: string, page: number = 1, limit: number = 15)
     const [blogs, totalCount] = await Promise.all([
       prisma.blog.findMany({
         where,
-        include: {
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          excerpt: true,
+          coverImage: true,
+          category: true,
+          status: true,
+          publishedAt: true,
+          createdAt: true,
+          updatedAt: true,
+          authorId: true,
           author: {
             select: {
               id: true,
@@ -144,9 +157,10 @@ async function getBlogs(category?: string, page: number = 1, limit: number = 15)
             }
           }
         },
-        orderBy: {
-          publishedAt: 'desc'
-        },
+        orderBy: [
+          { publishedAt: 'desc' },
+          { createdAt: 'desc' }
+        ],
         skip,
         take: limit
       }),
@@ -311,19 +325,21 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                 </section>
               ) : (
                 <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" aria-label="Blog posts">
-                  {blogsData.blogs.map((blog: BlogPost) => (
+                  {blogsData.blogs.map((blog: BlogPost, index: number) => (
                     <article key={blog.id} className="group" itemScope itemType="http://schema.org/BlogPosting">
                       <Card className="h-full flex flex-col hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-200 bg-white rounded-lg overflow-hidden">
                         {blog.coverImage && (
                           <div className="aspect-[16/10] w-full overflow-hidden">
                             <OptimizedImage
-              src={blog.coverImage}
-              alt={blog.title}
-              width={800}
-              height={600}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            />
+                              src={blog.coverImage}
+                              alt={blog.title}
+                              width={800}
+                              height={600}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              priority={index < 3}
+                              priority={index < 3}
+                            />
                           </div>
                         )}
                         
