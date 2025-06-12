@@ -106,11 +106,11 @@ export default async function LatestBlogPage() {
                 <Home className="h-4 w-4 mr-2 inline" />
                 Home
               </Link>
-              <Link href="/latest" className="text-gray-600 hover:text-gray-900 font-medium transition-colors px-3 py-2 rounded-lg hover:bg-gray-50">
-                Latest Blog
-              </Link>
               <Link href="/latest" className="font-medium transition-colors flex items-center px-3 py-2 rounded-lg text-blue-600 bg-blue-50">
                 Latest Blog
+              </Link>
+              <Link href="/english" className="text-gray-600 hover:text-gray-900 font-medium transition-colors px-3 py-2 rounded-lg hover:bg-gray-50">
+                English Blog
               </Link>
               <Link href="/hindi" className="text-gray-600 hover:text-gray-900 font-medium transition-colors px-3 py-2 rounded-lg hover:bg-gray-50">
                 हिंदी Blog
