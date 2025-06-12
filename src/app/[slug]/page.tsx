@@ -173,6 +173,9 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
     notFound()
   }
 
+  // Generate proper canonical URL that resolves redirects for structured data
+  const structuredDataCanonicalUrl = generateCanonicalUrl(`/${blog.slug}`)
+
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -182,24 +185,24 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
     "author": {
       "@type": "Person",
       "name": "Pkminfotech Team",
-      "url": "https://pkminfotech.com"
+      "url": generateCanonicalUrl('/')
     },
     "publisher": {
       "@type": "Organization",
       "name": "Pkminfotech",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://pkminfotech.com/favicon-32x32.png",
+        "url": generateCanonicalUrl('/favicon-32x32.png'),
         "width": 32,
         "height": 32
       }
     },
     "datePublished": blog.publishedAt || blog.createdAt,
     "dateModified": blog.updatedAt || blog.createdAt,
-    "url": `https://pkminfotech.com/${blog.slug}`,
+    "url": structuredDataCanonicalUrl,
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": `https://pkminfotech.com/${blog.slug}`
+      "@id": structuredDataCanonicalUrl
     },
     "articleSection": blog.category,
     "wordCount": blog.content.replace(/<[^>]*>/g, '').split(' ').length,

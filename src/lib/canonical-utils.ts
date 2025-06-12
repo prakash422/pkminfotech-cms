@@ -9,20 +9,47 @@ interface RedirectRule {
   permanent: boolean
 }
 
-// All redirect rules from next.config.js
+// All redirect rules from next.config.js - UPDATED with Ahrefs report URLs
 const REDIRECT_RULES: RedirectRule[] = [
-  // Specific URLs
+  // === SPECIFIC URLS FROM AHREFS REPORT ===
+  { source: '/bahubali-hills-udaipur-where-nature-and-history-converge', destination: '/latest', permanent: true },
+  { source: '/ranchi-waterpark-discovering-the-aquatic-wonderland', destination: '/hindi', permanent: true },
+  { source: '/how-to-link-pan-card-with-aadhar-card-link-pan-card-with-aadhar-card', destination: '/hindi', permanent: true },
+  { source: '/link-pan-card-with-aadhar-card', destination: '/hindi', permanent: true },
+  
+  // Previous specific URLs
   { source: '/diwali2020', destination: '/latest', permanent: true },
   { source: '/custom-rom', destination: '/latest', permanent: true },
   { source: '/opt-out-of-subsidy-solutions-in-hindi', destination: '/hindi', permanent: true },
+  { source: '/tribal-culture-in-india', destination: '/latest', permanent: true },
+  { source: '/rajasthani-culture', destination: '/latest', permanent: true },
+  { source: '/discover-akshardham-serene-boat-ride-in-delhi', destination: '/latest', permanent: true },
+  { source: '/mi-cloud', destination: '/latest', permanent: true },
+  { source: '/lugu-pahar-jharkhand', destination: '/hindi', permanent: true },
+  { source: '/bhadrakali_mandir_itkhori', destination: '/hindi', permanent: true },
+  { source: '/bhadrakali-mandir-itkhori', destination: '/hindi', permanent: true },
+  { source: '/best-laptop-under-50000', destination: '/latest', permanent: true },
+  { source: '/telibagh-lucknow-uttar-pradesh', destination: '/latest', permanent: true },
+  { source: '/web-series-on-netflix', destination: '/latest', permanent: true },
+  { source: '/hot-webseries', destination: '/latest', permanent: true },
+  { source: '/banaso-mandir', destination: '/hindi', permanent: true },
+  { source: '/sandhya-veer-ranchi-a-beacon-of-progress-and-culture', destination: '/hindi', permanent: true },
   
   // Blog redirects
   { source: '/blog/:slug*', destination: '/:slug*', permanent: true },
   
-  // Microsoft patterns
+  // Pattern-based redirects
   { source: '/microsoft:path*', destination: '/latest', permanent: true },
+  { source: '/webseries:path*', destination: '/latest', permanent: true },
+  { source: '/web-series:path*', destination: '/latest', permanent: true },
+  { source: '/laptop:path*', destination: '/latest', permanent: true },
+  { source: '/mobile:path*', destination: '/latest', permanent: true },
+  { source: '/temple:path*', destination: '/hindi', permanent: true },
+  { source: '/mandir:path*', destination: '/hindi', permanent: true },
+  { source: '/culture:path*', destination: '/latest', permanent: true },
+  { source: '/travel:path*', destination: '/latest', permanent: true },
   
-  // Pattern-based redirects (simplified for matching)
+  // Old blog patterns
   { source: '/p/:path*', destination: '/latest', permanent: true },
   { source: '/post/:path*', destination: '/latest', permanent: true },
   { source: '/articles/:path*', destination: '/latest', permanent: true },
