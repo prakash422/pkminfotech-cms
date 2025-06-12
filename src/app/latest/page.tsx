@@ -7,14 +7,19 @@ import { formatDate } from "@/lib/utils"
 import { Metadata } from "next"
 import MobileMenu from "@/components/MobileMenu"
 import OptimizedImage from '@/components/OptimizedImage'
+import { generateCanonicalUrl } from "@/lib/canonical-utils"
 
 export const metadata: Metadata = {
   title: 'Latest Blog Posts | Pkminfotech - Tech News & Updates',
   description: 'Read Latest blog posts about technology, business, and digital trends on Pkminfotech.',
   keywords: 'latest tech blog, technology articles, business updates, digital insights',
+  alternates: {
+    canonical: generateCanonicalUrl('/latest'),
+  },
   openGraph: {
     title: 'Latest Blog Posts | Pkminfotech',
     description: 'Latest articles about technology and business',
+    url: generateCanonicalUrl('/latest'),
     images: [{ url: '/favicon-32x32.png', width: 32, height: 32 }],
   },
 }

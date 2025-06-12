@@ -12,6 +12,7 @@ import { Suspense } from 'react'
 import ClientScripts from '@/components/ClientScripts'
 import { db } from '@/lib/db'
 import OptimizedImage from '@/components/OptimizedImage'
+import { generateCanonicalUrl } from "@/lib/canonical-utils"
 
 // Enable ISR with 60 second revalidation
 export async function generateMetadata({ searchParams }: { searchParams: Promise<{ category?: string; page?: string }> }): Promise<Metadata> {
@@ -27,10 +28,12 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
     ? `Browse our latest blog posts on page ${currentPage}. Discover tech news, travel guides, and business insights.`
     : 'Your source for latest tech news, business updates, travel guides for India and worldwide destinations, and daily insights on technology and digital trends.'
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.pkminfotech.com'
-  const canonicalUrl = currentPage > 1 
-    ? `${baseUrl}/page/${currentPage}${selectedCategory !== 'all' ? `?category=${selectedCategory}` : ''}`
-    : `${baseUrl}${selectedCategory !== 'all' ? `/?category=${selectedCategory}` : ''}`
+  // Generate proper canonical URL that resolves redirects
+  const pagePath = currentPage > 1 
+    ? `/page/${currentPage}${selectedCategory !== 'all' ? `?category=${selectedCategory}` : ''}`
+    : `${selectedCategory !== 'all' ? `/?category=${selectedCategory}` : '/'}`
+  
+  const canonicalUrl = generateCanonicalUrl(pagePath)
 
   return {
     title: pageTitle,

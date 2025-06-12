@@ -8,6 +8,7 @@ import { Metadata } from "next"
 import MobileMenu from "@/components/MobileMenu"
 import OptimizedImage from '@/components/OptimizedImage'
 import { PrismaClient } from "@prisma/client"
+import { generateCanonicalUrl } from "@/lib/canonical-utils"
 
 interface BlogPageProps {
   params: Promise<{
@@ -97,6 +98,9 @@ export async function generateMetadata({ params }: BlogPageProps): Promise<Metad
   const publishedTime = blog.publishedAt || blog.createdAt
   const modifiedTime = blog.updatedAt || blog.createdAt
 
+  // Generate proper canonical URL that resolves redirects
+  const canonicalUrl = generateCanonicalUrl(`/${blog.slug}`)
+
   return {
     title: `${blog.title} | Pkminfotech - Latest Tech News & Updates`,
     description: blog.excerpt || `Read ${blog.title} on Pkminfotech. Latest tech news, business updates, and digital insights.`,
@@ -105,7 +109,7 @@ export async function generateMetadata({ params }: BlogPageProps): Promise<Metad
     openGraph: {
       title: blog.title,
       description: blog.excerpt || `Read ${blog.title} on Pkminfotech`,
-      url: `https://www.pkminfotech.com/${blog.slug}`,
+      url: canonicalUrl,
       siteName: 'Pkminfotech',
       images: blog.coverImage ? [{
         url: blog.coverImage,
@@ -127,7 +131,7 @@ export async function generateMetadata({ params }: BlogPageProps): Promise<Metad
       creator: '@pkminfotech',
     },
     alternates: {
-      canonical: `https://pkminfotech.com/${blog.slug}`,
+      canonical: canonicalUrl,
     },
     robots: {
       index: true,
