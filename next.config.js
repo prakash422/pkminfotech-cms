@@ -25,7 +25,93 @@ const nextConfig = {
   // Comprehensive redirect handling
   async redirects() {
     return [
-      // === SPECIFIC OLD URLS ===
+      // === SPECIFIC BROKEN URLS FROM AHREFS ===
+      
+      // 404 errors - redirect to appropriate sections
+      {
+        source: '/tribal-culture-in-india',
+        destination: '/latest',
+        permanent: true,
+      },
+      {
+        source: '/rajasthani-culture',
+        destination: '/latest',
+        permanent: true,
+      },
+      {
+        source: '/discover-akshardham-serene-boat-ride-in-delhi',
+        destination: '/latest',
+        permanent: true,
+      },
+      {
+        source: '/bahubali-hills-udaipur-where-nature-and-history-converge',
+        destination: '/latest',
+        permanent: true,
+      },
+      
+      // 308 redirects - update to final destinations
+      {
+        source: '/mi-cloud',
+        destination: '/latest',
+        permanent: true,
+      },
+      {
+        source: '/lugu-pahar-jharkhand',
+        destination: '/hindi',
+        permanent: true,
+      },
+      {
+        source: '/bhadrakali_mandir_itkhori',
+        destination: '/hindi',
+        permanent: true,
+      },
+      {
+        source: '/bhadrakali-mandir-itkhori',
+        destination: '/hindi',
+        permanent: true,
+      },
+      {
+        source: '/best-laptop-under-50000',
+        destination: '/latest',
+        permanent: true,
+      },
+      {
+        source: '/telibagh-lucknow-uttar-pradesh',
+        destination: '/latest',
+        permanent: true,
+      },
+      {
+        source: '/web-series-on-netflix',
+        destination: '/latest',
+        permanent: true,
+      },
+      {
+        source: '/hot-webseries',
+        destination: '/latest',
+        permanent: true,
+      },
+      {
+        source: '/banaso-mandir',
+        destination: '/hindi',
+        permanent: true,
+      },
+      {
+        source: '/ranchi-waterpark-discovering-the-aquatic-wonderland',
+        destination: '/hindi',
+        permanent: true,
+      },
+      {
+        source: '/sandhya-veer-ranchi-a-beacon-of-progress-and-culture',
+        destination: '/hindi',
+        permanent: true,
+      },
+      {
+        source: '/how-to-link-pan-card-with-aadhar-card-link-pan-card-with-aadhar-card',
+        destination: '/hindi',
+        permanent: true,
+      },
+      
+      // === PREVIOUS REDIRECTS ===
       {
         source: '/diwali2020',
         destination: '/latest',
@@ -43,6 +129,72 @@ const nextConfig = {
       },
       
       // === PATTERN-BASED REDIRECTS ===
+      
+      // Web series and entertainment
+      {
+        source: '/webseries:path*',
+        destination: '/latest',
+        permanent: true,
+      },
+      {
+        source: '/web-series:path*',
+        destination: '/latest',
+        permanent: true,
+      },
+      {
+        source: '/netflix:path*',
+        destination: '/latest',
+        permanent: true,
+      },
+      {
+        source: '/best-web-series:path*',
+        destination: '/latest',
+        permanent: true,
+      },
+      
+      // Tech and laptop reviews
+      {
+        source: '/laptop:path*',
+        destination: '/latest',
+        permanent: true,
+      },
+      {
+        source: '/mobile:path*',
+        destination: '/latest',
+        permanent: true,
+      },
+      {
+        source: '/tech-news:path*',
+        destination: '/latest',
+        permanent: true,
+      },
+      {
+        source: '/review:path*',
+        destination: '/latest',
+        permanent: true,
+      },
+      
+      // Travel and places
+      {
+        source: '/travel:path*',
+        destination: '/latest',
+        permanent: true,
+      },
+      {
+        source: '/temple:path*',
+        destination: '/hindi',
+        permanent: true,
+      },
+      {
+        source: '/mandir:path*',
+        destination: '/hindi',
+        permanent: true,
+      },
+      {
+        source: '/culture:path*',
+        destination: '/latest',
+        permanent: true,
+      },
       
       // Microsoft related posts → Latest
       {
@@ -94,7 +246,7 @@ const nextConfig = {
       },
       {
         source: '/blog/:path*',
-        destination: '/latest',
+        destination: '/:path*',
         permanent: true,
       },
       {
