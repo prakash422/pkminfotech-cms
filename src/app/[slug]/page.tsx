@@ -7,6 +7,7 @@ import { formatDate } from "@/lib/utils"
 import { Metadata } from "next"
 import MobileMenu from "@/components/MobileMenu"
 import OptimizedImage from '@/components/OptimizedImage'
+import { PrismaClient } from "@prisma/client"
 
 interface BlogPageProps {
   params: Promise<{
@@ -34,31 +35,50 @@ interface Blog {
   }
 }
 
+const prisma = new PrismaClient()
+
 async function getBlogBySlug(slug: string): Promise<Blog | null> {
   try {
-    const response = await fetch(`${process.env.NEXTAUTH_URL}/api/blogs`)
-    
-    if (!response.ok) {
-      console.error('API response not OK:', response.status, response.statusText)
+    // Validate slug format
+    if (!slug || typeof slug !== 'string' || slug.length > 200) {
+      console.log(`❌ Invalid slug format: ${slug}`)
       return null
     }
+
+    // Clean the slug (remove any special characters, decode if needed)
+    const cleanSlug = decodeURIComponent(slug).replace(/[^\w-]/g, '').toLowerCase()
     
-    const data = await response.json()
-    
-    if (data.error) {
-      console.error('API returned error:', data.error)
+    console.log(`🔍 Searching for blog: ${slug} (cleaned: ${cleanSlug})`)
+
+    const blog = await prisma.blog.findFirst({
+      where: {
+        OR: [
+          { slug: slug },
+          { slug: cleanSlug },
+          { slug: { contains: cleanSlug } }
+        ],
+        status: 'published'
+      },
+      include: {
+        author: {
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
+        }
+      }
+    })
+
+    if (!blog) {
+      console.log(`❌ Blog not found for slug: ${slug}`)
       return null
     }
-    
-    if (!Array.isArray(data)) {
-      console.error('API did not return an array:', data)
-      return null
-    }
-    
-    const blogs: Blog[] = data
-    return blogs.find((blog: Blog) => blog.slug === slug && blog.status === 'published') || null
+
+    console.log(`✅ Blog found: ${blog.title}`)
+    return blog
   } catch (error) {
-    console.error('Error fetching blog:', error)
+    console.error('Error fetching blog by slug:', error)
     return null
   }
 }
@@ -127,7 +147,25 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
   const { slug } = await params
   const blog = await getBlogBySlug(slug)
 
+  // Log 404 errors for monitoring
   if (!blog) {
+    try {
+      await fetch('/api/404-log', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          slug,
+          userAgent: 'server-side',
+          referer: 'direct',
+          timestamp: new Date().toISOString()
+        })
+      })
+    } catch (error) {
+      console.error('Failed to log 404:', error)
+    }
+    
     notFound()
   }
 
