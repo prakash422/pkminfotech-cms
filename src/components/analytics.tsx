@@ -16,11 +16,19 @@ export default function Analytics() {
   const GA_ID = process.env.NEXT_PUBLIC_GA_ID
 
   useEffect(() => {
+    console.log('Analytics Debug:', {
+      GA_ID,
+      isClient: typeof window !== 'undefined',
+      pathname,
+      env: process.env.NODE_ENV
+    })
+
     if (GA_ID && typeof window !== 'undefined') {
       // Initialize dataLayer and gtag
       window.dataLayer = window.dataLayer || []
       function gtag(...args: any[]) {
         window.dataLayer.push(args)
+        console.log('GA Event:', args)
       }
       window.gtag = gtag
       
@@ -29,6 +37,7 @@ export default function Analytics() {
       gtag('config', GA_ID, {
         page_title: document.title,
         page_location: window.location.href,
+        debug_mode: true
       })
     }
   }, [GA_ID])
@@ -48,6 +57,12 @@ export default function Analytics() {
     <Script
       strategy="afterInteractive"
       src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+      onLoad={() => {
+        console.log('GA Script loaded successfully')
+      }}
+      onError={(e) => {
+        console.error('GA Script failed to load:', e)
+      }}
     />
   )
 } 
