@@ -10,7 +10,6 @@ import MobileMenu from "@/components/MobileMenu"
 import { Metadata } from "next"
 import { Suspense } from 'react'
 import ClientScripts from '@/components/ClientScripts'
-import { db } from '@/lib/db'
 import OptimizedImage from '@/components/OptimizedImage'
 import { generateCanonicalUrl } from "@/lib/canonical-utils"
 
@@ -265,7 +264,7 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
         }}
       />
 
-      <div className="min-h-screen bg-gray-50">
+      <div className="auto-ads-space min-h-screen bg-gray-50">
         {/* Navigation */}
         <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50" role="banner">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -340,7 +339,6 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                               height={600}
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              priority={index < 3}
                               priority={index < 3}
                             />
                           </div>
@@ -485,7 +483,7 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
         </div>
 
         {/* Enhanced Footer */}
-        <footer className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white" role="contentinfo">
+        <footer className="bg-gray-900 text-white mt-12" role="contentinfo">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
 

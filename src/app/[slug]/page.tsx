@@ -77,7 +77,13 @@ async function getBlogBySlug(slug: string): Promise<Blog | null> {
     }
 
     console.log(`✅ Blog found: ${blog.title}`)
-    return blog
+    // Convert Date fields to string to match Blog interface
+    return {
+      ...blog,
+      publishedAt: blog.publishedAt ? blog.publishedAt.toISOString() : null,
+      createdAt: blog.createdAt.toISOString(),
+      updatedAt: blog.updatedAt.toISOString(),
+    }
   } catch (error) {
     console.error('Error fetching blog by slug:', error)
     return null
@@ -234,7 +240,7 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
 
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
+      <div className="auto-ads-space min-h-screen bg-gray-50">
         <header className="bg-white shadow-sm border-b sticky top-0 z-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16 lg:h-20">
@@ -541,4 +547,4 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
       </div>
     </>
   )
-} 
+}
