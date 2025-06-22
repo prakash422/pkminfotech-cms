@@ -125,7 +125,7 @@ select:focus {
 /* Auto Ads - Google AdSense handles ad placement automatically */
 
 /* Optimize layout for Auto Ads in side spaces */
-@media (min-width: 1280px) {
+@media (min-width: 900px) {
   /* Ensure adequate side space for Auto Ads */
   .max-w-4xl {
     max-width: 56rem !important; /* 896px - leaves space on sides */
@@ -137,7 +137,7 @@ select:focus {
 }
 
 /* Mobile responsive - full width on smaller screens */
-@media (max-width: 1023px) {
+@media (max-width: 899px) {
   .max-w-4xl,
   .max-w-5xl {
     max-width: 100% !important;
@@ -147,7 +147,7 @@ select:focus {
 }
 
 /* Auto Ads detection helper - creates empty spaces for Google to fill */
-@media (min-width: 1024px) {
+@media (min-width: 900px) {
   .auto-ads-space {
     position: relative;
     min-height: 100vh;
@@ -171,4 +171,60 @@ select:focus {
   .auto-ads-space::after {
     right: 20px;
   }
+}
+
+/* Responsive Auto Ads for all screen sizes */
+@media (max-width: 899px) {
+  .auto-ads-space::before,
+  .auto-ads-space::after {
+    display: none !important;
+  }
+}
+
+@media (min-width: 900px) and (max-width: 1199px) {
+  .auto-ads-space::before,
+  .auto-ads-space::after {
+    content: '';
+    position: fixed;
+    top: 80px;
+    width: 80px;
+    min-height: 400px;
+    pointer-events: none;
+    z-index: 1;
+    display: block;
+  }
+  .auto-ads-space::before { left: 10px; }
+  .auto-ads-space::after { right: 10px; }
+}
+
+@media (min-width: 1200px) and (max-width: 1599px) {
+  .auto-ads-space::before,
+  .auto-ads-space::after {
+    content: '';
+    position: fixed;
+    top: 100px;
+    width: 120px;
+    min-height: 500px;
+    pointer-events: none;
+    z-index: 1;
+    display: block;
+  }
+  .auto-ads-space::before { left: 20px; }
+  .auto-ads-space::after { right: 20px; }
+}
+
+@media (min-width: 1600px) {
+  .auto-ads-space::before,
+  .auto-ads-space::after {
+    content: '';
+    position: fixed;
+    top: 120px;
+    width: 160px;
+    min-height: 600px;
+    pointer-events: none;
+    z-index: 1;
+    display: block;
+  }
+  .auto-ads-space::before { left: 40px; }
+  .auto-ads-space::after { right: 40px; }
 }
