@@ -289,8 +289,9 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
           </div>
         </header>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">  {/* Centered container for main content, space for auto ads on sides */}
-          <div className="py-2 lg:py-3">  {/* Reduced vertical padding for more ad space */}
+        {/* Main Content Container - no manual ad blocks, Google will auto-place ads */}
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="py-2 lg:py-3">
             
             {/* Main Content - Narrower Container for Auto Ads on Sides */}
             <main role="main" className="max-w-4xl mx-auto">  {/* Restore max width for main content */}
