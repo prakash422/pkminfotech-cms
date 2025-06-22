@@ -289,11 +289,11 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
           </div>
         </header>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="py-8 lg:py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">  {/* Centered container for main content, space for auto ads on sides */}
+          <div className="py-2 lg:py-3">  {/* Reduced vertical padding for more ad space */}
             
             {/* Main Content - Narrower Container for Auto Ads on Sides */}
-            <main role="main" className="max-w-4xl mx-auto">
+            <main role="main" className="max-w-4xl mx-auto">  {/* Restore max width for main content */}
               <nav className="mb-6 lg:mb-8" aria-label="Breadcrumb">
                 <div className="sm:hidden">
                   <div className="flex items-center space-x-2 text-sm text-gray-500 mb-2">
