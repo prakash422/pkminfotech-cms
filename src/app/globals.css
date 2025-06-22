@@ -152,25 +152,6 @@ select:focus {
     position: relative;
     min-height: 100vh;
   }
-  
-  .auto-ads-space::before,
-  .auto-ads-space::after {
-    content: '';
-    position: fixed;
-    top: 100px;
-    width: 160px;
-    min-height: 600px;
-    pointer-events: none;
-    z-index: 1;
-  }
-  
-  .auto-ads-space::before {
-    left: 20px;
-  }
-  
-  .auto-ads-space::after {
-    right: 20px;
-  }
 }
 
 /* Responsive Auto Ads for all screen sizes */
@@ -181,6 +162,22 @@ select:focus {
   }
 }
 
+/* Remove old .auto-ads-space::before/::after rules to prevent large side spaces */
+/*
+@media (min-width: 900px) {
+  .auto-ads-space::before,
+  .auto-ads-space::after {
+    content: '';
+    position: fixed;
+    top: 100px;
+    width: 160px;
+    min-height: 600px;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .auto-ads-space::before { left: 20px; }
+  .auto-ads-space::after { right: 20px; }
+}
 @media (min-width: 900px) and (max-width: 1199px) {
   .auto-ads-space::before,
   .auto-ads-space::after {
@@ -196,7 +193,6 @@ select:focus {
   .auto-ads-space::before { left: 10px; }
   .auto-ads-space::after { right: 10px; }
 }
-
 @media (min-width: 1200px) and (max-width: 1599px) {
   .auto-ads-space::before,
   .auto-ads-space::after {
@@ -212,7 +208,6 @@ select:focus {
   .auto-ads-space::before { left: 20px; }
   .auto-ads-space::after { right: 20px; }
 }
-
 @media (min-width: 1600px) {
   .auto-ads-space::before,
   .auto-ads-space::after {
@@ -228,3 +223,42 @@ select:focus {
   .auto-ads-space::before { left: 40px; }
   .auto-ads-space::after { right: 40px; }
 }
+*/
+
+/* --- Auto Ads Side Space Adjustments for Better Visibility --- */
+@media (min-width: 900px) {
+  .auto-ads-space::before,
+  .auto-ads-space::after {
+    width: 60px;
+    min-height: 400px;
+    left: unset;
+    right: unset;
+  }
+  .auto-ads-space::before { left: 8px; }
+  .auto-ads-space::after { right: 8px; }
+}
+
+@media (min-width: 1200px) and (max-width: 1599px) {
+  .auto-ads-space::before,
+  .auto-ads-space::after {
+    width: 80px;
+    min-height: 500px;
+    left: unset;
+    right: unset;
+  }
+  .auto-ads-space::before { left: 12px; }
+  .auto-ads-space::after { right: 12px; }
+}
+
+@media (min-width: 1600px) {
+  .auto-ads-space::before,
+  .auto-ads-space::after {
+    width: 100px;
+    min-height: 600px;
+    left: unset;
+    right: unset;
+  }
+  .auto-ads-space::before { left: 16px; }
+  .auto-ads-space::after { right: 16px; }
+}
+/* --- End Auto Ads Side Space Adjustments --- */

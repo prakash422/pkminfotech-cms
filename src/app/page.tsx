@@ -265,6 +265,7 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
       />
 
       <div className="auto-ads-space min-h-screen bg-gray-50">
+        {/* Main Content Area Only - No static ad asides, let AdSense Auto Ads handle placement */}
         {/* Navigation */}
         <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50" role="banner">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -309,9 +310,8 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
           </div>
         </header>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="py-8 lg:py-12">
-            
+        <div className="w-full px-0">
+          <div className="py-2 lg:py-3">
             {/* Main Content - Narrower Container for Auto Ads on Sides */}
             <main role="main" className="max-w-5xl mx-auto">
               {/* Blog Content */}
