@@ -44,17 +44,10 @@ export default function ClientScripts() {
       script.crossOrigin = 'anonymous'
       
       script.onload = () => {
-        console.log('✅ AdSense script loaded - Auto Ads will activate automatically')
-        console.log('📊 AdSense Array:', window.adsbygoogle?.length || 0, 'items')
+       
         
         // Enhanced debugging for Auto Ads
         setTimeout(() => {
-          console.log('🤖 Auto Ads Diagnostic:')
-          console.log('- Live Site:', isLivesite)
-          console.log('- Cookies:', navigator.cookieEnabled)
-          console.log('- Ad Blocker Check:', !window.adsbygoogle ? 'Possible blocker' : 'OK')
-          console.log('- Current URL:', window.location.href)
-          console.log('- Layout: Narrower main content for side ads')
           
           if (!isLivesite) {
             console.log('⚠️ AdSense may not work on localhost - deploy to see ads')
@@ -66,11 +59,6 @@ export default function ClientScripts() {
             const rect = mainContent.getBoundingClientRect()
             const viewportWidth = window.innerWidth
             const sideSpace = (viewportWidth - rect.width) / 2
-            console.log('📐 Layout Info:', {
-              viewport: `${viewportWidth}px`,
-              content: `${rect.width}px`,
-              sideSpace: `${sideSpace}px each side`
-            })
           }
         }, 2000)
       }

@@ -11,7 +11,6 @@ async function createAdminUser() {
     })
 
     if (existingAdmin) {
-      console.log('Admin user already exists!')
       return
     }
 
@@ -19,7 +18,7 @@ async function createAdminUser() {
     const hashedPassword = await bcrypt.hash('Pass@123', 12)
 
     // Create admin user
-    const admin = await prisma.user.create({
+    await prisma.user.create({
       data: {
         email: 'pkminfotech048@gmail.com',
         name: 'Pkminfotech Admin',
@@ -28,11 +27,6 @@ async function createAdminUser() {
       }
     })
 
-    console.log('Admin user created successfully!')
-    console.log('Email: pkminfotech048@gmail.com')
-    console.log('Password: Pass@123')
-    console.log('Please change the password after first login.')
-
   } catch (error) {
     console.error('Error creating admin user:', error)
   } finally {
@@ -40,4 +34,4 @@ async function createAdminUser() {
   }
 }
 
-createAdminUser() 
+createAdminUser()

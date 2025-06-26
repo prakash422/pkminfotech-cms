@@ -41,8 +41,6 @@ const LINK_FIXES = {
 }
 
 async function scanAndFixBrokenLinks() {
-  console.log('🔍 Starting broken link scan and fix...')
-  
   let fixedCount = 0
   let totalChecked = 0
   const errors = []
@@ -53,8 +51,6 @@ async function scanAndFixBrokenLinks() {
       where: { status: 'published' },
       select: { id: true, slug: true, content: true, title: true }
     })
-    
-    console.log(`📄 Found ${blogs.length} published blogs to check`)
     
     for (const blog of blogs) {
       totalChecked++
@@ -92,48 +88,33 @@ async function scanAndFixBrokenLinks() {
           })
           
           fixedCount++
-          console.log(`✅ Fixed ${fixedInThisBlog.length} links in: "${blog.title}"`)
-          fixedInThisBlog.forEach(fix => console.log(`   ${fix}`))
         } catch (error) {
           errors.push(`Failed to update "${blog.title}": ${error.message}`)
-          console.log(`❌ Error updating "${blog.title}": ${error.message}`)
         }
       }
     }
     
   } catch (error) {
-    console.error('💥 Script error:', error)
     errors.push(`System error: ${error.message}`)
   } finally {
     await prisma.$disconnect()
   }
   
   // Summary
-  console.log('\n📊 SUMMARY:')
-  console.log(`   Blogs checked: ${totalChecked}`)
-  console.log(`   Blogs updated: ${fixedCount}`)
-  console.log(`   Errors: ${errors.length}`)
-  
   if (errors.length > 0) {
-    console.log('\n❌ ERRORS:')
     errors.forEach(error => console.log(`   ${error}`))
   }
   
   if (fixedCount > 0) {
-    console.log('\n🎉 SUCCESS: Fixed broken links!')
     console.log('   Recommendations:')
     console.log('   • Deploy these changes to production')
     console.log('   • Wait 24-48 hours for crawlers to re-index')
     console.log('   • Check Ahrefs again for improvement')
-  } else {
-    console.log('\n✨ No broken links found to fix!')
   }
 }
 
 // Additional function to scan for potential issues
 async function scanForPotentialIssues() {
-  console.log('\n🔍 Scanning for potential broken link patterns...')
-  
   const blogs = await prisma.blog.findMany({
     where: { status: 'published' },
     select: { slug: true, content: true, title: true }
@@ -160,15 +141,12 @@ async function scanForPotentialIssues() {
   }
   
   if (issues.length > 0) {
-    console.log(`⚠️  Found ${issues.length} potential issues:`)
     issues.slice(0, 10).forEach(issue => {
       console.log(`   "${issue.blog}" contains: ${issue.pattern}`)
     })
     if (issues.length > 10) {
       console.log(`   ... and ${issues.length - 10} more`)
     }
-  } else {
-    console.log('✅ No suspicious patterns found!')
   }
 }
 
@@ -178,4 +156,4 @@ if (require.main === module) {
     await scanAndFixBrokenLinks()
     await scanForPotentialIssues()
   })()
-} 
+}

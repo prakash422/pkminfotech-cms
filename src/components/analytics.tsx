@@ -16,19 +16,12 @@ export default function Analytics() {
   const GA_ID = process.env.NEXT_PUBLIC_GA_ID
 
   useEffect(() => {
-    console.log('Analytics Debug:', {
-      GA_ID,
-      isClient: typeof window !== 'undefined',
-      pathname,
-      env: process.env.NODE_ENV
-    })
-
+   
     if (GA_ID && typeof window !== 'undefined') {
       // Initialize dataLayer and gtag
       window.dataLayer = window.dataLayer || []
       function gtag(...args: any[]) {
         window.dataLayer.push(args)
-        console.log('GA Event:', args)
       }
       window.gtag = gtag
       
