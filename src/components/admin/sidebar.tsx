@@ -17,7 +17,7 @@ import {
 import { signOut } from "next-auth/react"
 
 const navigation = [
-  { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
+  { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
   { name: "Blogs", href: "/admin/blogs", icon: FileText },
   { name: "Pages", href: "/admin/pages", icon: Files },
   { name: "Media", href: "/admin/media", icon: Image },
@@ -87,4 +87,4 @@ export default function Sidebar() {
       </div>
     </div>
   )
-} 
+}

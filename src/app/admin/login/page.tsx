@@ -31,7 +31,7 @@ export default function LoginPage() {
       if (result?.error) {
         setError("Invalid credentials")
       } else {
-        router.push("/admin")
+        router.push("/admin/dashboard")
       }
     } catch (error) {
       setError("An error occurred. Please try again.")
@@ -139,4 +139,4 @@ export default function LoginPage() {
       </div>
     </div>
   )
-} 
+}

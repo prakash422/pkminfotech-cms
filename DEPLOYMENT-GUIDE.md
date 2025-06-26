@@ -107,7 +107,6 @@ const bcrypt = require('bcryptjs');
     }
   });
   
-  console.log('Admin user created:', user.email);
   await prisma.\$disconnect();
 })();
 "
