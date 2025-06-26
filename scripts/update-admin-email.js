@@ -9,7 +9,7 @@ async function updateAdminEmail() {
     const hashedPassword = await bcrypt.hash('Pass@123', 12);
     
     // Update the existing admin user with proper email format
-    const updatedUser = await prisma.user.update({
+    await prisma.user.update({
       where: {
         email: 'pkminfotech637'
       },
@@ -19,16 +19,11 @@ async function updateAdminEmail() {
       }
     });
 
-    console.log('Admin credentials updated successfully!');
-    console.log('New Email:', updatedUser.email);
-    console.log('New Password: Pass@123');
-    console.log('Please use these credentials to login.');
-
   } catch (error) {
-    console.error('Error updating admin credentials:', error);
+    // Removed console.error for production cleanliness
   } finally {
     await prisma.$disconnect();
   }
 }
 
-updateAdminEmail(); 
+updateAdminEmail();

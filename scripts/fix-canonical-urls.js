@@ -22,11 +22,8 @@ const FILES_TO_UPDATE = [
   'src/app/disclaimers/page.tsx'
 ]
 
-console.log('🔧 Starting Canonical URL Fix...')
-
 function updateFile(filePath) {
   if (!fs.existsSync(filePath)) {
-    console.log(`⚠️  File not found: ${filePath}`)
     return
   }
 
@@ -106,10 +103,7 @@ function updateFile(filePath) {
 
   if (updated || content !== fs.readFileSync(filePath, 'utf8')) {
     fs.writeFileSync(filePath, content)
-    console.log(`✅ Fixed: ${filePath}`)
-  } else {
-    console.log(`⚪ No changes needed: ${filePath}`)
-  }
+  } 
 }
 
 // Process all files
@@ -168,17 +162,3 @@ export async function GET() {
 }`
 
 fs.writeFileSync('src/app/api/validate-canonical/route.ts', validationAPI)
-console.log('✅ Created canonical validation API')
-
-console.log('🎉 Canonical URL fix completed!')
-console.log('')
-console.log('📊 Next steps:')
-console.log('1. Test the validation API: /api/validate-canonical')
-console.log('2. Run build to verify all canonical URLs')
-console.log('3. Check Ahrefs again after deployment')
-console.log('')
-console.log('🔍 The script has:')
-console.log('• Added canonical URL resolver imports')
-console.log('• Fixed hardcoded canonical URLs') 
-console.log('• Updated OpenGraph URLs')
-console.log('• Created validation API endpoint') 

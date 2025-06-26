@@ -8,8 +8,6 @@ const setupDatabase = async () => {
     const prisma = new PrismaClient()
 
     try {
-        console.log('🚀 Setting up production database...')
-
         // Create admin user
         const hashedPassword = await bcrypt.hash('pkm@2024!secure', 12)
 
@@ -23,8 +21,6 @@ const setupDatabase = async () => {
                 role: 'admin'
             }
         })
-
-        console.log('✅ Admin user created:', adminUser.email)
 
         // Create About Us page
         await prisma.page.upsert({
@@ -67,8 +63,6 @@ const setupDatabase = async () => {
             }
         })
 
-        console.log('✅ Essential pages created')
-
         // Create welcome blog post
         const blogCount = await prisma.blog.count()
         if (blogCount === 0) {
@@ -88,12 +82,7 @@ const setupDatabase = async () => {
                     authorId: adminUser.id
                 }
             })
-            console.log('✅ Welcome blog post created')
         }
-
-        console.log('🎉 Database setup completed!')
-        console.log('🔐 Admin login: prakash@pkminfotech.com / pkm@2024!secure')
-        console.log('🌐 Admin panel: https://www.pkminfotech.com/admin')
 
     } catch (error) {
         console.error('❌ Setup failed:', error)
@@ -103,4 +92,4 @@ const setupDatabase = async () => {
 }
 
 // Run setup
-setupDatabase() 
+setupDatabase()
