@@ -35,10 +35,16 @@ export default function EditBlogPage() {
     content: "",
     excerpt: "",
     coverImage: "",
+    coverImageAlt: "", // Alt text for featured image
     category: "latest",
     status: "draft",
     focusKeyword: "",
+    metaTitle: "", // Meta Title
     metaDescription: "",
+    canonicalUrl: "", // Canonical URL
+    ogTitle: "", // Open Graph Title
+    ogDescription: "", // Open Graph Description
+    ogImage: "", // Open Graph Image
     tags: [] as string[] // Added tags field
   })
   const [tagsInput, setTagsInput] = useState("")
@@ -56,10 +62,16 @@ export default function EditBlogPage() {
             content: blog.content || "",
             excerpt: blog.excerpt || "",
             coverImage: blog.coverImage || "",
+            coverImageAlt: blog.coverImageAlt || "",
             category: blog.category || "latest",
             status: blog.status || "draft",
             focusKeyword: blog.focusKeyword || "",
+            metaTitle: blog.metaTitle || "",
             metaDescription: blog.metaDescription || "",
+            canonicalUrl: blog.canonicalUrl || "",
+            ogTitle: blog.ogTitle || "",
+            ogDescription: blog.ogDescription || "",
+            ogImage: blog.ogImage || "",
             tags: blog.tags || []
           })
           setTagsInput((blog.tags || []).join(", ")) // Sync tagsInput
@@ -247,6 +259,51 @@ export default function EditBlogPage() {
   const seoStatus = getSEOStatus(seoScore)
   const StatusIcon = seoStatus.icon
 
+  // --- Google Search Snippet Preview Component ---
+  function GoogleSnippetPreview({
+    title,
+    metaTitle,
+    metaDescription,
+    slug,
+    canonicalUrl
+  }: {
+    title: string
+    metaTitle: string
+    metaDescription: string
+    slug: string
+    canonicalUrl: string
+  }) {
+    const displayTitle = metaTitle || title
+    const displayUrl = canonicalUrl || (slug ? `https://www.pkminfotech.com/blog/${slug}` : "https://www.pkminfotech.com/blog/your-slug")
+    return (
+      <div className="bg-white border border-gray-200 rounded p-4 mb-4">
+        <div className="mb-1 text-xs text-gray-500">Google Preview</div>
+        <div className="text-blue-800 text-lg leading-tight font-medium truncate">{displayTitle || "Meta Title or Blog Title"}</div>
+        <div className="text-green-700 text-xs mb-1 truncate">{displayUrl}</div>
+        <div className="text-gray-700 text-sm leading-snug">
+          {metaDescription || "Meta description will appear here. Edit it for best SEO results."}
+        </div>
+      </div>
+    )
+  }
+
+  // Auto-generate Canonical URL, OG Title, OG Description, OG Image
+  useEffect(() => {
+    setFormData(prev => {
+      const autoCanonicalUrl = prev.slug ? `https://www.pkminfotech.com/blog/${prev.slug}` : ''
+      const autoOgTitle = prev.metaTitle || prev.title
+      const autoOgDescription = prev.metaDescription || prev.excerpt
+      const autoOgImage = prev.coverImage
+      return {
+        ...prev,
+        canonicalUrl: autoCanonicalUrl,
+        ogTitle: autoOgTitle,
+        ogDescription: autoOgDescription,
+        ogImage: autoOgImage
+      }
+    })
+  }, [formData.slug, formData.metaTitle, formData.title, formData.metaDescription, formData.excerpt, formData.coverImage])
+
   if (initialLoading) {
     return (
       <AdminLayout title="Edit Blog" description="Loading blog...">
@@ -317,6 +374,14 @@ export default function EditBlogPage() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
+                    {/* Google Search Snippet Preview */}
+                    <GoogleSnippetPreview
+                      title={formData.title}
+                      metaTitle={formData.metaTitle}
+                      metaDescription={formData.metaDescription}
+                      slug={formData.slug}
+                      canonicalUrl={formData.canonicalUrl}
+                    />
                     <div>
                       <Label htmlFor="title">Title *</Label>
                       <Input
@@ -330,7 +395,6 @@ export default function EditBlogPage() {
                         {formData.title.length}/60 characters (30-60 is optimal for SEO)
                       </p>
                     </div>
-                    
                     <div>
                       <Label htmlFor="slug">URL Slug</Label>
                       <Input
@@ -356,7 +420,6 @@ export default function EditBlogPage() {
                           <option value="hindi">हिंदी Blog</option>
                         </select>
                       </div>
-                      
                       <div>
                         <FeaturedImagePicker
                           value={formData.coverImage}
@@ -418,26 +481,93 @@ export default function EditBlogPage() {
                       <Input
                         id="focusKeyword"
                         value={formData.focusKeyword}
-                        onChange={(e) => handleFieldChange('focusKeyword', e.target.value)}
+                        readOnly
                         placeholder="Enter your main keyword..."
                       />
                       <p className="text-xs text-gray-600 mt-1">
                         Choose a keyword you want this post to rank for
                       </p>
                     </div>
-                    
+                    <div>
+                      <Label htmlFor="metaTitle">Meta Title</Label>
+                      <Input
+                        id="metaTitle"
+                        value={formData.metaTitle}
+                        readOnly
+                        placeholder="Enter meta title for SEO (optional)"
+                        maxLength={70}
+                      />
+                      <p className="text-xs text-gray-600 mt-1">
+                        {formData.metaTitle.length}/70 characters (recommended: 30-60)
+                      </p>
+                    </div>
                     <div>
                       <Label htmlFor="metaDescription">Meta Description</Label>
                       <Textarea
                         id="metaDescription"
                         value={formData.metaDescription}
-                        onChange={(e) => handleFieldChange('metaDescription', e.target.value)}
+                        readOnly
                         placeholder="Write a compelling description for search engines..."
                         rows={3}
                       />
                       <p className="text-xs text-gray-600 mt-1">
                         {formData.metaDescription.length}/160 characters (120-160 is optimal)
                       </p>
+                    </div>
+                    {/* Canonical URL - readOnly, auto-generated */}
+                    <div>
+                      <Label htmlFor="canonicalUrl">Canonical URL</Label>
+                      <Input
+                        id="canonicalUrl"
+                        value={formData.canonicalUrl}
+                        readOnly
+                        placeholder="https://yourdomain.com/blog/your-slug"
+                      />
+                      <p className="text-xs text-gray-600 mt-1">
+                        Set a canonical URL to avoid duplicate content issues
+                      </p>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {/* OG Title - readOnly, auto-generated */}
+                      <div>
+                        <Label htmlFor="ogTitle">OG Title</Label>
+                        <Input
+                          id="ogTitle"
+                          value={formData.ogTitle}
+                          readOnly
+                          placeholder="Open Graph title for social sharing"
+                        />
+                      </div>
+                      {/* OG Description - readOnly, auto-generated */}
+                      <div>
+                        <Label htmlFor="ogDescription">OG Description</Label>
+                        <Input
+                          id="ogDescription"
+                          value={formData.ogDescription}
+                          readOnly
+                          placeholder="Open Graph description for social sharing"
+                        />
+                      </div>
+                      {/* OG Image - readOnly, auto-generated */}
+                      <div>
+                        <Label htmlFor="ogImage">OG Image URL</Label>
+                        <Input
+                          id="ogImage"
+                          value={formData.ogImage}
+                          readOnly
+                          placeholder="URL for OG image (1200x630 recommended)"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <Label htmlFor="coverImageAlt">Alt Text for Featured Image</Label>
+                      <Input
+                        id="coverImageAlt"
+                        value={formData.coverImageAlt}
+                        readOnly
+                        placeholder="Alt text for featured image (SEO)"
+                        maxLength={120}
+                      />
                     </div>
                   </CardContent>
                 </Card>
