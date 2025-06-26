@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { title, slug, content, excerpt, coverImage, category, status, authorId, focusKeyword, metaDescription } = body
+    const { title, slug, content, excerpt, coverImage, category, status, authorId, focusKeyword, metaDescription, tags } = body
 
     // Validate required fields
     if (!title || !content) {
@@ -111,7 +111,8 @@ export async function POST(request: NextRequest) {
       publishedAt: status === "published" ? new Date() : null,
       // Auto-generated SEO fields (use provided values if available, otherwise use auto-generated)
       focusKeyword: focusKeyword || autoSEO.focusKeyword,
-      metaDescription: metaDescription || autoSEO.metaDescription
+      metaDescription: metaDescription || autoSEO.metaDescription,
+      tags: Array.isArray(tags) ? tags : [] // Add tags to blogData
     }
 
     // Add optional fields if they exist
@@ -138,4 +139,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     )
   }
-} 
+}

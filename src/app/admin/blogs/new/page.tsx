@@ -16,7 +16,6 @@ import FeaturedImagePicker from "@/components/admin/FeaturedImagePicker"
 import { generateSlug } from "@/lib/utils"
 import { Save, ArrowLeft, Eye, Target, FileText, CheckCircle, AlertCircle, BarChart3, Edit } from "lucide-react"
 import Link from "next/link"
-import OptimizedImage from '@/components/OptimizedImage'
 
 export default function NewBlogPage() {
   const { data: session } = useSession()
@@ -35,8 +34,10 @@ export default function NewBlogPage() {
     category: "latest",
     status: "draft",
     focusKeyword: "",
-    metaDescription: ""
+    metaDescription: "",
+    tags: [] as string[] // Added tags field
   })
+  const [tagsInput, setTagsInput] = useState("")
 
   // Word count and reading time calculation
   const calculateWordCount = (text: string) => {
@@ -116,6 +117,11 @@ export default function NewBlogPage() {
     setReadingTime(calculateReadingTime(count))
   }
 
+  // Sync tagsInput with formData.tags
+  useEffect(() => {
+    setTagsInput(formData.tags.join(", "))
+  }, [])
+
   // Update SEO score when relevant fields change
   useEffect(() => {
     setSeoScore(analyzeSEO())
@@ -161,6 +167,28 @@ export default function NewBlogPage() {
     }
   }
 
+  // Enhanced handler for tags input
+  const handleTagsInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTagsInput(e.target.value)
+  }
+  const handleTagsKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault()
+      const value = tagsInput.trim()
+      if (value) {
+        const tags = [...formData.tags, ...value.split(',').map(tag => tag.trim()).filter(Boolean)]
+        setFormData(prev => ({ ...prev, tags: Array.from(new Set(tags)) }))
+        setTagsInput("")
+      }
+    } else if (e.key === 'Backspace' && !tagsInput && formData.tags.length) {
+      // Remove last tag on backspace if input is empty
+      setFormData(prev => ({ ...prev, tags: prev.tags.slice(0, -1) }))
+    }
+  }
+  const handleRemoveTag = (tag: string) => {
+    setFormData(prev => ({ ...prev, tags: prev.tags.filter(t => t !== tag) }))
+  }
+
   const seoStatus = getSEOStatus(seoScore)
   const StatusIcon = seoStatus.icon
 
@@ -203,7 +231,7 @@ export default function NewBlogPage() {
                         {formData.title.length}/60 characters (30-60 is optimal for SEO)
                       </p>
                     </div>
-                    
+
                     <div>
                       <Label htmlFor="slug">URL Slug</Label>
                       <Input
@@ -229,7 +257,7 @@ export default function NewBlogPage() {
                           <option value="hindi">हिंदी Blog</option>
                         </select>
                       </div>
-                      
+
                       <div>
                         <FeaturedImagePicker
                           value={formData.coverImage}
@@ -249,6 +277,30 @@ export default function NewBlogPage() {
                         placeholder="Brief description of your blog post..."
                         rows={3}
                       />
+                    </div>
+
+                    {/* Tags Field */}
+                    <div>
+                      <Label htmlFor="tags">Tags</Label>
+                      <div className="flex flex-wrap gap-2 mb-2">
+                        {formData.tags.map(tag => (
+                          <span key={tag} className="bg-blue-100 text-blue-800 px-2 py-1 rounded flex items-center">
+                            {tag}
+                            <button type="button" className="ml-1 text-xs text-red-500" onClick={() => handleRemoveTag(tag)}>&times;</button>
+                          </span>
+                        ))}
+                      </div>
+                      <Input
+                        id="tags"
+                        value={tagsInput}
+                        onChange={handleTagsInputChange}
+                        onKeyDown={handleTagsKeyDown}
+                        placeholder="Type a tag and press Enter or comma"
+                        autoComplete="off"
+                      />
+                      <p className="text-xs text-gray-600 mt-1">
+                        Add relevant tags for SEO and navigation (press Enter or comma to add)
+                      </p>
                     </div>
                   </CardContent>
                 </Card>
@@ -274,7 +326,7 @@ export default function NewBlogPage() {
                         Choose a keyword you want this post to rank for
                       </p>
                     </div>
-                    
+
                     <div>
                       <Label htmlFor="metaDescription">Meta Description</Label>
                       <Textarea
@@ -331,7 +383,7 @@ export default function NewBlogPage() {
                       <Save className="h-4 w-4 mr-2" />
                       {loading ? "Saving..." : "Save Draft"}
                     </Button>
-                    
+
                     <Button
                       type="button"
                       onClick={(e) => handleSubmit(e, "published")}
@@ -341,7 +393,7 @@ export default function NewBlogPage() {
                       {loading ? "Publishing..." : "Publish Now"}
                     </Button>
                   </div>
-                  
+
                   <p className="text-sm text-gray-600">
                     Save as draft first, then publish when ready
                   </p>
@@ -375,12 +427,11 @@ export default function NewBlogPage() {
                       </span>
                     </div>
                     <div className="mt-2 bg-gray-200 rounded-full h-2">
-                      <div 
-                        className={`h-2 rounded-full transition-all ${
-                          seoScore >= 80 ? 'bg-green-500' : 
-                          seoScore >= 60 ? 'bg-yellow-500' : 
-                          seoScore >= 40 ? 'bg-orange-500' : 'bg-red-500'
-                        }`}
+                      <div
+                        className={`h-2 rounded-full transition-all ${seoScore >= 80 ? 'bg-green-500' :
+                            seoScore >= 60 ? 'bg-yellow-500' :
+                              seoScore >= 40 ? 'bg-orange-500' : 'bg-red-500'
+                          }`}
                         style={{ width: `${seoScore}%` }}
                       ></div>
                     </div>
@@ -388,32 +439,28 @@ export default function NewBlogPage() {
 
                   <div className="space-y-3 text-sm">
                     <div className="flex items-center">
-                      <div className={`w-3 h-3 rounded-full mr-2 ${
-                        formData.title.length >= 30 && formData.title.length <= 60 ? 'bg-green-500' : 
-                        formData.title.length >= 20 && formData.title.length <= 70 ? 'bg-yellow-500' : 'bg-red-500'
-                      }`}></div>
+                      <div className={`w-3 h-3 rounded-full mr-2 ${formData.title.length >= 30 && formData.title.length <= 60 ? 'bg-green-500' :
+                          formData.title.length >= 20 && formData.title.length <= 70 ? 'bg-yellow-500' : 'bg-red-500'
+                        }`}></div>
                       <span>Title length ({formData.title.length} chars)</span>
                     </div>
-                    
+
                     <div className="flex items-center">
-                      <div className={`w-3 h-3 rounded-full mr-2 ${
-                        formData.metaDescription.length >= 120 && formData.metaDescription.length <= 160 ? 'bg-green-500' : 
-                        formData.metaDescription.length >= 100 && formData.metaDescription.length <= 180 ? 'bg-yellow-500' : 'bg-red-500'
-                      }`}></div>
+                      <div className={`w-3 h-3 rounded-full mr-2 ${formData.metaDescription.length >= 120 && formData.metaDescription.length <= 160 ? 'bg-green-500' :
+                          formData.metaDescription.length >= 100 && formData.metaDescription.length <= 180 ? 'bg-yellow-500' : 'bg-red-500'
+                        }`}></div>
                       <span>Meta description ({formData.metaDescription.length} chars)</span>
                     </div>
-                    
+
                     <div className="flex items-center">
-                      <div className={`w-3 h-3 rounded-full mr-2 ${
-                        formData.focusKeyword && formData.title.toLowerCase().includes(formData.focusKeyword.toLowerCase()) ? 'bg-green-500' : 'bg-red-500'
-                      }`}></div>
+                      <div className={`w-3 h-3 rounded-full mr-2 ${formData.focusKeyword && formData.title.toLowerCase().includes(formData.focusKeyword.toLowerCase()) ? 'bg-green-500' : 'bg-red-500'
+                        }`}></div>
                       <span>Focus keyword in title</span>
                     </div>
-                    
+
                     <div className="flex items-center">
-                      <div className={`w-3 h-3 rounded-full mr-2 ${
-                        wordCount >= 300 ? 'bg-green-500' : wordCount >= 150 ? 'bg-yellow-500' : 'bg-red-500'
-                      }`}></div>
+                      <div className={`w-3 h-3 rounded-full mr-2 ${wordCount >= 300 ? 'bg-green-500' : wordCount >= 150 ? 'bg-yellow-500' : 'bg-red-500'
+                        }`}></div>
                       <span>Content length ({wordCount} words)</span>
                     </div>
                   </div>
@@ -457,23 +504,21 @@ export default function NewBlogPage() {
                   <div className="flex items-center justify-between">
                     <span className="text-gray-600">Category:</span>
                     <span className="font-medium text-gray-900">
-                      {formData.category === 'hindi' ? 'हिंदी' : 
-                       formData.category === 'english' ? 'English' : 'Latest'}
+                      {formData.category === 'hindi' ? 'हिंदी' :
+                        formData.category === 'english' ? 'English' : 'Latest'}
                     </span>
                   </div>
                   {formData.coverImage && (
                     <div className="mt-3">
                       <span className="text-gray-600 text-sm">Cover Image Preview:</span>
-                      <OptimizedImage
-              src={"formData.coverImage"}
-              alt={"Cover preview"}
-              width={800}
-              height={600}
-              className="mt-1 w-full h-24 object-cover rounded border"
-              sizes="100vw"
-            /> {
-                          e.currentTarget.style.display = 'none'
-                        }}
+                      <img
+                        src={formData.coverImage}
+                        alt="Cover preview"
+                        width={800}
+                        height={600}
+                        className="mt-1 w-full h-24 object-cover rounded border"
+                        sizes="100vw"
+                        onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
                       />
                     </div>
                   )}
@@ -485,4 +530,4 @@ export default function NewBlogPage() {
       </div>
     </AdminLayout>
   )
-} 
+}

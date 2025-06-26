@@ -15,7 +15,6 @@ import FeaturedImagePicker from "@/components/admin/FeaturedImagePicker"
 import { generateSlug } from "@/lib/utils"
 import { Save, ArrowLeft, Eye, Target, FileText, CheckCircle, AlertCircle, BarChart3, Edit, Loader2 } from "lucide-react"
 import Link from "next/link"
-import OptimizedImage from '@/components/OptimizedImage'
 
 export default function EditBlogPage() {
   const { data: session } = useSession()
@@ -39,8 +38,10 @@ export default function EditBlogPage() {
     category: "latest",
     status: "draft",
     focusKeyword: "",
-    metaDescription: ""
+    metaDescription: "",
+    tags: [] as string[] // Added tags field
   })
+  const [tagsInput, setTagsInput] = useState("")
 
   // Fetch existing blog data
   useEffect(() => {
@@ -58,8 +59,10 @@ export default function EditBlogPage() {
             category: blog.category || "latest",
             status: blog.status || "draft",
             focusKeyword: blog.focusKeyword || "",
-            metaDescription: blog.metaDescription || ""
+            metaDescription: blog.metaDescription || "",
+            tags: blog.tags || []
           })
+          setTagsInput((blog.tags || []).join(", ")) // Sync tagsInput
           
           // Set initial word count
           const count = calculateWordCount(blog.content || "")
@@ -164,6 +167,36 @@ export default function EditBlogPage() {
 
   const handleFieldChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }))
+    setHasChanges(true)
+  }
+
+  // Sync tagsInput with formData.tags when blog loads
+  useEffect(() => {
+    setTagsInput(formData.tags.join(", "))
+  }, [formData.tags])
+
+  // Enhanced handler for tags input
+  const handleTagsInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTagsInput(e.target.value)
+    setHasChanges(true)
+  }
+  const handleTagsKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault()
+      const value = tagsInput.trim()
+      if (value) {
+        const tags = [...formData.tags, ...value.split(',').map(tag => tag.trim()).filter(Boolean)]
+        setFormData(prev => ({ ...prev, tags: Array.from(new Set(tags)) }))
+        setTagsInput("")
+        setHasChanges(true)
+      }
+    } else if (e.key === 'Backspace' && !tagsInput && formData.tags.length) {
+      setFormData(prev => ({ ...prev, tags: prev.tags.slice(0, -1) }))
+      setHasChanges(true)
+    }
+  }
+  const handleRemoveTag = (tag: string) => {
+    setFormData(prev => ({ ...prev, tags: prev.tags.filter(t => t !== tag) }))
     setHasChanges(true)
   }
 
@@ -343,6 +376,30 @@ export default function EditBlogPage() {
                         placeholder="Brief description of your blog post..."
                         rows={3}
                       />
+                    </div>
+
+                    {/* Tags Field */}
+                    <div>
+                      <Label htmlFor="tags">Tags</Label>
+                      <div className="flex flex-wrap gap-2 mb-2">
+                        {formData.tags.map(tag => (
+                          <span key={tag} className="bg-blue-100 text-blue-800 px-2 py-1 rounded flex items-center">
+                            {tag}
+                            <button type="button" className="ml-1 text-xs text-red-500" onClick={() => handleRemoveTag(tag)}>&times;</button>
+                          </span>
+                        ))}
+                      </div>
+                      <Input
+                        id="tags"
+                        value={tagsInput}
+                        onChange={handleTagsInputChange}
+                        onKeyDown={handleTagsKeyDown}
+                        placeholder="Type a tag and press Enter or comma"
+                        autoComplete="off"
+                      />
+                      <p className="text-xs text-gray-600 mt-1">
+                        Add relevant tags for SEO and navigation (press Enter or comma to add)
+                      </p>
                     </div>
                   </CardContent>
                 </Card>
@@ -575,17 +632,15 @@ export default function EditBlogPage() {
                   {formData.coverImage && (
                     <div className="mt-3">
                       <span className="text-gray-600 text-sm">Cover Image Preview:</span>
-                      <OptimizedImage
-              src={"formData.coverImage"}
-              alt={"Cover preview"}
+                      <img
+              src={formData.coverImage}
+              alt="Cover preview"
               width={800}
               height={600}
               className="mt-1 w-full h-24 object-cover rounded border"
               sizes="100vw"
-            /> {
-                          e.currentTarget.style.display = 'none'
-                        }}
-                      />
+              onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
+            />
                     </div>
                   )}
                 </CardContent>
@@ -596,4 +651,4 @@ export default function EditBlogPage() {
       </div>
     </AdminLayout>
   )
-} 
+}
