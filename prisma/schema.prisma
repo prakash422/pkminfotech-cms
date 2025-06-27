@@ -43,6 +43,7 @@ model Blog {
   
   authorId      String    @db.ObjectId
   author        User      @relation(fields: [authorId], references: [id])
+  tags         String[]   @default([]) // New: tags for SEO and navigation
 }
 
 model Ad {

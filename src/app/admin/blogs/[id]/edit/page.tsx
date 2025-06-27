@@ -15,7 +15,6 @@ import FeaturedImagePicker from "@/components/admin/FeaturedImagePicker"
 import { generateSlug } from "@/lib/utils"
 import { Save, ArrowLeft, Eye, Target, FileText, CheckCircle, AlertCircle, BarChart3, Edit, Loader2 } from "lucide-react"
 import Link from "next/link"
-import OptimizedImage from '@/components/OptimizedImage'
 
 export default function EditBlogPage() {
   const { data: session } = useSession()
@@ -36,11 +35,19 @@ export default function EditBlogPage() {
     content: "",
     excerpt: "",
     coverImage: "",
+    coverImageAlt: "", // Alt text for featured image
     category: "latest",
     status: "draft",
     focusKeyword: "",
-    metaDescription: ""
+    metaTitle: "", // Meta Title
+    metaDescription: "",
+    canonicalUrl: "", // Canonical URL
+    ogTitle: "", // Open Graph Title
+    ogDescription: "", // Open Graph Description
+    ogImage: "", // Open Graph Image
+    tags: [] as string[] // Added tags field
   })
+  const [tagsInput, setTagsInput] = useState("")
 
   // Fetch existing blog data
   useEffect(() => {
@@ -55,11 +62,19 @@ export default function EditBlogPage() {
             content: blog.content || "",
             excerpt: blog.excerpt || "",
             coverImage: blog.coverImage || "",
+            coverImageAlt: blog.coverImageAlt || "",
             category: blog.category || "latest",
             status: blog.status || "draft",
             focusKeyword: blog.focusKeyword || "",
-            metaDescription: blog.metaDescription || ""
+            metaTitle: blog.metaTitle || "",
+            metaDescription: blog.metaDescription || "",
+            canonicalUrl: blog.canonicalUrl || "",
+            ogTitle: blog.ogTitle || "",
+            ogDescription: blog.ogDescription || "",
+            ogImage: blog.ogImage || "",
+            tags: blog.tags || []
           })
+          setTagsInput((blog.tags || []).join(", ")) // Sync tagsInput
           
           // Set initial word count
           const count = calculateWordCount(blog.content || "")
@@ -167,6 +182,36 @@ export default function EditBlogPage() {
     setHasChanges(true)
   }
 
+  // Sync tagsInput with formData.tags when blog loads
+  useEffect(() => {
+    setTagsInput(formData.tags.join(", "))
+  }, [formData.tags])
+
+  // Enhanced handler for tags input
+  const handleTagsInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTagsInput(e.target.value)
+    setHasChanges(true)
+  }
+  const handleTagsKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault()
+      const value = tagsInput.trim()
+      if (value) {
+        const tags = [...formData.tags, ...value.split(',').map(tag => tag.trim()).filter(Boolean)]
+        setFormData(prev => ({ ...prev, tags: Array.from(new Set(tags)) }))
+        setTagsInput("")
+        setHasChanges(true)
+      }
+    } else if (e.key === 'Backspace' && !tagsInput && formData.tags.length) {
+      setFormData(prev => ({ ...prev, tags: prev.tags.slice(0, -1) }))
+      setHasChanges(true)
+    }
+  }
+  const handleRemoveTag = (tag: string) => {
+    setFormData(prev => ({ ...prev, tags: prev.tags.filter(t => t !== tag) }))
+    setHasChanges(true)
+  }
+
   // Update SEO score when relevant fields change
   useEffect(() => {
     setSeoScore(analyzeSEO())
@@ -213,6 +258,51 @@ export default function EditBlogPage() {
 
   const seoStatus = getSEOStatus(seoScore)
   const StatusIcon = seoStatus.icon
+
+  // --- Google Search Snippet Preview Component ---
+  function GoogleSnippetPreview({
+    title,
+    metaTitle,
+    metaDescription,
+    slug,
+    canonicalUrl
+  }: {
+    title: string
+    metaTitle: string
+    metaDescription: string
+    slug: string
+    canonicalUrl: string
+  }) {
+    const displayTitle = metaTitle || title
+    const displayUrl = canonicalUrl || (slug ? `https://www.pkminfotech.com/blog/${slug}` : "https://www.pkminfotech.com/blog/your-slug")
+    return (
+      <div className="bg-white border border-gray-200 rounded p-4 mb-4">
+        <div className="mb-1 text-xs text-gray-500">Google Preview</div>
+        <div className="text-blue-800 text-lg leading-tight font-medium truncate">{displayTitle || "Meta Title or Blog Title"}</div>
+        <div className="text-green-700 text-xs mb-1 truncate">{displayUrl}</div>
+        <div className="text-gray-700 text-sm leading-snug">
+          {metaDescription || "Meta description will appear here. Edit it for best SEO results."}
+        </div>
+      </div>
+    )
+  }
+
+  // Auto-generate Canonical URL, OG Title, OG Description, OG Image
+  useEffect(() => {
+    setFormData(prev => {
+      const autoCanonicalUrl = prev.slug ? `https://www.pkminfotech.com/blog/${prev.slug}` : ''
+      const autoOgTitle = prev.metaTitle || prev.title
+      const autoOgDescription = prev.metaDescription || prev.excerpt
+      const autoOgImage = prev.coverImage
+      return {
+        ...prev,
+        canonicalUrl: autoCanonicalUrl,
+        ogTitle: autoOgTitle,
+        ogDescription: autoOgDescription,
+        ogImage: autoOgImage
+      }
+    })
+  }, [formData.slug, formData.metaTitle, formData.title, formData.metaDescription, formData.excerpt, formData.coverImage])
 
   if (initialLoading) {
     return (
@@ -275,116 +365,6 @@ export default function EditBlogPage() {
           <div className="lg:col-span-2">
             <form onSubmit={(e) => handleSubmit(e, formData.status)}>
               <div className="space-y-6">
-                {/* Blog Details */}
-                <Card className="bg-white shadow-sm border border-gray-200">
-                  <CardHeader>
-                    <CardTitle className="text-gray-900 flex items-center">
-                      <FileText className="h-5 w-5 mr-2" />
-                      Blog Details
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div>
-                      <Label htmlFor="title">Title *</Label>
-                      <Input
-                        id="title"
-                        value={formData.title}
-                        onChange={(e) => handleTitleChange(e.target.value)}
-                        placeholder="Enter your blog title..."
-                        required
-                      />
-                      <p className="text-xs text-gray-600 mt-1">
-                        {formData.title.length}/60 characters (30-60 is optimal for SEO)
-                      </p>
-                    </div>
-                    
-                    <div>
-                      <Label htmlFor="slug">URL Slug</Label>
-                      <Input
-                        id="slug"
-                        value={formData.slug}
-                        onChange={(e) => handleFieldChange('slug', e.target.value)}
-                        placeholder="your-blog-url-slug"
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="category">Category *</Label>
-                        <select
-                          id="category"
-                          value={formData.category}
-                          onChange={(e) => handleFieldChange('category', e.target.value)}
-                          className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
-                          required
-                        >
-                          <option value="latest">Latest Blog</option>
-                          <option value="english">English Blog</option>
-                          <option value="hindi">हिंदी Blog</option>
-                        </select>
-                      </div>
-                      
-                      <div>
-                        <FeaturedImagePicker
-                          value={formData.coverImage}
-                          onChange={(url) => handleFieldChange('coverImage', url)}
-                          label="Featured Image"
-                          placeholder="Enter image URL or select from media..."
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <Label htmlFor="excerpt">Excerpt</Label>
-                      <Textarea
-                        id="excerpt"
-                        value={formData.excerpt}
-                        onChange={(e) => handleFieldChange('excerpt', e.target.value)}
-                        placeholder="Brief description of your blog post..."
-                        rows={3}
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* SEO Settings */}
-                <Card className="bg-white shadow-sm border border-gray-200">
-                  <CardHeader>
-                    <CardTitle className="text-gray-900 flex items-center">
-                      <Target className="h-5 w-5 mr-2" />
-                      SEO Settings
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div>
-                      <Label htmlFor="focusKeyword">Focus Keyword</Label>
-                      <Input
-                        id="focusKeyword"
-                        value={formData.focusKeyword}
-                        onChange={(e) => handleFieldChange('focusKeyword', e.target.value)}
-                        placeholder="Enter your main keyword..."
-                      />
-                      <p className="text-xs text-gray-600 mt-1">
-                        Choose a keyword you want this post to rank for
-                      </p>
-                    </div>
-                    
-                    <div>
-                      <Label htmlFor="metaDescription">Meta Description</Label>
-                      <Textarea
-                        id="metaDescription"
-                        value={formData.metaDescription}
-                        onChange={(e) => handleFieldChange('metaDescription', e.target.value)}
-                        placeholder="Write a compelling description for search engines..."
-                        rows={3}
-                      />
-                      <p className="text-xs text-gray-600 mt-1">
-                        {formData.metaDescription.length}/160 characters (120-160 is optimal)
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-
                 {/* Content Editor */}
                 <Card className="bg-white shadow-sm border border-gray-200">
                   <CardHeader>
@@ -411,6 +391,213 @@ export default function EditBlogPage() {
                       onChange={handleContentChange}
                       placeholder="Start writing your amazing blog post..."
                     />
+                  </CardContent>
+                </Card>
+
+                {/* Blog Details */}
+                <Card className="bg-white shadow-sm border border-gray-200">
+                  <CardHeader>
+                    <CardTitle className="text-gray-900 flex items-center">
+                      <FileText className="h-5 w-5 mr-2" />
+                      Blog Details
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {/* Google Search Snippet Preview */}
+                    <GoogleSnippetPreview
+                      title={formData.title}
+                      metaTitle={formData.metaTitle}
+                      metaDescription={formData.metaDescription}
+                      slug={formData.slug}
+                      canonicalUrl={formData.canonicalUrl}
+                    />
+                    <div>
+                      <Label htmlFor="title">Title *</Label>
+                      <Input
+                        id="title"
+                        value={formData.title}
+                        onChange={(e) => handleTitleChange(e.target.value)}
+                        placeholder="Enter your blog title..."
+                        required
+                      />
+                      <p className="text-xs text-gray-600 mt-1">
+                        {formData.title.length}/60 characters (30-60 is optimal for SEO)
+                      </p>
+                    </div>
+                    <div>
+                      <Label htmlFor="slug">URL Slug</Label>
+                      <Input
+                        id="slug"
+                        value={formData.slug}
+                        onChange={(e) => handleFieldChange('slug', e.target.value)}
+                        placeholder="your-blog-url-slug"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="category">Category *</Label>
+                        <select
+                          id="category"
+                          value={formData.category}
+                          onChange={(e) => handleFieldChange('category', e.target.value)}
+                          className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                          required
+                        >
+                          <option value="latest">Latest Blog</option>
+                          <option value="english">English Blog</option>
+                          <option value="hindi">हिंदी Blog</option>
+                        </select>
+                      </div>
+                      <div>
+                        <FeaturedImagePicker
+                          value={formData.coverImage}
+                          onChange={(url) => handleFieldChange('coverImage', url)}
+                          label="Featured Image"
+                          placeholder="Enter image URL or select from media..."
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="excerpt">Excerpt</Label>
+                      <Textarea
+                        id="excerpt"
+                        value={formData.excerpt}
+                        onChange={(e) => handleFieldChange('excerpt', e.target.value)}
+                        placeholder="Brief description of your blog post..."
+                        rows={3}
+                      />
+                    </div>
+
+                    {/* Tags Field */}
+                    <div>
+                      <Label htmlFor="tags">Tags</Label>
+                      <div className="flex flex-wrap gap-2 mb-2">
+                        {formData.tags.map(tag => (
+                          <span key={tag} className="bg-blue-100 text-blue-800 px-2 py-1 rounded flex items-center">
+                            {tag}
+                            <button type="button" className="ml-1 text-xs text-red-500" onClick={() => handleRemoveTag(tag)}>&times;</button>
+                          </span>
+                        ))}
+                      </div>
+                      <Input
+                        id="tags"
+                        value={tagsInput}
+                        onChange={handleTagsInputChange}
+                        onKeyDown={handleTagsKeyDown}
+                        placeholder="Type a tag and press Enter or comma"
+                        autoComplete="off"
+                      />
+                      <p className="text-xs text-gray-600 mt-1">
+                        Add relevant tags for SEO and navigation (press Enter or comma to add)
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* SEO Settings - at the end */}
+                <Card className="bg-white shadow-sm border border-gray-200">
+                  <CardHeader>
+                    <CardTitle className="text-gray-900 flex items-center">
+                      <Target className="h-5 w-5 mr-2" />
+                      SEO Settings
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <Label htmlFor="focusKeyword">Focus Keyword</Label>
+                      <Input
+                        id="focusKeyword"
+                        value={formData.focusKeyword}
+                        readOnly
+                        placeholder="Enter your main keyword..."
+                      />
+                      <p className="text-xs text-gray-600 mt-1">
+                        Choose a keyword you want this post to rank for
+                      </p>
+                    </div>
+                    <div>
+                      <Label htmlFor="metaTitle">Meta Title</Label>
+                      <Input
+                        id="metaTitle"
+                        value={formData.metaTitle}
+                        readOnly
+                        placeholder="Enter meta title for SEO (optional)"
+                        maxLength={70}
+                      />
+                      <p className="text-xs text-gray-600 mt-1">
+                        {formData.metaTitle.length}/70 characters (recommended: 30-60)
+                      </p>
+                    </div>
+                    <div>
+                      <Label htmlFor="metaDescription">Meta Description</Label>
+                      <Textarea
+                        id="metaDescription"
+                        value={formData.metaDescription}
+                        readOnly
+                        placeholder="Write a compelling description for search engines..."
+                        rows={3}
+                      />
+                      <p className="text-xs text-gray-600 mt-1">
+                        {formData.metaDescription.length}/160 characters (120-160 is optimal)
+                      </p>
+                    </div>
+                    {/* Canonical URL - readOnly, auto-generated */}
+                    <div>
+                      <Label htmlFor="canonicalUrl">Canonical URL</Label>
+                      <Input
+                        id="canonicalUrl"
+                        value={formData.canonicalUrl}
+                        readOnly
+                        placeholder="https://yourdomain.com/blog/your-slug"
+                      />
+                      <p className="text-xs text-gray-600 mt-1">
+                        Set a canonical URL to avoid duplicate content issues
+                      </p>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {/* OG Title - readOnly, auto-generated */}
+                      <div>
+                        <Label htmlFor="ogTitle">OG Title</Label>
+                        <Input
+                          id="ogTitle"
+                          value={formData.ogTitle}
+                          readOnly
+                          placeholder="Open Graph title for social sharing"
+                        />
+                      </div>
+                      {/* OG Description - readOnly, auto-generated */}
+                      <div>
+                        <Label htmlFor="ogDescription">OG Description</Label>
+                        <Input
+                          id="ogDescription"
+                          value={formData.ogDescription}
+                          readOnly
+                          placeholder="Open Graph description for social sharing"
+                        />
+                      </div>
+                      {/* OG Image - readOnly, auto-generated */}
+                      <div>
+                        <Label htmlFor="ogImage">OG Image URL</Label>
+                        <Input
+                          id="ogImage"
+                          value={formData.ogImage}
+                          readOnly
+                          placeholder="URL for OG image (1200x630 recommended)"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <Label htmlFor="coverImageAlt">Alt Text for Featured Image</Label>
+                      <Input
+                        id="coverImageAlt"
+                        value={formData.coverImageAlt}
+                        readOnly
+                        placeholder="Alt text for featured image (SEO)"
+                        maxLength={120}
+                      />
+                    </div>
                   </CardContent>
                 </Card>
 
@@ -575,17 +762,15 @@ export default function EditBlogPage() {
                   {formData.coverImage && (
                     <div className="mt-3">
                       <span className="text-gray-600 text-sm">Cover Image Preview:</span>
-                      <OptimizedImage
-              src={"formData.coverImage"}
-              alt={"Cover preview"}
+                      <img
+              src={formData.coverImage}
+              alt="Cover preview"
               width={800}
               height={600}
               className="mt-1 w-full h-24 object-cover rounded border"
               sizes="100vw"
-            /> {
-                          e.currentTarget.style.display = 'none'
-                        }}
-                      />
+              onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
+            />
                     </div>
                   )}
                 </CardContent>
@@ -596,4 +781,4 @@ export default function EditBlogPage() {
       </div>
     </AdminLayout>
   )
-} 
+}
