@@ -260,6 +260,35 @@ export default function NewBlogPage() {
           <div className="lg:col-span-2">
             <form onSubmit={(e) => handleSubmit(e, "draft")}>
               <div className="space-y-6">
+                {/* Content Editor */}
+                <Card className="bg-white shadow-sm border border-gray-200">
+                  <CardHeader>
+                    <CardTitle className="text-gray-900 flex items-center justify-between">
+                      <span className="flex items-center">
+                        <Edit className="h-5 w-5 mr-2" />
+                        Content
+                      </span>
+                      <div className="flex items-center space-x-4 text-sm">
+                        <span className="text-gray-600">
+                          <BarChart3 className="h-4 w-4 inline mr-1" />
+                          {wordCount} words
+                        </span>
+                        <span className="text-gray-600">
+                          <Eye className="h-4 w-4 inline mr-1" />
+                          {readingTime} min read
+                        </span>
+                      </div>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <RichTextEditor
+                      content={formData.content}
+                      onChange={handleContentChange}
+                      placeholder="Start writing your amazing blog post..."
+                    />
+                  </CardContent>
+                </Card>
+
                 {/* Blog Details */}
                 <Card className="bg-white shadow-sm border border-gray-200">
                   <CardHeader>
@@ -463,35 +492,6 @@ export default function NewBlogPage() {
                         maxLength={120}
                       />
                     </div>
-                  </CardContent>
-                </Card>
-
-                {/* Content Editor */}
-                <Card className="bg-white shadow-sm border border-gray-200">
-                  <CardHeader>
-                    <CardTitle className="text-gray-900 flex items-center justify-between">
-                      <span className="flex items-center">
-                        <Edit className="h-5 w-5 mr-2" />
-                        Content
-                      </span>
-                      <div className="flex items-center space-x-4 text-sm">
-                        <span className="text-gray-600">
-                          <BarChart3 className="h-4 w-4 inline mr-1" />
-                          {wordCount} words
-                        </span>
-                        <span className="text-gray-600">
-                          <Eye className="h-4 w-4 inline mr-1" />
-                          {readingTime} min read
-                        </span>
-                      </div>
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <RichTextEditor
-                      content={formData.content}
-                      onChange={handleContentChange}
-                      placeholder="Start writing your amazing blog post..."
-                    />
                   </CardContent>
                 </Card>
 
