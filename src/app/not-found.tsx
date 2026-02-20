@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 export default async function NotFound() {
   // Get the current path for intelligent suggestions
-  const headersList = headers()
+  const headersList = await headers()
   const pathname = headersList.get('x-pathname') || ''
   
   // Generate intelligent suggestions based on path

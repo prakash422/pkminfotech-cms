@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/seo-optimization.css";
 import SessionProvider from "@/components/providers/session-provider";
 import { getServerSession } from "next-auth";
@@ -8,6 +9,7 @@ import { authOptions } from "@/lib/auth";
 import Analytics from "@/components/analytics";
 import StructuredData from "@/components/structured-data";
 import ClientScripts from "@/components/ClientScripts";
+import SiteChrome, { SiteFooter } from "@/components/SiteChrome";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -121,8 +123,12 @@ export default async function RootLayout({
           Skip to main content
         </a>
         <SessionProvider>
-          <div id="main-content">
-            {children}
+          <div id="main-content" className="d-flex flex-column min-vh-100">
+            <SiteChrome />
+            <div className="flex-grow-1">
+              {children}
+            </div>
+            <SiteFooter />
           </div>
           <Analytics />
           <StructuredData />

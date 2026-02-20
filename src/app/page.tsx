@@ -1,14 +1,12 @@
 export const revalidate = 60
 import Image from "next/image"
 import Link from "next/link"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { prisma } from "@/lib/prisma"
-import { ArrowLeft, Calendar, Home, Search, User } from "lucide-react"
+import { ArrowLeft, Calendar, Search, User, BadgeCheck, BookOpenCheck, ClipboardCheck, TimerReset, Wrench, ArrowRight, Clock3, Smartphone, Calculator, Percent, GraduationCap, HeartPulse, ChevronLeft, ChevronRight, MonitorCheck, Rows3, Trophy, Users, Newspaper, Globe2 } from "lucide-react"
 import { formatDate, truncateText } from "@/lib/utils"
-import MobileMenu from "@/components/MobileMenu"
 import { Metadata } from "next"
-import { Suspense } from 'react'
 import ClientScripts from '@/components/ClientScripts'
 import OptimizedImage from '@/components/OptimizedImage'
 import { generateCanonicalUrl } from "@/lib/canonical-utils"
@@ -252,6 +250,640 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
   const selectedCategory = params.category || 'all'
   
   const blogsData = await getBlogs(selectedCategory === 'all' ? undefined : selectedCategory, currentPage)
+  const latestBlogs = blogsData.blogs.slice(0, 3)
+  const featureCards = [
+    {
+      title: "Exam Practice",
+      description: "Practice multiple choice questions across major exams.",
+      cta: "Practice Now",
+      href: "/exams",
+      icon: BookOpenCheck,
+      miniIcon: BadgeCheck,
+      tone: "feature-tone-1",
+    },
+    {
+      title: "Mock Tests",
+      description: "Take full-length timed tests and check your score instantly.",
+      cta: "Start Test",
+      href: "/mock-tests",
+      icon: ClipboardCheck,
+      miniIcon: Clock3,
+      tone: "feature-tone-2",
+    },
+    {
+      title: "Daily Quiz",
+      description: "Test your general knowledge with short daily quizzes.",
+      cta: "Take Quiz",
+      href: "/practice",
+      icon: TimerReset,
+      miniIcon: ArrowRight,
+      tone: "feature-tone-3",
+    },
+    {
+      title: "Online Tools",
+      description: "Use calculators for age, percentage, GPA and more.",
+      cta: "Use Tools",
+      href: "/tools",
+      icon: Wrench,
+      miniIcon: Calculator,
+      tone: "feature-tone-4",
+    },
+  ]
+
+  const toolCards = [
+    { title: "Age Calculator", href: "/tools/age-calculator", text: "Find exact age from date of birth.", icon: Calculator, tone: "tool-tone-1" },
+    { title: "Percentage Calculator", href: "/tools/percentage-calculator", text: "Calculate percentages in seconds.", icon: Percent, tone: "tool-tone-2" },
+    { title: "GPA Calculator", href: "/tools/gpa-calculator", text: "Estimate semester and cumulative GPA.", icon: GraduationCap, tone: "tool-tone-3" },
+    { title: "BMI Calculator", href: "/tools/bmi-calculator", text: "Check healthy body mass index quickly.", icon: HeartPulse, tone: "tool-tone-4" },
+  ]
+
+  if (process.env.NEXT_PUBLIC_HOMEPAGE_LAYOUT !== "legacy") {
+    return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(generateStructuredData(blogsData.blogs))
+        }}
+      />
+
+      <main className="bg-light pb-4 pt-2">
+        <div className="container compact-home pt-0">
+          <section className="card border-0 shadow-sm figma-space-24 overflow-hidden compact-hero">
+            <div className="figma-hero-unified position-relative">
+              <div className="figma-hero-content">
+                <h1 className="fw-bold text-dark mb-2 compact-title figma-title">
+                  India&apos;s Smart Exam Practice &amp;
+                  <br className="d-none d-md-block" />
+                  Free Online Tools Platform
+                </h1>
+                <p className="text-secondary mb-3 compact-subtitle">
+                  Practice mock tests, daily quizzes &amp; useful calculators - all in one place.
+                </p>
+                <div className="d-flex flex-wrap gap-2 figma-hero-cta">
+                  <Link href="/mock-tests" className="figma-btn figma-btn-primary">
+                    Start Mock Test <ArrowRight size={14} />
+                  </Link>
+                  <Link href="/tools" className="figma-btn figma-btn-outline">
+                    Explore Tools <ArrowRight size={14} />
+                  </Link>
+                </div>
+                <div className="d-flex flex-wrap gap-2 mt-3">
+                  <span className="hero-chip"><BadgeCheck size={14} /> 100% Free</span>
+                  <span className="hero-chip"><Clock3 size={14} /> Instant Results</span>
+                  <span className="hero-chip"><Users size={14} /> Trusted by 10k+ Users</span>
+                </div>
+              </div>
+              <div className="figma-hero-image-floating" aria-hidden="true">
+                <Image
+                  src="/home/herobanner.jpeg"
+                  alt="PKMinfotech hero banner"
+                  width={860}
+                  height={480}
+                  priority
+                  className="w-100 h-auto"
+                  sizes="(max-width: 991px) 100vw, 46vw"
+                />
+              </div>
+            </div>
+          </section>
+
+          <section className="figma-space-24">
+            <h2 className="text-center fw-bold mb-3 h4 figma-section-title">Explore Our Core Features</h2>
+            <div className="row g-3">
+              {featureCards.map((feature) => {
+                const Icon = feature.icon
+                return (
+                  <div key={feature.title} className="col-sm-6 col-lg-3">
+                    <div className="card h-100 border figma-card feature-card">
+                      <div className="card-body d-flex flex-column p-2 p-md-3 feature-card-body">
+                        <div className={`feature-illustration mb-2 mx-auto ${feature.tone}`}>
+                          <span className="feature-cloud" />
+                          <Icon size={24} className="text-primary" />
+                        </div>
+                        <h3 className="h6 card-title fw-semibold mb-2 text-center">{feature.title}</h3>
+                        <p className="card-text text-secondary small flex-grow-1 text-center feature-description">{feature.description}</p>
+                        <Link href={feature.href} className="figma-btn figma-btn-primary figma-btn-block mt-1">
+                          {feature.cta} <ArrowRight size={14} />
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </section>
+
+          <section className="figma-space-24">
+            <h2 className="text-center fw-bold mb-3 h4 figma-section-title">Popular Free Tools</h2>
+            <div className="d-flex align-items-center gap-2 mb-2 tools-nav-line">
+              <button className="figma-arrow-btn" aria-label="Previous tools">
+                <ChevronLeft size={14} />
+              </button>
+              <div className="flex-grow-1 border-top border-secondary-subtle" />
+              <button className="figma-arrow-btn" aria-label="Next tools">
+                <ChevronRight size={14} />
+              </button>
+            </div>
+            <div className="row g-3">
+              {toolCards.map((tool) => (
+                <div key={tool.title} className="col-6 col-lg-3">
+                  <div className="card h-100 figma-card tool-card">
+                    <div className="card-body p-3 tool-card-body">
+                      <div className="d-flex align-items-center mb-2">
+                        <div className={`d-inline-flex align-items-center justify-content-center rounded-circle me-2 tool-icon-wrap ${tool.tone}`}>
+                          <tool.icon size={14} className="text-primary" />
+                        </div>
+                        <h3 className="h6 fw-semibold mb-0 tool-card-title">{tool.title}</h3>
+                      </div>
+                      <p className="small text-secondary mb-2 tool-card-text">{tool.text}</p>
+                      <Link href={tool.href} className="figma-btn figma-btn-sm tool-cta-btn">
+                        Use Now <ArrowRight size={12} />
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="figma-space-24">
+            <h2 className="text-center fw-bold mb-3 h4 figma-section-title">Latest Articles &amp; Updates</h2>
+            <div className="row g-3">
+              {latestBlogs.length > 0 ? (
+                latestBlogs.map((blog: BlogPost) => (
+                  <article key={blog.id} className="col-md-6 col-lg-4">
+                    <div className="card h-100 border figma-card">
+                      <div className="ratio ratio-16x9 overflow-hidden bg-light">
+                        {blog.coverImage ? (
+                          <OptimizedImage
+                            src={blog.coverImage}
+                            alt={blog.title}
+                            width={800}
+                            height={450}
+                            className="w-100 h-100 object-fit-cover"
+                            sizes="(max-width: 768px) 100vw, 33vw"
+                          />
+                        ) : (
+                          <div className="d-flex align-items-center justify-content-center text-secondary">
+                            Article Image
+                          </div>
+                        )}
+                      </div>
+                      <div className="card-body p-3">
+                        <h3 className="h6 card-title">
+                          <Link href={`/${blog.slug}`} className="text-decoration-none text-dark">
+                            {blog.title}
+                          </Link>
+                        </h3>
+                        <p className="small text-secondary mb-3">
+                          {truncateText(blog.excerpt || blog.title, 90)}
+                        </p>
+                        <div className="d-flex justify-content-between text-muted small">
+                          <span>{formatDate(blog.publishedAt || blog.createdAt)}</span>
+                          <span>5 min read</span>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                ))
+              ) : (
+                <div className="col-12">
+                  <div className="alert alert-light border text-center mb-0">
+                    Latest articles will appear here once published.
+                  </div>
+                </div>
+              )}
+            </div>
+          </section>
+
+          <section>
+            <h2 className="text-center fw-bold mb-3 h4 figma-section-title">Why Choose Us?</h2>
+            <p className="text-center text-secondary small mb-3">
+              Built for practical preparation: fast interface, realistic tests, and updated content.
+            </p>
+            <div className="row g-3">
+              <div className="col-sm-6 col-lg-3">
+                <div className="card border figma-card h-100 why-card">
+                  <div className="card-body text-center p-3">
+                    <span className="why-icon-box mb-2">
+                      <Clock3 className="text-primary" size={22} />
+                    </span>
+                    <h3 className="h6 fw-semibold">Trusted Since 2019 - 6+ Years of Consistent Indexing</h3>
+                    <p className="small text-secondary mb-0">Long-term indexed presence with stable updates builds stronger exam-prep trust.</p>
+                  </div>
+                </div>
+              </div>
+              <div className="col-sm-6 col-lg-3">
+                <div className="card border figma-card h-100 why-card">
+                  <div className="card-body text-center p-3">
+                    <span className="why-icon-box mb-2">
+                      <BadgeCheck className="text-primary" size={22} />
+                    </span>
+                    <h3 className="h6 fw-semibold">Completely Free Practice - No Login Required</h3>
+                    <p className="small text-secondary mb-0">Start instantly without signup friction across practice sets, quizzes, and tools.</p>
+                  </div>
+                </div>
+              </div>
+              <div className="col-sm-6 col-lg-3">
+                <div className="card border figma-card h-100 why-card">
+                  <div className="card-body text-center p-3">
+                    <span className="why-icon-box mb-2">
+                      <Smartphone className="text-primary" size={22} />
+                    </span>
+                    <h3 className="h6 fw-semibold">Fast &amp; Mobile Friendly</h3>
+                    <p className="small text-secondary mb-0">Lightweight pages with touch-friendly UI and quick loading.</p>
+                  </div>
+                </div>
+              </div>
+              <div className="col-sm-6 col-lg-3">
+                <div className="card border figma-card h-100 why-card">
+                  <div className="card-body text-center p-3">
+                    <span className="why-icon-box mb-2">
+                      <Newspaper className="text-primary" size={22} />
+                    </span>
+                    <h3 className="h6 fw-semibold">Regular Updates</h3>
+                    <p className="small text-secondary mb-0">New sets, mock tests, and tool improvements added regularly.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+
+      <style>{`
+        .compact-home {
+          max-width: 1120px;
+        }
+        .figma-space-24 {
+          margin-bottom: 24px;
+        }
+        .compact-hero {
+          border-radius: 0.9rem;
+        }
+        .figma-hero-unified {
+          background: #ffffff;
+          min-height: 320px;
+          padding: 24px;
+        }
+        .figma-hero-content {
+          position: relative;
+          z-index: 2;
+          max-width: 54%;
+        }
+        .figma-hero-image-floating {
+          position: absolute;
+          right: 10px;
+          top: 50%;
+          transform: translateY(-50%);
+          width: min(46%, 430px);
+          z-index: 1;
+          filter: none;
+        }
+        .hero-chip {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          height: 30px;
+          padding: 0 10px;
+          border-radius: 999px;
+          background: rgba(255, 255, 255, 0.78);
+          border: 1px solid #dbe7f7;
+          color: #1f2937;
+          font-size: 12px;
+          font-weight: 600;
+        }
+        .figma-title {
+          max-width: 540px;
+        }
+        .figma-card {
+          border-color: #e8edf4 !important;
+          border-radius: 0.75rem;
+          box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06), 0 2px 6px rgba(15, 23, 42, 0.03);
+          transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+        }
+        .figma-card:hover {
+          transform: translateY(-4px);
+          border-color: #d9e4f5 !important;
+          box-shadow: 0 14px 28px rgba(15, 23, 42, 0.1), 0 6px 12px rgba(15, 23, 42, 0.06);
+        }
+        .figma-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 6px;
+          border-radius: 10px;
+          font-size: 13px;
+          font-weight: 600;
+          line-height: 1;
+          height: 36px;
+          padding: 0 15px;
+          text-decoration: none;
+          transition: all 0.2s ease;
+        }
+        .figma-btn-primary {
+          background: linear-gradient(180deg, #2d7ef7 0%, #1a73e8 100%);
+          color: #fff;
+          border: 1px solid #1a73e8;
+          box-shadow: 0 3px 8px rgba(26, 115, 232, 0.2);
+        }
+        .figma-btn-primary:hover {
+          background: linear-gradient(180deg, #2872df 0%, #1669d6 100%);
+          border-color: #1669d6;
+          color: #fff;
+        }
+        .figma-btn-outline {
+          background: #fff;
+          color: #374151;
+          border: 1px solid #d1d5db;
+        }
+        .figma-btn-outline:hover {
+          border-color: #9ca3af;
+          color: #111827;
+        }
+        .figma-btn-block {
+          width: 100%;
+        }
+        .figma-btn-sm {
+          height: 32px;
+          font-size: 12px;
+          padding: 0 12px;
+        }
+        .figma-section-title {
+          letter-spacing: -0.2px;
+          font-size: clamp(1.6rem, 2vw, 2rem);
+        }
+        .figma-arrow-btn {
+          width: 28px;
+          height: 28px;
+          border-radius: 50%;
+          border: 1px solid #d5dbe5;
+          background: #fff;
+          color: #7a8699;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .compact-title {
+          font-size: clamp(1.35rem, 2.2vw, 2rem);
+          line-height: 1.25;
+        }
+        .compact-subtitle {
+          font-size: 0.95rem;
+        }
+        .compact-hero-graphic {
+          width: 100%;
+          max-width: 250px;
+        }
+        .hero-pill {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 28px;
+          height: 28px;
+          border-radius: 999px;
+          background: #ffffff;
+          color: #0d6efd;
+          border: 1px solid #dbe9ff;
+        }
+        .feature-tone-1 { background: #e9f2ff; }
+        .feature-tone-2 { background: #e8f8ff; }
+        .feature-tone-3 { background: #eef7ff; }
+        .feature-tone-4 { background: #eaf4ff; }
+        .feature-illustration {
+          width: 74px;
+          height: 52px;
+          border-radius: 14px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          border: 1px solid #dfeafb;
+          position: relative;
+        }
+        .feature-card {
+          min-height: 224px;
+        }
+        .feature-card-body {
+          gap: 2px;
+          padding: 14px !important;
+        }
+        .feature-card .card-title {
+          margin-bottom: 6px !important;
+          font-size: 1.02rem;
+        }
+        .feature-description {
+          min-height: 44px;
+          font-size: 0.84rem !important;
+          line-height: 1.35;
+          margin-bottom: 8px !important;
+        }
+        .feature-card .figma-btn {
+          height: 33px;
+          font-size: 12px;
+          padding: 0 11px;
+          border-radius: 9px;
+        }
+        .tool-card {
+          min-height: 170px;
+          border: 1px solid #e7edf7 !important;
+          background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+          overflow: hidden;
+        }
+        .tool-card .card-body {
+          display: flex;
+          flex-direction: column;
+        }
+        .tool-card-body {
+          gap: 2px;
+        }
+        .tool-card .figma-btn {
+          align-self: flex-start;
+          margin-top: auto;
+        }
+        .tool-icon-wrap {
+          width: 38px;
+          height: 38px;
+          border: 1px solid #dce7f7;
+          flex-shrink: 0;
+        }
+        .tool-icon-wrap svg {
+          width: 17px;
+          height: 17px;
+        }
+        .tool-card-title {
+          line-height: 1.2;
+          color: #1f2937;
+        }
+        .tool-card-text {
+          line-height: 1.35;
+          min-height: 36px;
+        }
+        .tool-cta-btn {
+          background: linear-gradient(180deg, #4d95ff 0%, #2b7ff4 45%, #1a73e8 100%);
+          color: #fff;
+          border: 1px solid #1f79f0;
+          box-shadow: 0 6px 14px rgba(26, 115, 232, 0.26);
+          min-width: 94px;
+        }
+        .tool-cta-btn:hover {
+          background: linear-gradient(180deg, #3f88f9 0%, #2478ec 45%, #176bdb 100%);
+          border-color: #1669d6;
+          color: #fff;
+          transform: translateY(-1px);
+        }
+        .why-card {
+          min-height: 148px;
+        }
+        .feature-cloud {
+          position: absolute;
+          left: 8px;
+          top: 7px;
+          width: 18px;
+          height: 10px;
+          border-radius: 10px;
+          background: rgba(255, 255, 255, 0.75);
+        }
+        .why-icon-box {
+          width: 48px;
+          height: 40px;
+          border-radius: 12px;
+          background: #eaf3ff;
+          border: 1px solid #dbe8fb;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .tool-tone-1 { background: #ebf4ff; }
+        .tool-tone-2 { background: #eef7ff; }
+        .tool-tone-3 { background: #e8f8ff; }
+        .tool-tone-4 { background: #eaf5ff; }
+        @media (max-width: 767px) {
+          .figma-space-24 {
+            margin-bottom: 20px;
+          }
+          .feature-card,
+          .tool-card,
+          .why-card,
+          .feature-description {
+            min-height: unset;
+          }
+          .figma-section-title {
+            font-size: 1.35rem;
+            line-height: 1.25;
+            margin-bottom: 12px !important;
+          }
+          .figma-hero-unified {
+            min-height: auto;
+            padding: 16px;
+          }
+          .figma-hero-content {
+            max-width: 100%;
+          }
+          .figma-hero-image-floating {
+            position: relative;
+            width: 100%;
+            right: auto;
+            top: auto;
+            transform: none;
+            margin-top: 14px;
+            filter: none;
+          }
+          .figma-hero-cta .figma-btn {
+            flex: 1 1 calc(50% - 4px);
+            min-width: 0;
+            padding: 0 10px;
+            font-size: 12px;
+            height: 32px;
+          }
+          .hero-chip {
+            height: 28px;
+            font-size: 11px;
+          }
+          .feature-card .card-body,
+          .tool-card .card-body,
+          .why-card .card-body {
+            padding: 12px !important;
+          }
+          .feature-card-body {
+            padding: 12px !important;
+          }
+          .feature-illustration {
+            width: 58px;
+            height: 40px;
+            border-radius: 10px;
+            margin-bottom: 8px !important;
+          }
+          .feature-illustration svg {
+            width: 18px;
+            height: 18px;
+          }
+          .feature-description {
+            font-size: 12px !important;
+            line-height: 1.35;
+            margin-bottom: 8px !important;
+          }
+          .feature-card .h6,
+          .tool-card .h6,
+          .why-card .h6 {
+            font-size: 1.02rem;
+            margin-bottom: 6px !important;
+          }
+          .feature-card .figma-btn,
+          .tool-card .figma-btn {
+            height: 30px;
+            font-size: 12px;
+          }
+          .feature-card .figma-btn svg,
+          .tool-card .figma-btn svg {
+            width: 11px;
+            height: 11px;
+          }
+          .tools-nav-line {
+            display: none !important;
+          }
+          .tool-card {
+            min-height: 154px;
+          }
+          .tool-card .card-body {
+            padding: 11px !important;
+          }
+          .tool-card .h6 {
+            font-size: 0.9rem;
+            line-height: 1.2;
+          }
+          .tool-card p {
+            font-size: 11px !important;
+            line-height: 1.3;
+            margin-bottom: 8px !important;
+          }
+          .tool-icon-wrap {
+            width: 34px;
+            height: 34px;
+          }
+          .tool-icon-wrap svg {
+            width: 15px;
+            height: 15px;
+          }
+          .tool-card .figma-btn {
+            width: 100%;
+            justify-content: center;
+            height: 30px;
+            font-size: 11px;
+            padding: 0 10px;
+          }
+          .row.g-3 {
+            --bs-gutter-y: 0.75rem;
+          }
+          .figma-card:hover {
+            transform: none;
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06), 0 2px 6px rgba(15, 23, 42, 0.03);
+          }
+        }
+      `}</style>
+    </>
+    )
+  }
   
   return (
     <>
@@ -266,50 +898,6 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
 
       <div className="auto-ads-space min-h-screen bg-gray-50">
         {/* Main Content Area Only - No static ad asides, let AdSense Auto Ads handle placement */}
-        {/* Navigation */}
-        <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50" role="banner">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16 lg:h-20">
-              {/* Logo */}
-              <div className="flex items-center">
-                <Link href="/" className="flex items-center space-x-3" aria-label="Pkminfotech Home">
-                  <Image
-                    src="/favicon-32x32.png"
-                    alt="Pkminfotech Logo"
-                    width={32}
-                    height={32}
-                    className="w-8 h-8 lg:w-10 lg:h-10"
-                  />
-                  <div>
-                    <h1 className="text-xl lg:text-2xl font-bold text-gray-900">Pkminfotech</h1>
-                    <p className="text-xs text-gray-500 hidden sm:block">Latest Tech & Travel News</p>
-                  </div>
-                </Link>
-              </div>
-
-              {/* Desktop Navigation */}
-              <nav className="hidden md:flex items-center space-x-8" role="navigation" aria-label="Main navigation">
-                <Link href="/" className="flex items-center px-3 py-2 text-blue-600 bg-blue-50 rounded-lg transition-colors">
-                  <Home className="h-4 w-4 mr-2" />
-                  Home
-                </Link>
-                <Link href="/latest" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors">Latest Blog</Link>
-                <Link href="/english" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors">English Blog</Link>
-                <Link href="/hindi" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors">हिंदी Blog</Link>
-                <Link href="/about-us" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors">About</Link>
-                <Link href="/contact-us">
-                  <Button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">Contact</Button>
-                </Link>
-              </nav>
-
-              {/* Mobile Menu */}
-              <div className="md:hidden">
-                <MobileMenu />
-              </div>
-            </div>
-          </div>
-        </header>
-
         <div className="w-full px-0">
           <div className="py-2 lg:py-3">
             {/* Main Content - Narrower Container for Auto Ads on Sides */}
@@ -482,90 +1070,6 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
           </div>
         </div>
 
-        {/* Enhanced Footer */}
-        <footer className="bg-gray-900 text-white mt-12" role="contentinfo">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-
-              {/* Company Info */}
-              <div className="sm:col-span-2 lg:col-span-2">
-                <div className="flex items-center mb-6">
-                  <Image
-                    src="/favicon-32x32.png"
-                    alt="Pkminfotech Logo"
-                    width={32}
-                    height={32}
-                    className="mr-3"
-                  />
-                  <h3 className="text-2xl font-bold">Pkminfotech</h3>
-                </div>
-                <p className="text-gray-400 mb-6 max-w-md leading-relaxed">
-                  Pkminfotech is a dynamic blogging platform providing the latest tech news, business updates, travel guides for India and worldwide destinations, and daily insights on technology and digital trends.
-                </p>
-              </div>
-
-              {/* Quick Links */}
-              <div>
-                <h4 className="text-lg font-semibold mb-6">Quick Links</h4>
-                <ul className="grid grid-cols-2 gap-y-4 gap-x-2">
-                  <li>
-                    <Link href="/" className="text-gray-400 hover:text-white transition-colors flex items-center">
-                      <span className="w-2 h-2 bg-blue-600 rounded-full mr-2"></span>
-                      Home
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/about-us" className="text-gray-400 hover:text-white transition-colors flex items-center">
-                      <span className="w-2 h-2 bg-blue-600 rounded-full mr-2"></span>
-                      About Us
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/contact-us" className="text-gray-400 hover:text-white transition-colors flex items-center">
-                      <span className="w-2 h-2 bg-blue-600 rounded-full mr-2"></span>
-                      Contact
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-
-              {/* Contact Info */}
-              <div>
-                <h4 className="text-base lg:text-lg font-semibold mb-4 lg:mb-6">Get in Touch</h4>
-                <ul className="space-y-3 lg:space-y-4">
-                  <li className="flex items-start">
-                    <span className="text-sm lg:text-base text-gray-400 leading-relaxed">Gurgaon, Haryana, India</span>
-                  </li>
-                  <li className="flex items-start">
-                    <a href="mailto:prakashkr806@gmail.com" className="text-sm lg:text-base text-gray-400 hover:text-white transition-colors leading-relaxed break-words">
-                      prakashkr806@gmail.com
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            {/* Bottom Section */}
-            <div className="border-t border-gray-800 mt-12 pt-8">
-              <div className="flex flex-col md:flex-row justify-between items-center">
-                <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-6">
-                  <p className="text-gray-500 text-sm">
-                    &copy; 2024 Pkminfotech. All rights reserved.
-                  </p>
-                  <div className="flex space-x-6 text-sm">
-                    <Link href="/privacy-policy" className="text-gray-500 hover:text-white transition-colors">Privacy Policy</Link>
-                    <Link href="/disclaimers" className="text-gray-500 hover:text-white transition-colors">Disclaimers</Link>
-                  </div>
-                </div>
-                <div className="mt-4 md:mt-0">
-                  <p className="text-gray-500 text-sm">
-                    Made with ❤️ in India
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </footer>
       </div>
     </>
   )

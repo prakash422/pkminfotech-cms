@@ -1,10 +1,8 @@
 import Link from "next/link"
-import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { Calendar, Home, ChevronRight, Clock, Eye } from "lucide-react"
+import { Calendar, ChevronRight, Clock, Eye } from "lucide-react"
 import { formatDate } from "@/lib/utils"
 import { Metadata } from "next"
-import MobileMenu from "@/components/MobileMenu"
 import OptimizedImage from '@/components/OptimizedImage'
 
 export const metadata: Metadata = {
@@ -62,53 +60,6 @@ export default async function HindiBlogPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
-      <header className="bg-white shadow-sm border-b sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16 lg:h-20">
-            <div className="flex items-center">
-              <Link href="/" className="flex items-center group">
-                <Image
-                  src="/favicon-32x32.png"
-                  alt="Pkminfotech Logo"
-                  width={32}
-                  height={32}
-                  className="w-8 h-8 mr-2 lg:mr-3"
-                />
-                <span className="text-xl lg:text-2xl font-bold text-gray-900">
-                  Pkminfotech
-                </span>
-              </Link>
-            </div>
-
-            <nav className="hidden md:flex items-center space-x-4 lg:space-x-6">
-              <Link href="/" className="text-gray-600 hover:text-gray-900 font-medium transition-colors px-3 py-2 rounded-lg hover:bg-gray-50">
-                <Home className="h-4 w-4 mr-2 inline" />
-                Home
-              </Link>
-              <Link href="/latest" className="text-gray-600 hover:text-gray-900 font-medium transition-colors px-3 py-2 rounded-lg hover:bg-gray-50">
-                Latest Blog
-              </Link>
-              <Link href="/english" className="text-gray-600 hover:text-gray-900 font-medium transition-colors px-3 py-2 rounded-lg hover:bg-gray-50">
-                English Blog
-              </Link>
-              <Link href="/hindi" className="font-medium transition-colors flex items-center px-3 py-2 rounded-lg text-orange-600 bg-orange-50">
-                हिंदी Blog
-              </Link>
-              <div className="hidden lg:flex items-center space-x-4 ml-4 pl-4 border-l border-gray-200">
-                <Link href="/about-us" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">
-                  About
-                </Link>
-                <Link href="/contact-us" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
-                  Contact
-                </Link>
-              </div>
-            </nav>
-
-            <MobileMenu />
-          </div>
-        </div>
-      </header>
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
         
         {/* Main Content - Narrower Container for Auto Ads on Sides */}
