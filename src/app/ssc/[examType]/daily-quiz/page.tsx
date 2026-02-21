@@ -1,10 +1,12 @@
 import Link from "next/link"
 import type { Metadata } from "next"
 import { headers } from "next/headers"
-import { notFound } from "next/navigation"
+import { notFound, redirect } from "next/navigation"
 import BreadcrumbNav from "@/components/BreadcrumbNav"
 import ExamInternalNav from "@/components/ExamInternalNav"
-import { getSscExamTypeBySlug } from "@/lib/ssc/ssc-exam-types"
+import ExamTabHero from "@/components/ExamTabHero"
+import { resolveExamByCategoryAndSlug, getExamTypeSlug } from "@/lib/exam-categories"
+import { getSscExamTypeBySlug, SSC_EXAM_TYPES } from "@/lib/ssc/ssc-exam-types"
 
 interface PageProps {
   params: Promise<{ examType: string }>
@@ -13,7 +15,8 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { examType } = await params
   const config = getSscExamTypeBySlug(examType)
-  const name = config?.shortName ?? examType
+  const examRecord = await resolveExamByCategoryAndSlug("ssc", examType)
+  const name = examRecord?.name ?? config?.shortName ?? examType
   return {
     title: `${name} Daily Quiz | PKMinfotech`,
     description: `Daily quiz for ${name} with instant result.`,
@@ -23,13 +26,19 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function SscExamDailyQuizPage({ params }: PageProps) {
   const { examType } = await params
   const config = getSscExamTypeBySlug(examType)
-  if (!config) notFound()
+  const examRecord = await resolveExamByCategoryAndSlug("ssc", examType)
+  if (!config && !examRecord) notFound()
 
-  const typeSlug = config.slug
-  const displayName = config.shortName
-  const base = `/ssc/${typeSlug}`
+  const category = "ssc"
+  const typeSlug = examRecord ? getExamTypeSlug(examRecord.slug, category) : examType
+  const canonicalTypeSlug =
+    config?.slug ?? (examRecord ? SSC_EXAM_TYPES.find((e) => e.shortName === examRecord.name)?.slug ?? typeSlug : examType)
+  if (canonicalTypeSlug !== examType) redirect(`/ssc/${canonicalTypeSlug}/daily-quiz`)
+
+  const displayName = examRecord?.name ?? config?.shortName ?? examType
+  const base = `/ssc/${canonicalTypeSlug}`
   const navItems = [
-    { label: "Practice", href: `${base}/practice` },
+    { label: "Practice", href: base },
     { label: "Daily Quiz", href: `${base}/daily-quiz` },
     { label: "Mock Test", href: `${base}/mock-test` },
     { label: "PYQ", href: `${base}/pyq` },
@@ -46,7 +55,7 @@ export default async function SscExamDailyQuizPage({ params }: PageProps) {
 
   return (
     <main className="bg-light py-4">
-      <div className="container" style={{ maxWidth: 1120 }}>
+      <div className="container exam-tab-container" style={{ maxWidth: 1120 }}>
         <BreadcrumbNav
           items={[
             { label: "Home", href: "/" },
@@ -55,13 +64,11 @@ export default async function SscExamDailyQuizPage({ params }: PageProps) {
             { label: "Daily Quiz" },
           ]}
         />
-        <ExamInternalNav examName={displayName} items={navItems} />
-        <section className="card border-0 shadow-sm mb-4">
-          <div className="card-body p-4 p-md-5">
-            <h1 className="fw-bold mb-2">{displayName} Daily Quiz</h1>
-            <p className="text-secondary mb-0">Daily quiz for {displayName}. Attempt and see instant result.</p>
-          </div>
-        </section>
+        <ExamInternalNav examName={displayName} items={navItems} variant="tabs" basePath={base} />
+        <ExamTabHero
+          title={`${displayName} Daily Quiz`}
+          description={`Daily quiz for ${displayName}. Attempt and see instant result.`}
+        />
 
         {quizzes.length === 0 ? (
           <section className="card border shadow-sm">

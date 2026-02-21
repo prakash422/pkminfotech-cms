@@ -143,6 +143,7 @@ model PracticeSet {
   id             String   @id @default(auto()) @map("_id") @db.ObjectId
   title          String
   slug           String   @unique
+  shortSlug      String?  @unique // optional clean URL slug e.g. mini-1 for /ssc/cgl/practice/mini-1
   description    String?
   totalQuestions Int      @default(10)
   difficulty     String   @default("mixed") // easy, medium, hard, mixed

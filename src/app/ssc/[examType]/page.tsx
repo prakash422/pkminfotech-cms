@@ -1,13 +1,13 @@
-import Link from "next/link"
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
-import BreadcrumbNav from "@/components/BreadcrumbNav"
-import ExamInternalNav from "@/components/ExamInternalNav"
+import ExamTypeLanding from "@/components/ExamTypeLanding"
 import {
   resolveExamByCategoryAndSlug,
   getExamTypeSlug,
 } from "@/lib/exam-categories"
-import { getSscExamTypeBySlug } from "@/lib/ssc/ssc-exam-types"
+import { redirect } from "next/navigation"
+import { getSscExamTypeBySlug, SSC_EXAM_TYPES } from "@/lib/ssc/ssc-exam-types"
+import { prisma } from "@/lib/prisma"
 
 interface PageProps {
   params: Promise<{ examType: string }>
@@ -32,53 +32,49 @@ export default async function SscExamTypeLandingPage({ params }: PageProps) {
 
   const category = "ssc"
   const typeSlug = examRecord ? getExamTypeSlug(examRecord.slug, category) : examType
+  const canonicalTypeSlug =
+    config?.slug ?? (examRecord ? SSC_EXAM_TYPES.find((e) => e.shortName === examRecord.name)?.slug ?? typeSlug : examType)
+  if (canonicalTypeSlug !== examType) redirect(`/ssc/${canonicalTypeSlug}`)
   const displayName = examRecord?.name ?? config!.shortName
-  const base = `/ssc/${typeSlug}`
+  const base = `/ssc/${canonicalTypeSlug}`
   const navItems = [
-    { label: "Practice", href: `${base}/practice` },
+    { label: "Practice", href: base },
     { label: "Daily Quiz", href: `${base}/daily-quiz` },
     { label: "Mock Test", href: `${base}/mock-test` },
     { label: "PYQ", href: `${base}/pyq` },
     { label: "Syllabus", href: `${base}/syllabus` },
   ]
 
+  const practiceSetsRaw = examRecord
+    ? await prisma.practiceSet.findMany({
+        where: { examId: examRecord.id, isActive: true },
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          questions: { where: { isActive: true }, select: { id: true } },
+        },
+        orderBy: { createdAt: "desc" },
+        take: 30,
+      })
+    : []
+  const practiceSets = practiceSetsRaw.map((s: { id: string; title: string; slug: string; questions: { id: string }[] }) => ({
+    id: s.id,
+    title: s.title,
+    slug: s.slug,
+    urlSlug: s.slug,
+    questionCount: s.questions?.length ?? 0,
+  }))
+
   return (
-    <main className="bg-light py-4">
-      <div className="container" style={{ maxWidth: 1120 }}>
-        <BreadcrumbNav
-          items={[
-            { label: "Home", href: "/" },
-            { label: "SSC", href: "/ssc" },
-            { label: displayName },
-          ]}
-        />
-        <ExamInternalNav examName={displayName} items={navItems} />
-
-        <section className="card border-0 shadow-sm mb-4">
-          <div className="card-body p-4 p-md-5">
-            <h1 className="fw-bold mb-2">{displayName}</h1>
-            <p className="text-secondary mb-0">
-              {config?.fullName && <span className="d-block small mb-1">{config.fullName}</span>}
-              Practice (question sets), Daily Quiz and Mock Test for {displayName}.
-            </p>
-          </div>
-        </section>
-
-        <section className="row g-3">
-          {navItems.map((item) => (
-            <div className="col-6 col-md-4" key={item.href}>
-              <article className="card h-100 border shadow-sm">
-                <div className="card-body p-3">
-                  <h2 className="h6 fw-semibold">{item.label}</h2>
-                  <Link href={item.href} className="btn btn-primary btn-sm mt-2">
-                    Open {item.label}
-                  </Link>
-                </div>
-              </article>
-            </div>
-          ))}
-        </section>
-      </div>
-    </main>
+    <ExamTypeLanding
+      categoryLabel="SSC"
+      categoryHref="/ssc"
+      displayName={displayName}
+      fullName={config?.fullName}
+      base={base}
+      navItems={navItems}
+      practiceSets={practiceSets}
+    />
   )
 }

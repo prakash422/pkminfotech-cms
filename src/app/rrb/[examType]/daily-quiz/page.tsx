@@ -1,10 +1,12 @@
 import Link from "next/link"
 import type { Metadata } from "next"
 import { headers } from "next/headers"
-import { notFound } from "next/navigation"
+import { notFound, redirect } from "next/navigation"
 import BreadcrumbNav from "@/components/BreadcrumbNav"
 import ExamInternalNav from "@/components/ExamInternalNav"
-import { getRrbExamTypeBySlug } from "@/lib/rrb/rrb-exam-types"
+import ExamTabHero from "@/components/ExamTabHero"
+import { resolveExamByCategoryAndSlug, getExamTypeSlug } from "@/lib/exam-categories"
+import { getRrbExamTypeBySlug, RRB_EXAM_TYPES } from "@/lib/rrb/rrb-exam-types"
 
 interface PageProps {
   params: Promise<{ examType: string }>
@@ -13,7 +15,8 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { examType } = await params
   const config = getRrbExamTypeBySlug(examType)
-  const name = config?.shortName ?? examType
+  const examRecord = await resolveExamByCategoryAndSlug("rrb", examType)
+  const name = examRecord?.name ?? config?.shortName ?? examType
   return {
     title: `${name} Daily Quiz | PKMinfotech`,
     description: `Daily quiz for ${name}.`,
@@ -23,12 +26,19 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function RrbExamDailyQuizPage({ params }: PageProps) {
   const { examType } = await params
   const config = getRrbExamTypeBySlug(examType)
-  if (!config) notFound()
+  const examRecord = await resolveExamByCategoryAndSlug("rrb", examType)
+  if (!config && !examRecord) notFound()
 
-  const displayName = config.shortName
-  const base = `/rrb/${config.slug}`
+  const category = "rrb"
+  const typeSlug = examRecord ? getExamTypeSlug(examRecord.slug, category) : examType
+  const canonicalTypeSlug =
+    config?.slug ?? (examRecord ? RRB_EXAM_TYPES.find((e) => e.shortName === examRecord.name)?.slug ?? typeSlug : examType)
+  if (canonicalTypeSlug !== examType) redirect(`/rrb/${canonicalTypeSlug}/daily-quiz`)
+
+  const displayName = examRecord?.name ?? config?.shortName ?? examType
+  const base = `/rrb/${canonicalTypeSlug}`
   const navItems = [
-    { label: "Practice", href: `${base}/practice` },
+    { label: "Practice", href: base },
     { label: "Daily Quiz", href: `${base}/daily-quiz` },
     { label: "Mock Test", href: `${base}/mock-test` },
     { label: "PYQ", href: `${base}/pyq` },
@@ -54,13 +64,11 @@ export default async function RrbExamDailyQuizPage({ params }: PageProps) {
             { label: "Daily Quiz" },
           ]}
         />
-        <ExamInternalNav examName={displayName} items={navItems} />
-        <section className="card border-0 shadow-sm mb-4">
-          <div className="card-body p-4 p-md-5">
-            <h1 className="fw-bold mb-2">{displayName} Daily Quiz</h1>
-            <p className="text-secondary mb-0">Daily quiz for {displayName}.</p>
-          </div>
-        </section>
+        <ExamInternalNav examName={displayName} items={navItems} variant="tabs" basePath={base} />
+        <ExamTabHero
+          title={`${displayName} Daily Quiz`}
+          description={`Daily quiz for ${displayName}. Attempt and see instant result.`}
+        />
         {quizzes.length === 0 ? (
           <section className="card border shadow-sm">
             <div className="card-body p-4 text-secondary">

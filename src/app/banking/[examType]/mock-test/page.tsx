@@ -1,11 +1,12 @@
 import Link from "next/link"
 import type { Metadata } from "next"
-import { notFound } from "next/navigation"
+import { notFound, redirect } from "next/navigation"
 import BreadcrumbNav from "@/components/BreadcrumbNav"
 import ExamInternalNav from "@/components/ExamInternalNav"
+import ExamTabHero from "@/components/ExamTabHero"
 import { prisma } from "@/lib/prisma"
 import { resolveExamByCategoryAndSlug, getExamTypeSlug } from "@/lib/exam-categories"
-import { getBankingExamTypeBySlug } from "@/lib/banking/banking-exam-types"
+import { getBankingExamTypeBySlug, BANKING_EXAM_TYPES } from "@/lib/banking/banking-exam-types"
 
 interface PageProps {
   params: Promise<{ examType: string }>
@@ -30,10 +31,13 @@ export default async function BankingExamMockTestPage({ params }: PageProps) {
 
   const category = "banking"
   const typeSlug = examRecord ? getExamTypeSlug(examRecord.slug, category) : examType
-  const displayName = examRecord?.name ?? config!.shortName
-  const base = `/banking/${typeSlug}`
+  const canonicalTypeSlug =
+    config?.slug ?? (examRecord ? BANKING_EXAM_TYPES.find((e) => e.shortName === examRecord.name)?.slug ?? typeSlug : examType)
+  if (canonicalTypeSlug !== examType) redirect(`/banking/${canonicalTypeSlug}/mock-test`)
+  const displayName = examRecord?.name ?? config?.shortName ?? examType
+  const base = `/banking/${canonicalTypeSlug}`
   const navItems = [
-    { label: "Practice", href: `${base}/practice` },
+    { label: "Practice", href: base },
     { label: "Daily Quiz", href: `${base}/daily-quiz` },
     { label: "Mock Test", href: `${base}/mock-test` },
     { label: "PYQ", href: `${base}/pyq` },
@@ -59,13 +63,11 @@ export default async function BankingExamMockTestPage({ params }: PageProps) {
             { label: "Mock Test" },
           ]}
         />
-        <ExamInternalNav examName={displayName} items={navItems} />
-        <section className="card border-0 shadow-sm mb-4">
-          <div className="card-body p-4 p-md-5">
-            <h1 className="fw-bold mb-2">{displayName} Mock Test</h1>
-            <p className="text-secondary mb-0">Full-length mock tests for {displayName}.</p>
-          </div>
-        </section>
+        <ExamInternalNav examName={displayName} items={navItems} variant="tabs" basePath={base} />
+        <ExamTabHero
+          title={`${displayName} Mock Test`}
+          description="Full-length mock tests with timer and instant result."
+        />
         {tests.length === 0 ? (
           <section className="card border shadow-sm">
             <div className="card-body p-4 text-secondary">

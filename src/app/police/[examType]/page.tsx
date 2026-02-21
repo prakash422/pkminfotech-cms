@@ -1,8 +1,6 @@
-import Link from "next/link"
 import type { Metadata } from "next"
 import { redirect, notFound } from "next/navigation"
-import BreadcrumbNav from "@/components/BreadcrumbNav"
-import ExamInternalNav from "@/components/ExamInternalNav"
+import ExamTypeLanding from "@/components/ExamTypeLanding"
 import { getPoliceExamTypeBySlug } from "@/lib/police/police-exam-types"
 
 interface PageProps {
@@ -29,8 +27,9 @@ export default async function PoliceExamTypeLandingPage({ params }: PageProps) {
 
   const displayName = config.shortName
   const base = `/police/${config.slug}`
+  const fullName = "fullName" in config ? config.fullName : undefined
   const navItems = [
-    { label: "Practice", href: `${base}/practice` },
+    { label: "Practice", href: base },
     { label: "Daily Quiz", href: `${base}/daily-quiz` },
     { label: "Mock Test", href: `${base}/mock-test` },
     { label: "PYQ", href: `${base}/pyq` },
@@ -38,42 +37,13 @@ export default async function PoliceExamTypeLandingPage({ params }: PageProps) {
   ]
 
   return (
-    <main className="bg-light py-4">
-      <div className="container" style={{ maxWidth: 1120 }}>
-        <BreadcrumbNav
-          items={[
-            { label: "Home", href: "/" },
-            { label: "Police", href: "/police" },
-            { label: displayName },
-          ]}
-        />
-        <ExamInternalNav examName={displayName} items={navItems} />
-
-        <section className="card border-0 shadow-sm mb-4">
-          <div className="card-body p-4 p-md-5">
-            <h1 className="fw-bold mb-2">{displayName}</h1>
-            <p className="text-secondary mb-0">
-              {config.fullName && <span className="d-block small mb-1">{config.fullName}</span>}
-              Practice (question sets), Daily Quiz and Mock Test for {displayName}.
-            </p>
-          </div>
-        </section>
-
-        <section className="row g-3">
-          {navItems.map((item) => (
-            <div className="col-6 col-md-4" key={item.href}>
-              <article className="card h-100 border shadow-sm">
-                <div className="card-body p-3">
-                  <h2 className="h6 fw-semibold">{item.label}</h2>
-                  <Link href={item.href} className="btn btn-primary btn-sm mt-2">
-                    Open {item.label}
-                  </Link>
-                </div>
-              </article>
-            </div>
-          ))}
-        </section>
-      </div>
-    </main>
+    <ExamTypeLanding
+      categoryLabel="Police"
+      categoryHref="/police"
+      displayName={displayName}
+      fullName={fullName}
+      base={base}
+      navItems={navItems}
+    />
   )
 }

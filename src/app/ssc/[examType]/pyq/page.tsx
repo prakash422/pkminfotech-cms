@@ -1,14 +1,15 @@
 import Link from "next/link"
 import type { Metadata } from "next"
-import { notFound } from "next/navigation"
+import { notFound, redirect } from "next/navigation"
 import BreadcrumbNav from "@/components/BreadcrumbNav"
 import ExamInternalNav from "@/components/ExamInternalNav"
+import ExamTabHero from "@/components/ExamTabHero"
 import { prisma } from "@/lib/prisma"
 import {
   resolveExamByCategoryAndSlug,
   getExamTypeSlug,
 } from "@/lib/exam-categories"
-import { getSscExamTypeBySlug } from "@/lib/ssc/ssc-exam-types"
+import { getSscExamTypeBySlug, SSC_EXAM_TYPES } from "@/lib/ssc/ssc-exam-types"
 
 interface PageProps {
   params: Promise<{ examType: string }>
@@ -33,10 +34,13 @@ export default async function SscExamPyqPage({ params }: PageProps) {
 
   const category = "ssc"
   const typeSlug = examRecord ? getExamTypeSlug(examRecord.slug, category) : examType
+  const canonicalTypeSlug =
+    config?.slug ?? (examRecord ? SSC_EXAM_TYPES.find((e) => e.shortName === examRecord.name)?.slug ?? typeSlug : examType)
+  if (canonicalTypeSlug !== examType) redirect(`/ssc/${canonicalTypeSlug}/pyq`)
   const displayName = examRecord?.name ?? config!.shortName
-  const base = `/ssc/${typeSlug}`
+  const base = `/ssc/${canonicalTypeSlug}`
   const navItems = [
-    { label: "Practice", href: `${base}/practice` },
+    { label: "Practice", href: base },
     { label: "Daily Quiz", href: `${base}/daily-quiz` },
     { label: "Mock Test", href: `${base}/mock-test` },
     { label: "PYQ", href: `${base}/pyq` },
@@ -67,13 +71,11 @@ export default async function SscExamPyqPage({ params }: PageProps) {
             { label: "PYQ" },
           ]}
         />
-        <ExamInternalNav examName={displayName} items={navItems} />
-        <section className="card border-0 shadow-sm mb-4">
-          <div className="card-body p-4 p-md-5">
-            <h1 className="fw-bold mb-2">{displayName} Previous Year Questions</h1>
-            <p className="text-secondary mb-0">Topic-wise PYQ sets from previous papers.</p>
-          </div>
-        </section>
+        <ExamInternalNav examName={displayName} items={navItems} variant="tabs" basePath={base} />
+        <ExamTabHero
+          title={`${displayName} Previous Year Questions`}
+          description="Topic-wise PYQ sets from previous papers."
+        />
 
         {sets.length === 0 ? (
           <section className="card border shadow-sm">
@@ -83,13 +85,13 @@ export default async function SscExamPyqPage({ params }: PageProps) {
           </section>
         ) : (
           <section className="row g-3">
-            {sets.map((set: { id: string; title: string; slug: string; _count?: { questions: number } }) => (
+            {sets.map((set: { id: string; title: string; slug: string; shortSlug?: string | null; _count?: { questions: number } }) => (
               <div className="col-md-6 col-lg-4" key={set.id}>
                 <article className="card h-100 border shadow-sm">
                   <div className="card-body p-3">
                     <h2 className="h6 fw-semibold">{set.title}</h2>
                     <p className="small text-secondary mb-3">{set._count?.questions ?? 0} questions</p>
-                    <Link href={`/practice/${set.slug}`} className="btn btn-primary btn-sm">
+                    <Link href={`${base}/practice/${set.shortSlug ?? set.slug}`} className="btn btn-primary btn-sm">
                       Practice PYQ
                     </Link>
                   </div>

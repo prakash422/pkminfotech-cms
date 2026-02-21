@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import BreadcrumbNav from "@/components/BreadcrumbNav"
 import ExamInternalNav from "@/components/ExamInternalNav"
+import ExamTabHero from "@/components/ExamTabHero"
 import { prisma } from "@/lib/prisma"
 import {
   resolveExamByCategoryAndSlug,
@@ -36,7 +37,7 @@ export default async function SscExamMockTestPage({ params }: PageProps) {
   const displayName = examRecord?.name ?? config!.shortName
   const base = `/ssc/${typeSlug}`
   const navItems = [
-    { label: "Practice", href: `${base}/practice` },
+    { label: "Practice", href: base },
     { label: "Daily Quiz", href: `${base}/daily-quiz` },
     { label: "Mock Test", href: `${base}/mock-test` },
     { label: "PYQ", href: `${base}/pyq` },
@@ -62,13 +63,11 @@ export default async function SscExamMockTestPage({ params }: PageProps) {
             { label: "Mock Test" },
           ]}
         />
-        <ExamInternalNav examName={displayName} items={navItems} />
-        <section className="card border-0 shadow-sm mb-4">
-          <div className="card-body p-4 p-md-5">
-            <h1 className="fw-bold mb-2">{displayName} Mock Test</h1>
-            <p className="text-secondary mb-0">Full-length mock tests with timer and instant result.</p>
-          </div>
-        </section>
+        <ExamInternalNav examName={displayName} items={navItems} variant="tabs" basePath={base} />
+        <ExamTabHero
+          title={`${displayName} Mock Test`}
+          description="Full-length mock tests with timer and instant result."
+        />
 
         {tests.length === 0 ? (
           <section className="card border shadow-sm">
