@@ -199,8 +199,14 @@ export default async function DailyCurrentAffairsPage({ searchParams }: PageProp
                         </span>
                       </div>
 
-                      <h2 className="text-sm font-bold text-gray-900 mb-1.5 line-clamp-2 hover:text-blue-600 transition-colors leading-tight">
-                        <Link href={`/${blog.slug}`}>{blog.title}</Link>
+                      <h2 className="mb-1.5 line-clamp-2 leading-tight" style={{ fontSize: "0.8125rem", fontWeight: 600 }}>
+                        <Link
+                          href={`/${blog.slug}`}
+                          className="no-underline transition-colors !text-gray-600 hover:!text-gray-900"
+                          style={{ fontSize: "0.8125rem" }}
+                        >
+                          {blog.title}
+                        </Link>
                       </h2>
 
                       {blog.excerpt && (

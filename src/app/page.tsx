@@ -390,8 +390,8 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                         )}
                       </div>
                       <div className="card-body p-2 p-sm-3">
-                        <h3 className="h6 card-title mb-0 lh-sm">
-                          <Link href={`/${blog.slug}`} className="text-decoration-none text-dark">
+                        <h3 className="card-title mb-0 lh-sm" style={{ fontSize: "0.8125rem", fontWeight: 600 }}>
+                          <Link href={`/${blog.slug}`} className="text-decoration-none no-underline !text-gray-600 hover:!text-gray-900 transition-colors" style={{ fontSize: "0.8125rem" }}>
                             {truncateText(blog.title, 42)}
                           </Link>
                         </h3>
@@ -437,8 +437,8 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                         )}
                       </div>
                       <div className="card-body p-2 p-sm-3">
-                        <h3 className="h6 card-title mb-0 lh-sm">
-                          <Link href={`/${blog.slug}`} className="text-decoration-none text-dark">
+                        <h3 className="card-title mb-0 lh-sm" style={{ fontSize: "0.8125rem", fontWeight: 600 }}>
+                          <Link href={`/${blog.slug}`} className="text-decoration-none no-underline !text-gray-600 hover:!text-gray-900 transition-colors" style={{ fontSize: "0.8125rem" }}>
                             {truncateText(blog.title, 42)}
                           </Link>
                         </h3>

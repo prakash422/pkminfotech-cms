@@ -33,7 +33,7 @@ model Blog {
   content         String
   excerpt         String?
   coverImage      String?
-  category        String    @default("latest") // hindi, english, latest
+  category        String    @default("latest") // latest, hindi, english, current-affairs
   status          String    @default("draft") // draft, published
   focusKeyword    String? // SEO focus keyword
   metaDescription String? // SEO meta description

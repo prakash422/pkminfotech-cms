@@ -337,6 +337,9 @@ export default function NewBlogPage() {
                           <option value="hindi">हिंदी Blog</option>
                           <option value="current-affairs">Current Affairs</option>
                         </select>
+                        <p className="text-xs text-gray-500 mt-1">
+                          Current Affairs posts appear on <strong>/daily-current-affairs</strong> and the home page &quot;Current Affairs for Exams&quot; section.
+                        </p>
                       </div>
 
                       <div>
