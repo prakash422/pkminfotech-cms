@@ -90,6 +90,9 @@ export default function OptimizedImage({
   }
 
   const optimizedSrc = optimizeImageUrl(src)
+  const isCloudinary = optimizedSrc.includes('res.cloudinary.com')
+  // Bypass Next.js image optimizer for Cloudinary to avoid 500s; Cloudinary already serves optimized images
+  const unoptimized = isCloudinary
 
   const handleError = () => {
     setImageError(true)
@@ -111,8 +114,9 @@ export default function OptimizedImage({
     quality,
     onError: handleError,
     placeholder,
+    unoptimized,
     ...(blurDataURL && { blurDataURL }),
-    ...(sizes && { sizes }),
+    ...(sizes && !unoptimized && { sizes }),
     ...props,
   }
 

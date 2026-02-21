@@ -14,67 +14,231 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
-  name          String?
-  email         String    @unique
-  password      String
-  role          String    @default("admin")
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  
-  blogs         Blog[]
-  pages         Page[]
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String?
+  email     String   @unique
+  password  String
+  role      String   @default("admin")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  blogs Blog[]
+  pages Page[]
 }
 
 model Blog {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
-  title         String
-  slug          String    @unique
-  content       String
-  excerpt       String?
-  coverImage    String?
-  category      String    @default("latest") // hindi, english, latest
-  status        String    @default("draft") // draft, published
-  focusKeyword  String?   // SEO focus keyword
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  title           String
+  slug            String    @unique
+  content         String
+  excerpt         String?
+  coverImage      String?
+  category        String    @default("latest") // hindi, english, latest
+  status          String    @default("draft") // draft, published
+  focusKeyword    String? // SEO focus keyword
   metaDescription String? // SEO meta description
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  publishedAt   DateTime?
-  
-  authorId      String    @db.ObjectId
-  author        User      @relation(fields: [authorId], references: [id])
-  tags         String[]   @default([]) // New: tags for SEO and navigation
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  publishedAt     DateTime?
+
+  authorId String   @db.ObjectId
+  author   User     @relation(fields: [authorId], references: [id])
+  tags     String[] @default([]) // New: tags for SEO and navigation
 }
 
 model Ad {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
-  title         String
-  description   String
-  imageUrl      String?
-  ctaText       String?
-  ctaLink       String?
-  startDate     DateTime?
-  endDate       DateTime?
-  isActive      Boolean   @default(true)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String
+  imageUrl    String?
+  ctaText     String?
+  ctaLink     String?
+  startDate   DateTime?
+  endDate     DateTime?
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 model Page {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
-  title         String
-  slug          String    @unique
-  content       String
-  metaTitle     String?
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  title           String
+  slug            String   @unique
+  content         String
+  metaTitle       String?
   metaDescription String?
-  keywords      String?
-  status        String    @default("published") // draft, published
-  showInMenu    Boolean   @default(true)
-  menuOrder     Int       @default(0)
-  pageType      String    @default("static") // static, contact, privacy, terms
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  
-  authorId      String    @db.ObjectId
-  author        User      @relation(fields: [authorId], references: [id])
+  keywords        String?
+  status          String   @default("published") // draft, published
+  showInMenu      Boolean  @default(true)
+  menuOrder       Int      @default(0)
+  pageType        String   @default("static") // static, contact, privacy, terms
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  authorId String @db.ObjectId
+  author   User   @relation(fields: [authorId], references: [id])
+}
+
+model State {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  slug      String   @unique
+  code      String? // e.g. UP, RJ, BR
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  exams        Exam[]
+  practiceSets PracticeSet[]
+  questions    Question[]
+}
+
+model Exam {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  slug        String   @unique
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  stateId String? @db.ObjectId
+  state   State?  @relation(fields: [stateId], references: [id])
+
+  practiceSets PracticeSet[]
+  questions    Question[]
+  mockTests    MockTest[]
+  dailyQuizzes DailyQuiz[]
+}
+
+model Subject {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  slug      String   @unique
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  topics       Topic[]
+  practiceSets PracticeSet[]
+  questions    Question[]
+}
+
+model Topic {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  slug      String   @unique
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  subjectId String  @db.ObjectId
+  subject   Subject @relation(fields: [subjectId], references: [id])
+
+  practiceSets PracticeSet[]
+  questions    Question[]
+}
+
+model PracticeSet {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  title          String
+  slug           String   @unique
+  description    String?
+  totalQuestions Int      @default(10)
+  difficulty     String   @default("mixed") // easy, medium, hard, mixed
+  language       String   @default("en") // en, hi, bilingual
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  stateId String? @db.ObjectId
+  state   State?  @relation(fields: [stateId], references: [id])
+
+  examId String @db.ObjectId
+  exam   Exam   @relation(fields: [examId], references: [id])
+
+  subjectId String?  @db.ObjectId
+  subject   Subject? @relation(fields: [subjectId], references: [id])
+
+  topicId String? @db.ObjectId
+  topic   Topic?  @relation(fields: [topicId], references: [id])
+
+  questions Question[]
+}
+
+model Question {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  questionText  String
+  questionTextHi String?
+  optionA       String
+  optionAHi     String?
+  optionB       String
+  optionBHi     String?
+  optionC       String
+  optionCHi     String?
+  optionD       String
+  optionDHi     String?
+  correctAnswer String // A, B, C, D
+  explanation   String?
+  explanationHi String?
+  difficulty    String   @default("medium") // easy, medium, hard
+  language      String   @default("en") // en, hi, bilingual
+  year          Int?
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  stateId String? @db.ObjectId
+  state   State?  @relation(fields: [stateId], references: [id])
+
+  examId String @db.ObjectId
+  exam   Exam   @relation(fields: [examId], references: [id])
+
+  subjectId String?  @db.ObjectId
+  subject   Subject? @relation(fields: [subjectId], references: [id])
+
+  topicId String? @db.ObjectId
+  topic   Topic?  @relation(fields: [topicId], references: [id])
+
+  practiceSetId String      @db.ObjectId
+  practiceSet   PracticeSet @relation(fields: [practiceSetId], references: [id])
+}
+
+model MockTest {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  mockId          String   @unique
+  title           String?
+  totalQuestions  Int
+  totalMarks      Float
+  negativeMarking Float    @default(0)
+  durationMinutes Int
+  language        String   @default("en") // en, hi, bilingual
+  sections        Json
+  questionIds     String[] @db.ObjectId
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  examId String? @db.ObjectId
+  exam   Exam?   @relation(fields: [examId], references: [id])
+}
+
+model DailyQuiz {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  quizId          String   @unique
+  title           String?
+  totalQuestions  Int
+  totalMarks      Float
+  negativeMarking Float    @default(0)
+  durationMinutes Int
+  language        String   @default("en") // en, hi, bilingual
+  sections        Json?
+  questionIds     String[] @db.ObjectId
+  quizDate        DateTime?
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  examId String? @db.ObjectId
+  exam   Exam?   @relation(fields: [examId], references: [id])
 }

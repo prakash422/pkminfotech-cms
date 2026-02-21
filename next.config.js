@@ -110,6 +110,13 @@ const nextConfig = {
         destination: '/hindi',
         permanent: true,
       },
+
+      // Old SEO top-level pages → new /ssc structure (301)
+      { source: '/ssc-exam-practice', destination: '/ssc', permanent: true },
+      { source: '/ssc-mock-test', destination: '/ssc', permanent: true },
+      { source: '/ssc-daily-quiz', destination: '/ssc', permanent: true },
+      { source: '/ssc-previous-year-question', destination: '/ssc', permanent: true },
+      { source: '/ssc-current-affairs', destination: '/current-affairs', permanent: true },
       
       // === PREVIOUS REDIRECTS ===
       {
@@ -316,11 +323,6 @@ const nextConfig = {
       },
       
       // === ADMIN/SYSTEM URLS ===
-      {
-        source: '/admin:path*',
-        destination: '/admin',
-        permanent: true,
-      },
       {
         source: '/wp-admin:path*',
         destination: '/',

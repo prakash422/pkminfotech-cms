@@ -6,6 +6,14 @@ import { usePathname } from "next/navigation"
 import { Facebook, Instagram, Linkedin, Menu, Search, X, Youtube } from "lucide-react"
 import { useState } from "react"
 
+const TOP_LINKS = [
+  { label: "Daily Quiz", href: "/daily-quiz" },
+  { label: "Current Affairs", href: "/current-affairs" },
+  { label: "Blog", href: "/latest" },
+  { label: "Online Tools", href: "/tools" },
+  { label: "Contact Us", href: "/contact-us" },
+]
+
 export default function SiteChrome() {
   const pathname = usePathname()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -15,15 +23,6 @@ export default function SiteChrome() {
     pathname.startsWith("/api")
 
   if (hideChrome) return null
-
-  const links = [
-    { label: "Home", href: "/" },
-    { label: "Exam Practice", href: "/exams" },
-    { label: "Mock Tests", href: "/mock-tests" },
-    { label: "Daily Quiz", href: "/practice" },
-    { label: "Online Tools", href: "/tools" },
-    { label: "Blog", href: "/latest" },
-  ]
 
   return (
     <>
@@ -37,12 +36,18 @@ export default function SiteChrome() {
               <span className="fw-bold">PKMinfotech</span>
             </Link>
 
-            <nav className="d-none d-lg-flex align-items-center gap-3 small fw-semibold">
-              {links.map((item) => (
+            <nav className="d-none d-lg-flex align-items-center gap-2 small fw-semibold">
+              <Link
+                href="/"
+                className={`text-decoration-none px-2 py-1 rounded ${pathname === "/" ? "text-primary" : "text-dark"}`}
+              >
+                Home
+              </Link>
+              {TOP_LINKS.map((item) => (
                 <Link
                   key={item.label}
                   href={item.href}
-                  className={`text-decoration-none ${pathname === item.href ? "text-primary" : "text-dark"}`}
+                  className={`text-decoration-none px-2 py-1 rounded ${pathname === item.href ? "text-primary" : "text-dark"}`}
                 >
                   {item.label}
                 </Link>
@@ -54,7 +59,7 @@ export default function SiteChrome() {
                 <Search size={14} />
               </button>
               <Link href="/admin/login" className="btn btn-outline-secondary btn-sm d-none d-md-inline-flex">Login</Link>
-              <Link href="/mock-tests" className="btn btn-primary btn-sm site-start-btn d-none d-md-inline-flex">Start Free</Link>
+              <Link href="/" className="btn btn-primary btn-sm site-start-btn d-none d-md-inline-flex">Start Free</Link>
               <button
                 type="button"
                 className="btn btn-light btn-sm d-inline-flex d-lg-none align-items-center justify-content-center site-menu-btn"
@@ -70,32 +75,23 @@ export default function SiteChrome() {
           {mobileMenuOpen && (
             <nav className="d-lg-none mt-2 border-top pt-2" aria-label="Mobile navigation">
               <div className="d-grid gap-1">
-                <Link
-                  href="/mock-tests"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="btn btn-primary btn-sm text-start ps-2 mb-1"
-                >
+                <Link href="/" onClick={() => setMobileMenuOpen(false)} className="btn btn-primary btn-sm text-start ps-2 mb-1">
                   Start Free
                 </Link>
-                {links.map((item) => (
+                <Link href="/" onClick={() => setMobileMenuOpen(false)} className={`text-decoration-none px-2 py-2 rounded small fw-semibold ${pathname === "/" ? "text-primary bg-primary-subtle" : "text-dark bg-light"}`}>
+                  Home
+                </Link>
+                {TOP_LINKS.map((item) => (
                   <Link
-                    key={`mobile-${item.label}`}
+                    key={item.label}
                     href={item.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`text-decoration-none px-2 py-2 rounded small fw-semibold ${
-                      pathname === item.href
-                        ? "text-primary bg-primary-subtle"
-                        : "text-dark bg-light"
-                    }`}
+                    className={`text-decoration-none px-2 py-2 rounded small fw-semibold ${pathname === item.href ? "text-primary bg-primary-subtle" : "text-dark bg-light"}`}
                   >
                     {item.label}
                   </Link>
                 ))}
-                <Link
-                  href="/admin/login"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="text-decoration-none px-2 py-2 rounded small fw-semibold text-dark bg-light"
-                >
+                <Link href="/admin/login" onClick={() => setMobileMenuOpen(false)} className="text-decoration-none px-2 py-2 rounded small fw-semibold text-dark bg-light">
                   Login
                 </Link>
               </div>
@@ -176,8 +172,8 @@ export function SiteFooter() {
             <div className="col-6 col-md-2">
               <h6 className="fw-semibold mb-2">Explore</h6>
               <ul className="list-unstyled mb-0 small">
-                <li><Link href="/exams" className="text-white-50 text-decoration-none">Exam Practice</Link></li>
-                <li><Link href="/mock-tests" className="text-white-50 text-decoration-none">Mock Tests</Link></li>
+                <li><Link href="/ssc" className="text-white-50 text-decoration-none">SSC Exam</Link></li>
+                <li><Link href="/daily-quiz" className="text-white-50 text-decoration-none">Daily Quiz</Link></li>
                 <li><Link href="/tools" className="text-white-50 text-decoration-none">Online Tools</Link></li>
               </ul>
             </div>

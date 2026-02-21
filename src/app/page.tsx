@@ -10,6 +10,7 @@ import { Metadata } from "next"
 import ClientScripts from '@/components/ClientScripts'
 import OptimizedImage from '@/components/OptimizedImage'
 import { generateCanonicalUrl } from "@/lib/canonical-utils"
+import ExploreCoreFeatures from "@/components/ExploreCoreFeatures"
 
 // Enable ISR with 60 second revalidation
 export async function generateMetadata({ searchParams }: { searchParams: Promise<{ category?: string; page?: string }> }): Promise<Metadata> {
@@ -250,46 +251,7 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
   const selectedCategory = params.category || 'all'
   
   const blogsData = await getBlogs(selectedCategory === 'all' ? undefined : selectedCategory, currentPage)
-  const latestBlogs = blogsData.blogs.slice(0, 3)
-  const featureCards = [
-    {
-      title: "Exam Practice",
-      description: "Practice multiple choice questions across major exams.",
-      cta: "Practice Now",
-      href: "/exams",
-      icon: BookOpenCheck,
-      miniIcon: BadgeCheck,
-      tone: "feature-tone-1",
-    },
-    {
-      title: "Mock Tests",
-      description: "Take full-length timed tests and check your score instantly.",
-      cta: "Start Test",
-      href: "/mock-tests",
-      icon: ClipboardCheck,
-      miniIcon: Clock3,
-      tone: "feature-tone-2",
-    },
-    {
-      title: "Daily Quiz",
-      description: "Test your general knowledge with short daily quizzes.",
-      cta: "Take Quiz",
-      href: "/practice",
-      icon: TimerReset,
-      miniIcon: ArrowRight,
-      tone: "feature-tone-3",
-    },
-    {
-      title: "Online Tools",
-      description: "Use calculators for age, percentage, GPA and more.",
-      cta: "Use Tools",
-      href: "/tools",
-      icon: Wrench,
-      miniIcon: Calculator,
-      tone: "feature-tone-4",
-    },
-  ]
-
+  const latestBlogs = blogsData.blogs.slice(0, 4)
   const toolCards = [
     { title: "Age Calculator", href: "/tools/age-calculator", text: "Find exact age from date of birth.", icon: Calculator, tone: "tool-tone-1" },
     { title: "Percentage Calculator", href: "/tools/percentage-calculator", text: "Calculate percentages in seconds.", icon: Percent, tone: "tool-tone-2" },
@@ -348,31 +310,7 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
             </div>
           </section>
 
-          <section className="figma-space-24">
-            <h2 className="text-center fw-bold mb-3 h4 figma-section-title">Explore Our Core Features</h2>
-            <div className="row g-3">
-              {featureCards.map((feature) => {
-                const Icon = feature.icon
-                return (
-                  <div key={feature.title} className="col-sm-6 col-lg-3">
-                    <div className="card h-100 border figma-card feature-card">
-                      <div className="card-body d-flex flex-column p-2 p-md-3 feature-card-body">
-                        <div className={`feature-illustration mb-2 mx-auto ${feature.tone}`}>
-                          <span className="feature-cloud" />
-                          <Icon size={24} className="text-primary" />
-                        </div>
-                        <h3 className="h6 card-title fw-semibold mb-2 text-center">{feature.title}</h3>
-                        <p className="card-text text-secondary small flex-grow-1 text-center feature-description">{feature.description}</p>
-                        <Link href={feature.href} className="figma-btn figma-btn-primary figma-btn-block mt-1">
-                          {feature.cta} <ArrowRight size={14} />
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          </section>
+          <ExploreCoreFeatures />
 
           <section className="figma-space-24">
             <h2 className="text-center fw-bold mb-3 h4 figma-section-title">Popular Free Tools</h2>
@@ -408,38 +346,35 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
           </section>
 
           <section className="figma-space-24">
-            <h2 className="text-center fw-bold mb-3 h4 figma-section-title">Latest Articles &amp; Updates</h2>
+            <h2 className="text-center fw-bold mb-2 h4 figma-section-title">Latest Articles &amp; Updates</h2>
             <div className="row g-3">
               {latestBlogs.length > 0 ? (
                 latestBlogs.map((blog: BlogPost) => (
-                  <article key={blog.id} className="col-md-6 col-lg-4">
-                    <div className="card h-100 border figma-card">
-                      <div className="ratio ratio-16x9 overflow-hidden bg-light">
+                  <article key={blog.id} className="col-6 col-md-3">
+                    <div className="card h-100 border figma-card blog-card-compact">
+                      <div className="blog-card-compact-img overflow-hidden bg-light">
                         {blog.coverImage ? (
                           <OptimizedImage
                             src={blog.coverImage}
                             alt={blog.title}
-                            width={800}
-                            height={450}
+                            width={320}
+                            height={180}
                             className="w-100 h-100 object-fit-cover"
-                            sizes="(max-width: 768px) 100vw, 33vw"
+                            sizes="(max-width: 768px) 50vw, 25vw"
                           />
                         ) : (
-                          <div className="d-flex align-items-center justify-content-center text-secondary">
-                            Article Image
+                          <div className="d-flex align-items-center justify-content-center text-secondary small" style={{ minHeight: 90 }}>
+                            Article
                           </div>
                         )}
                       </div>
-                      <div className="card-body p-3">
-                        <h3 className="h6 card-title">
+                      <div className="card-body p-2 p-sm-3">
+                        <h3 className="h6 card-title mb-0 lh-sm">
                           <Link href={`/${blog.slug}`} className="text-decoration-none text-dark">
-                            {blog.title}
+                            {truncateText(blog.title, 42)}
                           </Link>
                         </h3>
-                        <p className="small text-secondary mb-3">
-                          {truncateText(blog.excerpt || blog.title, 90)}
-                        </p>
-                        <div className="d-flex justify-content-between text-muted small">
+                        <div className="d-flex justify-content-between text-muted mt-1" style={{ fontSize: "0.7rem" }}>
                           <span>{formatDate(blog.publishedAt || blog.createdAt)}</span>
                           <span>5 min read</span>
                         </div>
@@ -612,7 +547,7 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
         }
         .figma-section-title {
           letter-spacing: -0.2px;
-          font-size: clamp(1.6rem, 2vw, 2rem);
+          font-size: clamp(1.2rem, 1.5vw, 1.45rem);
         }
         .figma-arrow-btn {
           width: 28px;
@@ -701,6 +636,18 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
           align-self: flex-start;
           margin-top: auto;
         }
+        .blog-card-compact {
+          min-height: auto;
+        }
+        .blog-card-compact-img {
+          height: 90px;
+          display: block;
+        }
+        .blog-card-compact-img img {
+          object-fit: cover;
+          width: 100%;
+          height: 100%;
+        }
         .tool-icon-wrap {
           width: 38px;
           height: 38px;
@@ -769,7 +716,7 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
             min-height: unset;
           }
           .figma-section-title {
-            font-size: 1.35rem;
+            font-size: 1.15rem;
             line-height: 1.25;
             margin-bottom: 12px !important;
           }
