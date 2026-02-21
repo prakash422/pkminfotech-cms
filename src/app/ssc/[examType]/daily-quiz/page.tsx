@@ -39,7 +39,6 @@ export default async function SscExamDailyQuizPage({ params }: PageProps) {
   const base = `/ssc/${canonicalTypeSlug}`
   const navItems = [
     { label: "Practice", href: base },
-    { label: "Daily Quiz", href: `${base}/daily-quiz` },
     { label: "Mock Test", href: `${base}/mock-test` },
     { label: "PYQ", href: `${base}/pyq` },
     { label: "Syllabus", href: `${base}/syllabus` },

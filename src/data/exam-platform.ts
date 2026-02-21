@@ -52,10 +52,14 @@ export const practiceSets: PracticeSetItem[] = [
 ]
 
 export const toolItems: ToolItem[] = [
-  { slug: "percentage-calculator", title: "Percentage Calculator", description: "Calculate percentages and percentage change quickly.", category: "Calculators" },
-  { slug: "simple-interest-calculator", title: "Simple Interest Calculator", description: "Calculate SI with principal, rate and time.", category: "Calculators" },
-  { slug: "compound-interest-calculator", title: "Compound Interest Calculator", description: "Get CI and maturity amount in one click.", category: "Calculators" },
-  { slug: "age-calculator", title: "Age Calculator", description: "Find exact age in years, months and days.", category: "Date & Time" },
-  { slug: "gpa-calculator", title: "GPA Calculator", description: "Estimate GPA and grade points for semesters.", category: "Academic" },
-  { slug: "bmi-calculator", title: "BMI Calculator", description: "Check your body mass index range.", category: "Health" },
+  { slug: "ssc-cgl-marks-calculator", title: "SSC CGL Marks Calculator", description: "Calculate your SSC CGL tier-wise marks and total score.", category: "SSC" },
+  { slug: "ssc-cgl-age-limit-calculator", title: "SSC CGL Age Limit Calculator", description: "Check age limit and relaxation for SSC CGL posts.", category: "SSC" },
+  { slug: "ssc-eligibility-checker", title: "SSC Eligibility Checker", description: "Verify eligibility for SSC exams by qualification and age.", category: "SSC" },
+  { slug: "rrb-ntpc-normalization-calculator", title: "RRB NTPC Normalization Calculator", description: "Calculate normalized marks for RRB NTPC multi-shift exam.", category: "RRB" },
+  { slug: "ibps-score-calculator", title: "IBPS Score Calculator", description: "Compute your IBPS PO/Clerk exam score from correct and wrong answers.", category: "Banking" },
+  { slug: "ssc-cutoff-predictor", title: "SSC Cutoff Predictor", description: "Estimate expected cutoff for SSC CGL, CHSL, MTS and other exams.", category: "SSC" },
+  { slug: "ssc-rank-predictor", title: "SSC Rank Predictor", description: "Predict your probable rank from marks and exam attempt.", category: "SSC" },
+  { slug: "police-height-eligibility-tool", title: "Police Height Eligibility Tool", description: "Check height and chest eligibility for police and constable posts.", category: "Police" },
+  { slug: "ctet-qualifying-marks-tool", title: "CTET Qualifying Marks Tool", description: "Check CTET qualifying marks and minimum score required.", category: "Teaching" },
+  { slug: "bank-final-score-predictor", title: "Bank Final Score Predictor", description: "Predict final score after mains and interview for banking exams.", category: "Banking" },
 ]

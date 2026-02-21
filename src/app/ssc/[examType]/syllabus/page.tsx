@@ -36,7 +36,6 @@ export default async function SscExamSyllabusPage({ params }: PageProps) {
   const base = `/ssc/${typeSlug}`
   const navItems = [
     { label: "Practice", href: base },
-    { label: "Daily Quiz", href: `${base}/daily-quiz` },
     { label: "Mock Test", href: `${base}/mock-test` },
     { label: "PYQ", href: `${base}/pyq` },
     { label: "Syllabus", href: `${base}/syllabus` },
@@ -60,7 +59,7 @@ export default async function SscExamSyllabusPage({ params }: PageProps) {
         />
         <section className="card border shadow-sm">
           <div className="card-body p-4 text-secondary">
-            Syllabus details for {displayName} will be added here soon. Use Practice, Daily Quiz and Mock Test to prepare.
+            Syllabus details for {displayName} will be added here soon. Use Practice and Mock Test to prepare.
           </div>
         </section>
       </div>

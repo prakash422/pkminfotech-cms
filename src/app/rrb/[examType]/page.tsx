@@ -18,8 +18,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const examRecord = await resolveExamByCategoryAndSlug("rrb", examType)
   const name = examRecord?.name ?? config?.shortName ?? examType
   return {
-    title: `${name} | Practice, Daily Quiz, Mock Test | PKMinfotech`,
-    description: `Free ${name} practice sets, daily quiz, mock tests, PYQ and syllabus.`,
+    title: `${name} | Practice, Mock Test, PYQ | PKMinfotech`,
+    description: `Free ${name} practice sets, mock tests, PYQ and syllabus.`,
   }
 }
 
@@ -38,7 +38,6 @@ export default async function RrbExamTypeLandingPage({ params }: PageProps) {
   const base = `/rrb/${canonicalTypeSlug}`
   const navItems = [
     { label: "Practice", href: base },
-    { label: "Daily Quiz", href: `${base}/daily-quiz` },
     { label: "Mock Test", href: `${base}/mock-test` },
     { label: "PYQ", href: `${base}/pyq` },
     { label: "Syllabus", href: `${base}/syllabus` },

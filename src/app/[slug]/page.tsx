@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation"
+import { notFound, redirect } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Calendar, User, Share2, Eye, Clock, Bookmark, ChevronRight } from "lucide-react"
@@ -88,6 +88,7 @@ async function getBlogBySlug(slug: string): Promise<Blog | null> {
 
 export async function generateMetadata({ params }: BlogPageProps): Promise<Metadata> {
   const { slug } = await params
+  if (slug === "current-affairs") redirect("/daily-current-affairs")
   const blog = await getBlogBySlug(slug)
 
   if (!blog) {
@@ -151,6 +152,7 @@ export async function generateMetadata({ params }: BlogPageProps): Promise<Metad
 
 export default async function BlogPostPage({ params }: BlogPageProps) {
   const { slug } = await params
+  if (slug === "current-affairs") redirect("/daily-current-affairs")
   const blog = await getBlogBySlug(slug)
 
   // Log 404 errors for monitoring

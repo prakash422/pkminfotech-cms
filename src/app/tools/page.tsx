@@ -2,11 +2,11 @@ import Link from "next/link"
 import type { Metadata } from "next"
 import { toolItems } from "@/data/exam-platform"
 import BreadcrumbNav from "@/components/BreadcrumbNav"
-import { ArrowRight, Calculator, GraduationCap, HeartPulse, Percent, Sparkles } from "lucide-react"
+import { ArrowRight, Calculator, Sparkles } from "lucide-react"
 
 export const metadata: Metadata = {
   title: "Online Tools & Calculators | PKMinfotech",
-  description: "Use free online tools like percentage calculator, age calculator, GPA and more.",
+  description: "SSC CGL marks calculator, age limit checker, RRB NTPC normalization, IBPS score calculator, cutoff and rank predictors, and more exam tools.",
 }
 
 export default function ToolsPage() {
@@ -15,11 +15,7 @@ export default function ToolsPage() {
     return acc
   }, {})
 
-  const iconBySlug: Record<string, React.ReactNode> = {
-    "percentage-calculator": <Percent size={18} className="text-primary" />,
-    "gpa-calculator": <GraduationCap size={18} className="text-primary" />,
-    "bmi-calculator": <HeartPulse size={18} className="text-primary" />,
-  }
+  const iconBySlug: Record<string, React.ReactNode> = {}
 
   return (
     <main className="bg-light py-4">
@@ -36,7 +32,7 @@ export default function ToolsPage() {
               <div>
                 <h1 className="fw-bold mb-2">Free Online Tools</h1>
                 <p className="text-secondary mb-0">
-                  Quick calculators and utility tools to support exam preparation.
+                  SSC, RRB, Banking, Police and Teaching exam calculators and predictors.
                 </p>
               </div>
               <span className="d-none d-md-inline-flex align-items-center gap-1 badge rounded-pill text-bg-primary-subtle text-primary-emphasis">

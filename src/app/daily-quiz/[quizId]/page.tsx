@@ -1,8 +1,9 @@
 import type { Metadata } from "next"
 import { headers } from "next/headers"
-import { notFound } from "next/navigation"
+import { notFound, redirect } from "next/navigation"
 import BreadcrumbNav from "@/components/BreadcrumbNav"
 import PracticeQuestionRunner from "@/components/practice/PracticeQuestionRunner"
+import { getDateSlug } from "@/lib/current-affairs-quiz"
 
 interface DailyQuizPageProps {
   params: Promise<{ quizId: string }>
@@ -72,6 +73,10 @@ export async function generateMetadata({ params }: DailyQuizPageProps): Promise<
 
 export default async function DailyQuizDetailPage({ params }: DailyQuizPageProps) {
   const { quizId } = await params
+  const datePart = quizId.startsWith("daily-quiz-") ? quizId.slice("daily-quiz-".length) : ""
+  if (datePart && /^\d{4}-\d{2}-\d{2}$/.test(datePart)) {
+    redirect(`/current-affairs-quiz/${getDateSlug(datePart)}`)
+  }
   const quiz = await getDailyQuiz(quizId)
   if (!quiz) notFound()
   const orderedQuestions = (quiz.orderedQuestions || []) as QuizQuestion[]

@@ -30,7 +30,6 @@ export default async function PoliceExamPyqPage({ params }: PageProps) {
   const base = `/police/${config.slug}`
   const navItems = [
     { label: "Practice", href: `${base}/practice` },
-    { label: "Daily Quiz", href: `${base}/daily-quiz` },
     { label: "Mock Test", href: `${base}/mock-test` },
     { label: "PYQ", href: `${base}/pyq` },
     { label: "Syllabus", href: `${base}/syllabus` },

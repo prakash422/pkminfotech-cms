@@ -116,7 +116,8 @@ const nextConfig = {
       { source: '/ssc-mock-test', destination: '/ssc', permanent: true },
       { source: '/ssc-daily-quiz', destination: '/ssc', permanent: true },
       { source: '/ssc-previous-year-question', destination: '/ssc', permanent: true },
-      { source: '/ssc-current-affairs', destination: '/current-affairs', permanent: true },
+      { source: '/ssc-current-affairs', destination: '/current-affairs-quiz', permanent: true },
+      { source: '/current-affairs', destination: '/current-affairs-quiz', permanent: true },
       
       // === PREVIOUS REDIRECTS ===
       {

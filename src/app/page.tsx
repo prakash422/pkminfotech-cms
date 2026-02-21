@@ -11,6 +11,7 @@ import ClientScripts from '@/components/ClientScripts'
 import OptimizedImage from '@/components/OptimizedImage'
 import { generateCanonicalUrl } from "@/lib/canonical-utils"
 import ExploreCoreFeatures from "@/components/ExploreCoreFeatures"
+import { toolItems } from "@/data/exam-platform"
 
 // Enable ISR with 60 second revalidation
 export async function generateMetadata({ searchParams }: { searchParams: Promise<{ category?: string; page?: string }> }): Promise<Metadata> {
@@ -247,19 +248,24 @@ function generateStructuredData(blogs: BlogPost[]) {
 
 export default async function HomePage({ searchParams }: { searchParams: Promise<{ category?: string; page?: string }> }) {
   const params = await searchParams
-  const currentPage = parseInt(params.page || '1', 10)
   const selectedCategory = params.category || 'all'
-  
+  if (selectedCategory === 'current-affairs') {
+    const { redirect } = await import('next/navigation')
+    const page = params.page || '1'
+    redirect(page === '1' ? '/daily-current-affairs' : `/daily-current-affairs?page=${page}`)
+  }
+  const currentPage = parseInt(params.page || '1', 10)
   const blogsData = await getBlogs(selectedCategory === 'all' ? undefined : selectedCategory, currentPage)
   const latestBlogs = blogsData.blogs.slice(0, 4)
   const currentAffairsData = await getBlogs('current-affairs', 1, 4)
   const currentAffairsBlogs = currentAffairsData.blogs
-  const toolCards = [
-    { title: "Age Calculator", href: "/tools/age-calculator", text: "Find exact age from date of birth.", icon: Calculator, tone: "tool-tone-1" },
-    { title: "Percentage Calculator", href: "/tools/percentage-calculator", text: "Calculate percentages in seconds.", icon: Percent, tone: "tool-tone-2" },
-    { title: "GPA Calculator", href: "/tools/gpa-calculator", text: "Estimate semester and cumulative GPA.", icon: GraduationCap, tone: "tool-tone-3" },
-    { title: "BMI Calculator", href: "/tools/bmi-calculator", text: "Check healthy body mass index quickly.", icon: HeartPulse, tone: "tool-tone-4" },
-  ]
+  const toolCards = toolItems.slice(0, 8).map((tool, i) => ({
+    title: tool.title,
+    href: `/tools/${tool.slug}`,
+    text: tool.description,
+    icon: Calculator,
+    tone: `tool-tone-${(i % 4) + 1}` as const,
+  }))
 
   if (process.env.NEXT_PUBLIC_HOMEPAGE_LAYOUT !== "legacy") {
     return (
@@ -285,7 +291,7 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                   Practice mock tests, daily quizzes &amp; useful calculators - all in one place.
                 </p>
                 <div className="d-flex flex-wrap gap-2 figma-hero-cta">
-                  <Link href="/daily-quiz" className="figma-btn figma-btn-primary">
+                  <Link href="/current-affairs-quiz" className="figma-btn figma-btn-primary">
                     Daily Quiz <ArrowRight size={14} />
                   </Link>
                   <Link href="/tools" className="figma-btn figma-btn-outline">
@@ -345,6 +351,11 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                 </div>
               ))}
             </div>
+            <div className="text-center mt-3">
+              <Link href="/tools" className="figma-btn figma-btn-outline">
+                View All <ArrowRight size={14} className="ms-1" />
+              </Link>
+            </div>
           </section>
 
           <section className="figma-space-24">
@@ -352,7 +363,7 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
             <p className="text-secondary small text-center mb-2">Stay updated for SSC, RRB, Banking &amp; govt exams.</p>
             {currentAffairsBlogs.length > 0 && (
               <div className="text-center mb-3">
-                <Link href="/?category=current-affairs" className="small fw-semibold text-primary text-decoration-none">
+                <Link href="/daily-current-affairs" className="small fw-semibold text-primary text-decoration-none">
                   View all <ArrowRight size={14} className="d-inline-block ms-1" />
                 </Link>
               </div>

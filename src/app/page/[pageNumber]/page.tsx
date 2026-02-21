@@ -17,6 +17,11 @@ export default async function PaginationPage({ params, searchParams }: PageProps
     redirect('/')
   }
   
+  // Current affairs has its own SEO-friendly URL
+  if (searchParamsObj.category === 'current-affairs') {
+    redirect(pageNum === 1 ? '/daily-current-affairs' : `/daily-current-affairs?page=${pageNum}`)
+  }
+  
   // Redirect page 1 to home to avoid duplicate content
   if (pageNum === 1) {
     const redirectUrl = searchParamsObj.category && searchParamsObj.category !== 'all' 

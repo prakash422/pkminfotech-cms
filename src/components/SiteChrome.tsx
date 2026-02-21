@@ -7,8 +7,8 @@ import { Facebook, Instagram, Linkedin, Menu, Search, X, Youtube } from "lucide-
 import { useState } from "react"
 
 const TOP_LINKS = [
-  { label: "Daily Quiz", href: "/daily-quiz" },
-  { label: "Current Affairs", href: "/current-affairs" },
+  { label: "Current Affairs Update", href: "/daily-current-affairs" },
+  { label: "Current Affairs Quiz", href: "/current-affairs-quiz" },
   { label: "Blog", href: "/latest" },
   { label: "Online Tools", href: "/tools" },
   { label: "Contact Us", href: "/contact-us" },
@@ -173,7 +173,7 @@ export function SiteFooter() {
               <h6 className="fw-semibold mb-2">Explore</h6>
               <ul className="list-unstyled mb-0 small">
                 <li><Link href="/ssc" className="text-white-50 text-decoration-none">SSC Exam</Link></li>
-                <li><Link href="/daily-quiz" className="text-white-50 text-decoration-none">Daily Quiz</Link></li>
+                <li><Link href="/daily-current-affairs" className="text-white-50 text-decoration-none">Current Affairs Update</Link></li>
                 <li><Link href="/tools" className="text-white-50 text-decoration-none">Online Tools</Link></li>
               </ul>
             </div>

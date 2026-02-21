@@ -56,7 +56,7 @@ export default function ExamTypeLanding({
             <p className="text-secondary mb-0 small exam-type-landing-desc">
               {showPracticeSets
                 ? `Question sets for ${displayName}. Start with any set.`
-                : `Practice sets, mock tests, PYQ, daily quizzes and syllabus for ${displayName}.`}
+                : `Practice sets, mock tests, PYQ and syllabus for ${displayName}.`}
             </p>
           </div>
         </section>
@@ -83,7 +83,7 @@ export default function ExamTypeLanding({
         ) : (
           <section className="card border shadow-sm" aria-label="Practice sets">
             <div className="card-body p-4 text-secondary text-center">
-              No practice sets for {displayName} yet. Check back later or try Daily Quiz, Mock Test or PYQ from the tabs above.
+              No practice sets for {displayName} yet. Check back later or try Mock Test or PYQ from the tabs above.
             </div>
           </section>
         )}
