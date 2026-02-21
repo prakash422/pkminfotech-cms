@@ -59,7 +59,7 @@ export default function SiteChrome() {
                 <Search size={14} />
               </button>
               <Link href="/admin/login" className="btn btn-outline-secondary btn-sm d-none d-md-inline-flex">Login</Link>
-              <Link href="/" className="btn btn-primary btn-sm site-start-btn d-none d-md-inline-flex">Start Free</Link>
+              <Link href="/signup" className="btn btn-primary btn-sm site-start-btn d-none d-md-inline-flex">Start Free</Link>
               <button
                 type="button"
                 className="btn btn-light btn-sm d-inline-flex d-lg-none align-items-center justify-content-center site-menu-btn"
@@ -75,7 +75,7 @@ export default function SiteChrome() {
           {mobileMenuOpen && (
             <nav className="d-lg-none mt-2 border-top pt-2" aria-label="Mobile navigation">
               <div className="d-grid gap-1">
-                <Link href="/" onClick={() => setMobileMenuOpen(false)} className="btn btn-primary btn-sm text-start ps-2 mb-1">
+                <Link href="/signup" onClick={() => setMobileMenuOpen(false)} className="btn btn-primary btn-sm text-start ps-2 mb-1">
                   Start Free
                 </Link>
                 <Link href="/" onClick={() => setMobileMenuOpen(false)} className={`text-decoration-none px-2 py-2 rounded small fw-semibold ${pathname === "/" ? "text-primary bg-primary-subtle" : "text-dark bg-light"}`}>

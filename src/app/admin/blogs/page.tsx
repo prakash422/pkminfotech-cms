@@ -277,10 +277,13 @@ export default function BlogsPage() {
                               ? 'bg-orange-100 text-orange-800' 
                               : blog.category === 'english'
                                 ? 'bg-green-100 text-green-800'
+                                : blog.category === 'current-affairs'
+                                ? 'bg-emerald-100 text-emerald-800'
                                 : 'bg-blue-100 text-blue-800'
                           }`}>
                             {blog.category === 'hindi' ? 'हिंदी' : 
-                             blog.category === 'english' ? 'English' : 'Latest'}
+                             blog.category === 'english' ? 'English' : 
+                             blog.category === 'current-affairs' ? 'Current Affairs' : 'Latest'}
                           </span>
                         </td>
                         <td className="py-3 px-4">

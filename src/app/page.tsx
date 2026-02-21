@@ -252,6 +252,8 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
   
   const blogsData = await getBlogs(selectedCategory === 'all' ? undefined : selectedCategory, currentPage)
   const latestBlogs = blogsData.blogs.slice(0, 4)
+  const currentAffairsData = await getBlogs('current-affairs', 1, 4)
+  const currentAffairsBlogs = currentAffairsData.blogs
   const toolCards = [
     { title: "Age Calculator", href: "/tools/age-calculator", text: "Find exact age from date of birth.", icon: Calculator, tone: "tool-tone-1" },
     { title: "Percentage Calculator", href: "/tools/percentage-calculator", text: "Calculate percentages in seconds.", icon: Percent, tone: "tool-tone-2" },
@@ -283,8 +285,8 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                   Practice mock tests, daily quizzes &amp; useful calculators - all in one place.
                 </p>
                 <div className="d-flex flex-wrap gap-2 figma-hero-cta">
-                  <Link href="/mock-tests" className="figma-btn figma-btn-primary">
-                    Start Mock Test <ArrowRight size={14} />
+                  <Link href="/daily-quiz" className="figma-btn figma-btn-primary">
+                    Daily Quiz <ArrowRight size={14} />
                   </Link>
                   <Link href="/tools" className="figma-btn figma-btn-outline">
                     Explore Tools <ArrowRight size={14} />
@@ -342,6 +344,61 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                   </div>
                 </div>
               ))}
+            </div>
+          </section>
+
+          <section className="figma-space-24">
+            <h2 className="text-center fw-bold mb-2 h4 figma-section-title">Current Affairs for Exams</h2>
+            <p className="text-secondary small text-center mb-2">Stay updated for SSC, RRB, Banking &amp; govt exams.</p>
+            {currentAffairsBlogs.length > 0 && (
+              <div className="text-center mb-3">
+                <Link href="/?category=current-affairs" className="small fw-semibold text-primary text-decoration-none">
+                  View all <ArrowRight size={14} className="d-inline-block ms-1" />
+                </Link>
+              </div>
+            )}
+            <div className="row g-3">
+              {currentAffairsBlogs.length > 0 ? (
+                currentAffairsBlogs.map((blog: BlogPost) => (
+                  <article key={blog.id} className="col-6 col-md-3">
+                    <div className="card h-100 border figma-card blog-card-compact">
+                      <div className="blog-card-compact-img overflow-hidden bg-light">
+                        {blog.coverImage ? (
+                          <OptimizedImage
+                            src={blog.coverImage}
+                            alt={blog.title}
+                            width={320}
+                            height={180}
+                            className="w-100 h-100 object-fit-cover"
+                            sizes="(max-width: 768px) 50vw, 25vw"
+                          />
+                        ) : (
+                          <div className="d-flex align-items-center justify-content-center text-secondary small" style={{ minHeight: 90 }}>
+                            Article
+                          </div>
+                        )}
+                      </div>
+                      <div className="card-body p-2 p-sm-3">
+                        <h3 className="h6 card-title mb-0 lh-sm">
+                          <Link href={`/${blog.slug}`} className="text-decoration-none text-dark">
+                            {truncateText(blog.title, 42)}
+                          </Link>
+                        </h3>
+                        <div className="d-flex justify-content-between text-muted mt-1" style={{ fontSize: "0.7rem" }}>
+                          <span>{formatDate(blog.publishedAt || blog.createdAt)}</span>
+                          <span>5 min read</span>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                ))
+              ) : (
+                <div className="col-12">
+                  <div className="alert alert-light border text-center mb-0 small">
+                    Current affairs articles will appear here. Add blogs with category &quot;Current Affairs&quot; in admin.
+                  </div>
+                </div>
+              )}
             </div>
           </section>
 
@@ -444,6 +501,7 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
               </div>
             </div>
           </section>
+
         </div>
       </main>
 
@@ -458,7 +516,7 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
           border-radius: 0.9rem;
         }
         .figma-hero-unified {
-          background: #ffffff;
+          background: linear-gradient(145deg, #ffffff 0%, #fafbfd 45%, #f6f8fc 100%);
           min-height: 320px;
           padding: 24px;
         }
@@ -493,14 +551,16 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
           max-width: 540px;
         }
         .figma-card {
-          border-color: #e8edf4 !important;
           border-radius: 0.75rem;
+          border: 1px solid rgba(226, 232, 240, 0.8) !important;
+          background: linear-gradient(145deg, #ffffff 0%, #f8fafc 50%, #f1f5f9 100%) !important;
           box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06), 0 2px 6px rgba(15, 23, 42, 0.03);
-          transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+          transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease, background 0.22s ease;
         }
         .figma-card:hover {
           transform: translateY(-4px);
           border-color: #d9e4f5 !important;
+          background: linear-gradient(145deg, #ffffff 0%, #f1f5f9 50%, #e2e8f0 100%) !important;
           box-shadow: 0 14px 28px rgba(15, 23, 42, 0.1), 0 6px 12px rgba(15, 23, 42, 0.06);
         }
         .figma-btn {
@@ -621,8 +681,6 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
         }
         .tool-card {
           min-height: 170px;
-          border: 1px solid #e7edf7 !important;
-          background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
           overflow: hidden;
         }
         .tool-card .card-body {

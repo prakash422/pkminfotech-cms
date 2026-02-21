@@ -335,6 +335,7 @@ export default function NewBlogPage() {
                           <option value="latest">Latest Blog</option>
                           <option value="english">English Blog</option>
                           <option value="hindi">हिंदी Blog</option>
+                          <option value="current-affairs">Current Affairs</option>
                         </select>
                       </div>
 
@@ -628,7 +629,8 @@ export default function NewBlogPage() {
                     <span className="text-gray-600">Category:</span>
                     <span className="font-medium text-gray-900">
                       {formData.category === 'hindi' ? 'हिंदी' :
-                        formData.category === 'english' ? 'English' : 'Latest'}
+                        formData.category === 'english' ? 'English' :
+                        formData.category === 'current-affairs' ? 'Current Affairs' : 'Latest'}
                     </span>
                   </div>
                   {formData.coverImage && (

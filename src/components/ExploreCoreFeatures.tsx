@@ -44,7 +44,7 @@ export default function ExploreCoreFeatures() {
           Choose Your Exam
         </h2>
         <p className="core-features-subtitle text-secondary small mb-0 mt-1">
-          Start free practice today — your dream job is a few tests away.
+          Start free practice today — dream job is a few tests away.
         </p>
       </div>
 
@@ -115,7 +115,7 @@ export default function ExploreCoreFeatures() {
         }
         .explore-core-features .core-features-subtitle {
           font-size: 0.8rem;
-          max-width: 320px;
+          max-width: 420px;
           margin-left: auto;
           margin-right: auto;
         }
