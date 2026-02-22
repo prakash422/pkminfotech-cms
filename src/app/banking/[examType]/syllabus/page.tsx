@@ -52,7 +52,7 @@ export default async function BankingExamSyllabusPage({ params }: PageProps) {
             { label: "Syllabus" },
           ]}
         />
-        <ExamInternalNav examName={displayName} items={navItems} variant="tabs" basePath={base} />
+        <ExamInternalNav examName={displayName} items={navItems} variant="tabs" basePath={base} forceActiveHref={`${base}/syllabus`} />
         <ExamTabHero
           title={`${displayName} Syllabus`}
           description={`Syllabus and exam pattern for ${displayName}.`}

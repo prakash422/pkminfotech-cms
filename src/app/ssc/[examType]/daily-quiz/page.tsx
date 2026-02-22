@@ -63,7 +63,7 @@ export default async function SscExamDailyQuizPage({ params }: PageProps) {
             { label: "Daily Quiz" },
           ]}
         />
-        <ExamInternalNav examName={displayName} items={navItems} variant="tabs" basePath={base} />
+        <ExamInternalNav examName={displayName} items={navItems} variant="tabs" basePath={base} forceActiveHref={`${base}/daily-quiz`} />
         <ExamTabHero
           title={`${displayName} Daily Quiz`}
           description={`Daily quiz for ${displayName}. Attempt and see instant result.`}

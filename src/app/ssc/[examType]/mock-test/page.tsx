@@ -62,7 +62,7 @@ export default async function SscExamMockTestPage({ params }: PageProps) {
             { label: "Mock Test" },
           ]}
         />
-        <ExamInternalNav examName={displayName} items={navItems} variant="tabs" basePath={base} />
+        <ExamInternalNav examName={displayName} items={navItems} variant="tabs" basePath={base} forceActiveHref={`${base}/mock-test`} />
         <ExamTabHero
           title={`${displayName} Mock Test`}
           description="Full-length mock tests with timer and instant result."

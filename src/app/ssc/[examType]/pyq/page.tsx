@@ -70,7 +70,7 @@ export default async function SscExamPyqPage({ params }: PageProps) {
             { label: "PYQ" },
           ]}
         />
-        <ExamInternalNav examName={displayName} items={navItems} variant="tabs" basePath={base} />
+        <ExamInternalNav examName={displayName} items={navItems} variant="tabs" basePath={base} forceActiveHref={`${base}/pyq`} />
         <ExamTabHero
           title={`${displayName} Previous Year Questions`}
           description="Topic-wise PYQ sets from previous papers."
