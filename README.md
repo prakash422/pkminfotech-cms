@@ -63,6 +63,25 @@ CLOUDINARY_API_KEY="your-api-key"
 CLOUDINARY_API_SECRET="your-api-secret"
 \`\`\`
 
+#### Production env (auth)
+
+Hosting (Vercel, Railway, etc.) pe **Environment Variables** mein ye add karein:
+
+| Variable | Value | Notes |
+|---------|--------|--------|
+| `NEXTAUTH_URL` | `https://yourdomain.com` | Live site URL, **no trailing slash** |
+| `NEXTAUTH_SECRET` | Strong random string | Same as dev ya naya: `openssl rand -base64 32` |
+| `GOOGLE_CLIENT_ID` | (same as dev) | Google Console se |
+| `GOOGLE_CLIENT_SECRET` | (same as dev) | Google Console se |
+| `DATABASE_URL` | Prod MongoDB URL | Atlas connection string |
+| `NEXT_PUBLIC_BASE_URL` | `https://yourdomain.com` | SEO / canonical ke liye |
+
+**Google OAuth (production):**  
+Google Cloud Console → Credentials → apna OAuth client → **Authorized redirect URIs** mein add karein:  
+`https://yourdomain.com/api/auth/callback/google`  
+**Authorized JavaScript origins** mein:  
+`https://yourdomain.com`
+
 ### 3. Database Setup
 \`\`\`bash
 # Generate Prisma client
