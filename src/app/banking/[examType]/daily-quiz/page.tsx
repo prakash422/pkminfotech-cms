@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const examRecord = await resolveExamByCategoryAndSlug("banking", examType)
   const name = examRecord?.name ?? config?.shortName ?? examType
   return {
-    title: `${name} Daily Quiz | PKMinfotech`,
+    title: `${name} Daily Quiz | pkminfotech`,
     description: `Daily quiz for ${name}.`,
   }
 }

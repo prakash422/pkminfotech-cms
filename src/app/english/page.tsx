@@ -7,11 +7,11 @@ import { Metadata } from "next"
 import OptimizedImage from '@/components/OptimizedImage'
 
 export const metadata: Metadata = {
-  title: 'English Blog Posts | Pkminfotech - Tech News & Updates',
-  description: 'Read English blog posts about technology, business, and digital trends on Pkminfotech.',
+  title: 'English Blog Posts | pkminfotech - Tech News & Updates',
+  description: 'Read English blog posts about technology, business, and digital trends on pkminfotech.',
   keywords: 'english tech blog, technology articles, business updates, digital insights',
   openGraph: {
-    title: 'English Blog Posts | Pkminfotech',
+    title: 'English Blog Posts | pkminfotech',
     description: 'English articles about technology and business',
     images: [{ url: '/favicon-32x32.png', width: 32, height: 32 }],
   },

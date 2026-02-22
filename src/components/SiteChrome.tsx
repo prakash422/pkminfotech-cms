@@ -45,9 +45,9 @@ export default function SiteChrome() {
           <div className="d-flex align-items-center justify-content-between gap-3">
             <Link href="/" className="d-flex align-items-center text-decoration-none text-dark">
               <span className="d-inline-flex align-items-center justify-content-center rounded-3 bg-primary-subtle border me-2" style={{ width: 36, height: 36 }}>
-                <Image src="/favicon-32x32.png" alt="PKMinfotech logo" width={22} height={22} />
+                <Image src="/favicon-32x32.png" alt="pkminfotech logo" width={22} height={22} />
               </span>
-              <span className="fw-bold">PKMinfotech</span>
+              <span className="fw-bold">pkminfotech</span>
             </Link>
 
             <nav className="d-none d-lg-flex align-items-center gap-2 small fw-semibold">
@@ -260,8 +260,8 @@ export function SiteFooter() {
           <div className="row g-4">
             <div className="col-md-5">
               <div className="d-flex align-items-center gap-2 mb-2">
-                <Image src="/favicon-32x32.png" alt="PKMinfotech logo" width={18} height={18} />
-                <span className="fw-semibold">PKMinfotech</span>
+                <Image src="/favicon-32x32.png" alt="pkminfotech logo" width={18} height={18} />
+                <span className="fw-semibold">pkminfotech</span>
               </div>
               <p className="small text-white-50 mb-0">
                 Exam practice, mock tests and utility tools to help learners prepare better.
@@ -308,7 +308,7 @@ export function SiteFooter() {
             </a>
           </div>
           <div className="border-top border-secondary-subtle mt-3 pt-3 small text-white-50 d-flex flex-wrap justify-content-between gap-2">
-            <span>&copy; {new Date().getFullYear()} PKMinfotech</span>
+            <span>&copy; {new Date().getFullYear()} pkminfotech</span>
             <span>Exam Practice • Mock Tests • Online Tools</span>
           </div>
         </div>

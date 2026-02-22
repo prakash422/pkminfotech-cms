@@ -4,7 +4,7 @@ import ExamTypeCardGrid from "@/components/ExamTypeCardGrid"
 import { BANKING_EXAM_TYPES } from "@/lib/banking/banking-exam-types"
 
 export const metadata: Metadata = {
-  title: "Banking Exam Preparation | IBPS PO, SBI PO, RBI Grade B | PKMinfotech",
+  title: "Banking Exam Preparation | IBPS PO, SBI PO, RBI Grade B | pkminfotech",
   description: "Free Banking exam practice, mock tests, daily quiz for IBPS, SBI, RBI exams.",
 }
 

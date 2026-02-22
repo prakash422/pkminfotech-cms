@@ -32,13 +32,13 @@ export async function generateMetadata({ params }: PracticeSetPageProps): Promis
 
   if (!set) {
     return {
-      title: "Practice Set Not Found | PKMinfotech",
+      title: "Practice Set Not Found | pkminfotech",
       description: "The requested practice set could not be found.",
     }
   }
 
   return {
-    title: `${set.title} | Practice Set | PKMinfotech`,
+    title: `${set.title} | Practice Set | pkminfotech`,
     description:
       set.description ||
       `Practice ${set.title} with ${set.questions.length || set.totalQuestions} MCQs in English and Hindi.`,

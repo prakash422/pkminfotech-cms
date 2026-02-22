@@ -88,8 +88,8 @@ Adsense 70%, Affiliate 15%, Premium tests 15%.
 - Keep **same core signals:** same domain, same root; change only content and layout.
 - **Enhance, don’t replace in one shot:** Introduce new sections (Exam categories, Mock tests, Tools) above the fold while keeping a “Latest from blog” or “Guides” section that still links to existing posts.
 - **Title/description:** Evolve gradually. Example transition:
-  - Current (concept): "Latest Tech News, Business Updates & Travel Guides | Pkminfotech"
-  - New: "Free Mock Tests, Exam Practice & Online Tools | SSC, Banking, Railway | Pkminfotech"
+  - Current (concept): "Latest Tech News, Business Updates & Travel Guides | pkminfotech"
+  - New: "Free Mock Tests, Exam Practice & Online Tools | SSC, Banking, Railway | pkminfotech"
   - Do this in one go but keep brand name and main keywords; avoid changing again for 6+ months.
 - **Internal links:** From day one, link from homepage to 5–10 key new sections (exam categories, top tools, “Start free mock test”). Link from new sections back to relevant old blog posts where they add value (e.g. “SSC preparation tips” → old article if any).
 - **Technical:** Don’t change canonical of homepage. Ensure new homepage is server-rendered (your current setup is), and core content isn’t hidden behind heavy JS so crawlers see it.

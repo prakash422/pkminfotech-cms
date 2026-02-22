@@ -45,13 +45,13 @@ export async function generateMetadata({ params }: MockTestDetailPageProps): Pro
 
   if (!test) {
     return {
-      title: "Mock Test Not Found | PKMinfotech",
+      title: "Mock Test Not Found | pkminfotech",
       description: "Requested mock test could not be found.",
     }
   }
 
   return {
-    title: `${test.title} | Mock Test | PKMinfotech`,
+    title: `${test.title} | Mock Test | pkminfotech`,
     description: `Take ${test.title} mock test with timer, navigation and instant result.`,
   }
 }

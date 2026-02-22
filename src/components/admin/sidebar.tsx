@@ -44,7 +44,7 @@ export default function Sidebar() {
       <div className="px-3 py-2.5 border-b border-gray-200">
         <div className="rounded-md bg-gradient-to-r from-blue-600 to-blue-700 px-2.5 py-2">
           <h1 className="text-base font-semibold text-white leading-tight">CMS Admin</h1>
-          <p className="text-[10px] text-blue-100 mt-0.5">PKMinfotech Panel</p>
+          <p className="text-[10px] text-blue-100 mt-0.5">pkminfotech Panel</p>
         </div>
       </div>
       

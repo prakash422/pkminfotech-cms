@@ -124,7 +124,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       ? formatMonthLabel(monthParsed.year, monthParsed.month)
       : month
   return {
-    title: `Daily Current Affairs Quiz - ${label} | PKMinfotech`,
+    title: `Daily Current Affairs Quiz - ${label} | pkminfotech`,
     description: `Practice daily current affairs quiz for ${label}. SSC, RRB, Banking and govt exam preparation.`,
   }
 }

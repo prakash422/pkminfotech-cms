@@ -4,7 +4,7 @@ import ExamTypeCardGrid from "@/components/ExamTypeCardGrid"
 import { RRB_EXAM_TYPES } from "@/lib/rrb/rrb-exam-types"
 
 export const metadata: Metadata = {
-  title: "RRB Exam Preparation | NTPC, Group D, JE, ALP, Technician | PKMinfotech",
+  title: "RRB Exam Preparation | NTPC, Group D, JE, ALP, Technician | pkminfotech",
   description: "Free RRB exam practice, mock tests, daily quiz for NTPC, Group D, JE, ALP, Technician.",
 }
 

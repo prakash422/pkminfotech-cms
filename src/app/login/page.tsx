@@ -44,7 +44,7 @@ export default function LoginPage() {
           <div className="card-body p-4 p-md-5">
             <div className="text-center mb-4">
               <h1 className="h4 fw-bold mb-1">Log in</h1>
-              <p className="text-secondary small mb-0">Sign in to your PKMinfotech account.</p>
+              <p className="text-secondary small mb-0">Sign in to your pkminfotech account.</p>
             </div>
             <button
               type="button"

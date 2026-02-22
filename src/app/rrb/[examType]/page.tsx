@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const examRecord = await resolveExamByCategoryAndSlug("rrb", examType)
   const name = examRecord?.name ?? config?.shortName ?? examType
   return {
-    title: `${name} | Practice, Mock Test, PYQ | PKMinfotech`,
+    title: `${name} | Practice, Mock Test, PYQ | pkminfotech`,
     description: `Free ${name} practice sets, mock tests, PYQ and syllabus.`,
   }
 }

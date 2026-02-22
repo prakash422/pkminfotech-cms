@@ -44,12 +44,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: page.metaTitle || `${page.title} - Pkminfotech`,
-    description: page.metaDescription || `${page.title} - Pkminfotech`,
+    title: page.metaTitle || `${page.title} - pkminfotech`,
+    description: page.metaDescription || `${page.title} - pkminfotech`,
     keywords: page.keywords,
     openGraph: {
-      title: page.metaTitle || `${page.title} - Pkminfotech`,
-      description: page.metaDescription || `${page.title} - Pkminfotech`,
+      title: page.metaTitle || `${page.title} - pkminfotech`,
+      description: page.metaDescription || `${page.title} - pkminfotech`,
       type: 'website',
     },
     alternates: {

@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const config = getSscExamTypeBySlug(examType)
   const name = examRecord?.name ?? config?.shortName ?? examType
   return {
-    title: `${name} Syllabus | PKMinfotech`,
+    title: `${name} Syllabus | pkminfotech`,
     description: `${name} exam syllabus and pattern.`,
   }
 }

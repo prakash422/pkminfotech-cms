@@ -11,10 +11,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { examType } = await params
   const config = getPoliceExamTypeBySlug(examType)
   if (config && "externalLink" in config && config.externalLink)
-    return { title: "Redirect | PKMinfotech" }
+    return { title: "Redirect | pkminfotech" }
   const name = config?.shortName ?? examType
   return {
-    title: `${name} | Practice, Mock Test, PYQ | PKMinfotech`,
+    title: `${name} | Practice, Mock Test, PYQ | pkminfotech`,
     description: `Free ${name} practice sets, mock tests, PYQ and syllabus.`,
   }
 }

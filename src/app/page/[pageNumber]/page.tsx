@@ -48,7 +48,7 @@ export async function generateMetadata({ params, searchParams }: PageProps) {
   const currentPage = parseInt(pageNumber, 10)
   const selectedCategory = category || 'all'
   
-  const pageTitle = `Latest Blogs - Page ${currentPage} | Pkminfotech`
+  const pageTitle = `Latest Blogs - Page ${currentPage} | pkminfotech`
   const pageDescription = `Browse our latest blog posts on page ${currentPage}. Discover tech news, travel guides, and business insights.`
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.pkminfotech.com'
@@ -57,10 +57,10 @@ export async function generateMetadata({ params, searchParams }: PageProps) {
   return {
     title: pageTitle,
     description: pageDescription,
-    keywords: "tech news, business updates, travel guides India, technology news, digital trends, tourist places, daily news, Pkminfotech",
-    authors: [{ name: "Pkminfotech Team" }],
-    creator: "Pkminfotech",
-    publisher: "Pkminfotech",
+    keywords: "tech news, business updates, travel guides India, technology news, digital trends, tourist places, daily news, pkminfotech",
+    authors: [{ name: "pkminfotech Team" }],
+    creator: "pkminfotech",
+    publisher: "pkminfotech",
     alternates: {
       canonical: canonicalUrl,
     },
@@ -93,7 +93,7 @@ export async function generateMetadata({ params, searchParams }: PageProps) {
       title: pageTitle,
       description: pageDescription,
       url: canonicalUrl,
-      siteName: "Pkminfotech",
+      siteName: "pkminfotech",
       locale: "en_US",
       type: "website",
       images: [
@@ -101,7 +101,7 @@ export async function generateMetadata({ params, searchParams }: PageProps) {
           url: "/favicon.ico",
           width: 32,
           height: 32,
-          alt: "Pkminfotech Logo"
+          alt: "pkminfotech Logo"
         },
         {
           url: "/og-home.jpg",

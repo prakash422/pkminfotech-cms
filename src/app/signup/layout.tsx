@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Sign up | PKMinfotech",
+  title: "Sign up | pkminfotech",
   description: "Create your free account to save progress and access more features.",
 }
 

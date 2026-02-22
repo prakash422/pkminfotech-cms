@@ -48,7 +48,7 @@ export default function LoginPage() {
           <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-full mb-4">
             <Lock className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900">Pkminfotech</h1>
+          <h1 className="text-3xl font-bold text-gray-900">pkminfotech</h1>
           <p className="text-gray-600">Content Management System</p>
         </div>
 
@@ -134,7 +134,7 @@ export default function LoginPage() {
 
         {/* Footer */}
         <div className="text-center mt-8 text-sm text-gray-500">
-          © 2024 PKM InfoTech. All rights reserved.
+          © 2024 pkminfotech. All rights reserved.
         </div>
       </div>
     </div>

@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const config = getTeachingExamTypeBySlug(examType)
   const name = config?.shortName ?? examType
   return {
-    title: `${name} Daily Quiz | PKMinfotech`,
+    title: `${name} Daily Quiz | pkminfotech`,
     description: `Daily quiz for ${name}.`,
   }
 }

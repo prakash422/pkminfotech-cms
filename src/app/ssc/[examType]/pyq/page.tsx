@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const config = getSscExamTypeBySlug(examType)
   const name = examRecord?.name ?? config?.shortName ?? examType
   return {
-    title: `${name} PYQ | Previous Year Questions | PKMinfotech`,
+    title: `${name} PYQ | Previous Year Questions | pkminfotech`,
     description: `Free ${name} previous year question practice sets.`,
   }
 }

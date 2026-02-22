@@ -4,7 +4,7 @@ import ExamTypeCardGrid from "@/components/ExamTypeCardGrid"
 import { POLICE_EXAM_TYPES } from "@/lib/police/police-exam-types"
 
 export const metadata: Metadata = {
-  title: "Police Exam Preparation | Central Level CAPF, CISF, CRPF | PKMinfotech",
+  title: "Police Exam Preparation | Central Level CAPF, CISF, CRPF | pkminfotech",
   description: "Free Police exam practice for CAPF, CISF, CRPF. SSC GD under SSC.",
 }
 

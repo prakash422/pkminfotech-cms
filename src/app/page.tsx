@@ -20,8 +20,8 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
   const selectedCategory = params.category || 'all'
   
   const pageTitle = currentPage > 1 
-    ? `Latest Blogs - Page ${currentPage} | Pkminfotech`
-    : 'Latest Tech News, Business Updates & Travel Guides | Pkminfotech'
+    ? `Latest Blogs - Page ${currentPage} | pkminfotech`
+    : 'Latest Tech News, Business Updates & Travel Guides | pkminfotech'
   
   const pageDescription = currentPage > 1
     ? `Browse our latest blog posts on page ${currentPage}. Discover tech news, travel guides, and business insights.`
@@ -37,10 +37,10 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
   return {
     title: pageTitle,
     description: pageDescription,
-    keywords: "tech news, business updates, travel guides India, technology news, digital trends, tourist places, daily news, Pkminfotech",
-    authors: [{ name: "Pkminfotech Team" }],
-    creator: "Pkminfotech",
-    publisher: "Pkminfotech",
+    keywords: "tech news, business updates, travel guides India, technology news, digital trends, tourist places, daily news, pkminfotech",
+    authors: [{ name: "pkminfotech Team" }],
+    creator: "pkminfotech",
+    publisher: "pkminfotech",
     alternates: {
       canonical: canonicalUrl,
     },
@@ -73,7 +73,7 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
       title: pageTitle,
       description: pageDescription,
       url: canonicalUrl,
-      siteName: "Pkminfotech",
+      siteName: "pkminfotech",
       locale: "en_US",
       type: "website",
       images: [
@@ -81,7 +81,7 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
           url: "/favicon.ico",
           width: 32,
           height: 32,
-          alt: "Pkminfotech Logo"
+          alt: "pkminfotech Logo"
         },
         {
           url: "/og-home.jpg",
@@ -199,7 +199,7 @@ function generateStructuredData(blogs: BlogPost[]) {
   return {
     "@context": "https://schema.org",
     "@type": "Blog",
-    "name": "Pkminfotech",
+    "name": "pkminfotech",
     "description": "Latest tech news, business updates & travel guides from India and worldwide",
     "url": "https://www.pkminfotech.com",
     "logo": {
@@ -210,7 +210,7 @@ function generateStructuredData(blogs: BlogPost[]) {
     },
     "author": {
       "@type": "Organization",
-      "name": "Pkminfotech",
+      "name": "pkminfotech",
       "logo": {
         "@type": "ImageObject",
         "url": "https://www.pkminfotech.com/favicon.ico",
@@ -220,7 +220,7 @@ function generateStructuredData(blogs: BlogPost[]) {
     },
     "publisher": {
       "@type": "Organization",
-      "name": "Pkminfotech",
+      "name": "pkminfotech",
       "logo": {
         "@type": "ImageObject",
         "url": "https://www.pkminfotech.com/favicon.ico"
@@ -235,11 +235,11 @@ function generateStructuredData(blogs: BlogPost[]) {
       "dateModified": blog.updatedAt.toISOString(),
       "author": {
         "@type": "Person",
-        "name": blog.author.name || "Pkminfotech Team"
+        "name": blog.author.name || "pkminfotech Team"
       },
       "publisher": {
         "@type": "Organization",
-        "name": "Pkminfotech"
+        "name": "pkminfotech"
       },
       "image": blog.coverImage || "/favicon.ico"
     }))
@@ -307,7 +307,7 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
               <div className="figma-hero-image-floating" aria-hidden="true">
                 <Image
                   src="/home/herobanner.jpeg"
-                  alt="PKMinfotech hero banner"
+                  alt="pkminfotech hero banner"
                   width={860}
                   height={480}
                   priority
@@ -736,15 +736,20 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
           min-height: 36px;
         }
         .tool-cta-btn {
-          background: linear-gradient(180deg, #4d95ff 0%, #2b7ff4 45%, #1a73e8 100%);
+          background: #2563eb;
           color: #fff;
-          border: 1px solid #1f79f0;
-          box-shadow: 0 6px 14px rgba(26, 115, 232, 0.26);
-          min-width: 94px;
+          border: none;
+          box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
+          padding: 0 0.65rem;
+          height: 28px;
+          line-height: 1;
+          font-size: 0.8rem;
+          display: inline-flex;
+          align-items: center;
+          width: fit-content;
         }
         .tool-cta-btn:hover {
-          background: linear-gradient(180deg, #3f88f9 0%, #2478ec 45%, #176bdb 100%);
-          border-color: #1669d6;
+          background: #1d4ed8;
           color: #fff;
           transform: translateY(-1px);
         }
@@ -845,10 +850,15 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
             font-size: 1.02rem;
             margin-bottom: 6px !important;
           }
-          .feature-card .figma-btn,
-          .tool-card .figma-btn {
+          .feature-card .figma-btn {
             height: 30px;
             font-size: 12px;
+          }
+          .tool-card .figma-btn {
+            height: 24px;
+            font-size: 0.75rem;
+            padding: 0 0.5rem;
+            width: fit-content;
           }
           .feature-card .figma-btn svg,
           .tool-card .figma-btn svg {
@@ -882,11 +892,10 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
             height: 15px;
           }
           .tool-card .figma-btn {
-            width: 100%;
-            justify-content: center;
-            height: 30px;
-            font-size: 11px;
-            padding: 0 10px;
+            height: 24px;
+            font-size: 0.75rem;
+            padding: 0 0.5rem;
+            width: fit-content;
           }
           .row.g-3 {
             --bs-gutter-y: 0.75rem;
@@ -996,7 +1005,7 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                                 <div className="w-5 h-5 bg-blue-100 rounded-full flex items-center justify-center mr-2">
                                   <User className="h-3 w-3 text-blue-600" />
                                 </div>
-                                <span itemProp="name">Pkminfotech Team</span>
+                                <span itemProp="name">pkminfotech Team</span>
                               </div>
                               <div className="text-xs text-gray-400">
                                 5 min read

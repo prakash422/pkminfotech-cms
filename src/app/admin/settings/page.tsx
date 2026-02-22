@@ -32,7 +32,7 @@ interface Settings {
 
 export default function SettingsPage() {
   const [settings, setSettings] = useState<Settings>({
-    siteName: "PKM InfoTech",
+    siteName: "pkminfotech",
     siteDescription: "Your trusted source for technology insights and travel guides",
     siteUrl: "https://pkminfotech-cms.vercel.app",
     adminEmail: "pkminfotech048@gmail.com",
@@ -40,8 +40,8 @@ export default function SettingsPage() {
     enableAnalytics: false,
     analyticsId: "",
     maintenanceMode: false,
-    seoTitle: "PKM InfoTech - Technology & Travel Blog",
-    seoDescription: "Discover the latest in technology trends, programming tutorials, and amazing travel destinations with PKM InfoTech.",
+    seoTitle: "pkminfotech - Technology & Travel Blog",
+    seoDescription: "Discover the latest in technology trends, programming tutorials, and amazing travel destinations with pkminfotech.",
     socialMediaLinks: {
       facebook: "",
       twitter: "",

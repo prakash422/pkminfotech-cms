@@ -76,13 +76,13 @@ export default function MobileMenu() {
                 <Link href="/" className="flex items-center" onClick={() => setIsOpen(false)}>
                   <OptimizedImage
               src={"/favicon-32x32.png"}
-              alt={"Pkminfotech Logo"}
+              alt={"pkminfotech Logo"}
               width={800}
               height={600}
               className="w-8 h-8 mr-3 object-contain"
               sizes="100vw"
             />
-                  <span className="text-lg font-bold text-gray-900">Pkminfotech</span>
+                  <span className="text-lg font-bold text-gray-900">pkminfotech</span>
                 </Link>
                 <button
                   onClick={() => setIsOpen(false)}
@@ -208,7 +208,7 @@ export default function MobileMenu() {
                       <Phone className="h-5 w-5 text-white" />
                     </Link>
                   </div>
-                  <p className="text-xs text-gray-500 mt-3">© 2024 Pkminfotech</p>
+                  <p className="text-xs text-gray-500 mt-3">© 2024 pkminfotech</p>
                 </div>
               </div>
             </div>

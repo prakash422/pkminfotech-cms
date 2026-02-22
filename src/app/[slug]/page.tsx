@@ -93,7 +93,7 @@ export async function generateMetadata({ params }: BlogPageProps): Promise<Metad
 
   if (!blog) {
     return {
-      title: 'Blog Post Not Found | Pkminfotech',
+      title: 'Blog Post Not Found | pkminfotech',
       description: 'The requested blog post could not be found.',
     }
   }
@@ -105,15 +105,15 @@ export async function generateMetadata({ params }: BlogPageProps): Promise<Metad
   const canonicalUrl = generateCanonicalUrl(`/${blog.slug}`)
 
   return {
-    title: `${blog.title} | Pkminfotech - Latest Tech News & Updates`,
-    description: blog.excerpt || `Read ${blog.title} on Pkminfotech. Latest tech news, business updates, and digital insights.`,
+    title: `${blog.title} | pkminfotech - Latest Tech News & Updates`,
+    description: blog.excerpt || `Read ${blog.title} on pkminfotech. Latest tech news, business updates, and digital insights.`,
     keywords: `tech news, ${blog.category}, business updates, technology, digital trends, India`,
-    authors: [{ name: 'Pkminfotech Team' }],
+    authors: [{ name: 'pkminfotech Team' }],
     openGraph: {
       title: blog.title,
-      description: blog.excerpt || `Read ${blog.title} on Pkminfotech`,
+      description: blog.excerpt || `Read ${blog.title} on pkminfotech`,
       url: canonicalUrl,
-      siteName: 'Pkminfotech',
+      siteName: 'pkminfotech',
       images: blog.coverImage ? [{
         url: blog.coverImage,
         width: 1200,
@@ -124,12 +124,12 @@ export async function generateMetadata({ params }: BlogPageProps): Promise<Metad
       publishedTime,
       modifiedTime,
       section: blog.category,
-      authors: ['Pkminfotech Team'],
+      authors: ['pkminfotech Team'],
     },
     twitter: {
       card: 'summary_large_image',
       title: blog.title,
-      description: blog.excerpt || `Read ${blog.title} on Pkminfotech`,
+      description: blog.excerpt || `Read ${blog.title} on pkminfotech`,
       images: blog.coverImage ? [blog.coverImage] : [],
       creator: '@pkminfotech',
     },
@@ -188,12 +188,12 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
     "image": blog.coverImage || "/default-blog-image.jpg",
     "author": {
       "@type": "Person",
-      "name": "Pkminfotech Team",
+      "name": "pkminfotech Team",
       "url": generateCanonicalUrl('/')
     },
     "publisher": {
       "@type": "Organization",
-      "name": "Pkminfotech",
+      "name": "pkminfotech",
       "logo": {
         "@type": "ImageObject",
         "url": generateCanonicalUrl('/favicon-32x32.png'),
@@ -333,7 +333,7 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
                           <User className="h-5 w-5 lg:h-6 lg:w-6 text-blue-600" />
                         </div>
                         <div>
-                          <p className="font-medium text-gray-900 text-sm lg:text-base" itemProp="name">Pkminfotech Team</p>
+                          <p className="font-medium text-gray-900 text-sm lg:text-base" itemProp="name">pkminfotech Team</p>
                           <p className="text-xs lg:text-sm text-gray-500">Published Author</p>
                         </div>
                       </div>

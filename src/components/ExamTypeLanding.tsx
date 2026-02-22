@@ -128,7 +128,25 @@ export default function ExamTypeLanding({
           flex-shrink: 0;
         }
         .exam-type-landing-card-title { font-size: 1rem; }
-        .exam-type-landing-cta { border-radius: 8px; font-size: 0.8rem; }
+        .exam-type-landing-cta {
+          background: #2563eb !important;
+          color: #fff !important;
+          border: none !important;
+          box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
+          padding: 0 0.65rem;
+          height: 28px;
+          line-height: 1;
+          font-size: 0.8rem;
+          display: inline-flex;
+          align-items: center;
+          width: fit-content;
+          border-radius: 8px;
+        }
+        .exam-type-landing-cta:hover {
+          background: #1d4ed8 !important;
+          color: #fff !important;
+          transform: translateY(-1px);
+        }
         .exam-type-landing-set-card,
         .exam-type-landing-set-card .card-body {
           background: linear-gradient(145deg, #ffffff 0%, #f6f8fb 50%, #eef2f7 100%) !important;

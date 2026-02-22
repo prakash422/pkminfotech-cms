@@ -4,7 +4,7 @@ import ExamTypeCardGrid from "@/components/ExamTypeCardGrid"
 import { TEACHING_EXAM_TYPES } from "@/lib/teaching/teaching-exam-types"
 
 export const metadata: Metadata = {
-  title: "Teaching Exam Preparation | CTET, KVS, NVS, DSSSB | PKMinfotech",
+  title: "Teaching Exam Preparation | CTET, KVS, NVS, DSSSB | pkminfotech",
   description: "Free Teaching exam practice for CTET, KVS, NVS, DSSSB Teacher.",
 }
 

@@ -5,7 +5,7 @@ import BreadcrumbNav from "@/components/BreadcrumbNav"
 import { ArrowRight, Calculator, Sparkles } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Online Tools & Calculators | PKMinfotech",
+  title: "Online Tools & Calculators | pkminfotech",
   description: "SSC CGL marks calculator, age limit checker, RRB NTPC normalization, IBPS score calculator, cutoff and rank predictors, and more exam tools.",
 }
 

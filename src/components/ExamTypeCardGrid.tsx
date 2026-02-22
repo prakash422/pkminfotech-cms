@@ -148,12 +148,14 @@ export default function ExamTypeCardGrid({
                       </li>
                     ))}
                   </ul>
-                  <Link
-                    href={href}
-                    className="btn btn-primary btn-sm w-100 fw-semibold text-uppercase exam-type-cta"
-                  >
-                    Start Preparation
-                  </Link>
+                  <div className="exam-type-cta-wrap">
+                    <Link
+                      href={href}
+                      className="btn btn-primary btn-sm fw-semibold text-uppercase exam-type-cta"
+                    >
+                      Start Preparation
+                    </Link>
+                  </div>
                 </div>
               </article>
             </div>
@@ -196,7 +198,27 @@ export default function ExamTypeCardGrid({
         .exam-type-card-title { font-size: 0.95rem; }
         .exam-type-card-subtitle { font-size: 0.75rem; }
         .exam-type-features { font-size: 0.75rem; }
-        .exam-type-cta { border-radius: 8px; letter-spacing: 0.4px; font-size: 0.7rem; padding: 0.35rem 0.5rem; }
+        .exam-type-cta-wrap { margin-top: auto; }
+        .exam-type-cta {
+          border-radius: 8px;
+          letter-spacing: 0.4px;
+          font-size: 0.75rem;
+          padding: 0.5rem 1rem;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          min-height: 36px;
+          width: 100%;
+        }
+        @media (max-width: 767px) {
+          .exam-type-cta-wrap { text-align: center; }
+          .exam-type-cta {
+            width: auto;
+            max-width: 100%;
+            padding: 0.5rem 1.25rem;
+            min-height: 32px;
+          }
+        }
       `}} />
     </>
   )

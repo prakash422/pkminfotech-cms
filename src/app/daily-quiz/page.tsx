@@ -4,7 +4,7 @@ import { headers } from "next/headers"
 import BreadcrumbNav from "@/components/BreadcrumbNav"
 
 export const metadata: Metadata = {
-  title: "Daily Quiz Today | SSC, GK, Current Affairs | PKMinfotech",
+  title: "Daily Quiz Today | SSC, GK, Current Affairs | pkminfotech",
   description:
     "Attempt free daily quiz for govt exam preparation. Practice Reasoning, Quant, English, GK and Current Affairs every day.",
 }

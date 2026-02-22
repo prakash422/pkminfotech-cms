@@ -30,8 +30,8 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
   const currentPage = Math.max(1, parseInt(params.page || "1", 10))
   const title =
     currentPage > 1
-      ? `Latest Blog Posts - Page ${currentPage} | Pkminfotech`
-      : "Latest Blog Posts | Pkminfotech - Tech News & Updates"
+      ? `Latest Blog Posts - Page ${currentPage} | pkminfotech`
+      : "Latest Blog Posts | pkminfotech - Tech News & Updates"
   const canonical =
     currentPage > 1 ? `${generateCanonicalUrl("/latest")}?page=${currentPage}` : generateCanonicalUrl("/latest")
   return {
@@ -39,11 +39,11 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
     description:
       currentPage > 1
         ? `Browse our latest blog posts on page ${currentPage}. Tech news, business insights, and digital trends.`
-        : "Read our latest articles about technology, business insights, and digital trends on Pkminfotech.",
+        : "Read our latest articles about technology, business insights, and digital trends on pkminfotech.",
     keywords: "latest tech blog, technology articles, business updates, digital insights",
     alternates: { canonical },
     openGraph: {
-      title: currentPage > 1 ? `Latest Blog Posts - Page ${currentPage} | Pkminfotech` : "Latest Blog Posts | Pkminfotech",
+      title: currentPage > 1 ? `Latest Blog Posts - Page ${currentPage} | pkminfotech` : "Latest Blog Posts | pkminfotech",
       description: "Latest articles about technology and business",
       url: canonical,
       images: [{ url: "/favicon-32x32.png", width: 32, height: 32 }],

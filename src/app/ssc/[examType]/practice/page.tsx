@@ -8,7 +8,7 @@ interface PageProps {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  return { title: `Practice | PKMinfotech`, description: "Practice sets are on the exam page." }
+  return { title: `Practice | pkminfotech`, description: "Practice sets are on the exam page." }
 }
 
 /** Practice list is merged on landing; redirect to canonical exam URL. */

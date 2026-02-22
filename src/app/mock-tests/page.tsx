@@ -5,7 +5,7 @@ import BreadcrumbNav from "@/components/BreadcrumbNav"
 import { prisma } from "@/lib/prisma"
 
 export const metadata: Metadata = {
-  title: "Free Mock Tests | PKMinfotech",
+  title: "Free Mock Tests | pkminfotech",
   description: "Take free full-length mock tests for SSC, Banking, Railway and UPSC exams.",
 }
 

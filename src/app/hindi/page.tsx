@@ -6,11 +6,11 @@ import { Metadata } from "next"
 import OptimizedImage from '@/components/OptimizedImage'
 
 export const metadata: Metadata = {
-  title: 'हिंदी ब्लॉग | Pkminfotech - टेक न्यूज़ और अपडेट्स',
-  description: 'Pkminfotech पर हिंदी में टेक्नोलॉजी, बिजनेस और डिजिटल ट्रेंड्स के बारे में पढ़ें।',
+  title: 'हिंदी ब्लॉग | pkminfotech - टेक न्यूज़ और अपडेट्स',
+  description: 'pkminfotech पर हिंदी में टेक्नोलॉजी, बिजनेस और डिजिटल ट्रेंड्स के बारे में पढ़ें।',
   keywords: 'हिंदी टेक ब्लॉग, टेक्नोलॉजी न्यूज़, बिजनेस अपडेट्स, डिजिटल इनसाइट्स',
   openGraph: {
-    title: 'हिंदी ब्लॉग | Pkminfotech',
+    title: 'हिंदी ब्लॉग | pkminfotech',
     description: 'हिंदी में टेक्नोलॉजी और बिजनेस के बारे में आर्टिकल',
     images: [{ url: '/favicon-32x32.png', width: 32, height: 32 }],
   },

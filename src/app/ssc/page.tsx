@@ -4,7 +4,7 @@ import ExamTypeCardGrid from "@/components/ExamTypeCardGrid"
 import { SSC_EXAM_TYPES } from "@/lib/ssc/ssc-exam-types"
 
 export const metadata: Metadata = {
-  title: "SSC Exam Preparation | CGL, CHSL, MTS, GD, CPO, JE | PKMinfotech",
+  title: "SSC Exam Preparation | CGL, CHSL, MTS, GD, CPO, JE | pkminfotech",
   description: "Free SSC exam practice, mock tests, daily quiz and PYQ for CGL, CHSL, MTS, GD Constable, CPO, JE, Stenographer, Selection Post.",
 }
 

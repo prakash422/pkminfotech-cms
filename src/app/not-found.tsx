@@ -5,7 +5,7 @@ import { Metadata } from 'next'
 import { headers } from 'next/headers'
 
 export const metadata: Metadata = {
-  title: '404 - Page Not Found | Pkminfotech',
+  title: '404 - Page Not Found | pkminfotech',
   description: 'The page you are looking for could not be found. Explore our latest tech news, business updates, and travel guides.',
   robots: {
     index: false,

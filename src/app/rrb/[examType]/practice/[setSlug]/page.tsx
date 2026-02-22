@@ -32,9 +32,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { setSlug } = await params
   const set = await getPracticeSetBySlug(setSlug)
   if (!set)
-    return { title: "Practice Set Not Found | PKMinfotech", description: "The requested practice set could not be found." }
+    return { title: "Practice Set Not Found | pkminfotech", description: "The requested practice set could not be found." }
   return {
-    title: `${set.title} | Practice | PKMinfotech`,
+    title: `${set.title} | Practice | pkminfotech`,
     description: set.description || `Practice ${set.title} with ${set.questions.length || set.totalQuestions} MCQs.`,
   }
 }

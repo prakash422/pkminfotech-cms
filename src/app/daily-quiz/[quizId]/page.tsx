@@ -60,10 +60,10 @@ export async function generateMetadata({ params }: DailyQuizPageProps): Promise<
   const { quizId } = await params
   const quiz = await getDailyQuiz(quizId)
   if (!quiz) {
-    return { title: "Daily Quiz Not Found | PKMinfotech" }
+    return { title: "Daily Quiz Not Found | pkminfotech" }
   }
   return {
-    title: `${quiz.title || quiz.quizId} | Free Daily Quiz | PKMinfotech`,
+    title: `${quiz.title || quiz.quizId} | Free Daily Quiz | pkminfotech`,
     description:
       "Free daily quiz for govt exam aspirants. Mixed sections with instant result and shareable score.",
     keywords:

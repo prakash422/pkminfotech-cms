@@ -12,7 +12,7 @@ export interface BlogSEOData {
 // Auto-generate SEO title (optimized for 50-60 characters)
 export function generateSEOTitle(title: string, category?: string): string {
   const maxLength = 60
-  const suffix = ' | Pkminfotech'
+  const suffix = ' | pkminfotech'
   const availableLength = maxLength - suffix.length
 
   if (title.length <= availableLength) {
@@ -103,7 +103,7 @@ export function extractFocusKeyword(title: string, content: string): string {
 
 // Generate keywords from content and category
 export function generateKeywords(category: string, title: string, content: string, focusKeyword?: string): string {
-  const baseKeywords = ['Pkminfotech', 'latest news', 'updates']
+  const baseKeywords = ['pkminfotech', 'latest news', 'updates']
   
   const categoryKeywords: { [key: string]: string[] } = {
     'hindi': ['हिंदी समाचार', 'भारत समाचार', 'hindi news', 'India news'],
@@ -159,12 +159,12 @@ export function generateBlogStructuredData(blog: {
     "image": blog.coverImage || `${baseUrl}/default-blog-image.jpg`,
     "author": {
       "@type": "Person",
-      "name": blog.author?.name || "Pkminfotech Team",
+      "name": blog.author?.name || "pkminfotech Team",
       "url": baseUrl
     },
     "publisher": {
       "@type": "Organization",
-      "name": "Pkminfotech",
+      "name": "pkminfotech",
       "logo": {
         "@type": "ImageObject",
         "url": `${baseUrl}/favicon-32x32.png`,
@@ -185,7 +185,7 @@ export function generateBlogStructuredData(blog: {
     "isPartOf": {
       "@type": "Website",
       "@id": baseUrl,
-      "name": "Pkminfotech",
+      "name": "pkminfotech",
       "description": "Latest tech news, business updates & travel guides"
     }
   }

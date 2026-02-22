@@ -32,8 +32,8 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
   const currentPage = Math.max(1, parseInt(params.page || "1", 10))
   const title =
     currentPage > 1
-      ? `Current Affairs Update - Page ${currentPage} | PKMinfotech`
-      : "Current Affairs Update | PKMinfotech - SSC, RRB, Banking Exam News"
+      ? `Current Affairs Update - Page ${currentPage} | pkminfotech`
+      : "Current Affairs Update | pkminfotech - SSC, RRB, Banking Exam News"
   const canonical =
     currentPage > 1
       ? `${generateCanonicalUrl(PAGE_PATH)}?page=${currentPage}`
@@ -47,7 +47,7 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
     keywords: "current affairs, SSC current affairs, RRB current affairs, banking current affairs, govt exam news, daily current affairs",
     alternates: { canonical },
     openGraph: {
-      title: currentPage > 1 ? `Current Affairs Update - Page ${currentPage} | PKMinfotech` : "Current Affairs Update | PKMinfotech",
+      title: currentPage > 1 ? `Current Affairs Update - Page ${currentPage} | pkminfotech` : "Current Affairs Update | pkminfotech",
       description: "Current affairs updates for government exam preparation.",
       url: canonical,
       images: [{ url: "/favicon-32x32.png", width: 32, height: 32 }],

@@ -5,7 +5,7 @@ import BreadcrumbNav from "@/components/BreadcrumbNav"
 import { prisma } from "@/lib/prisma"
 
 export const metadata: Metadata = {
-  title: "Topic-wise Practice Sets | PKMinfotech",
+  title: "Topic-wise Practice Sets | pkminfotech",
   description: "Practice topic-wise MCQs for SSC, Banking, Railway and UPSC exams.",
 }
 

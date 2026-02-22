@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const config = getTeachingExamTypeBySlug(examType)
   const name = config?.shortName ?? examType
   return {
-    title: `${name} PYQ | PKMinfotech`,
+    title: `${name} PYQ | pkminfotech`,
     description: `Free ${name} previous year questions.`,
   }
 }

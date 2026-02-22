@@ -16,7 +16,7 @@ import CurrentAffairsDateFilter from "@/components/CurrentAffairsDateFilter"
 import CurrentAffairsContentSection from "@/components/CurrentAffairsContentSection"
 
 export const metadata: Metadata = {
-  title: "Daily Current Affairs Quiz | SSC, RRB, Banking | PKMinfotech",
+  title: "Daily Current Affairs Quiz | SSC, RRB, Banking | pkminfotech",
   description:
     "Practice daily current affairs with updated quiz questions for SSC, RRB, Banking, Railway and other government exams.",
 }

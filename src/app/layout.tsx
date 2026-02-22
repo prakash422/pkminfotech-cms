@@ -18,14 +18,14 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "Pkminfotech - Latest Tech News, Business Updates & Travel Guides",
-    template: "%s | Pkminfotech"
+    default: "pkminfotech - Latest Tech News, Business Updates & Travel Guides",
+    template: "%s | pkminfotech"
   },
   description: "Your trusted source for latest tech news, business updates, travel guides for India and worldwide destinations, and daily insights on technology and digital trends.",
-  keywords: "tech news, business updates, travel guides India, technology news, digital trends, latest news, Pkminfotech, hindi news, english news",
-  authors: [{ name: "Pkminfotech Team", url: "https://www.pkminfotech.com" }],
-  creator: "Pkminfotech",
-  publisher: "Pkminfotech",
+  keywords: "tech news, business updates, travel guides India, technology news, digital trends, latest news, pkminfotech, hindi news, english news",
+  authors: [{ name: "pkminfotech Team", url: "https://www.pkminfotech.com" }],
+  creator: "pkminfotech",
+  publisher: "pkminfotech",
   formatDetection: {
     email: false,
     address: false,
@@ -50,21 +50,21 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "/",
-    siteName: "Pkminfotech",
-    title: "Pkminfotech - Latest Tech News, Business Updates & Travel Guides",
+    siteName: "pkminfotech",
+    title: "pkminfotech - Latest Tech News, Business Updates & Travel Guides",
     description: "Your trusted source for latest tech news, business updates, travel guides for India and worldwide destinations.",
     images: [
       {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Pkminfotech - Latest News and Updates"
+        alt: "pkminfotech - Latest News and Updates"
       }
     ]
   },
   twitter: {
     card: "summary_large_image",
-    title: "Pkminfotech - Latest Tech News & Updates",
+    title: "pkminfotech - Latest Tech News & Updates",
     description: "Your trusted source for latest tech news, business updates, and travel guides.",
     creator: "@pkminfotech",
     images: ["/og-image.jpg"]
