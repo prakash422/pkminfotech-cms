@@ -22,6 +22,10 @@ export default function AdminLayout({ children, title, description }: AdminLayou
       router.push("/admin/login")
       return
     }
+    if (session.user?.role !== "admin") {
+      router.push("/")
+      return
+    }
   }, [session, status, router])
 
   if (status === "loading") {

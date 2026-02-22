@@ -53,6 +53,10 @@ DATABASE_URL="mongodb+srv://username:password@cluster.mongodb.net/cms_db?retryWr
 NEXTAUTH_URL="http://localhost:3000"
 NEXTAUTH_SECRET="your-secret-key-here"
 
+# Google OAuth (for user sign-in / sign-up; get from Google Cloud Console)
+GOOGLE_CLIENT_ID="your-google-client-id"
+GOOGLE_CLIENT_SECRET="your-google-client-secret"
+
 # Optional: Cloudinary (for image uploads)
 CLOUDINARY_CLOUD_NAME="your-cloud-name"
 CLOUDINARY_API_KEY="your-api-key"

@@ -3,8 +3,9 @@
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Facebook, Instagram, Linkedin, Menu, Search, X, Youtube } from "lucide-react"
-import { useState } from "react"
+import { useSession, signOut } from "next-auth/react"
+import { Facebook, Instagram, Linkedin, Menu, Search, User, ChevronDown, X, Youtube, LogOut, Shield } from "lucide-react"
+import { useState, useRef, useEffect } from "react"
 
 const TOP_LINKS = [
   { label: "Current Affairs Update", href: "/daily-current-affairs" },
@@ -17,6 +18,19 @@ const TOP_LINKS = [
 export default function SiteChrome() {
   const pathname = usePathname()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [profileOpen, setProfileOpen] = useState(false)
+  const profileRef = useRef<HTMLDivElement>(null)
+  const { data: session, status } = useSession()
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
+        setProfileOpen(false)
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [])
 
   const hideChrome =
     pathname.startsWith("/admin") ||
@@ -58,8 +72,52 @@ export default function SiteChrome() {
               <button className="btn btn-light btn-sm d-none d-sm-inline-flex align-items-center justify-content-center" aria-label="Search" style={{ width: 32, height: 32 }}>
                 <Search size={14} />
               </button>
-              <Link href="/admin/login" className="btn btn-outline-secondary btn-sm d-none d-md-inline-flex">Login</Link>
-              <Link href="/signup" className="btn btn-primary btn-sm site-start-btn d-none d-md-inline-flex">Start Free</Link>
+              {status !== "loading" && session?.user ? (
+                <div className="d-none d-md-block position-relative" ref={profileRef}>
+                  <button
+                    type="button"
+                    className="btn btn-light btn-sm d-flex align-items-center gap-2 border rounded-3 profile-trigger"
+                    onClick={() => setProfileOpen((o) => !o)}
+                    aria-expanded={profileOpen}
+                    aria-haspopup="true"
+                  >
+                    {session.user.image ? (
+                      <img src={session.user.image} alt="" className="rounded-circle" style={{ width: 26, height: 26, objectFit: "cover" }} />
+                    ) : (
+                      <span className="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary text-white small fw-semibold" style={{ width: 26, height: 26, fontSize: 12 }}>
+                        {(session.user.name || session.user.email || "U").charAt(0).toUpperCase()}
+                      </span>
+                    )}
+                    <span className="small fw-semibold text-dark d-none d-lg-inline text-nowrap" style={{ maxWidth: 100 }} title={session.user.email ?? undefined}>
+                      {session.user.name || session.user.email?.split("@")[0] || "Profile"}
+                    </span>
+                    <ChevronDown size={12} className="text-secondary flex-shrink-0" />
+                  </button>
+                  {profileOpen && (
+                    <div className="position-absolute top-100 end-0 mt-1 bg-white border rounded-2 shadow-sm overflow-hidden profile-dropdown" style={{ zIndex: 1050, minWidth: 132 }}>
+                      <Link href="/profile" className="profile-dropdown-item d-flex align-items-center gap-2 text-dark text-decoration-none" onClick={() => setProfileOpen(false)}>
+                        <User size={14} />
+                        <span>Profile</span>
+                      </Link>
+                      {session.user.role === "admin" && (
+                        <Link href="/admin/dashboard" className="profile-dropdown-item d-flex align-items-center gap-2 text-dark text-decoration-none" onClick={() => setProfileOpen(false)}>
+                          <Shield size={14} />
+                          <span>Admin</span>
+                        </Link>
+                      )}
+                      <button type="button" className="profile-dropdown-item profile-dropdown-item--danger d-flex align-items-center gap-2 w-100 border-0 bg-transparent text-start" onClick={() => { setProfileOpen(false); signOut({ callbackUrl: "/" }); }}>
+                        <LogOut size={14} />
+                        <span>Sign out</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <>
+                  <Link href="/login" className="btn btn-outline-secondary btn-sm d-none d-md-inline-flex">Login</Link>
+                  <Link href="/signup" className="btn btn-primary btn-sm site-start-btn d-none d-md-inline-flex">Start Free</Link>
+                </>
+              )}
               <button
                 type="button"
                 className="btn btn-light btn-sm d-inline-flex d-lg-none align-items-center justify-content-center site-menu-btn"
@@ -75,9 +133,31 @@ export default function SiteChrome() {
           {mobileMenuOpen && (
             <nav className="d-lg-none mt-2 border-top pt-2" aria-label="Mobile navigation">
               <div className="d-grid gap-1">
-                <Link href="/signup" onClick={() => setMobileMenuOpen(false)} className="btn btn-primary btn-sm text-start ps-2 mb-1">
-                  Start Free
-                </Link>
+                {session?.user ? (
+                  <>
+                    <Link href="/profile" onClick={() => setMobileMenuOpen(false)} className="d-flex align-items-center gap-2 px-2 py-2 rounded small fw-semibold text-dark bg-light">
+                      <User size={16} />
+                      {session.user.name || session.user.email?.split("@")[0] || "Profile"}
+                    </Link>
+                    {session.user.role === "admin" && (
+                      <Link href="/admin/dashboard" onClick={() => setMobileMenuOpen(false)} className="text-decoration-none px-2 py-2 rounded small fw-semibold text-dark bg-light">
+                        Admin
+                      </Link>
+                    )}
+                    <button type="button" onClick={() => { setMobileMenuOpen(false); signOut({ callbackUrl: "/" }); }} className="text-start px-2 py-2 rounded small fw-semibold text-danger bg-light border-0">
+                      Sign out
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link href="/signup" onClick={() => setMobileMenuOpen(false)} className="btn btn-primary btn-sm text-start ps-2 mb-1">
+                      Start Free
+                    </Link>
+                    <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="text-decoration-none px-2 py-2 rounded small fw-semibold text-dark bg-light">
+                      Login
+                    </Link>
+                  </>
+                )}
                 <Link href="/" onClick={() => setMobileMenuOpen(false)} className={`text-decoration-none px-2 py-2 rounded small fw-semibold ${pathname === "/" ? "text-primary bg-primary-subtle" : "text-dark bg-light"}`}>
                   Home
                 </Link>
@@ -91,15 +171,33 @@ export default function SiteChrome() {
                     {item.label}
                   </Link>
                 ))}
-                <Link href="/admin/login" onClick={() => setMobileMenuOpen(false)} className="text-decoration-none px-2 py-2 rounded small fw-semibold text-dark bg-light">
-                  Login
-                </Link>
               </div>
             </nav>
           )}
         </div>
       </header>
       <style>{`
+        .profile-dropdown {
+          padding: 4px 0;
+          font-size: 13px;
+        }
+        .profile-dropdown-item {
+          padding: 6px 12px;
+          line-height: 1.3;
+          transition: background 0.15s ease;
+        }
+        .profile-dropdown-item:hover {
+          background: #f1f5f9;
+        }
+        .profile-dropdown-item--danger:hover {
+          background: #fef2f2;
+        }
+        .profile-dropdown-item--danger {
+          color: #dc2626;
+        }
+        .profile-trigger {
+          padding: 4px 8px 4px 6px;
+        }
         .site-start-btn {
           display: inline-flex !important;
           align-items: center;
