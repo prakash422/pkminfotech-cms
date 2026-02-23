@@ -65,7 +65,7 @@ export default function ToolsPage() {
                   </div>
                   <h2 className="h5 fw-semibold mb-2 tools-title">{tool.title}</h2>
                   <p className="small text-secondary mb-3 flex-grow-1 tools-desc">{tool.description}</p>
-                  <Link href={`/tools/${tool.slug}`} className="align-self-start tools-cta">
+                  <Link href={tool.path ?? `/tools/${tool.slug}`} className="align-self-start tools-cta">
                     Open Tool <ArrowRight size={13} />
                   </Link>
                 </div>

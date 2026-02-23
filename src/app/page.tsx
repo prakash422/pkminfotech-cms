@@ -261,7 +261,7 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
   const currentAffairsBlogs = currentAffairsData.blogs
   const toolCards = toolItems.slice(0, 8).map((tool, i) => ({
     title: tool.title,
-    href: `/tools/${tool.slug}`,
+    href: tool.path ?? `/tools/${tool.slug}`,
     text: tool.description,
     icon: Calculator,
     tone: `tool-tone-${(i % 4) + 1}` as const,

@@ -26,6 +26,20 @@ export interface ToolItem {
   title: string
   description: string
   category: string
+  /** Exam segment in URL, e.g. "ssc-cgl", "banking". Enables reuse: /ssc-cgl/tier-1-marks-calculator, /banking/tier-1-marks-calculator */
+  examCategorySlug: string
+  /** Tool segment in URL, e.g. "tier-1-marks-calculator", "rank-predictor". Same component can be reused across exams. */
+  toolSlug: string
+  /** Canonical path = /:examCategorySlug/:toolSlug */
+  path: string
+}
+
+export function getToolByPath(examCategorySlug: string, toolSlug: string): ToolItem | undefined {
+  return toolItems.find((t) => t.examCategorySlug === examCategorySlug && t.toolSlug === toolSlug)
+}
+
+export function getToolPath(item: ToolItem): string {
+  return `/${item.examCategorySlug}/${item.toolSlug}`
 }
 
 export const examCategories: ExamCategory[] = [
@@ -52,14 +66,16 @@ export const practiceSets: PracticeSetItem[] = [
 ]
 
 export const toolItems: ToolItem[] = [
-  { slug: "ssc-cgl-marks-calculator", title: "SSC CGL Marks Calculator", description: "Calculate your SSC CGL tier-wise marks and total score.", category: "SSC" },
-  { slug: "ssc-cgl-age-limit-calculator", title: "SSC CGL Age Limit Calculator", description: "Check age limit and relaxation for SSC CGL posts.", category: "SSC" },
-  { slug: "ssc-eligibility-checker", title: "SSC Eligibility Checker", description: "Verify eligibility for SSC exams by qualification and age.", category: "SSC" },
-  { slug: "rrb-ntpc-normalization-calculator", title: "RRB NTPC Normalization Calculator", description: "Calculate normalized marks for RRB NTPC multi-shift exam.", category: "RRB" },
-  { slug: "ibps-score-calculator", title: "IBPS Score Calculator", description: "Compute your IBPS PO/Clerk exam score from correct and wrong answers.", category: "Banking" },
-  { slug: "ssc-cutoff-predictor", title: "SSC Cutoff Predictor", description: "Estimate expected cutoff for SSC CGL, CHSL, MTS and other exams.", category: "SSC" },
-  { slug: "ssc-rank-predictor", title: "SSC Rank Predictor", description: "Predict your probable rank from marks and exam attempt.", category: "SSC" },
-  { slug: "police-height-eligibility-tool", title: "Police Height Eligibility Tool", description: "Check height and chest eligibility for police and constable posts.", category: "Police" },
-  { slug: "ctet-qualifying-marks-tool", title: "CTET Qualifying Marks Tool", description: "Check CTET qualifying marks and minimum score required.", category: "Teaching" },
-  { slug: "bank-final-score-predictor", title: "Bank Final Score Predictor", description: "Predict final score after mains and interview for banking exams.", category: "Banking" },
+  { slug: "ssc-cgl-tier-1-marks-calculator", title: "SSC CGL Tier 1 Marks Calculator", description: "Calculate Tier 1 raw marks with negative marking formula and example.", category: "SSC", examCategorySlug: "ssc-cgl", toolSlug: "tier-1-marks-calculator", path: "/ssc-cgl/tier-1-marks-calculator" },
+  { slug: "ssc-cgl-tier-2-marks-calculator", title: "SSC CGL Tier 2 Marks Calculator", description: "Tier 2 section-wise marks and negative marking rules.", category: "SSC", examCategorySlug: "ssc-cgl", toolSlug: "tier-2-marks-calculator", path: "/ssc-cgl/tier-2-marks-calculator" },
+  { slug: "ssc-cgl-final-score-calculator", title: "SSC CGL Final Score Calculator", description: "Combine Tier 1 and Tier 2 for final merit score.", category: "SSC", examCategorySlug: "ssc-cgl", toolSlug: "final-score-calculator", path: "/ssc-cgl/final-score-calculator" },
+  { slug: "ssc-cgl-age-limit-calculator", title: "SSC CGL Age Limit Calculator", description: "Check your eligibility for the SSC CGL exam based on age limit criteria.", category: "SSC", examCategorySlug: "ssc-cgl", toolSlug: "age-limit-calculator", path: "/ssc-cgl/age-limit-calculator" },
+  { slug: "ssc-eligibility-checker", title: "SSC Eligibility Checker", description: "Verify your eligibility for SSC exams including age limit and qualification.", category: "SSC", examCategorySlug: "ssc", toolSlug: "eligibility-checker", path: "/ssc/eligibility-checker" },
+  { slug: "rrb-ntpc-normalization-calculator", title: "RRB NTPC Normalization Calculator", description: "Calculate normalized marks for RRB NTPC multi-shift exam.", category: "RRB", examCategorySlug: "rrb-ntpc", toolSlug: "normalization-calculator", path: "/rrb-ntpc/normalization-calculator" },
+  { slug: "ibps-score-calculator", title: "IBPS Score Calculator", description: "Compute your IBPS PO/Clerk exam score from correct and wrong answers.", category: "Banking", examCategorySlug: "banking", toolSlug: "ibps-score-calculator", path: "/banking/ibps-score-calculator" },
+  { slug: "ssc-cutoff-predictor", title: "SSC CGL Cutoff Predictor", description: "Estimate the expected cutoff marks for the SSC CGL exam based on your inputs.", category: "SSC", examCategorySlug: "ssc-cgl", toolSlug: "cutoff-predictor", path: "/ssc-cgl/cutoff-predictor" },
+  { slug: "ssc-rank-predictor", title: "SSC Rank Predictor", description: "Predict your probable rank from marks and exam attempt.", category: "SSC", examCategorySlug: "ssc-cgl", toolSlug: "rank-predictor", path: "/ssc-cgl/rank-predictor" },
+  { slug: "police-height-eligibility-tool", title: "Police Height Eligibility Tool", description: "Check height and chest eligibility for police and constable posts.", category: "Police", examCategorySlug: "police", toolSlug: "height-eligibility-tool", path: "/police/height-eligibility-tool" },
+  { slug: "ctet-qualifying-marks-tool", title: "CTET Qualifying Marks Tool", description: "Check CTET qualifying marks and minimum score required.", category: "Teaching", examCategorySlug: "teaching", toolSlug: "ctet-qualifying-marks-tool", path: "/teaching/ctet-qualifying-marks-tool" },
+  { slug: "bank-final-score-predictor", title: "Bank Final Score Predictor", description: "Predict final score after mains and interview for banking exams.", category: "Banking", examCategorySlug: "banking", toolSlug: "final-score-predictor", path: "/banking/final-score-predictor" },
 ]

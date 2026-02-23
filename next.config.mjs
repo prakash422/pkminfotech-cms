@@ -90,6 +90,13 @@ const nextConfig = {
   // Redirects for clean URLs and SEO
   async redirects() {
     return [
+      // Canonical tool URLs: /examCategory/toolSlug (e.g. /ssc-cgl/tier-1-marks-calculator)
+      { source: '/tools/ssc-cgl-tier-1-marks-calculator', destination: '/ssc-cgl/tier-1-marks-calculator', permanent: true },
+      { source: '/tools/ssc-cgl-tier-2-marks-calculator', destination: '/ssc-cgl/tier-2-marks-calculator', permanent: true },
+      { source: '/tools/ssc-cgl-final-score-calculator', destination: '/ssc-cgl/final-score-calculator', permanent: true },
+      { source: '/ssc-cgl-tier-1-marks-calculator', destination: '/ssc-cgl/tier-1-marks-calculator', permanent: true },
+      { source: '/ssc-cgl-tier-2-marks-calculator', destination: '/ssc-cgl/tier-2-marks-calculator', permanent: true },
+      { source: '/ssc-cgl-final-score-calculator', destination: '/ssc-cgl/final-score-calculator', permanent: true },
       // Redirect blog URLs to clean URLs
       {
         source: '/blog/:slug*',
