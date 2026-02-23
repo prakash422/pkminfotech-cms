@@ -12,9 +12,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { examType } = await params
   const config = getTeachingExamTypeBySlug(examType)
   const name = config?.shortName ?? examType
+  const canonicalPath = `/teaching/${examType}/mock-test`
+  const title = `${name} Mock Test | pkminfotech`
+  const description = `Free ${name} full-length mock tests with timer and instant result. Practice before the real teaching exam.`
   return {
-    title: `${name} Mock Test | pkminfotech`,
-    description: `Free ${name} mock tests.`,
+    title,
+    description,
+    robots: { index: true, follow: true },
+    alternates: { canonical: canonicalPath },
+    openGraph: { title, description, url: canonicalPath, type: "website", siteName: "pkminfotech" },
+    twitter: { card: "summary_large_image", title, description },
   }
 }
 

@@ -3,9 +3,20 @@ import BreadcrumbNav from "@/components/BreadcrumbNav"
 import ExamTypeCardGrid from "@/components/ExamTypeCardGrid"
 import { BANKING_EXAM_TYPES } from "@/lib/banking/banking-exam-types"
 
+const CANONICAL = "/banking"
 export const metadata: Metadata = {
   title: "Banking Exam Preparation | IBPS PO, SBI PO, RBI Grade B | pkminfotech",
-  description: "Free Banking exam practice, mock tests, daily quiz for IBPS, SBI, RBI exams.",
+  description: "Free Banking exam practice, mock tests, daily quiz for IBPS PO, SBI PO, RBI Grade B, IBPS Clerk, SBI Clerk and other bank exams. Choose your exam and start preparing.",
+  robots: { index: true, follow: true },
+  alternates: { canonical: CANONICAL },
+  openGraph: {
+    title: "Banking Exam Preparation | IBPS PO, SBI PO, RBI Grade B | pkminfotech",
+    description: "Free Banking exam practice, mock tests, daily quiz for IBPS, SBI, RBI and other bank exams. Choose your exam and start preparing.",
+    url: CANONICAL,
+    type: "website",
+    siteName: "pkminfotech",
+  },
+  twitter: { card: "summary_large_image", title: "Banking Exam Preparation | pkminfotech", description: "Free Banking exam practice for IBPS, SBI, RBI and more." },
 }
 
 export default async function BankingLandingPage() {

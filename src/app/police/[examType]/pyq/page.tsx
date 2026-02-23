@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { redirect, notFound } from "next/navigation"
 import BreadcrumbNav from "@/components/BreadcrumbNav"
 import ExamInternalNav from "@/components/ExamInternalNav"
+import PyqSeoContent from "@/components/PyqSeoContent"
 import { getPoliceExamTypeBySlug } from "@/lib/police/police-exam-types"
 
 interface PageProps {
@@ -14,9 +15,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (config && "externalLink" in config && config.externalLink)
     return { title: "Redirect | pkminfotech" }
   const name = config?.shortName ?? examType
+  const canonicalPath = `/police/${examType}/pyq`
+  const title = `${name} PYQ | Previous Year Questions | pkminfotech`
+  const description = `Free ${name} previous year question (PYQ) practice. Topic-wise PYQ for police exam preparation.`
   return {
-    title: `${name} PYQ | pkminfotech`,
-    description: `Free ${name} previous year questions.`,
+    title,
+    description,
+    robots: { index: true, follow: true },
+    alternates: { canonical: canonicalPath },
+    openGraph: { title, description, url: canonicalPath, type: "website", siteName: "pkminfotech" },
+    twitter: { card: "summary_large_image", title, description },
   }
 }
 
@@ -58,6 +66,8 @@ export default async function PoliceExamPyqPage({ params }: PageProps) {
             PYQ sets for {displayName} will be added here soon.
           </div>
         </section>
+
+        <PyqSeoContent displayName={displayName} base={base} categoryLabel="Police" categoryHref="/police" />
       </div>
     </main>
   )

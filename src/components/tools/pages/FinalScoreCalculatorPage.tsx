@@ -78,7 +78,7 @@ export default function FinalScoreCalculatorPage({ title, description, basePath 
           <p className="mb-0 small text-secondary">Use the <Link href={`${basePath}/tier-1-marks-calculator`} className="text-primary">Tier 1</Link> and <Link href={`${basePath}/tier-2-marks-calculator`} className="text-primary">Tier 2</Link> calculators to get your raw marks first; the actual final score is computed by SSC using their normalisation and weights.</p>
         </div>
       </section>
-      <FaqAccordion title="FAQ – Final Score and Merit" items={FINAL_SCORE_FAQS} />
+      <FaqAccordion title="FAQ" items={FINAL_SCORE_FAQS} />
       <div className="text-center mt-4">
         <Link href="/tools" className="btn btn-outline-primary btn-sm">
           View all tools

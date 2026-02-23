@@ -51,7 +51,7 @@ export default function CtetQualifyingMarksPage({ title, description, basePath }
         </div>
       </section>
 
-      <FaqAccordion title="Frequently Asked Questions – CTET Qualifying Marks" items={CTET_FAQS} />
+      <FaqAccordion title="FAQ" items={CTET_FAQS} />
 
       <div className="text-center mt-4">
         <Link href="/tools" className="btn btn-outline-primary btn-sm">

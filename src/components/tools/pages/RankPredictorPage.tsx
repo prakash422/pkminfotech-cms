@@ -67,7 +67,7 @@ export default function RankPredictorPage({ title, description, basePath }: Prop
         </div>
       </section>
 
-      <FaqAccordion title="Frequently Asked Questions – SSC CGL Rank" items={RANK_FAQS} />
+      <FaqAccordion title="FAQ" items={RANK_FAQS} />
 
       <div className="text-center mt-4">
         <Link href="/tools" className="btn btn-outline-primary btn-sm">

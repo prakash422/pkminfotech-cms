@@ -3,9 +3,20 @@ import BreadcrumbNav from "@/components/BreadcrumbNav"
 import ExamTypeCardGrid from "@/components/ExamTypeCardGrid"
 import { POLICE_EXAM_TYPES } from "@/lib/police/police-exam-types"
 
+const CANONICAL = "/police"
 export const metadata: Metadata = {
   title: "Police Exam Preparation | Central Level CAPF, CISF, CRPF | pkminfotech",
-  description: "Free Police exam practice for CAPF, CISF, CRPF. SSC GD under SSC.",
+  description: "Free Police exam practice for CAPF, CISF, CRPF and other central-level forces. SSC GD Constable under SSC. Choose your exam and start preparing.",
+  robots: { index: true, follow: true },
+  alternates: { canonical: CANONICAL },
+  openGraph: {
+    title: "Police Exam Preparation | Central Level CAPF, CISF, CRPF | pkminfotech",
+    description: "Free Police exam practice for CAPF, CISF, CRPF and other central-level forces. Choose your exam and start preparing.",
+    url: CANONICAL,
+    type: "website",
+    siteName: "pkminfotech",
+  },
+  twitter: { card: "summary_large_image", title: "Police Exam Preparation | pkminfotech", description: "Free Police exam practice for CAPF, CISF, CRPF and more." },
 }
 
 export default async function PoliceLandingPage() {

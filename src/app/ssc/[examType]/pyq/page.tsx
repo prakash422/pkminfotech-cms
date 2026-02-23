@@ -4,6 +4,7 @@ import { notFound, redirect } from "next/navigation"
 import BreadcrumbNav from "@/components/BreadcrumbNav"
 import ExamInternalNav from "@/components/ExamInternalNav"
 import ExamTabHero from "@/components/ExamTabHero"
+import PyqSeoContent from "@/components/PyqSeoContent"
 import { prisma } from "@/lib/prisma"
 import {
   resolveExamByCategoryAndSlug,
@@ -20,9 +21,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const examRecord = await resolveExamByCategoryAndSlug("ssc", examType)
   const config = getSscExamTypeBySlug(examType)
   const name = examRecord?.name ?? config?.shortName ?? examType
+  const canonicalPath = `/ssc/${examType}/pyq`
+  const title = `${name} PYQ | Previous Year Questions | pkminfotech`
+  const description = `Free ${name} previous year question (PYQ) practice sets. Topic-wise and year-wise PYQ with timer and negative marking for exam preparation.`
   return {
-    title: `${name} PYQ | Previous Year Questions | pkminfotech`,
-    description: `Free ${name} previous year question practice sets.`,
+    title,
+    description,
+    robots: { index: true, follow: true },
+    alternates: { canonical: canonicalPath },
+    openGraph: { title, description, url: canonicalPath, type: "website", siteName: "pkminfotech" },
+    twitter: { card: "summary_large_image", title, description },
   }
 }
 
@@ -99,6 +107,8 @@ export default async function SscExamPyqPage({ params }: PageProps) {
             ))}
           </section>
         )}
+
+        <PyqSeoContent displayName={displayName} base={base} categoryLabel="SSC" categoryHref="/ssc" />
       </div>
     </main>
   )

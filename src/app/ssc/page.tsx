@@ -3,9 +3,20 @@ import BreadcrumbNav from "@/components/BreadcrumbNav"
 import ExamTypeCardGrid from "@/components/ExamTypeCardGrid"
 import { SSC_EXAM_TYPES } from "@/lib/ssc/ssc-exam-types"
 
+const CANONICAL = "/ssc"
 export const metadata: Metadata = {
   title: "SSC Exam Preparation | CGL, CHSL, MTS, GD, CPO, JE | pkminfotech",
-  description: "Free SSC exam practice, mock tests, daily quiz and PYQ for CGL, CHSL, MTS, GD Constable, CPO, JE, Stenographer, Selection Post.",
+  description: "Free SSC exam practice, mock tests, daily quiz and PYQ for CGL, CHSL, MTS, GD Constable, CPO, JE, Stenographer, Selection Post. Choose your exam and start preparing.",
+  robots: { index: true, follow: true },
+  alternates: { canonical: CANONICAL },
+  openGraph: {
+    title: "SSC Exam Preparation | CGL, CHSL, MTS, GD, CPO, JE | pkminfotech",
+    description: "Free SSC exam practice, mock tests, daily quiz and PYQ for CGL, CHSL, MTS, GD Constable, CPO, JE and more. Choose your exam and start preparing.",
+    url: CANONICAL,
+    type: "website",
+    siteName: "pkminfotech",
+  },
+  twitter: { card: "summary_large_image", title: "SSC Exam Preparation | pkminfotech", description: "Free SSC exam practice, mock tests, daily quiz and PYQ for CGL, CHSL, MTS and more." },
 }
 
 export default async function SscLandingPage() {

@@ -79,7 +79,7 @@ export default function AgeLimitCalculatorPage({ title, description, basePath }:
         </div>
       </section>
 
-      <FaqAccordion title="Frequently Asked Questions – SSC CGL Age Limit" items={AGE_LIMIT_FAQS} />
+      <FaqAccordion title="FAQ" items={AGE_LIMIT_FAQS} />
 
       <div className="text-center mt-4">
         <Link href="/tools" className="btn btn-outline-primary btn-sm">

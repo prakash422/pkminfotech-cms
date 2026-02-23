@@ -22,6 +22,8 @@ type ExamTypeLandingProps = {
   base: string
   navItems: ExamNavItem[]
   practiceSets?: PracticeSetItem[]
+  /** Optional SEO/content section rendered below practice sets */
+  bottomContent?: React.ReactNode
 }
 
 export default function ExamTypeLanding({
@@ -32,6 +34,7 @@ export default function ExamTypeLanding({
   base,
   navItems,
   practiceSets = [],
+  bottomContent,
 }: ExamTypeLandingProps) {
   const breadcrumbItems = [
     { label: "Home", href: "/" },
@@ -87,6 +90,8 @@ export default function ExamTypeLanding({
             </div>
           </section>
         )}
+
+        {bottomContent && <div className="mt-4">{bottomContent}</div>}
       </div>
 
       <style dangerouslySetInnerHTML={{ __html: `

@@ -20,9 +20,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const examRecord = await resolveExamByCategoryAndSlug("ssc", examType)
   const config = getSscExamTypeBySlug(examType)
   const name = examRecord?.name ?? config?.shortName ?? examType
+  const canonicalPath = `/ssc/${examType}/mock-test`
+  const title = `${name} Mock Test | pkminfotech`
+  const description = `Free ${name} full-length mock tests with timer and instant result. Practice before the real SSC exam.`
   return {
-    title: `${name} Mock Test | pkminfotech`,
-    description: `Free ${name} mock tests with timer and result.`,
+    title,
+    description,
+    robots: { index: true, follow: true },
+    alternates: { canonical: canonicalPath },
+    openGraph: { title, description, url: canonicalPath, type: "website", siteName: "pkminfotech" },
+    twitter: { card: "summary_large_image", title, description },
   }
 }
 

@@ -4,6 +4,7 @@ import { notFound, redirect } from "next/navigation"
 import BreadcrumbNav from "@/components/BreadcrumbNav"
 import ExamInternalNav from "@/components/ExamInternalNav"
 import ExamTabHero from "@/components/ExamTabHero"
+import PyqSeoContent from "@/components/PyqSeoContent"
 import { prisma } from "@/lib/prisma"
 import { resolveExamByCategoryAndSlug, getExamTypeSlug } from "@/lib/exam-categories"
 import { getRrbExamTypeBySlug, RRB_EXAM_TYPES } from "@/lib/rrb/rrb-exam-types"
@@ -17,9 +18,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const examRecord = await resolveExamByCategoryAndSlug("rrb", examType)
   const config = getRrbExamTypeBySlug(examType)
   const name = examRecord?.name ?? config?.shortName ?? examType
+  const canonicalPath = `/rrb/${examType}/pyq`
+  const title = `${name} PYQ | Previous Year Questions | pkminfotech`
+  const description = `Free ${name} previous year question (PYQ) practice. Topic-wise PYQ with timer and negative marking for Railway exam preparation.`
   return {
-    title: `${name} PYQ | pkminfotech`,
-    description: `Free ${name} previous year questions.`,
+    title,
+    description,
+    robots: { index: true, follow: true },
+    alternates: { canonical: canonicalPath },
+    openGraph: { title, description, url: canonicalPath, type: "website", siteName: "pkminfotech" },
+    twitter: { card: "summary_large_image", title, description },
   }
 }
 
@@ -95,6 +103,8 @@ export default async function RrbExamPyqPage({ params }: PageProps) {
             ))}
           </section>
         )}
+
+        <PyqSeoContent displayName={displayName} base={base} categoryLabel="RRB" categoryHref="/rrb" />
       </div>
     </main>
   )

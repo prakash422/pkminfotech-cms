@@ -78,7 +78,7 @@ export default function Tier1MarksCalculatorPage({ title, description, basePath 
           <p className="mb-0 small text-secondary">SSC may later apply normalization to this raw score. For combining with Tier 2, use our <Link href={`${basePath}/final-score-calculator`} className="text-primary">final score calculator</Link>.</p>
         </div>
       </section>
-      <FaqAccordion title="Frequently Asked Questions – Tier 1" items={TIER1_FAQS} />
+      <FaqAccordion title="FAQ" items={TIER1_FAQS} />
       <div className="text-center mt-4">
         <Link href="/tools" className="btn btn-outline-primary btn-sm">
           View all tools

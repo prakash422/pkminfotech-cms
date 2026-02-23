@@ -80,7 +80,7 @@ export default function Tier2MarksCalculatorPage({ title, description, basePath 
           <p className="mb-0 small text-secondary">Add all such section totals to get your Paper 1 (and Paper 2/3 if applicable) score. To see how Tier 2 combines with Tier 1, use the <Link href={`${basePath}/final-score-calculator`} className="text-primary">SSC CGL final score calculator</Link>.</p>
         </div>
       </section>
-      <FaqAccordion title="Common Questions About Tier 2 Marks" items={TIER2_FAQS} />
+      <FaqAccordion title="FAQ" items={TIER2_FAQS} />
       <div className="text-center mt-4">
         <Link href="/tools" className="btn btn-outline-primary btn-sm">
           View all tools

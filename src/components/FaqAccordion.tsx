@@ -42,7 +42,7 @@ export default function FaqAccordion({ items, title }: { items: FaqItem[]; title
               >
                 <button
                   type="button"
-                  className="faq-question-btn w-100 text-start d-flex align-items-center gap-2 px-3 py-3 px-md-4 py-md-3"
+                  className="faq-question-btn w-100 text-start d-flex align-items-start align-items-md-center gap-2 px-3 py-2 px-md-4 py-md-3"
                   onClick={() => setOpenIndex(isOpen ? null : index)}
                   aria-expanded={isOpen}
                   aria-controls={`faq-answer-${index}`}
@@ -51,7 +51,7 @@ export default function FaqAccordion({ items, title }: { items: FaqItem[]; title
                   <span className="faq-icon flex-shrink-0">
                     {isOpen ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
                   </span>
-                  <span className="fw-semibold small">{item.question}</span>
+                  <span className="faq-question-text fw-semibold small">{item.question}</span>
                 </button>
                 <div
                   id={`faq-answer-${index}`}
@@ -70,12 +70,19 @@ export default function FaqAccordion({ items, title }: { items: FaqItem[]; title
         </div>
       </div>
       <style dangerouslySetInnerHTML={{ __html: `
-        .faq-accordion-section .faq-question-btn { background: none; border: none; color: inherit; cursor: pointer; transition: background 0.2s; }
+        .faq-accordion-section .faq-question-btn { background: none; border: none; color: inherit; cursor: pointer; transition: background 0.2s; min-height: 2.5rem; }
         .faq-accordion-section .faq-question-btn:hover { background: rgba(0,0,0,0.03); }
         .faq-accordion-section .faq-icon { color: #2563eb; transition: transform 0.2s; }
         .faq-accordion-section .faq-item-open .faq-icon { transform: rotate(0deg); }
         .faq-accordion-section .faq-answer-wrap[hidden] { display: none; }
         .faq-accordion-section .faq-answer { line-height: 1.6; }
+        /* Mobile: compact question text so 2-line wrap looks clean; icon top-aligned */
+        .faq-accordion-section .faq-question-text { line-height: 1.35; font-size: 0.8125rem; flex: 1; min-width: 0; }
+        .faq-accordion-section .faq-icon { margin-top: 0.2rem; }
+        @media (min-width: 768px) {
+          .faq-accordion-section .faq-question-text { font-size: inherit; line-height: 1.4; }
+          .faq-accordion-section .faq-icon { margin-top: 0; }
+        }
       `}} />
     </section>
   )

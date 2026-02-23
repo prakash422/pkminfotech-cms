@@ -15,10 +15,20 @@ import OptimizedImage from "@/components/OptimizedImage"
 import CurrentAffairsDateFilter from "@/components/CurrentAffairsDateFilter"
 import CurrentAffairsContentSection from "@/components/CurrentAffairsContentSection"
 
+const CANONICAL = "/current-affairs-quiz"
 export const metadata: Metadata = {
   title: "Daily Current Affairs Quiz | SSC, RRB, Banking | pkminfotech",
-  description:
-    "Practice daily current affairs with updated quiz questions for SSC, RRB, Banking, Railway and other government exams.",
+  description: "Practice daily current affairs with updated quiz questions for SSC, RRB, Banking, Railway and other government exams. Free quiz by month and topic.",
+  robots: { index: true, follow: true },
+  alternates: { canonical: CANONICAL },
+  openGraph: {
+    title: "Daily Current Affairs Quiz | SSC, RRB, Banking | pkminfotech",
+    description: "Practice daily current affairs with updated quiz questions for SSC, RRB, Banking, Railway and other government exams.",
+    url: CANONICAL,
+    type: "website",
+    siteName: "pkminfotech",
+  },
+  twitter: { card: "summary_large_image", title: "Daily Current Affairs Quiz | pkminfotech", description: "Free current affairs quiz for SSC, RRB, Banking and govt exams." },
 }
 
 type QuizItem = {
@@ -280,9 +290,37 @@ export default async function CurrentAffairsQuizPage({ searchParams }: PageProps
                   The questions are framed the way they appear in real exams: multiple choice, one correct answer. Topics include Union and state government schemes, summits and treaties, sports events and winners, books and authors, science and tech in the news, appointments in important posts, and changes in banking or economic policy. We add new quizzes regularly so that the content stays relevant.
                 </p>
                 <p className="text-secondary mb-0">
-                  You can combine this with our SSC practice sets, mock tests, and PYQ sections for a full preparation plan. A lot of students use the date-wise list to revise a particular week or month before their exam. Bookmark this page and visit whenever you have a few minutes. No login is needed to attempt the quizzes; only if you want to track your accuracy over time do you need an account. Good luck with your preparation.
+                  You can combine this with our <Link href="/ssc" className="text-primary">SSC practice sets</Link>, <Link href="/mock-tests" className="text-primary">mock tests</Link>, and PYQ sections for a full preparation plan. A lot of students use the date-wise list to revise a particular week or month before their exam. Bookmark this page and visit whenever you have a few minutes. No login is needed to attempt the quizzes; only if you want to track your accuracy over time do you need an account. For mixed-topic daily practice, try our <Link href="/daily-quiz" className="text-primary">daily quiz</Link> (Reasoning, Quant, GK). Good luck with your preparation.
                 </p>
             </CurrentAffairsContentSection>
+
+            <section className="card border-0 shadow-sm mt-3 mb-4">
+              <div className="card-body p-4 p-md-5">
+                <h2 className="h5 fw-semibold mb-3">Frequently asked questions – Current affairs quiz</h2>
+                <div className="small text-secondary">
+                  <p className="mb-3"><strong>Which exams have current affairs?</strong> SSC CGL, SSC CHSL, RRB NTPC, IBPS PO, SBI Clerk, and most state PSC and police exams have a GK or current affairs section. Questions often come from the last 6–12 months.</p>
+                  <p className="mb-3"><strong>How many current affairs quizzes should I do per day?</strong> One quiz per day is enough. Consistency matters more than volume. Use the date filter to attempt any day you missed.</p>
+                  <p className="mb-0"><strong>Is the current affairs quiz free?</strong> Yes. You can attempt all quizzes without signing up. Create an account only if you want to track your score and accuracy over time.</p>
+                </div>
+              </div>
+            </section>
+
+            <section className="card border-0 shadow-sm mt-3">
+              <div className="card-body p-4">
+                <h2 className="h6 fw-semibold mb-3">Related resources</h2>
+                <p className="small text-secondary mb-3">
+                  For daily mixed-topic practice (Reasoning, Quant, English, GK), use our <Link href="/daily-quiz" className="text-primary">Daily Quiz</Link>. For full-length timed tests, try <Link href="/mock-tests" className="text-primary">Mock Tests</Link>. For exam-wise practice and PYQ, go to <Link href="/ssc" className="text-primary">SSC</Link>, <Link href="/banking" className="text-primary">Banking</Link>, or <Link href="/rrb" className="text-primary">RRB</Link> and choose your exam. For calculators and predictors, see <Link href="/tools" className="text-primary">Online Tools</Link>.
+                </p>
+                <div className="d-flex flex-wrap gap-2">
+                  <Link href="/daily-quiz" className="btn btn-outline-primary btn-sm">Daily Quiz</Link>
+                  <Link href="/mock-tests" className="btn btn-outline-primary btn-sm">Mock Tests</Link>
+                  <Link href="/ssc" className="btn btn-outline-primary btn-sm">SSC</Link>
+                  <Link href="/banking" className="btn btn-outline-primary btn-sm">Banking</Link>
+                  <Link href="/rrb" className="btn btn-outline-primary btn-sm">RRB</Link>
+                  <Link href="/tools" className="btn btn-outline-primary btn-sm">Online Tools</Link>
+                </div>
+              </div>
+            </section>
           </div>
         </div>
       </div>

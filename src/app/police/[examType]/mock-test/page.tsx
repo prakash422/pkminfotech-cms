@@ -14,9 +14,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (config && "externalLink" in config && config.externalLink)
     return { title: "Redirect | pkminfotech" }
   const name = config?.shortName ?? examType
+  const canonicalPath = `/police/${examType}/mock-test`
+  const title = `${name} Mock Test | pkminfotech`
+  const description = `Free ${name} full-length mock tests with timer and instant result. Practice before the real police exam.`
   return {
-    title: `${name} Mock Test | pkminfotech`,
-    description: `Free ${name} mock tests.`,
+    title,
+    description,
+    robots: { index: true, follow: true },
+    alternates: { canonical: canonicalPath },
+    openGraph: { title, description, url: canonicalPath, type: "website", siteName: "pkminfotech" },
+    twitter: { card: "summary_large_image", title, description },
   }
 }
 

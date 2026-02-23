@@ -17,9 +17,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const config = getBankingExamTypeBySlug(examType)
   const examRecord = await resolveExamByCategoryAndSlug("banking", examType)
   const name = examRecord?.name ?? config?.shortName ?? examType
+  const canonicalPath = `/banking/${examType}/daily-quiz`
+  const title = `${name} Daily Quiz | pkminfotech`
+  const description = `Free daily quiz for ${name}. Mixed topics with timer and instant result for bank exam preparation.`
   return {
-    title: `${name} Daily Quiz | pkminfotech`,
-    description: `Daily quiz for ${name}.`,
+    title,
+    description,
+    robots: { index: true, follow: true },
+    alternates: { canonical: canonicalPath },
+    openGraph: { title, description, url: canonicalPath, type: "website", siteName: "pkminfotech" },
+    twitter: { card: "summary_large_image", title, description },
   }
 }
 

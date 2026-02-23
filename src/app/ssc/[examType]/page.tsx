@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import ExamTypeLanding from "@/components/ExamTypeLanding"
+import SscExamSeoContent from "@/components/ssc/SscExamSeoContent"
 import {
   resolveExamByCategoryAndSlug,
   getExamTypeSlug,
@@ -18,9 +19,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const config = getSscExamTypeBySlug(examType)
   const examRecord = await resolveExamByCategoryAndSlug("ssc", examType)
   const name = examRecord?.name ?? config?.shortName ?? examType
+  const canonicalSlug = config?.slug ?? examType
+  const canonicalPath = `/ssc/${canonicalSlug}`
+  const title = `${name} | Practice, Mock Test, PYQ | pkminfotech`
+  const description = `Free ${name} practice sets, mock tests, daily quiz, PYQ and syllabus. Start your SSC exam preparation with topic-wise practice and full mocks.`
   return {
-    title: `${name} | Practice, Mock Test, PYQ | pkminfotech`,
-    description: `Free ${name} practice sets, mock tests, PYQ and syllabus.`,
+    title,
+    description,
+    robots: { index: true, follow: true },
+    alternates: { canonical: canonicalPath },
+    openGraph: { title, description, url: canonicalPath, type: "website", siteName: "pkminfotech" },
+    twitter: { card: "summary_large_image", title, description },
   }
 }
 
@@ -65,6 +74,15 @@ export default async function SscExamTypeLandingPage({ params }: PageProps) {
     questionCount: s.questions?.length ?? 0,
   }))
 
+  const bottomContent = (
+    <SscExamSeoContent
+      displayName={displayName}
+      fullName={config?.fullName}
+      base={base}
+      slug={canonicalTypeSlug}
+    />
+  )
+
   return (
     <ExamTypeLanding
       categoryLabel="SSC"
@@ -74,6 +92,7 @@ export default async function SscExamTypeLandingPage({ params }: PageProps) {
       base={base}
       navItems={navItems}
       practiceSets={practiceSets}
+      bottomContent={bottomContent}
     />
   )
 }

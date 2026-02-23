@@ -25,12 +25,17 @@ type Props = { basePath?: string }
 const DEFAULT_BASE_PATH = "/ssc-cgl"
 
 export default function SscCglTier2CalculatorCard({ basePath = DEFAULT_BASE_PATH }: Props) {
-  const [total, setTotal] = useState(DEFAULT_TOTAL)
-  const [correct, setCorrect] = useState(DEFAULT_CORRECT)
-  const [incorrect, setIncorrect] = useState(DEFAULT_INCORRECT)
+  const [totalStr, setTotalStr] = useState(String(DEFAULT_TOTAL))
+  const [correctStr, setCorrectStr] = useState(String(DEFAULT_CORRECT))
+  const [incorrectStr, setIncorrectStr] = useState(String(DEFAULT_INCORRECT))
   const [marksPerCorrect, setMarksPerCorrect] = useState(MARKS_PER_CORRECT_T2)
   const [negativeMarking, setNegativeMarking] = useState(NEGATIVE_MARKING_T2)
   const [expanded, setExpanded] = useState(false)
+  const [submitted, setSubmitted] = useState(false)
+
+  const total = useMemo(() => Math.max(1, parseInt(totalStr, 10) || DEFAULT_TOTAL), [totalStr])
+  const correct = useMemo(() => Math.max(0, Math.min(total, parseInt(correctStr, 10) || 0)), [correctStr, total])
+  const incorrect = useMemo(() => Math.max(0, Math.min(total, parseInt(incorrectStr, 10) || 0)), [incorrectStr, total])
 
   const score = useMemo(() => {
     const gain = correct * marksPerCorrect
@@ -49,85 +54,85 @@ export default function SscCglTier2CalculatorCard({ basePath = DEFAULT_BASE_PATH
 
   return (
     <div className="card border-0 shadow-sm ssc-cgl-calc-card">
-      <div className="card-body p-3 p-md-4">
+      <div className="card-body p-2 p-md-4 ssc-cgl-calc-card-body">
         {/* Select Tier tabs */}
-        <div className="d-flex align-items-center gap-2 mb-4">
-          <span className="small fw-semibold text-secondary">Select Tier</span>
+        <div className="d-flex align-items-center gap-1 gap-md-2 mb-2 mb-md-4">
+          <span className="small fw-semibold text-secondary d-none d-md-inline">Select Tier</span>
           <div className="d-flex rounded overflow-hidden border border-secondary-subtle">
             <Link
               href={`${basePath}/tier-1-marks-calculator`}
-              className="px-3 py-2 small fw-semibold bg-light text-secondary text-decoration-none"
+              className="px-2 py-1_5 px-md-3 py-md-2 small fw-semibold bg-light text-secondary text-decoration-none"
             >
               Tier 1
             </Link>
-            <span className="px-3 py-2 small fw-semibold bg-primary text-white">Tier 2</span>
+            <span className="px-2 py-1_5 px-md-3 py-md-2 small fw-semibold bg-primary text-white">Tier 2</span>
             <Link
               href={`${basePath}/final-score-calculator`}
-              className="px-3 py-2 small fw-semibold bg-light text-secondary text-decoration-none"
+              className="px-2 py-1_5 px-md-3 py-md-2 small fw-semibold bg-light text-secondary text-decoration-none"
             >
               Final Score
             </Link>
           </div>
         </div>
 
-        <div className="row g-4">
+        <div className="row g-2 g-md-4">
           {/* Left: Enter Your Responses */}
           <div className="col-md-6">
-            <h3 className="h6 fw-semibold mb-3">Enter Your Responses</h3>
-            <div className="mb-3">
-              <label className="form-label small mb-1">Total Questions</label>
-              <div className="d-flex align-items-center gap-2">
+            <h3 className="h6 fw-semibold mb-2 mb-md-3">Enter Your Responses</h3>
+            <div className="mb-2 mb-md-3">
+              <label className="form-label small mb-0 mb-md-1">Total Questions</label>
+              <div className="d-flex align-items-center gap-1 gap-md-2">
                 <input
-                  type="number"
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
                   className="form-control form-control-sm"
-                  min={1}
-                  max={300}
-                  value={total}
-                  onChange={(e) => setTotal(Math.max(1, parseInt(e.target.value, 10) || 0))}
+                  value={totalStr}
+                  onChange={(e) => setTotalStr(e.target.value.replace(/\D/g, "").slice(0, 3) || "")}
                 />
-                <span className="d-flex align-items-center justify-content-center rounded-circle bg-secondary-subtle text-secondary" style={{ width: 24, height: 24 }}>
+                <span className="d-flex align-items-center justify-content-center rounded-circle bg-secondary-subtle text-secondary ssc-cgl-input-icon">
                   <HelpCircle size={14} />
                 </span>
               </div>
             </div>
-            <div className="mb-3">
-              <label className="form-label small mb-1">Correct Answers</label>
-              <div className="d-flex align-items-center gap-2">
+            <div className="mb-2 mb-md-3">
+              <label className="form-label small mb-0 mb-md-1">Correct Answers</label>
+              <div className="d-flex align-items-center gap-1 gap-md-2">
                 <input
-                  type="number"
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
                   className="form-control form-control-sm"
-                  min={0}
-                  max={total}
-                  value={correct}
-                  onChange={(e) => setCorrect(Math.max(0, Math.min(total, parseInt(e.target.value, 10) || 0)))}
+                  value={correctStr}
+                  onChange={(e) => setCorrectStr(e.target.value.replace(/\D/g, "").slice(0, 3) || "")}
                 />
-                <span className="d-flex align-items-center justify-content-center rounded-circle text-success ssc-cgl-icon-green" style={{ width: 24, height: 24 }}>
+                <span className="d-flex align-items-center justify-content-center rounded-circle text-success ssc-cgl-icon-green ssc-cgl-input-icon">
                   <CheckCircle size={14} />
                 </span>
               </div>
             </div>
-            <div className="mb-3">
-              <label className="form-label small mb-1">Incorrect Answers</label>
-              <div className="d-flex align-items-center gap-2">
+            <div className="mb-2 mb-md-3">
+              <label className="form-label small mb-0 mb-md-1">Incorrect Answers</label>
+              <div className="d-flex align-items-center gap-1 gap-md-2">
                 <input
-                  type="number"
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
                   className="form-control form-control-sm"
-                  min={0}
-                  max={total}
-                  value={incorrect}
-                  onChange={(e) => setIncorrect(Math.max(0, Math.min(total, parseInt(e.target.value, 10) || 0)))}
+                  value={incorrectStr}
+                  onChange={(e) => setIncorrectStr(e.target.value.replace(/\D/g, "").slice(0, 3) || "")}
                 />
-                <span className="d-flex align-items-center justify-content-center rounded-circle text-danger ssc-cgl-icon-red" style={{ width: 24, height: 24 }}>
+                <span className="d-flex align-items-center justify-content-center rounded-circle text-danger ssc-cgl-icon-red ssc-cgl-input-icon">
                   <XCircle size={14} />
                 </span>
               </div>
             </div>
-            <div className="mb-3">
-              <label className="form-label small mb-1">Marks Per Correct Answer</label>
-              <div className="d-flex align-items-center gap-1">
+            <div className="mb-2 mb-md-3">
+              <label className="form-label small mb-0 mb-md-1">Marks Per Correct Answer</label>
+              <div className="d-flex align-items-center gap-1 gap-md-2">
                 <input
                   type="number"
-                  className="form-control form-control-sm text-center"
+                  className="form-control form-control-sm flex-grow-1"
                   step={0.25}
                   min={0.25}
                   max={10}
@@ -137,34 +142,15 @@ export default function SscCglTier2CalculatorCard({ basePath = DEFAULT_BASE_PATH
                     if (!Number.isNaN(v)) setMarksPerCorrect(step(v, 0, 0.25, 10))
                   }}
                 />
-                <div className="d-flex flex-column border rounded">
-                  <button
-                    type="button"
-                    className="btn btn-sm p-0 border-0 bg-light"
-                    style={{ lineHeight: 1 }}
-                    onClick={() => setMarksPerCorrect((v) => step(v, 0.25, 0.25, 10))}
-                    aria-label="Increase"
-                  >
-                    <ChevronRight size={14} style={{ transform: "rotate(-90deg)" }} />
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-sm p-0 border-0 bg-light"
-                    style={{ lineHeight: 1 }}
-                    onClick={() => setMarksPerCorrect((v) => step(v, -0.25, 0.25, 10))}
-                    aria-label="Decrease"
-                  >
-                    <ChevronRight size={14} style={{ transform: "rotate(90deg)" }} />
-                  </button>
-                </div>
+                <span className="ssc-cgl-input-icon flex-shrink-0" aria-hidden="true" />
               </div>
             </div>
             <div className="mb-0">
-              <label className="form-label small mb-1">Negative Marking (per wrong)</label>
-              <div className="d-flex align-items-center gap-1">
+              <label className="form-label small mb-0 mb-md-1">Negative Marking (per wrong)</label>
+              <div className="d-flex align-items-center gap-1 gap-md-2">
                 <input
                   type="number"
-                  className="form-control form-control-sm text-center"
+                  className="form-control form-control-sm flex-grow-1"
                   step={0.25}
                   min={0}
                   max={2}
@@ -174,64 +160,60 @@ export default function SscCglTier2CalculatorCard({ basePath = DEFAULT_BASE_PATH
                     if (!Number.isNaN(v)) setNegativeMarking(step(v, 0, 0, 2))
                   }}
                 />
-                <div className="d-flex flex-column border rounded">
-                  <button
-                    type="button"
-                    className="btn btn-sm p-0 border-0 bg-light"
-                    style={{ lineHeight: 1 }}
-                    onClick={() => setNegativeMarking((v) => step(v, -0.25, 0, 2))}
-                    aria-label="Decrease"
-                  >
-                    <ChevronRight size={14} style={{ transform: "rotate(90deg)" }} />
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-sm p-0 border-0 bg-light"
-                    style={{ lineHeight: 1 }}
-                    onClick={() => setNegativeMarking((v) => step(v, 0.25, 0, 2))}
-                    aria-label="Increase"
-                  >
-                    <ChevronRight size={14} style={{ transform: "rotate(-90deg)" }} />
-                  </button>
-                </div>
+                <span className="ssc-cgl-input-icon flex-shrink-0" aria-hidden="true" />
               </div>
             </div>
           </div>
 
-          {/* Right: Your Calculated Score */}
+          {/* Right: Your Calculated Score – only after Calculate click */}
           <div className="col-md-6 d-flex flex-column justify-content-between">
-            <div>
-              <h3 className="h6 fw-semibold mb-2 d-flex align-items-center gap-2">
-                <CheckCircle size={18} className="text-success" />
-                Your Calculated Score
-              </h3>
-              <div className="rounded-3 p-3 mb-2 fw-semibold small ssc-cgl-result-msg">
-                {message}
-              </div>
-              <p className="small text-secondary mb-1">Marks Obtained:</p>
-              <p className="display-5 fw-bold text-dark mb-3">{score}</p>
-            </div>
-            <button
-              type="button"
-              className="btn btn-primary align-self-start ssc-cgl-calc-btn"
-              onClick={() => {}}
-            >
-              Calculate Score <ChevronRight size={12} className="ms-1" />
-            </button>
-            <div className="mt-3 pt-3 border-top border-secondary-subtle">
-              <p className="small fw-semibold text-secondary mb-2">Detailed Results:</p>
-              <div className="d-flex flex-wrap gap-3 small">
-                <span className="d-flex align-items-center gap-1">
-                  <CheckCircle size={14} className="text-success" /> Correct Answers: <strong>{correct}</strong>
-                </span>
-                <span className="d-flex align-items-center gap-1">
-                  <XCircle size={14} className="text-danger" /> Incorrect Answers: <strong>{incorrect}</strong>
-                </span>
-                <span className="d-flex align-items-center gap-1">
-                  <Minus size={14} className="text-secondary" /> Negative Marks: <strong>-{(incorrect * negativeMarking).toFixed(1)}</strong>
-                </span>
-              </div>
-            </div>
+            {!submitted ? (
+              <>
+                <p className="small text-secondary mb-3">Enter your Tier 2 section responses on the left, then click Calculate Score to see your marks.</p>
+                <button
+                  type="button"
+                  className="btn btn-primary align-self-start ssc-cgl-calc-btn"
+                  onClick={() => setSubmitted(true)}
+                >
+                  Calculate Score <ChevronRight size={12} className="ms-1" />
+                </button>
+              </>
+            ) : (
+              <>
+                <div>
+                  <h3 className="h6 fw-semibold mb-2 d-flex align-items-center gap-2">
+                    <CheckCircle size={18} className="text-success" />
+                    Your Calculated Score
+                  </h3>
+                  <div className="rounded-3 p-3 mb-2 fw-semibold small ssc-cgl-result-msg">
+                    {message}
+                  </div>
+                  <p className="small text-secondary mb-1">Marks Obtained:</p>
+                  <p className="display-5 fw-bold text-dark mb-3">{score}</p>
+                </div>
+                <button
+                  type="button"
+                  className="btn btn-outline-primary btn-sm align-self-start mb-2"
+                  onClick={() => setSubmitted(false)}
+                >
+                  Recalculate
+                </button>
+                <div className="mt-3 pt-3 border-top border-secondary-subtle">
+                  <p className="small fw-semibold text-secondary mb-2">Detailed Results:</p>
+                  <div className="d-flex flex-wrap gap-3 small">
+                    <span className="d-flex align-items-center gap-1">
+                      <CheckCircle size={14} className="text-success" /> Correct Answers: <strong>{correct}</strong>
+                    </span>
+                    <span className="d-flex align-items-center gap-1">
+                      <XCircle size={14} className="text-danger" /> Incorrect Answers: <strong>{incorrect}</strong>
+                    </span>
+                    <span className="d-flex align-items-center gap-1">
+                      <Minus size={14} className="text-secondary" /> Negative Marks: <strong>-{(incorrect * negativeMarking).toFixed(1)}</strong>
+                    </span>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
 
@@ -269,6 +251,14 @@ export default function SscCglTier2CalculatorCard({ basePath = DEFAULT_BASE_PATH
       </div>
       <style dangerouslySetInnerHTML={{ __html: `
         .ssc-cgl-calc-card { border-radius: 12px; }
+        .ssc-cgl-calc-card-body .px-2.py-1_5 { padding: 0.35rem 0.5rem !important; }
+        @media (min-width: 768px) {
+          .ssc-cgl-calc-card-body .px-2.py-1_5 { padding: 0.5rem 0.75rem !important; }
+        }
+        .ssc-cgl-input-icon { display: inline-block; width: 22px; height: 22px; min-width: 22px; flex-shrink: 0; }
+        @media (min-width: 768px) {
+          .ssc-cgl-input-icon { width: 24px; height: 24px; }
+        }
         .ssc-cgl-calc-btn {
           background: #2563eb !important;
           color: #fff !important;

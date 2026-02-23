@@ -14,9 +14,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (config && "externalLink" in config && config.externalLink)
     return { title: "Redirect | pkminfotech" }
   const name = config?.shortName ?? examType
+  const canonicalPath = `/police/${examType}/syllabus`
+  const title = `${name} Syllabus | pkminfotech`
+  const description = `${name} exam syllabus, pattern and section-wise topics. Free syllabus for police exam preparation.`
   return {
-    title: `${name} Syllabus | pkminfotech`,
-    description: `${name} exam syllabus.`,
+    title,
+    description,
+    robots: { index: true, follow: true },
+    alternates: { canonical: canonicalPath },
+    openGraph: { title, description, url: canonicalPath, type: "website", siteName: "pkminfotech" },
+    twitter: { card: "summary_large_image", title, description },
   }
 }
 

@@ -67,7 +67,7 @@ export default function CutoffPredictorPage({ title, description, basePath }: Pr
         </div>
       </section>
 
-      <FaqAccordion title="Frequently Asked Questions – SSC CGL Cutoff" items={CUTOFF_FAQS} />
+      <FaqAccordion title="FAQ" items={CUTOFF_FAQS} />
 
       <div className="text-center mt-4">
         <Link href="/tools" className="btn btn-outline-primary btn-sm">

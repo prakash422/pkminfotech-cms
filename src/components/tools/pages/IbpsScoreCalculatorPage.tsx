@@ -57,7 +57,7 @@ export default function IbpsScoreCalculatorPage({ title, description, basePath }
         </div>
       </section>
 
-      <FaqAccordion title="Frequently Asked Questions – IBPS Score" items={IBPS_FAQS} />
+      <FaqAccordion title="FAQ" items={IBPS_FAQS} />
 
       <div className="text-center mt-3">
         <Link href="/tools" className="btn btn-outline-primary btn-sm">

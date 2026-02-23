@@ -17,9 +17,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const config = getSscExamTypeBySlug(examType)
   const examRecord = await resolveExamByCategoryAndSlug("ssc", examType)
   const name = examRecord?.name ?? config?.shortName ?? examType
+  const canonicalPath = `/ssc/${examType}/daily-quiz`
+  const title = `${name} Daily Quiz | pkminfotech`
+  const description = `Free daily quiz for ${name}. Mixed topics with timer and instant result for SSC exam preparation.`
   return {
-    title: `${name} Daily Quiz | pkminfotech`,
-    description: `Daily quiz for ${name} with instant result.`,
+    title,
+    description,
+    robots: { index: true, follow: true },
+    alternates: { canonical: canonicalPath },
+    openGraph: { title, description, url: canonicalPath, type: "website", siteName: "pkminfotech" },
+    twitter: { card: "summary_large_image", title, description },
   }
 }
 

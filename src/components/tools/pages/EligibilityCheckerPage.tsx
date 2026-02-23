@@ -80,7 +80,7 @@ export default function EligibilityCheckerPage({ title, description, basePath }:
         </div>
       </section>
 
-      <FaqAccordion title="Frequently Asked Questions – SSC Eligibility" items={ELIGIBILITY_FAQS} />
+      <FaqAccordion title="FAQ" items={ELIGIBILITY_FAQS} />
 
       <div className="text-center mt-4">
         <Link href="/tools" className="btn btn-outline-primary btn-sm">
