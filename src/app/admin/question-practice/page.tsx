@@ -309,51 +309,38 @@ export default function QuestionPracticeAdminPage() {
   }
 
   return (
-    <AdminLayout
-      title="Question Practice"
-      description="State-wise and exam-wise practice sets with 10-question workflow"
-    >
-      <div className="space-y-4">
+    <AdminLayout title="Question Practice" description="Masters → Set → Questions / Bulk JSON">
+      <div className="space-y-2">
         {message && (
-          <div className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800 shadow-sm">
+          <div className="rounded border border-blue-200 bg-blue-50 px-2.5 py-1.5 text-xs text-blue-800">
             {message}
           </div>
         )}
-
-        <div className="flex items-center justify-between bg-white p-3 rounded-lg shadow-sm border border-gray-200">
-          <div>
-            <h2 className="text-lg font-bold text-gray-900">Setup Flow</h2>
-            <p className="text-xs text-gray-600">Create masters, create set, add questions</p>
+        <div className="flex items-center justify-between gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-1.5 flex-1">
+            <InfoCard label="States" value={states.length} />
+            <InfoCard label="Exams" value={exams.length} />
+            <InfoCard label="Subjects" value={subjects.length} />
+            <InfoCard label="Topics" value={topics.length} />
+            <InfoCard label="Sets" value={sets.length} />
           </div>
-          <Button variant="outline" onClick={fetchAll} className="gap-2 h-9 px-3">
-            <RefreshCcw className="h-4 w-4" />
+          <Button variant="outline" size="sm" onClick={fetchAll} className="gap-1 h-7 px-2 shrink-0">
+            <RefreshCcw className="h-3 w-3" />
             Refresh
           </Button>
         </div>
-
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
-          <InfoCard label="States" value={states.length} />
-          <InfoCard label="Exams" value={exams.length} />
-          <InfoCard label="Subjects" value={subjects.length} />
-          <InfoCard label="Topics" value={topics.length} />
-          <InfoCard label="Practice Sets" value={sets.length} />
-        </div>
-
         {loading ? (
-          <Card className="shadow-sm">
-            <CardContent className="p-6 text-sm text-gray-600">Loading data...</CardContent>
-          </Card>
+          <p className="text-xs text-gray-500 py-2">Loading...</p>
         ) : (
           <>
-            <Card className="shadow-sm border-gray-200">
-              <CardHeader className="pb-2 pt-4">
-                <CardTitle className="text-base text-gray-900">1) Create Masters</CardTitle>
-                <p className="text-sm text-gray-600">State, Exam, Subject, Topic create karein</p>
+            <Card className="border-gray-200">
+              <CardHeader className="p-2 pb-0">
+                <CardTitle className="text-sm font-semibold text-gray-900">1) Masters</CardTitle>
               </CardHeader>
-              <CardContent className="pt-0">
-              <div className="grid grid-cols-1 md:grid-cols-5 gap-2.5">
+              <CardContent className="p-2 pt-0">
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-1.5">
                 <select
-                  className="h-9 rounded-md border border-gray-300 bg-white px-2.5 text-sm"
+                  className="h-7 rounded border border-gray-300 bg-white px-1.5 text-xs"
                   value={masterType}
                   onChange={(e) => setMasterType(e.target.value)}
                 >
@@ -363,21 +350,21 @@ export default function QuestionPracticeAdminPage() {
                   <option value="topic">Topic</option>
                 </select>
                 <input
-                  className="h-9 rounded-md border border-gray-300 bg-white px-2.5 text-sm"
+                  className="h-7 rounded border border-gray-300 bg-white px-1.5 text-xs"
                   placeholder="Name"
                   value={masterName}
                   onChange={(e) => setMasterName(e.target.value)}
                 />
                 {masterType === "state" ? (
                   <input
-                    className="h-9 rounded-md border border-gray-300 bg-white px-2.5 text-sm"
-                    placeholder="State code (optional)"
+                    className="h-7 rounded border border-gray-300 bg-white px-1.5 text-xs"
+                    placeholder="Code (opt)"
                     value={masterCode}
                     onChange={(e) => setMasterCode(e.target.value)}
                   />
                 ) : masterType === "exam" ? (
                   <select
-                    className="h-9 rounded-md border border-gray-300 bg-white px-2.5 text-sm"
+                    className="h-7 rounded border border-gray-300 bg-white px-1.5 text-xs"
                     value={masterStateId}
                     onChange={(e) => setMasterStateId(e.target.value)}
                   >
@@ -390,7 +377,7 @@ export default function QuestionPracticeAdminPage() {
                   </select>
                 ) : masterType === "topic" ? (
                   <select
-                    className="h-9 rounded-md border border-gray-300 bg-white px-2.5 text-sm"
+                    className="h-7 rounded border border-gray-300 bg-white px-1.5 text-xs"
                     value={masterSubjectId}
                     onChange={(e) => setMasterSubjectId(e.target.value)}
                   >
@@ -404,27 +391,26 @@ export default function QuestionPracticeAdminPage() {
                 ) : (
                   <div />
                 )}
-                <Button type="button" onClick={onCreateMaster} disabled={submitting} className="h-9">
+                <Button type="button" size="sm" onClick={onCreateMaster} disabled={submitting} className="h-7 px-2 text-xs">
                   Create
                 </Button>
               </div>
               </CardContent>
             </Card>
 
-            <Card className="shadow-sm border-gray-200">
-              <CardHeader className="pb-2 pt-4">
-                <CardTitle className="text-base text-gray-900">2) Create Practice Set (10 Questions)</CardTitle>
-                <p className="text-sm text-gray-600">Har category ke liye ek starter set banayein</p>
+            <Card className="border-gray-200">
+              <CardHeader className="p-2 pb-0">
+                <CardTitle className="text-sm font-semibold text-gray-900">2) Practice Set</CardTitle>
               </CardHeader>
-              <CardContent className="pt-0">
-              <div className="grid grid-cols-1 md:grid-cols-6 gap-2.5">
+              <CardContent className="p-2 pt-0">
+              <div className="grid grid-cols-2 md:grid-cols-6 gap-1.5">
                 <input
-                  className="h-9 rounded-md border border-gray-300 bg-white px-2.5 text-sm md:col-span-2"
+                  className="h-7 rounded border border-gray-300 bg-white px-1.5 text-xs md:col-span-2"
                   placeholder="Set title"
                   value={setTitle}
                   onChange={(e) => setSetTitle(e.target.value)}
                 />
-                <select className="h-9 rounded-md border border-gray-300 bg-white px-2.5 text-sm md:col-span-2" value={setExamId} onChange={(e) => setSetExamId(e.target.value)}>
+                <select className="h-7 rounded border border-gray-300 bg-white px-1.5 text-xs md:col-span-2" value={setExamId} onChange={(e) => setSetExamId(e.target.value)}>
                   <option value="">Select Exam</option>
                   {exams.map((item) => (
                     <option key={item.id} value={item.id}>
@@ -432,7 +418,7 @@ export default function QuestionPracticeAdminPage() {
                     </option>
                   ))}
                 </select>
-                <select className="h-9 rounded-md border border-gray-300 bg-white px-2.5 text-sm md:col-span-2" value={setStateId} onChange={(e) => setSetStateId(e.target.value)}>
+                <select className="h-7 rounded border border-gray-300 bg-white px-1.5 text-xs md:col-span-2" value={setStateId} onChange={(e) => setSetStateId(e.target.value)}>
                   <option value="">State (optional)</option>
                   {states.map((item) => (
                     <option key={item.id} value={item.id}>
@@ -440,7 +426,7 @@ export default function QuestionPracticeAdminPage() {
                     </option>
                   ))}
                 </select>
-                <select className="h-9 rounded-md border border-gray-300 bg-white px-2.5 text-sm md:col-span-2" value={setSubjectId} onChange={(e) => setSetSubjectId(e.target.value)}>
+                <select className="h-7 rounded border border-gray-300 bg-white px-1.5 text-xs md:col-span-2" value={setSubjectId} onChange={(e) => setSetSubjectId(e.target.value)}>
                   <option value="">Subject (optional)</option>
                   {subjects.map((item) => (
                     <option key={item.id} value={item.id}>
@@ -448,7 +434,7 @@ export default function QuestionPracticeAdminPage() {
                     </option>
                   ))}
                 </select>
-                <select className="h-9 rounded-md border border-gray-300 bg-white px-2.5 text-sm md:col-span-2" value={setTopicId} onChange={(e) => setSetTopicId(e.target.value)}>
+                <select className="h-7 rounded border border-gray-300 bg-white px-1.5 text-xs md:col-span-2" value={setTopicId} onChange={(e) => setSetTopicId(e.target.value)}>
                   <option value="">Topic (optional)</option>
                   {topics.map((item) => (
                     <option key={item.id} value={item.id}>
@@ -457,12 +443,12 @@ export default function QuestionPracticeAdminPage() {
                   ))}
                 </select>
                 <div className="grid grid-cols-2 gap-2.5 md:col-span-2">
-                  <select className="h-9 rounded-md border border-gray-300 bg-white px-2.5 text-sm" value={setLanguage} onChange={(e) => setSetLanguage(e.target.value)}>
+                  <select className="h-7 rounded border border-gray-300 bg-white px-1.5 text-xs" value={setLanguage} onChange={(e) => setSetLanguage(e.target.value)}>
                     <option value="en">English</option>
                     <option value="hi">Hindi</option>
                     <option value="bilingual">Bilingual</option>
                   </select>
-                  <select className="h-9 rounded-md border border-gray-300 bg-white px-2.5 text-sm" value={setDifficulty} onChange={(e) => setSetDifficulty(e.target.value)}>
+                  <select className="h-7 rounded border border-gray-300 bg-white px-1.5 text-xs" value={setDifficulty} onChange={(e) => setSetDifficulty(e.target.value)}>
                     <option value="mixed">Mixed</option>
                     <option value="easy">Easy</option>
                     <option value="medium">Medium</option>
@@ -470,20 +456,19 @@ export default function QuestionPracticeAdminPage() {
                   </select>
                 </div>
               </div>
-              <Button type="button" onClick={onCreateSet} disabled={submitting} className="mt-2.5 h-9">
+              <Button type="button" size="sm" onClick={onCreateSet} disabled={submitting} className="mt-1.5 h-7 px-2 text-xs">
                 Create Set
               </Button>
               </CardContent>
             </Card>
 
-            <Card className="shadow-sm border-gray-200">
-              <CardHeader className="pb-2 pt-4">
-                <CardTitle className="text-base text-gray-900">3) Add Question</CardTitle>
-                <p className="text-sm text-gray-600">English, Hindi ya bilingual question add karein</p>
+            <Card className="border-gray-200">
+              <CardHeader className="p-2 pb-0">
+                <CardTitle className="text-sm font-semibold text-gray-900">3) Add Question</CardTitle>
               </CardHeader>
-              <CardContent className="pt-0">
-              <div className="grid grid-cols-1 md:grid-cols-6 gap-2.5">
-                <select className="h-9 rounded-md border border-gray-300 bg-white px-2.5 text-sm md:col-span-2" value={questionLanguage} onChange={(e) => setQuestionLanguage(e.target.value)}>
+              <CardContent className="p-2 pt-0">
+              <div className="grid grid-cols-2 md:grid-cols-6 gap-1.5">
+                <select className="h-7 rounded border border-gray-300 bg-white px-1.5 text-xs md:col-span-2" value={questionLanguage} onChange={(e) => setQuestionLanguage(e.target.value)}>
                   <option value="en">English</option>
                   <option value="hi">Hindi</option>
                   <option value="bilingual">Bilingual</option>
@@ -495,10 +480,10 @@ export default function QuestionPracticeAdminPage() {
                   value={questionText}
                   onChange={(e) => setQuestionText(e.target.value)}
                 />
-                <input className="h-9 rounded-md border border-gray-300 bg-white px-2.5 text-sm md:col-span-3" placeholder="Option A (English)" value={optionA} onChange={(e) => setOptionA(e.target.value)} />
-                <input className="h-9 rounded-md border border-gray-300 bg-white px-2.5 text-sm md:col-span-3" placeholder="Option B (English)" value={optionB} onChange={(e) => setOptionB(e.target.value)} />
-                <input className="h-9 rounded-md border border-gray-300 bg-white px-2.5 text-sm md:col-span-3" placeholder="Option C (English)" value={optionC} onChange={(e) => setOptionC(e.target.value)} />
-                <input className="h-9 rounded-md border border-gray-300 bg-white px-2.5 text-sm md:col-span-3" placeholder="Option D (English)" value={optionD} onChange={(e) => setOptionD(e.target.value)} />
+                <input className="h-7 rounded border border-gray-300 bg-white px-1.5 text-xs md:col-span-3" placeholder="A (en)" value={optionA} onChange={(e) => setOptionA(e.target.value)} />
+                <input className="h-7 rounded border border-gray-300 bg-white px-1.5 text-xs md:col-span-3" placeholder="B (en)" value={optionB} onChange={(e) => setOptionB(e.target.value)} />
+                <input className="h-7 rounded border border-gray-300 bg-white px-1.5 text-xs md:col-span-3" placeholder="C (en)" value={optionC} onChange={(e) => setOptionC(e.target.value)} />
+                <input className="h-7 rounded border border-gray-300 bg-white px-1.5 text-xs md:col-span-3" placeholder="D (en)" value={optionD} onChange={(e) => setOptionD(e.target.value)} />
                 {(questionLanguage === "hi" || questionLanguage === "bilingual") && (
                   <>
                     <textarea
@@ -508,21 +493,21 @@ export default function QuestionPracticeAdminPage() {
                       value={questionTextHi}
                       onChange={(e) => setQuestionTextHi(e.target.value)}
                     />
-                    <input className="h-9 rounded-md border border-gray-300 bg-white px-2.5 text-sm md:col-span-3" placeholder="Option A (Hindi)" value={optionAHi} onChange={(e) => setOptionAHi(e.target.value)} />
-                    <input className="h-9 rounded-md border border-gray-300 bg-white px-2.5 text-sm md:col-span-3" placeholder="Option B (Hindi)" value={optionBHi} onChange={(e) => setOptionBHi(e.target.value)} />
-                    <input className="h-9 rounded-md border border-gray-300 bg-white px-2.5 text-sm md:col-span-3" placeholder="Option C (Hindi)" value={optionCHi} onChange={(e) => setOptionCHi(e.target.value)} />
-                    <input className="h-9 rounded-md border border-gray-300 bg-white px-2.5 text-sm md:col-span-3" placeholder="Option D (Hindi)" value={optionDHi} onChange={(e) => setOptionDHi(e.target.value)} />
+                    <input className="h-7 rounded border border-gray-300 bg-white px-1.5 text-xs md:col-span-3" placeholder="A (hi)" value={optionAHi} onChange={(e) => setOptionAHi(e.target.value)} />
+                    <input className="h-7 rounded border border-gray-300 bg-white px-1.5 text-xs md:col-span-3" placeholder="B (hi)" value={optionBHi} onChange={(e) => setOptionBHi(e.target.value)} />
+                    <input className="h-7 rounded border border-gray-300 bg-white px-1.5 text-xs md:col-span-3" placeholder="C (hi)" value={optionCHi} onChange={(e) => setOptionCHi(e.target.value)} />
+                    <input className="h-7 rounded border border-gray-300 bg-white px-1.5 text-xs md:col-span-3" placeholder="D (hi)" value={optionDHi} onChange={(e) => setOptionDHi(e.target.value)} />
                   </>
                 )}
-                <input className="h-9 rounded-md border border-gray-300 bg-white px-2.5 text-sm md:col-span-3" placeholder="Explanation (English, optional)" value={questionExplanation} onChange={(e) => setQuestionExplanation(e.target.value)} />
-                <input className="h-9 rounded-md border border-gray-300 bg-white px-2.5 text-sm md:col-span-3" placeholder="Explanation (Hindi, optional)" value={questionExplanationHi} onChange={(e) => setQuestionExplanationHi(e.target.value)} />
-                <select className="h-9 rounded-md border border-gray-300 bg-white px-2.5 text-sm md:col-span-2" value={correctAnswer} onChange={(e) => setCorrectAnswer(e.target.value)}>
+                <input className="h-7 rounded border border-gray-300 bg-white px-1.5 text-xs md:col-span-3" placeholder="Explanation (English, optional)" value={questionExplanation} onChange={(e) => setQuestionExplanation(e.target.value)} />
+                <input className="h-7 rounded border border-gray-300 bg-white px-1.5 text-xs md:col-span-3" placeholder="Explanation (Hindi, optional)" value={questionExplanationHi} onChange={(e) => setQuestionExplanationHi(e.target.value)} />
+                <select className="h-7 rounded border border-gray-300 bg-white px-1.5 text-xs md:col-span-2" value={correctAnswer} onChange={(e) => setCorrectAnswer(e.target.value)}>
                   <option value="A">Correct: A</option>
                   <option value="B">Correct: B</option>
                   <option value="C">Correct: C</option>
                   <option value="D">Correct: D</option>
                 </select>
-                <select className="h-9 rounded-md border border-gray-300 bg-white px-2.5 text-sm md:col-span-2" value={questionExamId} onChange={(e) => setQuestionExamId(e.target.value)}>
+                <select className="h-7 rounded border border-gray-300 bg-white px-1.5 text-xs md:col-span-2" value={questionExamId} onChange={(e) => setQuestionExamId(e.target.value)}>
                   <option value="">Select Exam</option>
                   {exams.map((item) => (
                     <option key={item.id} value={item.id}>
@@ -530,7 +515,7 @@ export default function QuestionPracticeAdminPage() {
                     </option>
                   ))}
                 </select>
-                <select className="h-9 rounded-md border border-gray-300 bg-white px-2.5 text-sm md:col-span-2" value={questionSetId} onChange={(e) => setQuestionSetId(e.target.value)}>
+                <select className="h-7 rounded border border-gray-300 bg-white px-1.5 text-xs md:col-span-2" value={questionSetId} onChange={(e) => setQuestionSetId(e.target.value)}>
                   <option value="">Select Practice Set</option>
                   {sets.map((item) => (
                     <option key={item.id} value={item.id}>
@@ -538,7 +523,7 @@ export default function QuestionPracticeAdminPage() {
                     </option>
                   ))}
                 </select>
-                <select className="h-9 rounded-md border border-gray-300 bg-white px-2.5 text-sm md:col-span-2" value={questionStateId} onChange={(e) => setQuestionStateId(e.target.value)}>
+                <select className="h-7 rounded border border-gray-300 bg-white px-1.5 text-xs md:col-span-2" value={questionStateId} onChange={(e) => setQuestionStateId(e.target.value)}>
                   <option value="">State (optional)</option>
                   {states.map((item) => (
                     <option key={item.id} value={item.id}>
@@ -546,7 +531,7 @@ export default function QuestionPracticeAdminPage() {
                     </option>
                   ))}
                 </select>
-                <select className="h-9 rounded-md border border-gray-300 bg-white px-2.5 text-sm md:col-span-2" value={questionSubjectId} onChange={(e) => setQuestionSubjectId(e.target.value)}>
+                <select className="h-7 rounded border border-gray-300 bg-white px-1.5 text-xs md:col-span-2" value={questionSubjectId} onChange={(e) => setQuestionSubjectId(e.target.value)}>
                   <option value="">Subject (optional)</option>
                   {subjects.map((item) => (
                     <option key={item.id} value={item.id}>
@@ -554,7 +539,7 @@ export default function QuestionPracticeAdminPage() {
                     </option>
                   ))}
                 </select>
-                <select className="h-9 rounded-md border border-gray-300 bg-white px-2.5 text-sm md:col-span-2" value={questionTopicId} onChange={(e) => setQuestionTopicId(e.target.value)}>
+                <select className="h-7 rounded border border-gray-300 bg-white px-1.5 text-xs md:col-span-2" value={questionTopicId} onChange={(e) => setQuestionTopicId(e.target.value)}>
                   <option value="">Topic (optional)</option>
                   {topics.map((item) => (
                     <option key={item.id} value={item.id}>
@@ -563,29 +548,29 @@ export default function QuestionPracticeAdminPage() {
                   ))}
                 </select>
               </div>
-              <Button type="button" onClick={onCreateQuestion} disabled={submitting} className="mt-2.5 h-9">
+              <Button type="button" size="sm" onClick={onCreateQuestion} disabled={submitting} className="mt-1.5 h-7 px-2 text-xs">
                 Add Question
               </Button>
               </CardContent>
             </Card>
 
-            <Card className="shadow-sm border-gray-200">
-              <CardHeader className="pb-2 pt-4">
-                <CardTitle className="text-base text-gray-900">Recent Practice Sets</CardTitle>
+            <Card className="border-gray-200">
+              <CardHeader className="p-2 pb-0">
+                <CardTitle className="text-sm font-semibold text-gray-900">Recent Sets</CardTitle>
               </CardHeader>
-              <CardContent className="pt-0">
-              <div className="space-y-1.5">
+              <CardContent className="p-2 pt-0">
+              <div className="space-y-0.5 max-h-32 overflow-y-auto">
                 {sets.length === 0 ? (
-                  <p className="text-sm text-gray-600">No sets found.</p>
+                  <p className="text-xs text-gray-500">No sets.</p>
                 ) : (
                   sets.slice(0, 8).map((item) => (
-                    <div key={item.id} className="flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-sm">
+                    <div key={item.id} className="flex items-center justify-between rounded border border-gray-100 bg-gray-50/80 px-2 py-0.5 text-xs">
                       <div>
                         <p className="font-medium text-gray-900">{item.title}</p>
                         <p className="text-gray-600">{item.exam?.name || "No Exam"}</p>
                       </div>
-                      <span className="rounded bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700">
-                        {item._count?.questions ?? 0} questions
+                      <span className="rounded bg-blue-50 px-1.5 py-0.5 text-[10px] font-medium text-blue-700">
+                        {item._count?.questions ?? 0} Q
                       </span>
                     </div>
                   ))
@@ -594,31 +579,24 @@ export default function QuestionPracticeAdminPage() {
               </CardContent>
             </Card>
 
-            <Card className="shadow-sm border-gray-200">
-              <CardHeader className="pb-2 pt-4">
-                <CardTitle className="text-base text-gray-900">4) JSON Bulk Import (One Click)</CardTitle>
-                <p className="text-sm text-gray-600">Ek JSON script se set + multiple questions add karein</p>
+            <Card className="border-gray-200">
+              <CardHeader className="p-2 pb-0">
+                <CardTitle className="text-sm font-semibold text-gray-900">4) Bulk Import JSON</CardTitle>
+                <p className="text-[11px] text-gray-500">set + questions[] — paste &amp; Import</p>
               </CardHeader>
-              <CardContent className="pt-0">
+              <CardContent className="p-2">
                 <textarea
-                  className="w-full rounded-md border border-gray-300 bg-white px-2.5 py-2 text-xs md:text-sm font-mono"
-                  rows={16}
+                  className="w-full rounded border border-gray-300 bg-white px-1.5 py-1 text-[11px] font-mono leading-snug min-h-[160px] resize-y"
                   value={bulkImportJson}
                   onChange={(e) => setBulkImportJson(e.target.value)}
-                  placeholder="Paste bulk import JSON here"
+                  placeholder="Paste bulk JSON (set + questions)"
                 />
-                <div className="mt-2 flex flex-wrap gap-2">
-                  <Button type="button" onClick={onBulkImport} disabled={submitting} className="h-9">
+                <div className="mt-1.5 flex gap-1">
+                  <Button type="button" size="sm" onClick={onBulkImport} disabled={submitting} className="h-7 px-2 text-xs">
                     Import JSON
                   </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setBulkImportJson(bulkImportTemplate)}
-                    disabled={submitting}
-                    className="h-9"
-                  >
-                    Reset Template
+                  <Button type="button" size="sm" variant="outline" onClick={() => setBulkImportJson(bulkImportTemplate)} disabled={submitting} className="h-7 px-2 text-xs">
+                    Reset
                   </Button>
                 </div>
               </CardContent>
@@ -633,10 +611,10 @@ export default function QuestionPracticeAdminPage() {
 
 function InfoCard({ label, value }: { label: string; value: number }) {
   return (
-      <Card className="shadow-sm border-gray-200">
-      <CardContent className="p-3">
-        <p className="text-xs text-gray-500">{label}</p>
-        <p className="mt-0.5 text-xl font-bold text-gray-900">{value}</p>
+    <Card className="border-gray-200">
+      <CardContent className="p-1.5">
+        <p className="text-[10px] text-gray-500">{label}</p>
+        <p className="text-base font-bold text-gray-900">{value}</p>
       </CardContent>
     </Card>
   )

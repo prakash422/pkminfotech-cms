@@ -1,7 +1,8 @@
 "use client"
 
 import Link from "next/link"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
+import { useSession } from "next-auth/react"
 
 type Language = "en" | "hi"
 type OptionKey = "A" | "B" | "C" | "D"
@@ -33,6 +34,10 @@ interface PracticeQuestionRunnerProps {
   nextMockUrl?: string
   showGrowthBadges?: boolean
   attemptedUsersToday?: number
+  /** When set, attempt is sent to API for logged-in user (profile tracking). */
+  quizId?: string
+  quizTitle?: string
+  quizType?: "daily-quiz" | "current-affairs" | "mock-test"
 }
 
 const pickText = (
@@ -56,7 +61,12 @@ export default function PracticeQuestionRunner({
   nextMockUrl = "/mock-tests",
   showGrowthBadges = false,
   attemptedUsersToday = 0,
+  quizId,
+  quizTitle,
+  quizType = "daily-quiz",
 }: PracticeQuestionRunnerProps) {
+  const { data: session } = useSession()
+  const attemptRecorded = useRef(false)
   const [language, setLanguage] = useState<Language>(defaultLanguage)
   const [currentIndex, setCurrentIndex] = useState(0)
   const [answers, setAnswers] = useState<Record<string, OptionKey | undefined>>({})
@@ -224,6 +234,43 @@ export default function PracticeQuestionRunner({
     }
   }, [answers, isSubmitted, negativeMarks, normalizedQuestions, positiveMarks, sections])
 
+  useEffect(() => {
+    if (
+      !isSubmitted ||
+      !resultSummary ||
+      !session?.user ||
+      !quizId ||
+      attemptRecorded.current
+    )
+      return
+    attemptRecorded.current = true
+    const totalMarksVal = totalMarks ?? questions.length * positiveMarks
+    fetch("/api/quiz-attempts", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+        quizId,
+        quizTitle: quizTitle || quizId,
+        quizType,
+        score: resultSummary.score,
+        totalMarks: totalMarksVal,
+        correctCount: resultSummary.correct,
+        totalQuestions: questions.length,
+      }),
+    }).catch(() => {})
+  }, [
+    isSubmitted,
+    resultSummary,
+    session?.user,
+    quizId,
+    quizTitle,
+    quizType,
+    totalMarks,
+    questions.length,
+    positiveMarks,
+  ])
+
   const timeTakenSeconds = Math.max(derivedDuration - timeLeftSeconds, 0)
   const formattedTimeTaken = `${Math.floor(timeTakenSeconds / 60)}m ${String(timeTakenSeconds % 60).padStart(2, "0")}s`
 
@@ -295,7 +342,9 @@ export default function PracticeQuestionRunner({
               <div>✔ Incorrect: {resultSummary.incorrect}</div>
               {showGrowthBadges && (
                 <>
-                  <div>✔ Attempted by {attemptedUsersToday.toLocaleString("en-IN")} users today</div>
+                  {attemptedUsersToday > 0 && (
+                    <div>✔ Attempted by {attemptedUsersToday.toLocaleString("en-IN")} users today</div>
+                  )}
                   <div>✔ Streak: 🔥 {streakDays} Day Streak</div>
                 </>
               )}
@@ -370,7 +419,7 @@ export default function PracticeQuestionRunner({
               </div>
               <div className="d-flex align-items-center gap-2">
                 <div className="fw-semibold text-danger">Time Left: {formattedTimer}</div>
-                {showGrowthBadges && (
+                {showGrowthBadges && attemptedUsersToday > 0 && (
                   <span className="badge text-bg-light border text-secondary">
                     Attempted by {attemptedUsersToday.toLocaleString("en-IN")} users today
                   </span>

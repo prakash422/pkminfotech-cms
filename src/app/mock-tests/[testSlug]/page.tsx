@@ -139,6 +139,9 @@ export default async function MockTestDetailPage({ params }: MockTestDetailPageP
             negativeMarks={test.negativeMarking}
             totalMarks={test.totalMarks}
             nextMockUrl="/mock-tests"
+            quizId={test.mockId}
+            quizTitle={test.title ?? undefined}
+            quizType="mock-test"
           />
         )}
       </div>

@@ -72,14 +72,14 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <AdminLayout title="Dashboard" description="Welcome to your CMS dashboard">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <AdminLayout title="Dashboard" description="CMS dashboard">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
           {[...Array(4)].map((_, i) => (
             <Card key={i}>
-              <CardContent className="p-6">
+              <CardContent className="p-3">
                 <div className="animate-pulse">
-                  <div className="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
-                  <div className="h-8 bg-gray-200 rounded w-1/3"></div>
+                  <div className="h-3 bg-gray-200 rounded w-1/2 mb-1"></div>
+                  <div className="h-6 bg-gray-200 rounded w-1/3"></div>
                 </div>
               </CardContent>
             </Card>
@@ -90,50 +90,40 @@ export default function AdminDashboard() {
   }
 
   return (
-    <AdminLayout title="Dashboard" description="Welcome to your CMS dashboard">
-      <div className="space-y-6">
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <AdminLayout title="Dashboard" description="CMS dashboard">
+      <div className="space-y-3">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
           {statCards.map((card, index) => (
             <Card key={index}>
-              <CardContent className="p-6">
+              <CardContent className="p-3">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-700">{card.title}</p>
-                    <p className="text-3xl font-bold text-gray-900">{card.value}</p>
+                    <p className="text-xs font-medium text-gray-600">{card.title}</p>
+                    <p className="text-xl font-bold text-gray-900">{card.value}</p>
                   </div>
-                  <div className={`p-3 rounded-full ${card.bgColor}`}>
-                    <card.icon className={`h-6 w-6 ${card.color}`} />
+                  <div className={`p-1.5 rounded-full ${card.bgColor}`}>
+                    <card.icon className={`h-4 w-4 ${card.color}`} />
                   </div>
                 </div>
               </CardContent>
             </Card>
           ))}
         </div>
-
-        {/* Recent Activity */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
           <Card>
-            <CardHeader>
-              <CardTitle className="text-gray-900 font-semibold">Recent Blogs</CardTitle>
+            <CardHeader className="p-3 pb-1">
+              <CardTitle className="text-sm font-semibold text-gray-900">Recent Blogs</CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <p className="text-sm text-gray-700 font-medium">No recent blogs found.</p>
-                <p className="text-sm text-gray-600">Create your first blog post to get started.</p>
-              </div>
+            <CardContent className="p-3 pt-0">
+              <p className="text-xs text-gray-600">No recent blogs. Create from Blogs.</p>
             </CardContent>
           </Card>
-
           <Card>
-            <CardHeader>
-              <CardTitle className="text-gray-900 font-semibold">Active Ads</CardTitle>
+            <CardHeader className="p-3 pb-1">
+              <CardTitle className="text-sm font-semibold text-gray-900">Active Ads</CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <p className="text-sm text-gray-700 font-medium">No active ads found.</p>
-                <p className="text-sm text-gray-600">Create your first ad to get started.</p>
-              </div>
+            <CardContent className="p-3 pt-0">
+              <p className="text-xs text-gray-600">No active ads. Create from Ads.</p>
             </CardContent>
           </Card>
         </div>

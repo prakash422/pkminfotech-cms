@@ -23,8 +23,26 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  blogs Blog[]
-  pages Page[]
+  blogs        Blog[]
+  pages        Page[]
+  quizAttempts QuizAttempt[]
+}
+
+model QuizAttempt {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String   @db.ObjectId
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quizId          String   // e.g. daily-quiz-2026-02-24, mock slug, or current-affairs slug
+  quizTitle       String?
+  quizType        String   @default("daily-quiz") // daily-quiz, current-affairs, mock-test
+  score           Float
+  totalMarks      Float
+  correctCount    Int
+  totalQuestions  Int
+  attemptedAt     DateTime @default(now())
+
+  @@index([userId])
+  @@index([userId, attemptedAt(sort: Desc)])
 }
 
 model Blog {

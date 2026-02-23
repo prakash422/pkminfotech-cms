@@ -1,21 +1,25 @@
 import { redirect } from 'next/navigation'
 import { notFound } from 'next/navigation'
+import { headers } from 'next/headers'
 
 interface CatchAllProps {
-  params: {
-    catchall: string[]
-  }
+  params: Promise<{ catchall: string[] }>
 }
 
 export default async function CatchAllPage({ params }: CatchAllProps) {
-  const path = params.catchall?.join('/') || ''
-  
-  // Log for analytics
+  const { catchall } = await params
+  const path = catchall?.join('/') || ''
+
+  // Log for analytics (fetch needs absolute URL)
   try {
-    await fetch('/api/404-analytics', {
+    const headersList = await headers()
+    const host = headersList.get('host') || ''
+    const proto = headersList.get('x-forwarded-proto') || headersList.get('x-forwarded-ssl') === 'on' ? 'https' : 'http'
+    const baseUrl = host ? `${proto}://${host}` : process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
+    await fetch(`${baseUrl}/api/404-analytics`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ pathname: `/${path}` })
+      body: JSON.stringify({ pathname: `/${path}` }),
     })
   } catch (error) {
     console.error('Failed to log 404:', error)

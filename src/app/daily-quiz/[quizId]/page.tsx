@@ -37,11 +37,6 @@ type QuizQuestion = {
   correctAnswer: string
 }
 
-const getAttemptedUsersToday = (quizId: string) => {
-  const seed = quizId.split("").reduce((sum, ch) => sum + ch.charCodeAt(0), 0)
-  return 1200 + (seed % 1800)
-}
-
 async function getDailyQuiz(quizId: string): Promise<DailyQuizWithMeta | null> {
   const h = await headers()
   const host = h.get("x-forwarded-host") || h.get("host")
@@ -100,8 +95,8 @@ export default async function DailyQuizDetailPage({ params }: DailyQuizPageProps
         <section className="card border-0 shadow-sm mb-3">
           <div className="card-body p-3 p-md-4">
             <h1 className="h3 fw-bold mb-2">{quiz.title || quiz.quizId}</h1>
-            <p className="mb-0 text-secondary small">
-              Attempted by {getAttemptedUsersToday(quiz.quizId).toLocaleString("en-IN")} users today.
+            <p className="mb-0 text-success small fw-semibold">
+              No login required — attempt directly. Instant result after submit.
             </p>
           </div>
         </section>
@@ -135,7 +130,10 @@ export default async function DailyQuizDetailPage({ params }: DailyQuizPageProps
             totalMarks={quiz.totalMarks}
             nextMockUrl="/daily-quiz"
             showGrowthBadges
-            attemptedUsersToday={getAttemptedUsersToday(quiz.quizId)}
+            attemptedUsersToday={0}
+            quizId={quiz.quizId}
+            quizTitle={quiz.title ?? undefined}
+            quizType="daily-quiz"
           />
         )}
       </div>

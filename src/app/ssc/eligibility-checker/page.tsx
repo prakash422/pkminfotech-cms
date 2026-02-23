@@ -9,7 +9,7 @@ const TOOL_PATH = "/ssc/eligibility-checker"
 export const metadata: Metadata = {
   title: `${TOOL.title} | pkminfotech`,
   description: TOOL.description,
-  robots: { index: true, follow: true },
+  robots: "index, follow",
   alternates: { canonical: TOOL_PATH },
   openGraph: {
     title: `${TOOL.title} | pkminfotech`,

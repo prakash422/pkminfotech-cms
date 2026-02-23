@@ -75,8 +75,11 @@ export default async function DailyQuizListPage() {
         <section className="card border-0 shadow-sm mb-4">
           <div className="card-body p-4 p-md-5">
             <h1 className="fw-bold mb-2">Daily Quiz For Govt Exams</h1>
-            <p className="text-secondary mb-0">
+            <p className="text-secondary mb-2">
               Search intent focused: SSC daily quiz today, free current affairs quiz, and mixed govt exam daily practice.
+            </p>
+            <p className="text-success small fw-semibold mb-0">
+              No login required — attempt any quiz directly. No signup needed.
             </p>
           </div>
         </section>
@@ -128,7 +131,7 @@ export default async function DailyQuizListPage() {
               <strong>Daily quiz</strong> is short (typically 10–20 questions) and ideal for everyday practice. It keeps you in touch with syllabus without taking hours. <strong>Full mock tests</strong> are timed, full-length papers that simulate the real exam. Use mocks once you have covered the syllabus—weekly or before the exam—to check your speed and accuracy under pressure. We offer both: try our <Link href="/mock-tests" className="text-primary">free mock tests</Link> for SSC, Banking, and Railway, and use this daily quiz page for regular bite-sized practice.
             </p>
             <p className="text-secondary mb-0">
-              For current-affairs-only practice, use our <Link href="/current-affairs-quiz" className="text-primary">Daily Current Affairs Quiz</Link>, which is updated with date-wise sets. Combine daily quiz, current affairs quiz, and mock tests for a complete preparation routine. All quizzes and mocks are free; no signup is required to attempt.
+              For current-affairs-only practice, use our <Link href="/current-affairs-quiz" className="text-primary">Daily Current Affairs Quiz</Link>, which is updated with date-wise sets. Combine daily quiz, current affairs quiz, and mock tests for a complete preparation routine. <strong>Daily quiz works without login</strong>—you can attempt directly; for mock tests and tracking history, sign in is required.
             </p>
           </div>
         </section>
@@ -137,7 +140,7 @@ export default async function DailyQuizListPage() {
           <div className="card-body p-4 p-md-5">
             <h2 className="h5 fw-semibold mb-3">Tips to get the most from daily quiz practice</h2>
             <p className="text-secondary mb-2">
-              Fix a time each day—e.g. morning or after work—and attempt one quiz. After submitting, review the answers you got wrong and note the correct ones. Revise that list once a week. Over time you will build speed and reduce silly errors. Do not skip negative marking: attempt only when you are fairly sure, as wrong answers will deduct marks in real exams too. If you want to track your score and accuracy over time, create a free account and log in before attempting.
+              Fix a time each day—e.g. morning or after work—and attempt one quiz. No login is needed to attempt; just click and start. After submitting, review the answers you got wrong and note the correct ones. Revise that list once a week. Over time you will build speed and reduce silly errors. Do not skip negative marking: attempt only when you are fairly sure, as wrong answers will deduct marks in real exams too. If you want to track your score and accuracy over time, create a free account and sign in.
             </p>
             <p className="text-secondary mb-0">
               Bookmark this page and explore <Link href="/tools" className="text-primary">online tools</Link> like the SSC CGL marks calculator, IBPS score calculator, and cutoff predictor to plan your preparation. Good luck with your exam.

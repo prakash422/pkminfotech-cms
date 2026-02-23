@@ -41,6 +41,39 @@ type DailyQuizDelegate = {
   upsert: (args: Record<string, unknown>) => Promise<unknown>
 }
 
+/** Quiz date from quizDate or from quizId (daily-quiz-YYYY-MM-DD). Start of day UTC. */
+function getQuizDate(quiz: { quizId?: string; quizDate?: Date | string | null }): Date | null {
+  if (quiz.quizDate) {
+    const d = new Date(quiz.quizDate)
+    if (!isNaN(d.getTime())) {
+      d.setUTCHours(0, 0, 0, 0)
+      return d
+    }
+  }
+  const match = quiz.quizId?.match(/^daily-quiz-(\d{4}-\d{2}-\d{2})$/)
+  if (match) {
+    const d = new Date(match[1] + "T00:00:00.000Z")
+    if (!isNaN(d.getTime())) return d
+  }
+  return null
+}
+
+function isTodayOrPast(quizDate: Date): boolean {
+  const today = new Date()
+  today.setUTCHours(0, 0, 0, 0)
+  return quizDate.getTime() <= today.getTime()
+}
+
+/** True if quiz date is within last 6 days (today + 5 past days). */
+function isWithinLast6Days(quizDate: Date): boolean {
+  const today = new Date()
+  today.setUTCHours(0, 0, 0, 0)
+  const cutoff = new Date(today)
+  cutoff.setUTCDate(cutoff.getUTCDate() - 5)
+  return quizDate.getTime() >= cutoff.getTime() && quizDate.getTime() <= today.getTime()
+}
+
+// Daily quiz list and quiz with questions are public — no login required (guest can attempt).
 export async function GET(request: NextRequest) {
   try {
     const dailyQuizDelegate = (prisma as unknown as { dailyQuiz?: DailyQuizDelegate }).dailyQuiz
@@ -63,6 +96,10 @@ export async function GET(request: NextRequest) {
         include: { exam: true },
       })
       if (!quiz) return NextResponse.json({ error: "Daily quiz not found" }, { status: 404 })
+      const qDate = getQuizDate(quiz as { quizId?: string; quizDate?: Date | string | null })
+      if (qDate && !isTodayOrPast(qDate)) {
+        return NextResponse.json({ error: "Daily quiz not found" }, { status: 404 })
+      }
 
       if (withQuestions) {
         const typedQuiz = quiz as {
@@ -91,12 +128,18 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ data: quiz })
     }
 
-    const quizzes = await dailyQuizDelegate.findMany({
+    const allQuizzes = await dailyQuizDelegate.findMany({
       where: { isActive: true },
       include: { exam: true },
       orderBy: { createdAt: "desc" },
       take: 100,
     })
+    const filtered = (allQuizzes as Array<{ quizId?: string; quizDate?: Date | string | null }>).filter((q) => {
+      const qDate = getQuizDate(q)
+      if (!qDate || !isTodayOrPast(qDate)) return false
+      return isWithinLast6Days(qDate)
+    })
+    const quizzes = filtered.slice(0, 6)
 
     return NextResponse.json({ data: quizzes })
   } catch (error) {

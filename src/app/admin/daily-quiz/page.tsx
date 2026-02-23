@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react"
 import AdminLayout from "@/components/admin/admin-layout"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { RefreshCcw } from "lucide-react"
+import { RefreshCcw, Sparkles } from "lucide-react"
 
 type ExamOption = { id: string; name: string }
 
@@ -124,6 +124,7 @@ export default function DailyQuizAdminPage() {
   const [manualQuizDate, setManualQuizDate] = useState("")
   const [manualQuestionIds, setManualQuestionIds] = useState("")
   const [manualSectionsJson, setManualSectionsJson] = useState("")
+  const [autoGenerating, setAutoGenerating] = useState(false)
 
   const fetchAll = useCallback(async () => {
     try {
@@ -181,6 +182,25 @@ export default function DailyQuizAdminPage() {
       setMessage(getErrorMessage(error))
     } finally {
       setSubmitting(false)
+    }
+  }
+
+  const onAutoGenerateToday = async () => {
+    try {
+      setAutoGenerating(true)
+      setMessage(null)
+      const res = await fetch("/api/daily-quiz/auto-generate?count=10", { credentials: "include" })
+      const json = await res.json()
+      if (!res.ok) {
+        setMessage(json.error || "Auto-generate failed")
+        return
+      }
+      setMessage(json.data?.message || "Today's quiz created.")
+      fetchAll()
+    } catch (e) {
+      setMessage(getErrorMessage(e))
+    } finally {
+      setAutoGenerating(false)
     }
   }
 
@@ -244,133 +264,107 @@ export default function DailyQuizAdminPage() {
   }
 
   return (
-    <AdminLayout
-      title="Daily Quiz"
-      description="Dedicated daily quiz setup and JSON import"
-    >
-      <div className="space-y-4">
+    <AdminLayout title="Daily Quiz" description="Paste JSON → Import. No login needed on site.">
+      <div className="space-y-2">
         {message && (
-          <div className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800 shadow-sm">
+          <div className="rounded border border-blue-200 bg-blue-50 px-2.5 py-1.5 text-xs text-blue-800">
             {message}
           </div>
         )}
-
-        <div className="flex items-center justify-between bg-white p-3 rounded-lg shadow-sm border border-gray-200">
-          <div>
-            <h2 className="text-lg font-bold text-gray-900">Daily Quiz Setup</h2>
-            <p className="text-xs text-gray-600">Separate daily quiz module with independent import flow</p>
+        <div className="flex items-center justify-between gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 flex-1">
+            <InfoCard label="Exams" value={exams.length} />
+            <InfoCard label="Quizzes" value={quizzes.length} />
+            <InfoCard label="Questions" value={quizzes.reduce((s, i) => s + (i.questionIds?.length || 0), 0)} />
+            <InfoCard label="Min" value={quizzes.reduce((s, i) => s + (i.durationMinutes || 0), 0)} />
           </div>
-          <Button variant="outline" onClick={fetchAll} className="gap-2 h-9 px-3">
-            <RefreshCcw className="h-4 w-4" />
-            Refresh
-          </Button>
-        </div>
-
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          <InfoCard label="Exams" value={exams.length} />
-          <InfoCard label="Daily Quizzes" value={quizzes.length} />
-          <InfoCard
-            label="Mapped Questions"
-            value={quizzes.reduce((sum, item) => sum + (item.questionIds?.length || 0), 0)}
-          />
-          <InfoCard
-            label="Total Duration (min)"
-            value={quizzes.reduce((sum, item) => sum + (item.durationMinutes || 0), 0)}
-          />
+          <div className="flex gap-1 shrink-0">
+            <Button size="sm" onClick={onAutoGenerateToday} disabled={autoGenerating || loading} className="gap-1 h-7 px-2 bg-green-600 hover:bg-green-700">
+              <Sparkles className="h-3 w-3" />
+              {autoGenerating ? "..." : "Generate today"}
+            </Button>
+            <Button variant="outline" size="sm" onClick={fetchAll} className="gap-1 h-7 px-2">
+              <RefreshCcw className="h-3 w-3" />
+              Refresh
+            </Button>
+          </div>
         </div>
 
         {loading ? (
-          <Card className="shadow-sm">
-            <CardContent className="p-6 text-sm text-gray-600">Loading data...</CardContent>
-          </Card>
+          <p className="text-xs text-gray-500 py-2">Loading...</p>
         ) : (
           <>
-            <Card className="shadow-sm border-gray-200">
-              <CardHeader className="pb-2 pt-4">
-                <CardTitle className="text-base text-gray-900">1) Daily Quiz JSON Import</CardTitle>
-                <p className="text-sm text-gray-600">Sirf daily quiz data import karein</p>
+            {/* 1) JSON Import — primary flow: paste → Import */}
+            <Card className="border-gray-200">
+              <CardHeader className="p-2 pb-0">
+                <CardTitle className="text-sm font-semibold text-gray-900">1) Paste JSON &amp; Import</CardTitle>
+                <p className="text-[11px] text-gray-500">quizId, title, exam, questions[] (category, question.en/hi, options, correctOption). Or use <strong>Generate today</strong> above: random 10 from DB for today.</p>
               </CardHeader>
-              <CardContent className="pt-0">
+              <CardContent className="p-2">
                 <textarea
-                  className="w-full rounded-md border border-gray-300 bg-white px-2.5 py-2 text-xs md:text-sm font-mono"
-                  rows={14}
+                  className="w-full rounded border border-gray-300 bg-white px-2 py-1.5 text-[11px] font-mono leading-snug min-h-[180px] resize-y"
                   value={quizImportJson}
                   onChange={(e) => setQuizImportJson(e.target.value)}
-                  placeholder="Paste daily quiz JSON here"
+                  placeholder="Paste daily quiz JSON (structure as template)"
                 />
-                <div className="mt-2 flex flex-wrap gap-2">
-                  <Button type="button" onClick={onQuizImport} disabled={submitting} className="h-9">
-                    Import Daily Quiz JSON
+                <div className="mt-1.5 flex flex-wrap gap-1">
+                  <Button type="button" size="sm" onClick={onQuizImport} disabled={submitting} className="h-7 px-2 text-xs">
+                    Import JSON
                   </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setQuizImportJson(quizImportTemplate)}
-                    disabled={submitting}
-                    className="h-9"
-                  >
-                    Reset Template
+                  <Button type="button" size="sm" variant="outline" onClick={() => setQuizImportJson(quizImportTemplate)} disabled={submitting} className="h-7 px-2 text-xs">
+                    Reset template
                   </Button>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="shadow-sm border-gray-200">
-              <CardHeader className="pb-2 pt-4">
-                <CardTitle className="text-base text-gray-900">2) Create Daily Quiz Manually</CardTitle>
-                <p className="text-sm text-gray-600">Manual question IDs se daily quiz create karein</p>
+            {/* 2) Manual — compact row */}
+            <Card className="border-gray-200">
+              <CardHeader className="p-2 pb-0">
+                <CardTitle className="text-sm font-semibold text-gray-900">2) Manual (IDs only)</CardTitle>
               </CardHeader>
-              <CardContent className="pt-0 space-y-2.5">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5">
-                  <input className="h-9 rounded-md border border-gray-300 bg-white px-2.5 text-sm" placeholder="Quiz ID (unique)" value={manualQuizId} onChange={(e) => setManualQuizId(e.target.value)} />
-                  <input className="h-9 rounded-md border border-gray-300 bg-white px-2.5 text-sm" placeholder="Title (optional)" value={manualTitle} onChange={(e) => setManualTitle(e.target.value)} />
-                  <input className="h-9 rounded-md border border-gray-300 bg-white px-2.5 text-sm" placeholder="Exam name (e.g. SSC CGL)" value={manualExam} onChange={(e) => setManualExam(e.target.value)} />
-                  <input type="number" className="h-9 rounded-md border border-gray-300 bg-white px-2.5 text-sm" placeholder="Total Questions" value={manualTotalQuestions} onChange={(e) => setManualTotalQuestions(Number(e.target.value))} />
-                  <input type="number" className="h-9 rounded-md border border-gray-300 bg-white px-2.5 text-sm" placeholder="Total Marks" value={manualTotalMarks} onChange={(e) => setManualTotalMarks(Number(e.target.value))} />
-                  <input type="number" step="0.25" className="h-9 rounded-md border border-gray-300 bg-white px-2.5 text-sm" placeholder="Negative Marking" value={manualNegativeMarking} onChange={(e) => setManualNegativeMarking(Number(e.target.value))} />
-                  <input type="number" className="h-9 rounded-md border border-gray-300 bg-white px-2.5 text-sm" placeholder="Duration (min)" value={manualDurationMinutes} onChange={(e) => setManualDurationMinutes(Number(e.target.value))} />
-                  <select className="h-9 rounded-md border border-gray-300 bg-white px-2.5 text-sm" value={manualLanguage} onChange={(e) => setManualLanguage(e.target.value)}>
-                    <option value="en">English</option>
-                    <option value="hi">Hindi</option>
-                    <option value="bilingual">Bilingual</option>
+              <CardContent className="p-2 space-y-1.5">
+                <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-10 gap-1">
+                  <input className="h-7 rounded border border-gray-300 bg-white px-1.5 text-xs" placeholder="Quiz ID" value={manualQuizId} onChange={(e) => setManualQuizId(e.target.value)} />
+                  <input className="h-7 rounded border border-gray-300 bg-white px-1.5 text-xs" placeholder="Title" value={manualTitle} onChange={(e) => setManualTitle(e.target.value)} />
+                  <input className="h-7 rounded border border-gray-300 bg-white px-1.5 text-xs" placeholder="Exam" value={manualExam} onChange={(e) => setManualExam(e.target.value)} />
+                  <input type="number" className="h-7 rounded border border-gray-300 bg-white px-1.5 text-xs w-14" placeholder="Q" value={manualTotalQuestions} onChange={(e) => setManualTotalQuestions(Number(e.target.value))} />
+                  <input type="number" className="h-7 rounded border border-gray-300 bg-white px-1.5 text-xs w-14" placeholder="Marks" value={manualTotalMarks} onChange={(e) => setManualTotalMarks(Number(e.target.value))} />
+                  <input type="number" step="0.25" className="h-7 rounded border border-gray-300 bg-white px-1.5 text-xs w-14" placeholder="Neg" value={manualNegativeMarking} onChange={(e) => setManualNegativeMarking(Number(e.target.value))} />
+                  <input type="number" className="h-7 rounded border border-gray-300 bg-white px-1.5 text-xs w-12" placeholder="Min" value={manualDurationMinutes} onChange={(e) => setManualDurationMinutes(Number(e.target.value))} />
+                  <select className="h-7 rounded border border-gray-300 bg-white px-1.5 text-xs" value={manualLanguage} onChange={(e) => setManualLanguage(e.target.value)}>
+                    <option value="en">en</option>
+                    <option value="hi">hi</option>
+                    <option value="bilingual">bilingual</option>
                   </select>
-                  <input type="date" className="h-9 rounded-md border border-gray-300 bg-white px-2.5 text-sm" value={manualQuizDate} onChange={(e) => setManualQuizDate(e.target.value)} />
+                  <input type="date" className="h-7 rounded border border-gray-300 bg-white px-1.5 text-xs" value={manualQuizDate} onChange={(e) => setManualQuizDate(e.target.value)} />
                 </div>
-                <textarea className="w-full rounded-md border border-gray-300 bg-white px-2.5 py-2 text-xs md:text-sm font-mono" rows={4} placeholder="Question IDs (comma/newline separated)" value={manualQuestionIds} onChange={(e) => setManualQuestionIds(e.target.value)} />
-                <textarea className="w-full rounded-md border border-gray-300 bg-white px-2.5 py-2 text-xs md:text-sm font-mono" rows={4} placeholder='Sections JSON (optional), e.g. [{"name":"General","questions":["id1"]}]' value={manualSectionsJson} onChange={(e) => setManualSectionsJson(e.target.value)} />
-                <Button type="button" onClick={onCreateManualQuiz} disabled={submitting} className="h-9">
-                  Create Manual Daily Quiz
+                <textarea className="w-full rounded border border-gray-300 bg-white px-1.5 py-1 text-[11px] font-mono" rows={2} placeholder="Question IDs (comma/newline)" value={manualQuestionIds} onChange={(e) => setManualQuestionIds(e.target.value)} />
+                <textarea className="w-full rounded border border-gray-300 bg-white px-1.5 py-1 text-[11px] font-mono" rows={2} placeholder='Sections JSON optional' value={manualSectionsJson} onChange={(e) => setManualSectionsJson(e.target.value)} />
+                <Button type="button" size="sm" onClick={onCreateManualQuiz} disabled={submitting} className="h-7 px-2 text-xs">
+                  Create manual quiz
                 </Button>
               </CardContent>
             </Card>
 
-            <Card className="shadow-sm border-gray-200">
-              <CardHeader className="pb-2 pt-4">
-                <CardTitle className="text-base text-gray-900">3) Recent Daily Quizzes</CardTitle>
+            {/* 3) Recent list — compact */}
+            <Card className="border-gray-200">
+              <CardHeader className="p-2 pb-0">
+                <CardTitle className="text-sm font-semibold text-gray-900">3) Recent</CardTitle>
               </CardHeader>
-              <CardContent className="pt-0">
-                <div className="space-y-1.5">
-                  {quizzes.length === 0 ? (
-                    <p className="text-sm text-gray-600">No daily quizzes found.</p>
-                  ) : (
-                    quizzes.slice(0, 10).map((item) => (
-                      <div
-                        key={item.id}
-                        className="flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-sm"
-                      >
-                        <div>
-                          <p className="font-medium text-gray-900">{item.title || item.quizId}</p>
-                          <p className="text-gray-600">
-                            {item.exam?.name || "No Exam"} | {item.durationMinutes} min | -{item.negativeMarking}
-                          </p>
-                        </div>
-                        <span className="rounded bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700">
-                          {item.totalQuestions} Qs
-                        </span>
+              <CardContent className="p-2">
+                {quizzes.length === 0 ? (
+                  <p className="text-xs text-gray-500">No quizzes.</p>
+                ) : (
+                  <div className="space-y-0.5 max-h-40 overflow-y-auto">
+                    {quizzes.slice(0, 10).map((item) => (
+                      <div key={item.id} className="flex items-center justify-between rounded border border-gray-100 bg-gray-50/80 px-2 py-0.5 text-xs">
+                        <span className="font-medium text-gray-800 truncate">{item.title || item.quizId}</span>
+                        <span className="text-gray-500 shrink-0">{item.exam?.name} · {item.totalQuestions}Q · {item.durationMinutes}m</span>
                       </div>
-                    ))
-                  )}
-                </div>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
           </>
@@ -382,10 +376,10 @@ export default function DailyQuizAdminPage() {
 
 function InfoCard({ label, value }: { label: string; value: number }) {
   return (
-    <Card className="shadow-sm border-gray-200">
-      <CardContent className="p-3">
-        <p className="text-xs text-gray-500">{label}</p>
-        <p className="mt-0.5 text-xl font-bold text-gray-900">{value}</p>
+    <Card className="border-gray-200">
+      <CardContent className="p-1.5">
+        <p className="text-[10px] text-gray-500">{label}</p>
+        <p className="text-base font-bold text-gray-900">{value}</p>
       </CardContent>
     </Card>
   )
