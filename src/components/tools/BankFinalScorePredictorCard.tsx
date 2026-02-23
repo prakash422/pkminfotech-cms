@@ -65,12 +65,12 @@ export default function BankFinalScorePredictorCard({ basePath = DEFAULT_BASE_PA
   return (
     <>
       <div className="card border-0 shadow-sm ssc-cgl-calc-card">
-        <div className="card-body p-3 p-md-4">
-          <div className="row g-4">
+        <div className="card-body p-2 p-md-4">
+          <div className="row g-2 g-md-4">
             <div className="col-md-6 col-lg-5">
-              <h3 className="h6 fw-semibold mb-3">Enter Your Marks</h3>
-              <div className="mb-3">
-                <label className="form-label small mb-1">
+              <h3 className="h6 fw-semibold mb-2 mb-md-3">Enter Your Marks</h3>
+              <div className="mb-2 mb-md-3">
+                <label className="form-label small mb-0 mb-md-1">
                   Select Exam <span className="text-danger">*</span>
                 </label>
                 <select
@@ -85,57 +85,59 @@ export default function BankFinalScorePredictorCard({ basePath = DEFAULT_BASE_PA
                   ))}
                 </select>
               </div>
-              <div className="mb-3">
-                <label className="form-label small mb-1">
+              <div className="mb-2 mb-md-3">
+                <label className="form-label small mb-0 mb-md-1">
                   Prelims Score <span className="text-danger">*</span>
                 </label>
                 <div className="d-flex gap-2 align-items-center">
                   <input
-                    type="number"
+                    type="text"
+                    inputMode="decimal"
                     className="form-control form-control-sm"
-                    min={0}
-                    max={pTotal || 200}
-                    step={0.5}
                     value={prelimsObtained}
-                    onChange={(e) => setPrelimsObtained(e.target.value)}
+                    onChange={(e) => {
+                      const v = e.target.value
+                      if (v === "" || /^\d*\.?\d*$/.test(v)) setPrelimsObtained(v.slice(0, 6))
+                    }}
                     placeholder="65"
                   />
                   <span className="text-secondary small">/</span>
                   <input
-                    type="number"
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     className="form-control form-control-sm"
                     style={{ width: 70 }}
-                    min={1}
-                    max={200}
                     value={prelimsTotal}
-                    onChange={(e) => setPrelimsTotal(e.target.value)}
+                    onChange={(e) => setPrelimsTotal(e.target.value.replace(/\D/g, "").slice(0, 3) || "")}
                   />
                 </div>
               </div>
-              <div className="mb-4">
-                <label className="form-label small mb-1">
+              <div className="mb-2 mb-md-4">
+                <label className="form-label small mb-0 mb-md-1">
                   Mains Score <span className="text-danger">*</span>
                 </label>
                 <div className="d-flex gap-2 align-items-center">
                   <input
-                    type="number"
+                    type="text"
+                    inputMode="decimal"
                     className="form-control form-control-sm"
-                    min={0}
-                    max={mTotal || 300}
-                    step={0.5}
                     value={mainsObtained}
-                    onChange={(e) => setMainsObtained(e.target.value)}
+                    onChange={(e) => {
+                      const v = e.target.value
+                      if (v === "" || /^\d*\.?\d*$/.test(v)) setMainsObtained(v.slice(0, 6))
+                    }}
                     placeholder="125"
                   />
                   <span className="text-secondary small">/</span>
                   <input
-                    type="number"
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     className="form-control form-control-sm"
                     style={{ width: 70 }}
-                    min={1}
-                    max={300}
                     value={mainsTotal}
-                    onChange={(e) => setMainsTotal(e.target.value)}
+                    onChange={(e) => setMainsTotal(e.target.value.replace(/\D/g, "").slice(0, 3) || "")}
                   />
                 </div>
               </div>

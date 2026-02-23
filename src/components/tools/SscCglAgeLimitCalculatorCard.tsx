@@ -67,12 +67,12 @@ export default function SscCglAgeLimitCalculatorCard({ basePath }: Props) {
   return (
     <>
     <div className="card border-0 shadow-sm ssc-cgl-calc-card">
-      <div className="card-body p-3 p-md-4">
-        <div className="row g-4">
+      <div className="card-body p-2 p-md-4">
+        <div className="row g-2 g-md-4">
           <div className="col-md-6 col-lg-5">
-            <h3 className="h6 fw-semibold mb-3">Enter Your Details</h3>
-            <div className="mb-3">
-              <label className="form-label small mb-1">
+            <h3 className="h6 fw-semibold mb-2 mb-md-3">Enter Your Details</h3>
+            <div className="mb-2 mb-md-3">
+              <label className="form-label small mb-0 mb-md-1">
                 Select Your Category <span className="text-danger">*</span>
               </label>
               <select
@@ -87,8 +87,8 @@ export default function SscCglAgeLimitCalculatorCard({ basePath }: Props) {
                 ))}
               </select>
             </div>
-            <div className="mb-3">
-              <label className="form-label small mb-1">
+            <div className="mb-2 mb-md-3">
+              <label className="form-label small mb-0 mb-md-1">
                 Date of Birth <span className="text-danger">*</span>
               </label>
               <div className="input-group input-group-sm">
@@ -104,8 +104,8 @@ export default function SscCglAgeLimitCalculatorCard({ basePath }: Props) {
                 />
               </div>
             </div>
-            <div className="mb-4">
-              <label className="form-label small mb-1">Upper Age Limit for SSC CGL ({REFERENCE_YEAR})</label>
+            <div className="mb-2 mb-md-4">
+              <label className="form-label small mb-0 mb-md-1">Upper Age Limit for SSC CGL ({REFERENCE_YEAR})</label>
               <select
                 className="form-select form-select-sm"
                 value={upperAgeLimit}

@@ -8,7 +8,7 @@ import { prisma } from "@/lib/prisma"
 const MOCK_TEST_FAQS = [
   {
     question: "Are mock tests free?",
-    answer: "Yes. You can attempt all mock tests on this page without signup. Create an account if you want to track your scores and attempt history.",
+    answer: "Yes, all mock tests are free. You need to sign in to attempt them. Without login you can only attempt the daily quiz; for mock tests, PYQ, and full practice, create an account and sign in.",
   },
   {
     question: "How many mocks should I give before the exam?",

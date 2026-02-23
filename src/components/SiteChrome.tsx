@@ -248,9 +248,9 @@ export function SiteFooter() {
       <div className="py-3 text-white" style={{ background: "linear-gradient(90deg, #072b5f, #0b3f87)" }}>
         <div className="container" style={{ maxWidth: 1120 }}>
           <div className="row g-2 small fw-semibold">
-            <div className="col-6 col-md-3">10,000+ Mock Tests</div>
-            <div className="col-6 col-md-3">10,000+ Users</div>
-            <div className="col-6 col-md-3">100+ Online Tools</div>
+            <div className="col-6 col-md-3">Free Mock Tests</div>
+            <div className="col-6 col-md-3">For Govt Job Aspirants</div>
+            <div className="col-6 col-md-3">Free Online Tools</div>
             <div className="col-6 col-md-3">Daily Updates</div>
           </div>
         </div>

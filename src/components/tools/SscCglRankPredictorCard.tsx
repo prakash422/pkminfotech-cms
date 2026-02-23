@@ -60,11 +60,11 @@ export default function SscCglRankPredictorCard({ basePath = DEFAULT_BASE_PATH }
   return (
     <>
       <div className="card border-0 shadow-sm ssc-cgl-calc-card">
-        <div className="card-body p-3 p-md-4">
-          <div className="row g-4">
+        <div className="card-body p-2 p-md-4">
+          <div className="row g-2 g-md-4">
             <div className="col-md-6 col-lg-5">
-              <h3 className="h6 fw-semibold mb-3">Enter Your Details</h3>
-              <div className="mb-3">
+              <h3 className="h6 fw-semibold mb-2 mb-md-3">Enter Your Details</h3>
+              <div className="mb-2 mb-md-3">
                 <label className="form-label small mb-1">
                   Select Tier <span className="text-danger">*</span>
                 </label>
@@ -85,8 +85,8 @@ export default function SscCglRankPredictorCard({ basePath = DEFAULT_BASE_PATH }
                   </button>
                 </div>
               </div>
-              <div className="mb-3">
-                <label className="form-label small mb-1">
+              <div className="mb-2 mb-md-3">
+                <label className="form-label small mb-0 mb-md-1">
                   Select Your Category <span className="text-danger">*</span>
                 </label>
                 <select
@@ -101,18 +101,19 @@ export default function SscCglRankPredictorCard({ basePath = DEFAULT_BASE_PATH }
                   ))}
                 </select>
               </div>
-              <div className="mb-4">
-                <label className="form-label small mb-1">
+              <div className="mb-2 mb-md-4">
+                <label className="form-label small mb-0 mb-md-1">
                   Enter Your Score <span className="text-danger">*</span>
                 </label>
                 <input
-                  type="number"
+                  type="text"
+                  inputMode="decimal"
                   className="form-control form-control-sm"
-                  min={0}
-                  max={tier === "tier-1" ? 200 : 999}
-                  step={tier === "tier-1" ? 0.01 : 1}
                   value={score}
-                  onChange={(e) => setScore(e.target.value)}
+                  onChange={(e) => {
+                    const v = e.target.value
+                    if (v === "" || /^\d*\.?\d*$/.test(v)) setScore(v.slice(0, 6))
+                  }}
                   placeholder={tier === "tier-1" ? "e.g. 160" : "e.g. 450"}
                 />
               </div>

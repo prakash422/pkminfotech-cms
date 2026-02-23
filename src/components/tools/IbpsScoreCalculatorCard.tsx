@@ -52,8 +52,8 @@ export default function IbpsScoreCalculatorCard({ basePath = DEFAULT_BASE_PATH }
   return (
     <>
       <div className="card border-0 shadow-sm ssc-cgl-calc-card">
-        <div className="card-body p-3">
-          <div className="row g-3">
+        <div className="card-body p-2 p-md-4">
+          <div className="row g-2 g-md-3">
             <div className="col-md-6 col-lg-5">
               <h3 className="h6 fw-semibold mb-2">Enter Your Details</h3>
               <div className="row g-2">
@@ -76,12 +76,12 @@ export default function IbpsScoreCalculatorCard({ basePath = DEFAULT_BASE_PATH }
                 <div className="col-6 col-md-4">
                   <label className="form-label small mb-0">Total Q</label>
                   <input
-                    type="number"
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     className="form-control form-control-sm"
-                    min={1}
-                    max={200}
                     value={totalQuestions}
-                    onChange={(e) => setTotalQuestions(e.target.value)}
+                    onChange={(e) => setTotalQuestions(e.target.value.replace(/\D/g, "").slice(0, 3) || "")}
                     placeholder="100"
                   />
                 </div>
@@ -89,12 +89,12 @@ export default function IbpsScoreCalculatorCard({ basePath = DEFAULT_BASE_PATH }
                   <label className="form-label small mb-0">Correct</label>
                   <div className="input-group input-group-sm">
                     <input
-                      type="number"
+                      type="text"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
                       className="form-control"
-                      min={0}
-                      max={total || 200}
                       value={correctAnswers}
-                      onChange={(e) => setCorrectAnswers(e.target.value)}
+                      onChange={(e) => setCorrectAnswers(e.target.value.replace(/\D/g, "").slice(0, 3) || "")}
                       placeholder="70"
                     />
                     <span className="input-group-text bg-white px-1">
@@ -106,12 +106,12 @@ export default function IbpsScoreCalculatorCard({ basePath = DEFAULT_BASE_PATH }
                   <label className="form-label small mb-0">Incorrect</label>
                   <div className="input-group input-group-sm">
                     <input
-                      type="number"
+                      type="text"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
                       className="form-control"
-                      min={0}
-                      max={total || 200}
                       value={incorrectAnswers}
-                      onChange={(e) => setIncorrectAnswers(e.target.value)}
+                      onChange={(e) => setIncorrectAnswers(e.target.value.replace(/\D/g, "").slice(0, 3) || "")}
                       placeholder="20"
                     />
                     <span className="input-group-text bg-white px-1">
@@ -122,24 +122,28 @@ export default function IbpsScoreCalculatorCard({ basePath = DEFAULT_BASE_PATH }
                 <div className="col-6 col-md-4">
                   <label className="form-label small mb-0">Marks/Q</label>
                   <input
-                    type="number"
+                    type="text"
+                    inputMode="decimal"
                     className="form-control form-control-sm"
-                    min={0}
-                    step={0.25}
                     value={marksPerQuestion}
-                    onChange={(e) => setMarksPerQuestion(e.target.value)}
+                    onChange={(e) => {
+                      const v = e.target.value
+                      if (v === "" || /^\d*\.?\d*$/.test(v)) setMarksPerQuestion(v.slice(0, 6))
+                    }}
                     placeholder="1"
                   />
                 </div>
                 <div className="col-6 col-md-4">
                   <label className="form-label small mb-0">Negative</label>
                   <input
-                    type="number"
+                    type="text"
+                    inputMode="decimal"
                     className="form-control form-control-sm"
-                    min={0}
-                    step={0.05}
                     value={negativeMarking}
-                    onChange={(e) => setNegativeMarking(e.target.value)}
+                    onChange={(e) => {
+                      const v = e.target.value
+                      if (v === "" || /^\d*\.?\d*$/.test(v)) setNegativeMarking(v.slice(0, 6))
+                    }}
                     placeholder="0.25"
                   />
                 </div>

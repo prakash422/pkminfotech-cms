@@ -301,7 +301,7 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                 <div className="d-flex flex-wrap gap-2 mt-3">
                   <span className="hero-chip"><BadgeCheck size={14} /> 100% Free</span>
                   <span className="hero-chip"><Clock3 size={14} /> Instant Results</span>
-                  <span className="hero-chip"><Users size={14} /> Trusted by 10k+ Users</span>
+                  <span className="hero-chip"><Users size={14} /> Trusted by Aspirants</span>
                 </div>
               </div>
               <div className="figma-hero-image-floating" aria-hidden="true">
@@ -472,8 +472,8 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                     <span className="why-icon-box mb-2">
                       <Clock3 className="text-primary" size={22} />
                     </span>
-                    <h3 className="h6 fw-semibold">Trusted Since 2019 - 6+ Years of Consistent Indexing</h3>
-                    <p className="small text-secondary mb-0">Long-term indexed presence with stable updates builds stronger exam-prep trust.</p>
+                    <h3 className="h6 fw-semibold">Trusted Since 2019 — Now With Quizzes &amp; Mock Tests</h3>
+                    <p className="small text-secondary mb-0">Started with exam-prep content; now practice with daily quiz, PYQ, and full-length mocks — all in one place.</p>
                   </div>
                 </div>
               </div>
@@ -483,8 +483,8 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                     <span className="why-icon-box mb-2">
                       <BadgeCheck className="text-primary" size={22} />
                     </span>
-                    <h3 className="h6 fw-semibold">Completely Free Practice - No Login Required</h3>
-                    <p className="small text-secondary mb-0">Start instantly without signup friction across practice sets, quizzes, and tools.</p>
+                    <h3 className="h6 fw-semibold">100% Free — Login Required for Full Access</h3>
+                    <p className="small text-secondary mb-0">Daily quiz is available without login; sign in to access mock tests, PYQ, and all practice tools.</p>
                   </div>
                 </div>
               </div>
