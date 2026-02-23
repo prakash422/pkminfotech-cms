@@ -9,6 +9,8 @@ export const metadata: Metadata = {
   }
 }
 
+export const dynamic = 'force-dynamic'
+
 // This will be populated from your database
 async function getPrivacyPolicyContent() {
   try {

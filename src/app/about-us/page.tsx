@@ -2,12 +2,14 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'About Us - PKMInfotech',
-  description: 'Learn more about PKMInfotech - your source for tech news, travel guides, and business insights.',
+  title: 'About Us - Free Quizzes, Mock Tests & Exam Tools | PKMInfotech',
+  description: 'PKMInfotech helps govt job aspirants with free daily quiz, mock tests, current affairs quiz, and exam tools for SSC, Banking, RRB, Police & Teaching exams. Trusted since 2019.',
   alternates: {
     canonical: '/about-us'
   }
 }
+
+export const dynamic = 'force-dynamic'
 
 // This will be populated from your database
 async function getAboutUsContent() {
