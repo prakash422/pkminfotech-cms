@@ -7,6 +7,16 @@ import { ArrowRight, Calculator, Sparkles } from "lucide-react"
 export const metadata: Metadata = {
   title: "Online Tools & Calculators | pkminfotech",
   description: "SSC CGL marks calculator, age limit checker, RRB NTPC normalization, IBPS score calculator, cutoff and rank predictors, and more exam tools.",
+  robots: { index: true, follow: true },
+  alternates: { canonical: "/tools" },
+  openGraph: {
+    title: "Online Tools & Calculators | pkminfotech",
+    description: "SSC CGL marks calculator, age limit checker, RRB NTPC normalization, IBPS score calculator, cutoff and rank predictors, and more exam tools.",
+    url: "/tools",
+    type: "website",
+    siteName: "pkminfotech",
+  },
+  twitter: { card: "summary_large_image", title: "Online Tools & Calculators | pkminfotech", description: "SSC CGL marks calculator, age limit checker, RRB NTPC normalization, IBPS score calculator, and more exam tools." },
 }
 
 export default function ToolsPage() {

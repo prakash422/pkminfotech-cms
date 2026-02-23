@@ -9,6 +9,12 @@ import FinalScoreCalculatorPage from "@/components/tools/pages/FinalScoreCalcula
 import AgeLimitCalculatorPage from "@/components/tools/pages/AgeLimitCalculatorPage"
 import EligibilityCheckerPage from "@/components/tools/pages/EligibilityCheckerPage"
 import CutoffPredictorPage from "@/components/tools/pages/CutoffPredictorPage"
+import RankPredictorPage from "@/components/tools/pages/RankPredictorPage"
+import NormalizationCalculatorPage from "@/components/tools/pages/NormalizationCalculatorPage"
+import IbpsScoreCalculatorPage from "@/components/tools/pages/IbpsScoreCalculatorPage"
+import PoliceHeightEligibilityPage from "@/components/tools/pages/PoliceHeightEligibilityPage"
+import CtetQualifyingMarksPage from "@/components/tools/pages/CtetQualifyingMarksPage"
+import BankFinalScorePredictorPage from "@/components/tools/pages/BankFinalScorePredictorPage"
 import BreadcrumbNav from "@/components/BreadcrumbNav"
 
 /** Params use [slug] for first segment to match app/[slug]/page.tsx (Next.js requires same name for same path level). */
@@ -22,6 +28,12 @@ const TOOL_PAGE_REGISTRY: Record<string, React.ComponentType<{ title: string; de
   "ssc-cgl/age-limit-calculator": AgeLimitCalculatorPage,
   "ssc/eligibility-checker": EligibilityCheckerPage,
   "ssc-cgl/cutoff-predictor": CutoffPredictorPage,
+  "ssc-cgl/rank-predictor": RankPredictorPage,
+  "rrb-ntpc/normalization-calculator": NormalizationCalculatorPage,
+  "banking/ibps-score-calculator": IbpsScoreCalculatorPage,
+  "police/height-eligibility-tool": PoliceHeightEligibilityPage,
+  "teaching/ctet-qualifying-marks-tool": CtetQualifyingMarksPage,
+  "banking/final-score-predictor": BankFinalScorePredictorPage,
 }
 
 function getToolPageKey(examCategory: string, toolSlug: string): string {
@@ -32,9 +44,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug: examCategory, toolSlug } = await params
   const tool = getToolByPath(examCategory, toolSlug)
   if (!tool) return { title: "Tool not found | pkminfotech" }
+  const title = `${tool.title} | pkminfotech`
+  const description = tool.description
+  const canonicalPath = tool.path
   return {
-    title: `${tool.title} | pkminfotech`,
-    description: tool.description,
+    title,
+    description,
+    robots: { index: true, follow: true },
+    alternates: { canonical: canonicalPath },
+    openGraph: {
+      title,
+      description,
+      url: canonicalPath,
+      type: "website",
+      siteName: "pkminfotech",
+    },
+    twitter: { card: "summary_large_image", title, description },
   }
 }
 

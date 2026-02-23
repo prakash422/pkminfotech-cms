@@ -1,11 +1,11 @@
 import type { Metadata } from "next"
-import EligibilityCheckerPage from "@/components/tools/pages/EligibilityCheckerPage"
+import CtetQualifyingMarksPage from "@/components/tools/pages/CtetQualifyingMarksPage"
 import { getToolByPath } from "@/data/exam-platform"
 
-const TOOL = getToolByPath("ssc", "eligibility-checker")
-if (!TOOL) throw new Error("SSC eligibility-checker tool not found in exam-platform")
+const TOOL = getToolByPath("teaching", "ctet-qualifying-marks-tool")
+if (!TOOL) throw new Error("teaching/ctet-qualifying-marks-tool not found in exam-platform")
 
-const TOOL_PATH = "/ssc/eligibility-checker"
+const TOOL_PATH = "/teaching/ctet-qualifying-marks-tool"
 export const metadata: Metadata = {
   title: `${TOOL.title} | pkminfotech`,
   description: TOOL.description,
@@ -21,15 +21,15 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image", title: `${TOOL.title} | pkminfotech`, description: TOOL.description },
 }
 
-/** Static route so /ssc/eligibility-checker is not caught by /ssc/[examType]. */
-export default function SscEligibilityCheckerRoute() {
+/** Static route so /teaching/ctet-qualifying-marks-tool is not caught by /teaching/[examType]. */
+export default function TeachingCtetQualifyingMarksRoute() {
   return (
     <main className="bg-light py-4">
       <div className="container" style={{ maxWidth: 900 }}>
-        <EligibilityCheckerPage
-          title={TOOL?.title ?? ""}
-          description={TOOL?.description ?? ""}
-          basePath="/ssc"
+        <CtetQualifyingMarksPage
+          title={TOOL.title}
+          description={TOOL.description}
+          basePath="/teaching"
         />
       </div>
       <style dangerouslySetInnerHTML={{ __html: `

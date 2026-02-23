@@ -1,15 +1,35 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { ChevronDown, ChevronRight } from "lucide-react"
 
 export type FaqItem = { question: string; answer: string }
 
+function buildFaqSchema(items: FaqItem[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  }
+}
+
 export default function FaqAccordion({ items, title }: { items: FaqItem[]; title: string }) {
   const [openIndex, setOpenIndex] = useState<number | null>(0)
+  const faqSchemaJson = useMemo(() => {
+    const schema = buildFaqSchema(items)
+    return JSON.stringify(schema).replace(/<\/script>/gi, "<\\/script>")
+  }, [items])
 
   return (
-    <section className="card border-0 shadow-sm mt-3 faq-accordion-section">
+    <section className="card border-0 shadow-sm mt-3 faq-accordion-section" aria-label={title}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: faqSchemaJson }} />
       <div className="card-body p-0">
         <h2 className="h5 fw-semibold mb-0 px-3 pt-3 px-md-4 pt-md-4">{title}</h2>
         <div className="faq-list">

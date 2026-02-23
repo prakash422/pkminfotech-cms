@@ -1,11 +1,11 @@
 import type { Metadata } from "next"
-import EligibilityCheckerPage from "@/components/tools/pages/EligibilityCheckerPage"
+import PoliceHeightEligibilityPage from "@/components/tools/pages/PoliceHeightEligibilityPage"
 import { getToolByPath } from "@/data/exam-platform"
 
-const TOOL = getToolByPath("ssc", "eligibility-checker")
-if (!TOOL) throw new Error("SSC eligibility-checker tool not found in exam-platform")
+const TOOL = getToolByPath("police", "height-eligibility-tool")
+if (!TOOL) throw new Error("police/height-eligibility-tool not found in exam-platform")
 
-const TOOL_PATH = "/ssc/eligibility-checker"
+const TOOL_PATH = "/police/height-eligibility-tool"
 export const metadata: Metadata = {
   title: `${TOOL.title} | pkminfotech`,
   description: TOOL.description,
@@ -21,15 +21,15 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image", title: `${TOOL.title} | pkminfotech`, description: TOOL.description },
 }
 
-/** Static route so /ssc/eligibility-checker is not caught by /ssc/[examType]. */
-export default function SscEligibilityCheckerRoute() {
+/** Static route so /police/height-eligibility-tool is not caught by /police/[examType]. */
+export default function PoliceHeightEligibilityRoute() {
   return (
     <main className="bg-light py-4">
       <div className="container" style={{ maxWidth: 900 }}>
-        <EligibilityCheckerPage
-          title={TOOL?.title ?? ""}
-          description={TOOL?.description ?? ""}
-          basePath="/ssc"
+        <PoliceHeightEligibilityPage
+          title={TOOL.title}
+          description={TOOL.description}
+          basePath="/police"
         />
       </div>
       <style dangerouslySetInnerHTML={{ __html: `

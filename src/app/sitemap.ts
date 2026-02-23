@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next'
 import { prisma } from '@/lib/prisma'
+import { toolItems } from '@/data/exam-platform'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.pkminfotech.com'
@@ -70,7 +71,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         changeFrequency: 'yearly' as const,
         priority: 0.3,
       },
+      {
+        url: `${baseUrl}/tools`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly' as const,
+        priority: 0.8,
+      },
     ]
+
+    // Online tool pages (SEO: include all tool URLs in sitemap)
+    const toolPages = toolItems.map((tool) => ({
+      url: `${baseUrl}${tool.path}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    }))
 
     // Dynamic blog pages
     const blogPages = blogs.map((blog) => ({
@@ -80,7 +95,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     }))
 
-    return [...staticPages, ...blogPages]
+    return [...staticPages, ...toolPages, ...blogPages]
   } catch (error) {
     console.error('Error generating sitemap:', error)
     
