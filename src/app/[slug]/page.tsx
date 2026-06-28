@@ -1,12 +1,13 @@
 import { notFound, redirect } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Calendar, User, Share2, Eye, Clock, Bookmark, ChevronRight } from "lucide-react"
+import { Calendar, User, Share2, Eye, Clock, Bookmark, ChevronRight, Wrench } from "lucide-react"
 import { formatDate } from "@/lib/utils"
 import { Metadata } from "next"
 import OptimizedImage from '@/components/OptimizedImage'
 import { prisma } from "@/lib/prisma"
 import { generateCanonicalUrl } from "@/lib/canonical-utils"
+import { toolItems } from "@/data/tools-data"
 
 interface BlogPageProps {
   params: Promise<{
@@ -190,6 +191,21 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
 
   // Generate proper canonical URL that resolves redirects for structured data
   const structuredDataCanonicalUrl = generateCanonicalUrl(`/${blog.slug}`)
+
+  // Dynamic tool recommendation matching logic
+  const getRecommendedTools = (cat: string) => {
+    if (cat === 'hindi') {
+      return toolItems.filter(t => t.slug === 'bigha-to-kattha-converter' || t.slug === 'gst-calculator')
+    } else if (cat === 'current-affairs') {
+      return toolItems.filter(t => t.slug === 'age-calculator' || t.slug === 'cgpa-to-percentage-converter')
+    } else {
+      return toolItems.filter(t => t.slug === 'sip-calculator' || t.slug === 'rent-receipt-generator')
+    }
+  }
+
+  const recommendedTools = getRecommendedTools(blog.category).length > 0
+    ? getRecommendedTools(blog.category)
+    : toolItems.slice(0, 2)
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -397,6 +413,34 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
                         className="text-gray-700 leading-relaxed [&>h1]:text-3xl [&>h1]:font-bold [&>h1]:text-gray-900 [&>h1]:mt-8 [&>h1]:mb-6 [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:text-gray-900 [&>h2]:mt-8 [&>h2]:mb-6 [&>h3]:text-xl [&>h3]:font-bold [&>h3]:text-gray-900 [&>h3]:mt-6 [&>h3]:mb-4 [&>p]:mb-4 [&>p]:leading-relaxed [&>div]:my-6"
                       />
                     </div>
+                  </div>
+                </div>
+
+                {/* Dynamic Related Tools Box (SEO Internal Linking Widget) */}
+                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100/50 mb-8">
+                  <h3 className="text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
+                    <Wrench className="h-5 w-5 text-indigo-600" />
+                    Recommended Calculators &amp; Tools
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Simplify your calculations and conversions instantly using our 100% free web utility tools.
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {recommendedTools.map((tool) => (
+                      <Link 
+                        key={tool.slug} 
+                        href={tool.path}
+                        className="flex flex-col p-4 bg-white hover:bg-blue-50/20 border border-gray-100 rounded-xl shadow-sm hover:shadow-md hover:border-blue-200 transition-all group"
+                      >
+                        <span className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors flex items-center justify-between text-sm sm:text-base">
+                          {tool.title}
+                          <ChevronRight className="h-4 w-4 text-gray-400 group-hover:translate-x-1 transition-transform" />
+                        </span>
+                        <span className="text-xs text-gray-500 mt-1 line-clamp-2">
+                          {tool.description}
+                        </span>
+                      </Link>
+                    ))}
                   </div>
                 </div>
 
