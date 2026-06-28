@@ -1,100 +1,72 @@
 import { Metadata } from 'next'
-import Link from 'next/link'
+import BreadcrumbNav from '@/components/BreadcrumbNav'
+import { Info, HelpCircle } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Disclaimers - PKMInfotech',
-  description: 'Read our disclaimers regarding the content and information provided on PKMInfotech.',
+  title: 'Disclaimers - pkminfotech | Calculation & General Limits',
+  description: 'Understand the limitations, accuracy bounds, and external links disclaimers for online tools on pkminfotech.',
   alternates: {
-    canonical: '/disclaimers'
+    canonical: 'https://www.pkminfotech.com/disclaimers'
   }
 }
 
-export const dynamic = 'force-dynamic'
-
-// This will be populated from your database
-async function getDisclaimersContent() {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
-                   (typeof window === 'undefined' ? 'http://localhost:3000' : window.location.origin)
-    
-    const response = await fetch(`${baseUrl}/api/pages/slug/disclaimers`, {
-      cache: 'no-store',
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    })
-    
-    if (!response.ok) {
-      return null
-    }
-    
-    const data = await response.json()
-    return data.page
-  } catch (error) {
-    console.error('Error fetching disclaimers page:', error)
-    return null
-  }
-}
-
-export default async function DisclaimersPage() {
-  const page = await getDisclaimersContent()
-
+export default function DisclaimersPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
-      {/* Breadcrumb */}
-      <div className="bg-white">
-        <div className="container py-3" style={{ maxWidth: 1120 }}>
-          <nav className="flex text-sm text-gray-600">
-            <Link href="/" className="hover:text-gray-900 transition-colors">
-              Home
-            </Link>
-            <span className="mx-2">→</span>
-            <span className="text-gray-900 font-medium">Disclaimers</span>
-          </nav>
+    <div className="bg-light min-vh-100 py-4">
+      <div className="container" style={{ maxWidth: 900 }}>
+        <BreadcrumbNav
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Disclaimers" }
+          ]}
+        />
+
+        <div className="card border-0 shadow-sm p-4 p-md-5 bg-white" style={{ borderRadius: 16 }}>
+          <h1 className="h2 fw-bold text-dark mb-3">Legal Disclaimer</h1>
+          <p className="text-secondary small mb-4">Last Updated: June 28, 2026</p>
+
+          <div className="alert bg-light border-0 text-secondary p-3 mb-4 rounded-3 d-flex gap-2 align-items-start">
+            <Info size={18} className="text-primary mt-1 flex-shrink-0" />
+            <div>
+              <strong className="text-dark d-block mb-1">Notice to All Users</strong>
+              By accessing any of the calculators and converters on **pkminfotech**, you acknowledge and agree to the guidelines, limitations, and liabilities outlined below.
+            </div>
+          </div>
+
+          <div className="lh-lg text-secondary small">
+            <h2 className="h5 fw-bold text-dark mt-4 mb-2">1. Precision &amp; Math Limitations</h2>
+            <p className="mb-3">
+              All tools, converters, and calculators available on pkminfotech are designed as estimation models. Land area metrics (specifically *Bigha*, *Kattha*, *Biswa*) are subject to local fluctuations based on regional rules and individual state revenue definitions. The mathematical values provided by our software are for convenience and general reference only, and should not be used as legal deeds or final surveys.
+            </p>
+
+            <h2 className="h5 fw-bold text-dark mt-4 mb-2">2. Finance &amp; Tax Calculators Disclaimer</h2>
+            <p className="mb-3">
+              The Rent Receipt Generator and other finance tools are designed to print documentation templates. Availing HRA tax benefits under Section 10(13A) is governed by rules laid down by the Income Tax Department of India. pkminfotech does not guarantee tax deductions or provide certified financial counseling. We strongly suggest consulting a Chartered Accountant (CA) or certified tax professional before submitting receipts to employers.
+            </p>
+
+            <h2 className="h5 fw-bold text-dark mt-4 mb-2">3. External Hyperlinks Policy</h2>
+            <p className="mb-3">
+              Our pages may contain links directing users to external platforms, blogs, or government portals. While we strive to source links from reputable directories, we have no control over the privacy conditions, cookies, or reliability of these external resources. The presence of any link does not imply endorsement by pkminfotech.
+            </p>
+
+            <h2 className="h5 fw-bold text-dark mt-4 mb-2">4. Client-Side Image Compression Limits</h2>
+            <p className="mb-3">
+              The Exam Photo &amp; Signature Compressor operates client-side via HTML5 canvas, adjusting quality factors iteratively. It is the user&apos;s responsibility to inspect the downloaded JPG file for visual sharpness and confirm it matches the exact rules published by recruitment boards (such as SSC, UPSC, IBPS) before submitting applications.
+            </p>
+
+            <h2 className="h5 fw-bold text-dark mt-4 mb-2">5. Limitation of Liability</h2>
+            <p className="mb-4">
+              In no event shall pkminfotech or its developers be held liable for any direct, indirect, consequential, or incidental damages arising from the use or inability to use our tools, articles, or services.
+            </p>
+
+            <div className="border-top pt-3 text-center">
+              <span className="small text-secondary">
+                Have questions regarding legal terms? Visit our <a href="mailto:prakashkr806@gmail.com" className="text-primary text-decoration-none fw-semibold">Contact Us</a> channel.
+              </span>
+            </div>
+          </div>
         </div>
       </div>
-
-      {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8 lg:p-10">
-          {page ? (
-            <div>
-              <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
-                {page.title}
-              </h1>
-              <div 
-                className="prose prose-lg max-w-none text-gray-700 leading-relaxed [&>h1]:text-3xl [&>h1]:font-bold [&>h1]:text-gray-900 [&>h1]:mt-8 [&>h1]:mb-6 [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:text-gray-900 [&>h2]:mt-8 [&>h2]:mb-6 [&>h3]:text-xl [&>h3]:font-bold [&>h3]:text-gray-900 [&>h3]:mt-6 [&>h3]:mb-4 [&>p]:mb-4 [&>p]:leading-relaxed [&>div]:my-6 [&>ul]:my-4 [&>ol]:my-4 [&>li]:mb-2 [&>strong]:font-semibold [&>strong]:text-gray-900"
-                dangerouslySetInnerHTML={{ __html: page.content }}
-              />
-            </div>
-          ) : (
-            <div>
-              <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
-                Disclaimers
-              </h1>
-              <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed space-y-6">
-                <p className="text-gray-600 mb-6">Last updated: {new Date().toLocaleDateString()}</p>
-                
-                <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">General Information</h2>
-                <p className="mb-4 leading-relaxed">The information on PKMInfotech is provided for general informational purposes only. We make no warranties about the completeness, reliability, and accuracy of this information.</p>
-                
-                <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">External Links</h2>
-                <p className="mb-4 leading-relaxed">PKMInfotech may contain links to external websites. We have no control over the content and practices of these sites and cannot accept responsibility for their content.</p>
-                
-                <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">Professional Advice</h2>
-                <p className="mb-4 leading-relaxed">The content on this website is not intended to be a substitute for professional advice. Always seek the advice of qualified professionals for specific questions.</p>
-                
-                <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">Limitation of Liability</h2>
-                <p className="mb-4 leading-relaxed">PKMInfotech will not be liable for any loss or damage arising from the use of information on this website.</p>
-                
-                <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">Contact Us</h2>
-                <p className="mb-4 leading-relaxed">If you have any questions about these disclaimers, please contact us at <a href="mailto:prakash@pkminfotech.com" className="text-blue-600 hover:text-blue-800 font-medium underline">prakash@pkminfotech.com</a></p>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-
     </div>
   )
-} 
+}

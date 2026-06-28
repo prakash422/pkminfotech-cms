@@ -8,8 +8,6 @@ import { Facebook, Instagram, Linkedin, Menu, Search, User, ChevronDown, X, Yout
 import { useState, useRef, useEffect } from "react"
 
 const TOP_LINKS = [
-  { label: "Current Affairs Update", href: "/daily-current-affairs" },
-  { label: "Current Affairs Quiz", href: "/current-affairs-quiz" },
   { label: "Blog", href: "/latest" },
   { label: "Online Tools", href: "/tools" },
   { label: "Contact Us", href: "/contact-us" },
@@ -72,51 +70,11 @@ export default function SiteChrome() {
               <button className="btn btn-light btn-sm d-none d-sm-inline-flex align-items-center justify-content-center" aria-label="Search" style={{ width: 32, height: 32 }}>
                 <Search size={14} />
               </button>
-              {status !== "loading" && session?.user ? (
-                <div className="d-none d-md-block position-relative" ref={profileRef}>
-                  <button
-                    type="button"
-                    className="btn btn-light btn-sm d-flex align-items-center gap-2 border rounded-3 profile-trigger"
-                    onClick={() => setProfileOpen((o) => !o)}
-                    aria-expanded={profileOpen}
-                    aria-haspopup="true"
-                  >
-                    {session.user.image ? (
-                      <img src={session.user.image} alt="" className="rounded-circle" style={{ width: 26, height: 26, objectFit: "cover" }} />
-                    ) : (
-                      <span className="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary text-white small fw-semibold" style={{ width: 26, height: 26, fontSize: 12 }}>
-                        {(session.user.name || session.user.email || "U").charAt(0).toUpperCase()}
-                      </span>
-                    )}
-                    <span className="small fw-semibold text-dark d-none d-lg-inline text-nowrap" style={{ maxWidth: 100 }} title={session.user.email ?? undefined}>
-                      {session.user.name || session.user.email?.split("@")[0] || "Profile"}
-                    </span>
-                    <ChevronDown size={12} className="text-secondary flex-shrink-0" />
-                  </button>
-                  {profileOpen && (
-                    <div className="position-absolute top-100 end-0 mt-1 bg-white border rounded-2 shadow-sm overflow-hidden profile-dropdown" style={{ zIndex: 1050, minWidth: 132 }}>
-                      <Link href="/profile" className="profile-dropdown-item d-flex align-items-center gap-2 text-dark text-decoration-none" onClick={() => setProfileOpen(false)}>
-                        <User size={14} />
-                        <span>Profile</span>
-                      </Link>
-                      {session.user.role === "admin" && (
-                        <Link href="/admin/dashboard" className="profile-dropdown-item d-flex align-items-center gap-2 text-dark text-decoration-none" onClick={() => setProfileOpen(false)}>
-                          <Shield size={14} />
-                          <span>Admin</span>
-                        </Link>
-                      )}
-                      <button type="button" className="profile-dropdown-item profile-dropdown-item--danger d-flex align-items-center gap-2 w-100 border-0 bg-transparent text-start" onClick={() => { setProfileOpen(false); signOut({ callbackUrl: "/" }); }}>
-                        <LogOut size={14} />
-                        <span>Sign out</span>
-                      </button>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <>
-                  <Link href="/login" className="btn btn-outline-secondary btn-sm d-none d-md-inline-flex">Login</Link>
-                  <Link href="/signup" className="btn btn-primary btn-sm site-start-btn d-none d-md-inline-flex">Start Free</Link>
-                </>
+              {status !== "loading" && session?.user && session.user.role === "admin" && (
+                <Link href="/admin/dashboard" className="btn btn-outline-primary btn-sm d-none d-md-inline-flex align-items-center gap-1 rounded-3">
+                  <Shield size={14} />
+                  <span>Admin</span>
+                </Link>
               )}
               <button
                 type="button"
@@ -131,49 +89,54 @@ export default function SiteChrome() {
             </div>
           </div>
           {mobileMenuOpen && (
-            <nav className="d-lg-none mt-2 border-top pt-2" aria-label="Mobile navigation">
-              <div className="d-grid gap-1">
-                {session?.user ? (
-                  <>
-                    <Link href="/profile" onClick={() => setMobileMenuOpen(false)} className="d-flex align-items-center gap-2 px-2 py-2 rounded small fw-semibold text-dark bg-light">
-                      <User size={16} />
-                      {session.user.name || session.user.email?.split("@")[0] || "Profile"}
-                    </Link>
-                    {session.user.role === "admin" && (
-                      <Link href="/admin/dashboard" onClick={() => setMobileMenuOpen(false)} className="text-decoration-none px-2 py-2 rounded small fw-semibold text-dark bg-light">
-                        Admin
-                      </Link>
-                    )}
-                    <button type="button" onClick={() => { setMobileMenuOpen(false); signOut({ callbackUrl: "/" }); }} className="text-start px-2 py-2 rounded small fw-semibold text-danger bg-light border-0">
-                      Sign out
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <Link href="/signup" onClick={() => setMobileMenuOpen(false)} className="btn btn-primary btn-sm text-start ps-2 mb-1">
-                      Start Free
-                    </Link>
-                    <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="text-decoration-none px-2 py-2 rounded small fw-semibold text-dark bg-light">
-                      Login
-                    </Link>
-                  </>
-                )}
-                <Link href="/" onClick={() => setMobileMenuOpen(false)} className={`text-decoration-none px-2 py-2 rounded small fw-semibold ${pathname === "/" ? "text-primary bg-primary-subtle" : "text-dark bg-light"}`}>
-                  Home
-                </Link>
-                {TOP_LINKS.map((item) => (
-                  <Link
-                    key={item.label}
-                    href={item.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className={`text-decoration-none px-2 py-2 rounded small fw-semibold ${pathname === item.href ? "text-primary bg-primary-subtle" : "text-dark bg-light"}`}
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-              </div>
-            </nav>
+            <div
+              className="position-fixed top-0 start-0 w-100 h-100 mobile-menu-backdrop"
+              onClick={() => setMobileMenuOpen(false)}
+            />
           )}
+
+          <div className={`mobile-menu-drawer ${mobileMenuOpen ? "open" : ""}`} aria-label="Mobile navigation">
+            <div className="mobile-menu-drawer-header">
+              <span className="fw-bold d-flex align-items-center text-dark">
+                <span className="d-inline-flex align-items-center justify-content-center rounded-3 bg-primary-subtle border me-2" style={{ width: 32, height: 32 }}>
+                  <Image src="/favicon-32x32.png" alt="pkminfotech logo" width={18} height={18} />
+                </span>
+                pkminfotech
+              </span>
+              <button
+                type="button"
+                className="btn btn-link text-secondary p-1 ms-auto"
+                onClick={() => setMobileMenuOpen(false)}
+                style={{ textDecoration: 'none' }}
+              >
+                <X size={20} />
+              </button>
+            </div>
+            <div className="mobile-menu-drawer-body">
+              <Link href="/" onClick={() => setMobileMenuOpen(false)} className={`mobile-nav-link ${pathname === "/" ? "active" : ""}`}>
+                Home
+              </Link>
+              <Link href="/latest" onClick={() => setMobileMenuOpen(false)} className={`mobile-nav-link ${pathname === "/latest" ? "active" : ""}`}>
+                Blog
+              </Link>
+              <Link href="/tools" onClick={() => setMobileMenuOpen(false)} className={`mobile-nav-link ${pathname === "/tools" ? "active" : ""}`}>
+                Online Tools
+              </Link>
+              <Link href="/contact-us" onClick={() => setMobileMenuOpen(false)} className={`mobile-nav-link ${pathname === "/contact-us" ? "active" : ""}`}>
+                Contact Us
+              </Link>
+            </div>
+            <div className="mobile-menu-drawer-footer text-center text-muted small py-3 border-top">
+              {status !== "loading" && session?.user && session.user.role === "admin" && (
+                <div className="d-grid mb-2">
+                  <Link href="/admin/dashboard" onClick={() => setMobileMenuOpen(false)} className="btn btn-light btn-sm py-2 border rounded-3 text-decoration-none">
+                    Admin Dashboard
+                  </Link>
+                </div>
+              )}
+              <span>&copy; 2026 pkminfotech</span>
+            </div>
+          </div>
         </div>
       </header>
       <style>{`
@@ -222,6 +185,70 @@ export default function SiteChrome() {
           background: #f8fafc;
           border-color: #cbd5e1;
         }
+        .mobile-menu-backdrop {
+          position: fixed !important;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          background: rgba(15, 23, 42, 0.3);
+          backdrop-filter: blur(4px);
+          z-index: 1040;
+        }
+        .mobile-menu-drawer {
+          position: fixed;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          width: 280px;
+          background: #ffffff;
+          z-index: 1050;
+          box-shadow: -4px 0 24px rgba(15, 23, 42, 0.15);
+          display: flex;
+          flex-direction: column;
+          transform: translateX(100%);
+          transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .mobile-menu-drawer.open {
+          transform: translateX(0);
+        }
+        .mobile-menu-drawer-header {
+          display: flex;
+          align-items: center;
+          padding: 16px 20px;
+          border-bottom: 1px solid #f1f5f9;
+        }
+        .mobile-menu-drawer-body {
+          flex: 1;
+          padding: 20px;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+        .mobile-nav-link {
+          display: flex;
+          align-items: center;
+          padding: 12px 16px;
+          border-radius: 12px;
+          color: #334155;
+          font-size: 14px;
+          font-weight: 600;
+          text-decoration: none;
+          background: #f8fafc;
+          transition: all 0.2s ease;
+        }
+        .mobile-nav-link:hover, .mobile-nav-link.active {
+          color: #2563eb;
+          background: #eff6ff;
+        }
+        .mobile-menu-drawer-footer {
+          padding: 20px;
+          border-top: 1px solid #f1f5f9;
+        }
+        .site-start-btn-mobile {
+          font-weight: 600;
+          box-shadow: 0 2px 6px rgba(37, 99, 235, 0.2);
+        }
         @media (max-width: 767px) {
           .site-start-btn { display: none !important; }
           .site-menu-btn {
@@ -248,10 +275,10 @@ export function SiteFooter() {
       <div className="py-3 text-white" style={{ background: "linear-gradient(90deg, #072b5f, #0b3f87)" }}>
         <div className="container" style={{ maxWidth: 1120 }}>
           <div className="row g-2 small fw-semibold">
-            <div className="col-6 col-md-3">Free Mock Tests</div>
-            <div className="col-6 col-md-3">For Govt Job Aspirants</div>
-            <div className="col-6 col-md-3">Free Online Tools</div>
-            <div className="col-6 col-md-3">Daily Updates</div>
+            <div className="col-6 col-md-3">Free Calculators</div>
+            <div className="col-6 col-md-3">Utility Tools</div>
+            <div className="col-6 col-md-3">Daily Blog</div>
+            <div className="col-6 col-md-3">Mobile Friendly</div>
           </div>
         </div>
       </div>
@@ -264,15 +291,14 @@ export function SiteFooter() {
                 <span className="fw-semibold">pkminfotech</span>
               </div>
               <p className="small text-white-50 mb-0">
-                Exam practice, mock tests and utility tools to help learners prepare better.
+                Free online tools, calculators, and helpful resources for students, professionals, and small businesses.
               </p>
             </div>
             <div className="col-6 col-md-2">
               <h6 className="fw-semibold mb-2">Explore</h6>
               <ul className="list-unstyled mb-0 small">
-                <li><Link href="/ssc" className="text-white-50 text-decoration-none">SSC Exam</Link></li>
-                <li><Link href="/daily-current-affairs" className="text-white-50 text-decoration-none">Current Affairs Update</Link></li>
                 <li><Link href="/tools" className="text-white-50 text-decoration-none">Online Tools</Link></li>
+                <li><Link href="/latest" className="text-white-50 text-decoration-none">Latest Blog</Link></li>
               </ul>
             </div>
             <div className="col-6 col-md-2">
@@ -309,7 +335,7 @@ export function SiteFooter() {
           </div>
           <div className="border-top border-secondary-subtle mt-3 pt-3 small text-white-50 d-flex flex-wrap justify-content-between gap-2">
             <span>&copy; {new Date().getFullYear()} pkminfotech</span>
-            <span>Exam Practice • Mock Tests • Online Tools</span>
+            <span>Free Online Tools • Calculators • Daily Blog</span>
           </div>
         </div>
       </div>

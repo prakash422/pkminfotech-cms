@@ -1,22 +1,22 @@
 import Link from "next/link"
 import type { Metadata } from "next"
-import { toolItems } from "@/data/exam-platform"
+import { toolItems } from "@/data/tools-data"
 import BreadcrumbNav from "@/components/BreadcrumbNav"
 import { ArrowRight, Calculator, Sparkles } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Online Tools & Calculators | pkminfotech",
-  description: "SSC CGL marks calculator, age limit checker, RRB NTPC normalization, IBPS score calculator, cutoff and rank predictors, and more exam tools.",
+  title: "Free Online Tools & Smart Calculators | pkminfotech",
+  description: "Convert land area measurements (Bigha to Kattha), generate printable rent receipts for HRA tax claims, convert CGPA to percentage, and compress form photos locally.",
   robots: { index: true, follow: true },
-  alternates: { canonical: "/tools" },
+  alternates: { canonical: "https://www.pkminfotech.com/tools" },
   openGraph: {
-    title: "Online Tools & Calculators | pkminfotech",
-    description: "SSC CGL marks calculator, age limit checker, RRB NTPC normalization, IBPS score calculator, cutoff and rank predictors, and more exam tools.",
-    url: "/tools",
+    title: "Free Online Tools & Smart Calculators | pkminfotech",
+    description: "Convert land area measurements (Bigha to Kattha), generate printable rent receipts for HRA tax claims, convert CGPA to percentage, and compress form photos locally.",
+    url: "https://www.pkminfotech.com/tools",
     type: "website",
     siteName: "pkminfotech",
   },
-  twitter: { card: "summary_large_image", title: "Online Tools & Calculators | pkminfotech", description: "SSC CGL marks calculator, age limit checker, RRB NTPC normalization, IBPS score calculator, and more exam tools." },
+  twitter: { card: "summary_large_image", title: "Free Online Tools & Smart Calculators | pkminfotech", description: "Convert land area measurements, generate HRA rent receipts, convert CGPA to percentage, and compress images." },
 }
 
 export default function ToolsPage() {
@@ -42,7 +42,7 @@ export default function ToolsPage() {
               <div>
                 <h1 className="fw-bold mb-2">Free Online Tools</h1>
                 <p className="text-secondary mb-0">
-                  SSC, RRB, Banking, Police and Teaching exam calculators and predictors.
+                  Quick and secure utility tools for land area conversion, educational grading, finance planning, and image resizing.
                 </p>
               </div>
               <span className="d-none d-md-inline-flex align-items-center gap-1 badge rounded-pill text-bg-primary-subtle text-primary-emphasis">

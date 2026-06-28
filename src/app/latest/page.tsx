@@ -55,38 +55,65 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
 }
 
 async function getLatestBlogsPaginated(page: number) {
-  const skip = (page - 1) * BLOGS_PER_PAGE
-  const where = { status: "published" as const }
-  const [blogs, totalCount] = await Promise.all([
-    prisma.blog.findMany({
-      where,
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        excerpt: true,
-        coverImage: true,
-        category: true,
-        publishedAt: true,
-        createdAt: true,
-        author: { select: { id: true, name: true } },
+  if (!process.env.DATABASE_URL || process.env.DATABASE_URL.includes("localhost:27017")) {
+    return {
+      blogs: [],
+      pagination: {
+        currentPage: page,
+        totalPages: 0,
+        totalCount: 0,
+        hasNextPage: false,
+        hasPrevPage: false
+      }
+    }
+  }
+
+  try {
+    const skip = (page - 1) * BLOGS_PER_PAGE
+    const where = { status: "published" as const }
+    const [blogs, totalCount] = await Promise.all([
+      prisma.blog.findMany({
+        where,
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          excerpt: true,
+          coverImage: true,
+          category: true,
+          publishedAt: true,
+          createdAt: true,
+          author: { select: { id: true, name: true } },
+        },
+        orderBy: [{ publishedAt: "desc" }, { createdAt: "desc" }],
+        skip,
+        take: BLOGS_PER_PAGE,
+      }),
+      prisma.blog.count({ where }),
+    ])
+    const totalPages = Math.ceil(totalCount / BLOGS_PER_PAGE)
+    return {
+      blogs,
+      pagination: {
+        currentPage: page,
+        totalPages,
+        totalCount,
+        hasNextPage: page < totalPages,
+        hasPrevPage: page > 1,
       },
-      orderBy: [{ publishedAt: "desc" }, { createdAt: "desc" }],
-      skip,
-      take: BLOGS_PER_PAGE,
-    }),
-    prisma.blog.count({ where }),
-  ])
-  const totalPages = Math.ceil(totalCount / BLOGS_PER_PAGE)
-  return {
-    blogs,
-    pagination: {
-      currentPage: page,
-      totalPages,
-      totalCount,
-      hasNextPage: page < totalPages,
-      hasPrevPage: page > 1,
-    },
+    }
+  } catch (error) {
+    console.error("Error in getLatestBlogsPaginated:", error)
+    return {
+      blogs: [],
+      pagination: {
+        currentPage: 1,
+        totalPages: 0,
+        totalCount: 0,
+        hasNextPage: false,
+        hasPrevPage: false,
+      },
+    }
   }
 }
 

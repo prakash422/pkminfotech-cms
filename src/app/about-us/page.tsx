@@ -1,88 +1,86 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
+import BreadcrumbNav from '@/components/BreadcrumbNav'
+import { Shield, Sparkles, Award, Heart } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'About Us - Free Quizzes, Mock Tests & Exam Tools | PKMInfotech',
-  description: 'PKMInfotech helps govt job aspirants with free daily quiz, mock tests, current affairs quiz, and exam tools for SSC, Banking, RRB, Police & Teaching exams. Trusted since 2019.',
+  title: 'About Us - pkminfotech | Free Utility Tools & Smart Calculators',
+  description: 'Learn about pkminfotech, a leading utility platform providing free tools for land area measurements, education grading, finance receipts, and photo compressor.',
   alternates: {
-    canonical: '/about-us'
+    canonical: 'https://www.pkminfotech.com/about-us'
   }
 }
 
-export const dynamic = 'force-dynamic'
-
-// This will be populated from your database
-async function getAboutUsContent() {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
-                   (typeof window === 'undefined' ? 'http://localhost:3000' : window.location.origin)
-    
-    const response = await fetch(`${baseUrl}/api/pages/slug/about-us`, {
-      cache: 'no-store',
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    })
-    
-    if (!response.ok) {
-      return null
-    }
-    
-    const data = await response.json()
-    return data.page
-  } catch (error) {
-    console.error('Error fetching about page:', error)
-    return null
-  }
-}
-
-export default async function AboutUsPage() {
-  const page = await getAboutUsContent()
-
+export default function AboutUsPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Breadcrumb */}
-      <div className="bg-white">
-        <div className="container py-3" style={{ maxWidth: 1120 }}>
-          <nav className="flex text-sm text-gray-600">
-            <Link href="/" className="hover:text-gray-900 transition-colors">
-              Home
-            </Link>
-            <span className="mx-2">→</span>
-            <span className="text-gray-900 font-medium">About Us</span>
-          </nav>
-        </div>
-      </div>
+    <div className="bg-light min-vh-100 py-4">
+      <div className="container" style={{ maxWidth: 960 }}>
+        <BreadcrumbNav
+          items={[
+            { label: "Home", href: "/" },
+            { label: "About Us" }
+          ]}
+        />
 
-      {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="py-8 lg:py-12">
-          <div className="bg-white rounded-2xl shadow-sm border p-8 lg:p-12">
-            {page ? (
-              <div>
-                <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
-                  {page.title}
-                </h1>
-                <div 
-                  className="prose prose-lg max-w-none text-gray-700 leading-relaxed [&>h1]:text-3xl [&>h1]:font-bold [&>h1]:text-gray-900 [&>h1]:mt-8 [&>h1]:mb-6 [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:text-gray-900 [&>h2]:mt-8 [&>h2]:mb-6 [&>h3]:text-xl [&>h3]:font-bold [&>h3]:text-gray-900 [&>h3]:mt-6 [&>h3]:mb-4 [&>p]:mb-4 [&>p]:leading-relaxed [&>div]:my-6 [&>ul]:my-4 [&>ol]:my-4 [&>li]:mb-2 [&>strong]:font-semibold [&>strong]:text-gray-900"
-                  dangerouslySetInnerHTML={{ __html: page.content }}
-                />
-              </div>
-            ) : (
-              <div>
-                <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
-                  About Us
-                </h1>
-                <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed">
-                  <p>Welcome to PKMInfotech - your trusted source for technology news, business insights, and travel guides.</p>
-                  <p>We are passionate about delivering authentic, informative, and engaging content to keep you updated with the world around you.</p>
+        <div className="card border-0 shadow-sm p-4 p-md-5 bg-white mb-4" style={{ borderRadius: 16 }}>
+          <div className="text-center mb-5">
+            <span className="badge rounded-pill text-bg-primary-subtle text-primary-emphasis px-3 py-2 mb-3">Our Mission</span>
+            <h1 className="display-5 fw-bold text-dark mb-3">About pkminfotech</h1>
+            <p className="lead text-secondary mx-auto" style={{ maxWidth: 680 }}>
+              We build highly optimized, secure, and precise browser-based calculators and converters to simplify your daily workspace tasks.
+            </p>
+          </div>
+
+          <div className="row g-4 mb-5">
+            <div className="col-12 col-md-4">
+              <div className="p-4 bg-light rounded-3 h-100 border border-light-subtle text-center">
+                <div className="d-inline-flex align-items-center justify-content-center bg-primary-subtle text-primary rounded-circle mb-3" style={{ width: 54, height: 54 }}>
+                  <Shield size={24} />
                 </div>
+                <h3 className="h6 fw-bold text-dark mb-2">100% Privacy Focused</h3>
+                <p className="small text-secondary mb-0">
+                  Calculations and image compressions run entirely client-side in your browser. We never upload your private images or data.
+                </p>
               </div>
-            )}
+            </div>
+            <div className="col-12 col-md-4">
+              <div className="p-4 bg-light rounded-3 h-100 border border-light-subtle text-center">
+                <div className="d-inline-flex align-items-center justify-content-center bg-success-subtle text-success rounded-circle mb-3" style={{ width: 54, height: 54 }}>
+                  <Sparkles size={24} />
+                </div>
+                <h3 className="h6 fw-bold text-dark mb-2">Zero Login Required</h3>
+                <p className="small text-secondary mb-0">
+                  No signups, subscriptions, or hidden charges. Instant utility access whenever you need it, fully optimized.
+                </p>
+              </div>
+            </div>
+            <div className="col-12 col-md-4">
+              <div className="p-4 bg-light rounded-3 h-100 border border-light-subtle text-center">
+                <div className="d-inline-flex align-items-center justify-content-center bg-warning-subtle text-warning-emphasis rounded-circle mb-3" style={{ width: 54, height: 54 }}>
+                  <Award size={24} />
+                </div>
+                <h3 className="h6 fw-bold text-dark mb-2">Mathematical Accuracy</h3>
+                <p className="small text-secondary mb-0">
+                  From ancient land measurements (like Akbar&apos;s Todar Mal laggas) to CBAS grade curves, we verify logic with experts.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="lh-lg text-secondary">
+            <h2 className="h4 fw-bold text-dark mb-3">Who We Are</h2>
+            <p className="mb-4">
+              Founded with the goal of replacing cluttered, slow, and data-heavy converter sites, **pkminfotech** is a lightweight portal dedicated to responsive micro-utilities. We specialize in four core segments: regional land area calculations, educational conversions, compliance-ready finance receipts, and online application photo sizing.
+            </p>
+            <p className="mb-4">
+              Our development philosophy centers on speed and clean design. Every page on pkminfotech is crafted to load in milliseconds, even on slow mobile internet connections. By omitting server-side database redirects for public interactions, we guarantee maximum security for tax receipt generators and scanned files.
+            </p>
+            <p className="mb-0">
+              For queries, partnership requests, or feedback regarding tools improvements, feel free to visit our <Link href="/contact-us" className="text-primary text-decoration-none fw-semibold">Contact Us</Link> page.
+            </p>
           </div>
         </div>
       </div>
-
     </div>
   )
-} 
+}

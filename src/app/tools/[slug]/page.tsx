@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import { notFound, redirect } from "next/navigation"
-import { toolItems } from "@/data/exam-platform"
+import { toolItems } from "@/data/tools-data"
 
 type Props = { params: Promise<{ slug: string }> }
 

@@ -4,14 +4,13 @@ import Link from "next/link"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { prisma } from "@/lib/prisma"
-import { ArrowLeft, Calendar, Search, User, BadgeCheck, BookOpenCheck, ClipboardCheck, TimerReset, Wrench, ArrowRight, Clock3, Smartphone, Calculator, Percent, GraduationCap, HeartPulse, ChevronLeft, ChevronRight, MonitorCheck, Rows3, Trophy, Users, Newspaper, Globe2 } from "lucide-react"
+import { ArrowLeft, Calendar, Search, User, BadgeCheck, BookOpenCheck, ClipboardCheck, TimerReset, Wrench, ArrowRight, Clock3, Smartphone, Calculator, Percent, GraduationCap, HeartPulse, ChevronLeft, ChevronRight, MonitorCheck, Rows3, Trophy, Users, Newspaper, Globe2, TrendingUp, Receipt } from "lucide-react"
 import { formatDate, truncateText } from "@/lib/utils"
 import { Metadata } from "next"
 import ClientScripts from '@/components/ClientScripts'
 import OptimizedImage from '@/components/OptimizedImage'
 import { generateCanonicalUrl } from "@/lib/canonical-utils"
-import ExploreCoreFeatures from "@/components/ExploreCoreFeatures"
-import { toolItems } from "@/data/exam-platform"
+import { toolItems } from "@/data/tools-data"
 
 // Enable ISR with 60 second revalidation
 export async function generateMetadata({ searchParams }: { searchParams: Promise<{ category?: string; page?: string }> }): Promise<Metadata> {
@@ -125,6 +124,19 @@ interface BlogPost {
 
 // Server-side data fetching with pagination and caching
 async function getBlogs(category?: string, page: number = 1, limit: number = 15) {
+  if (!process.env.DATABASE_URL || process.env.DATABASE_URL.includes("localhost:27017")) {
+    return {
+      blogs: [],
+      pagination: {
+        currentPage: page,
+        totalPages: 0,
+        totalCount: 0,
+        hasNextPage: false,
+        hasPrevPage: false
+      }
+    }
+  }
+
   try {
     const where: { status: string; category?: string } = {
       status: 'published'
@@ -259,13 +271,15 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
   const latestBlogs = blogsData.blogs.slice(0, 4)
   const currentAffairsData = await getBlogs('current-affairs', 1, 4)
   const currentAffairsBlogs = currentAffairsData.blogs
-  const toolCards = toolItems.slice(0, 8).map((tool, i) => ({
-    title: tool.title,
-    href: tool.path ?? `/tools/${tool.slug}`,
-    text: tool.description,
-    icon: Calculator,
-    tone: `tool-tone-${(i % 4) + 1}` as const,
-  }))
+  const toolCards = [
+    { title: "Bigha to Kattha Converter", href: "/tools/land-area/bigha-to-kattha", text: "Convert regional land measurements like Bigha, Kattha, Biswa to Square Feet.", icon: Globe2, tone: "tool-tone-1" as const },
+    { title: "Rent Receipt Generator", href: "/tools/utility/rent-receipt", text: "Generate HRA rent receipts in PDF format instantly for tax claims.", icon: Calculator, tone: "tool-tone-2" as const },
+    { title: "CGPA/SGPA to Percentage", href: "/tools/education/cgpa-to-percentage", text: "Convert CGPA and SGPA into percentage formats for various Indian Universities.", icon: GraduationCap, tone: "tool-tone-3" as const },
+    { title: "Exam Photo Compressor", href: "/tools/utility/photo-compressor", text: "Compress and resize passport-size photos below 20kb/50kb for online applications.", icon: Smartphone, tone: "tool-tone-4" as const },
+    { title: "SIP Calculator", href: "/tools/utility/sip-calculator", text: "Calculate expected future wealth and returns from your monthly SIP investments.", icon: TrendingUp, tone: "tool-tone-1" as const },
+    { title: "Age Calculator", href: "/tools/education/age-calculator", text: "Calculate your exact age in years, months, and days from your Date of Birth.", icon: Calendar, tone: "tool-tone-2" as const },
+    { title: "GST Calculator", href: "/tools/utility/gst-calculator", text: "Calculate inclusive/exclusive GST (5%, 12%, 18%, 28%) for invoices.", icon: Receipt, tone: "tool-tone-3" as const },
+  ]
 
   if (process.env.NEXT_PUBLIC_HOMEPAGE_LAYOUT !== "legacy") {
     return (
@@ -279,29 +293,29 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
 
       <main className="bg-light pb-4 pt-2">
         <div className="container compact-home pt-0">
-          <section className="card border-0 shadow-sm figma-space-24 overflow-hidden compact-hero">
+          <section className="card border-0 shadow-lg figma-space-24 overflow-hidden compact-hero" style={{ border: '0', borderRadius: '18px' }}>
             <div className="figma-hero-unified position-relative">
               <div className="figma-hero-content">
-                <h1 className="fw-bold text-dark mb-2 compact-title figma-title">
-                  India&apos;s Smart Exam Practice &amp;
+                <h1 className="fw-bold text-white mb-2 compact-title figma-title">
+                  Free Online Tools &amp;
                   <br className="d-none d-md-block" />
-                  Free Online Tools Platform
+                  <span className="text-gradient">Smart Calculators</span>
                 </h1>
-                <p className="text-secondary mb-3 compact-subtitle">
-                  Practice mock tests, daily quizzes &amp; useful calculators - all in one place.
+                <p className="text-white-50 mb-3 compact-subtitle" style={{ fontSize: '1rem', lineHeight: '1.5' }}>
+                  Simplify your calculations, land area conversions, planning, and tasks with our simple, instant tools.
                 </p>
                 <div className="d-flex flex-wrap gap-2 figma-hero-cta">
-                  <Link href="/current-affairs-quiz" className="figma-btn figma-btn-primary">
-                    Daily Quiz <ArrowRight size={14} />
-                  </Link>
-                  <Link href="/tools" className="figma-btn figma-btn-outline">
+                  <Link href="/tools" className="figma-btn figma-btn-primary">
                     Explore Tools <ArrowRight size={14} />
+                  </Link>
+                  <Link href="/latest" className="figma-btn figma-btn-outline" style={{ background: 'transparent', color: '#fff', borderColor: 'rgba(255,255,255,0.3)' }}>
+                    Read Our Blog <ArrowRight size={14} />
                   </Link>
                 </div>
                 <div className="d-flex flex-wrap gap-2 mt-3">
                   <span className="hero-chip"><BadgeCheck size={14} /> 100% Free</span>
                   <span className="hero-chip"><Clock3 size={14} /> Instant Results</span>
-                  <span className="hero-chip"><Users size={14} /> Trusted by Aspirants</span>
+                  <span className="hero-chip"><Wrench size={14} /> Easy to Use</span>
                 </div>
               </div>
               <div className="figma-hero-image-floating" aria-hidden="true">
@@ -318,7 +332,74 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
             </div>
           </section>
 
-          <ExploreCoreFeatures />
+          <section className="figma-space-24 explore-core-features">
+            <div className="core-features-header text-center mb-4">
+              <h2 className="core-features-title">
+                Explore Tool Categories
+              </h2>
+              <p className="core-features-subtitle text-secondary mb-0 mt-2">
+                Find the right tools and converters for your daily needs.
+              </p>
+            </div>
+            <div className="row g-3 g-md-4">
+              <div className="col-6 col-md-6 col-lg-3">
+                <Link href="/tools/land-area/bigha-to-kattha" className="text-decoration-none">
+                  <div className="card h-100 border figma-card category-card p-3">
+                    <div className="d-flex align-items-center gap-2 mb-2">
+                      <div className="category-icon-wrap cat-indigo">
+                        <Globe2 size={18} />
+                      </div>
+                      <h3 className="h6 fw-bold mb-0 text-dark">Land Area</h3>
+                    </div>
+                    <p className="small text-secondary flex-grow-1 mb-3 d-none d-md-block">Bigha to Kattha, Gaj to Biswa, and regional land converters.</p>
+                    <span className="category-cta d-none d-md-block">Try Converter &rarr;</span>
+                  </div>
+                </Link>
+              </div>
+              <div className="col-6 col-md-6 col-lg-3">
+                <Link href="/tools/education/cgpa-to-percentage" className="text-decoration-none">
+                  <div className="card h-100 border figma-card category-card p-3">
+                    <div className="d-flex align-items-center gap-2 mb-2">
+                      <div className="category-icon-wrap cat-emerald">
+                        <GraduationCap size={18} />
+                      </div>
+                      <h3 className="h6 fw-bold mb-0 text-dark">Education</h3>
+                    </div>
+                    <p className="small text-secondary flex-grow-1 mb-3 d-none d-md-block">SGPA/CGPA to percentage, grade converters and board calculators.</p>
+                    <span className="category-cta d-none d-md-block">Try Converter &rarr;</span>
+                  </div>
+                </Link>
+              </div>
+              <div className="col-6 col-md-6 col-lg-3">
+                <Link href="/tools/utility/rent-receipt" className="text-decoration-none">
+                  <div className="card h-100 border figma-card category-card p-3">
+                    <div className="d-flex align-items-center gap-2 mb-2">
+                      <div className="category-icon-wrap cat-amber">
+                        <Calculator size={18} />
+                      </div>
+                      <h3 className="h6 fw-bold mb-0 text-dark">Finance &amp; Tax</h3>
+                    </div>
+                    <p className="small text-secondary flex-grow-1 mb-3 d-none d-md-block">HRA calculator, Old vs New tax Slab, Rent Receipt generator.</p>
+                    <span className="category-cta d-none d-md-block">Generate Receipt &rarr;</span>
+                  </div>
+                </Link>
+              </div>
+              <div className="col-6 col-md-6 col-lg-3">
+                <Link href="/tools/utility/photo-compressor" className="text-decoration-none">
+                  <div className="card h-100 border figma-card category-card p-3">
+                    <div className="d-flex align-items-center gap-2 mb-2">
+                      <div className="category-icon-wrap cat-rose">
+                        <Smartphone size={18} />
+                      </div>
+                      <h3 className="h6 fw-bold mb-0 text-dark">Image resizer</h3>
+                    </div>
+                    <p className="small text-secondary flex-grow-1 mb-3 d-none d-md-block">Compress exam photos, crop signature, resize jpeg images instantly.</p>
+                    <span className="category-cta d-none d-md-block">Compress Photo &rarr;</span>
+                  </div>
+                </Link>
+              </div>
+            </div>
+          </section>
 
           <section className="figma-space-24">
             <h2 className="text-center fw-bold mb-3 h4 figma-section-title">Popular Free Tools</h2>
@@ -332,8 +413,8 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
               </button>
             </div>
             <div className="row g-3">
-              {toolCards.map((tool) => (
-                <div key={tool.title} className="col-6 col-lg-3">
+              {toolCards.slice(0, 4).map((tool) => (
+                <div key={tool.title} className="col-12 col-md-6 col-lg-3">
                   <div className="card h-100 figma-card tool-card">
                     <div className="card-body p-3 tool-card-body">
                       <div className="d-flex align-items-center mb-2">
@@ -355,61 +436,6 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
               <Link href="/tools" className="figma-btn figma-btn-outline">
                 View All <ArrowRight size={14} className="ms-1" />
               </Link>
-            </div>
-          </section>
-
-          <section className="figma-space-24">
-            <h2 className="text-center fw-bold mb-2 h4 figma-section-title">Current Affairs for Exams</h2>
-            <p className="text-secondary small text-center mb-2">Stay updated for SSC, RRB, Banking &amp; govt exams.</p>
-            {currentAffairsBlogs.length > 0 && (
-              <div className="text-center mb-3">
-                <Link href="/daily-current-affairs" className="small fw-semibold text-primary text-decoration-none">
-                  View all <ArrowRight size={14} className="d-inline-block ms-1" />
-                </Link>
-              </div>
-            )}
-            <div className="row g-3">
-              {currentAffairsBlogs.length > 0 ? (
-                currentAffairsBlogs.map((blog: BlogPost) => (
-                  <article key={blog.id} className="col-6 col-md-3">
-                    <div className="card h-100 border figma-card blog-card-compact">
-                      <div className="blog-card-compact-img overflow-hidden bg-light">
-                        {blog.coverImage ? (
-                          <OptimizedImage
-                            src={blog.coverImage}
-                            alt={blog.title}
-                            width={320}
-                            height={180}
-                            className="w-100 h-100 object-fit-cover"
-                            sizes="(max-width: 768px) 50vw, 25vw"
-                          />
-                        ) : (
-                          <div className="d-flex align-items-center justify-content-center text-secondary small" style={{ minHeight: 90 }}>
-                            Article
-                          </div>
-                        )}
-                      </div>
-                      <div className="card-body p-2 p-sm-3">
-                        <h3 className="card-title mb-0 lh-sm" style={{ fontSize: "0.8125rem", fontWeight: 600 }}>
-                          <Link href={`/${blog.slug}`} className="text-decoration-none no-underline !text-gray-600 hover:!text-gray-900 transition-colors" style={{ fontSize: "0.8125rem" }}>
-                            {truncateText(blog.title, 42)}
-                          </Link>
-                        </h3>
-                        <div className="d-flex justify-content-between text-muted mt-1" style={{ fontSize: "0.7rem" }}>
-                          <span>{formatDate(blog.publishedAt || blog.createdAt)}</span>
-                          <span>5 min read</span>
-                        </div>
-                      </div>
-                    </div>
-                  </article>
-                ))
-              ) : (
-                <div className="col-12">
-                  <div className="alert alert-light border text-center mb-0 small">
-                    Current affairs articles will appear here. Add blogs with category &quot;Current Affairs&quot; in admin.
-                  </div>
-                </div>
-              )}
             </div>
           </section>
 
@@ -463,7 +489,7 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
           <section>
             <h2 className="text-center fw-bold mb-3 h4 figma-section-title">Why Choose Us?</h2>
             <p className="text-center text-secondary small mb-3">
-              Built for practical preparation: fast interface, realistic tests, and updated content.
+              Designed for ease and efficiency: fast tools, zero configuration, and accurate results.
             </p>
             <div className="row g-3">
               <div className="col-sm-6 col-lg-3">
@@ -472,8 +498,8 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                     <span className="why-icon-box mb-2">
                       <Clock3 className="text-primary" size={22} />
                     </span>
-                    <h3 className="h6 fw-semibold">Trusted Since 2019 — Now With Quizzes &amp; Mock Tests</h3>
-                    <p className="small text-secondary mb-0">Started with exam-prep content; now practice with daily quiz, PYQ, and full-length mocks — all in one place.</p>
+                    <h3 className="h6 fw-semibold">Trusted Since 2019</h3>
+                    <p className="small text-secondary mb-0">Starting as a resource platform, we have evolved into a lightweight hub of online utility converters and calculators.</p>
                   </div>
                 </div>
               </div>
@@ -483,8 +509,8 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                     <span className="why-icon-box mb-2">
                       <BadgeCheck className="text-primary" size={22} />
                     </span>
-                    <h3 className="h6 fw-semibold">100% Free — Login Required for Full Access</h3>
-                    <p className="small text-secondary mb-0">Daily quiz is available without login; sign in to access mock tests, PYQ, and all practice tools.</p>
+                    <h3 className="h6 fw-semibold">No Login Required</h3>
+                    <p className="small text-secondary mb-0">Use all calculations and area converters completely free without creating any account or storing private data.</p>
                   </div>
                 </div>
               </div>
@@ -495,7 +521,7 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                       <Smartphone className="text-primary" size={22} />
                     </span>
                     <h3 className="h6 fw-semibold">Fast &amp; Mobile Friendly</h3>
-                    <p className="small text-secondary mb-0">Lightweight pages with touch-friendly UI and quick loading.</p>
+                    <p className="small text-secondary mb-0">Built using server-side rendering for lightning-fast speeds and high usability on mobile devices.</p>
                   </div>
                 </div>
               </div>
@@ -503,10 +529,10 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                 <div className="card border figma-card h-100 why-card">
                   <div className="card-body text-center p-3">
                     <span className="why-icon-box mb-2">
-                      <Newspaper className="text-primary" size={22} />
+                      <Wrench className="text-primary" size={22} />
                     </span>
-                    <h3 className="h6 fw-semibold">Regular Updates</h3>
-                    <p className="small text-secondary mb-0">New sets, mock tests, and tool improvements added regularly.</p>
+                    <h3 className="h6 fw-semibold">Formula Accurate</h3>
+                    <p className="small text-secondary mb-0">Our calculations follow official formulas (such as tax codes and standard area measurements) to give reliable results.</p>
                   </div>
                 </div>
               </div>
@@ -524,12 +550,18 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
           margin-bottom: 24px;
         }
         .compact-hero {
-          border-radius: 0.9rem;
+          border-radius: 18px;
         }
         .figma-hero-unified {
-          background: linear-gradient(145deg, #ffffff 0%, #fafbfd 45%, #f6f8fc 100%);
-          min-height: 320px;
-          padding: 24px;
+          background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+          min-height: 340px;
+          padding: 40px 32px;
+          color: #ffffff;
+        }
+        .text-gradient {
+          background: linear-gradient(to right, #38bdf8, #818cf8);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
         }
         .figma-hero-content {
           position: relative;
@@ -543,20 +575,66 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
           transform: translateY(-50%);
           width: min(46%, 430px);
           z-index: 1;
-          filter: none;
+          filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
         }
         .hero-chip {
           display: inline-flex;
           align-items: center;
           gap: 6px;
           height: 30px;
-          padding: 0 10px;
+          padding: 0 12px;
           border-radius: 999px;
-          background: rgba(255, 255, 255, 0.78);
-          border: 1px solid #dbe7f7;
-          color: #1f2937;
+          background: rgba(255, 255, 255, 0.06);
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          color: #f1f5f9;
           font-size: 12px;
           font-weight: 600;
+          backdrop-filter: blur(8px);
+        }
+        .category-card {
+          border-radius: 16px;
+          border: 1px solid rgba(226, 232, 240, 0.8) !important;
+          background: #ffffff !important;
+          box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03) !important;
+          transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1) !important;
+          padding: 20px !important;
+        }
+        .category-card:hover {
+          transform: translateY(-5px);
+          border-color: rgba(99, 102, 241, 0.35) !important;
+          box-shadow: 0 16px 24px rgba(15, 23, 42, 0.08) !important;
+        }
+        .category-icon-wrap {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 38px;
+          height: 38px;
+          border-radius: 12px;
+          color: #ffffff;
+          flex-shrink: 0;
+        }
+        .cat-indigo {
+          background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+        }
+        .cat-emerald {
+          background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+        .cat-amber {
+          background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+        .cat-rose {
+          background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+        }
+        .category-cta {
+          font-size: 0.82rem;
+          font-weight: 600;
+          color: #4f46e5;
+          transition: transform 0.2s ease;
+        }
+        .category-card:hover .category-cta {
+          color: #3b82f6;
+          text-decoration: underline;
         }
         .figma-title {
           max-width: 540px;
@@ -802,20 +880,18 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
             max-width: 100%;
           }
           .figma-hero-image-floating {
-            position: relative;
+            display: none !important;
+          }
+          .figma-hero-cta {
+            flex-direction: column;
             width: 100%;
-            right: auto;
-            top: auto;
-            transform: none;
-            margin-top: 14px;
-            filter: none;
           }
           .figma-hero-cta .figma-btn {
-            flex: 1 1 calc(50% - 4px);
-            min-width: 0;
-            padding: 0 10px;
-            font-size: 12px;
-            height: 32px;
+            width: 100%;
+            padding: 0 16px;
+            font-size: 14px;
+            height: 44px;
+            border-radius: 12px;
           }
           .hero-chip {
             height: 28px;
@@ -823,8 +899,45 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
           }
           .feature-card .card-body,
           .tool-card .card-body,
-          .why-card .card-body {
+          .why-card .card-body,
+          .category-card {
             padding: 12px !important;
+            margin-bottom: 0px !important;
+          }
+          .category-card {
+            border-radius: 16px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            text-align: center !important;
+            min-height: 104px !important;
+            padding: 14px 8px !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02) !important;
+          }
+          .category-card .d-flex {
+            flex-direction: column !important;
+            align-items: center !important;
+            gap: 8px !important;
+            margin-bottom: 0 !important;
+          }
+          .category-card .h6 {
+            font-size: 0.82rem !important;
+            font-weight: 700 !important;
+            line-height: 1.3 !important;
+            margin-top: 2px;
+          }
+          .category-icon-wrap {
+            width: 40px !important;
+            height: 40px !important;
+            border-radius: 12px !important;
+          }
+          .category-icon-wrap svg {
+            width: 20px !important;
+            height: 20px !important;
+          }
+          .category-cta {
+            display: none !important;
           }
           .feature-card-body {
             padding: 12px !important;
