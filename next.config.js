@@ -111,13 +111,12 @@ const nextConfig = {
         permanent: true,
       },
 
-      // Old SEO top-level pages → new /ssc structure (301)
-      { source: '/ssc-exam-practice', destination: '/ssc', permanent: true },
-      { source: '/ssc-mock-test', destination: '/ssc', permanent: true },
-      { source: '/ssc-daily-quiz', destination: '/ssc', permanent: true },
-      { source: '/ssc-previous-year-question', destination: '/ssc', permanent: true },
-      { source: '/ssc-current-affairs', destination: '/current-affairs-quiz', permanent: true },
-      { source: '/current-affairs', destination: '/current-affairs-quiz', permanent: true },
+      { source: '/ssc-exam-practice', destination: '/tools', permanent: true },
+      { source: '/ssc-mock-test', destination: '/tools', permanent: true },
+      { source: '/ssc-daily-quiz', destination: '/tools', permanent: true },
+      { source: '/ssc-previous-year-question', destination: '/tools', permanent: true },
+      { source: '/ssc-current-affairs', destination: '/daily-current-affairs', permanent: true },
+      { source: '/current-affairs', destination: '/daily-current-affairs', permanent: true },
       
       // === PREVIOUS REDIRECTS ===
       {

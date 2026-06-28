@@ -99,12 +99,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }
     })
 
-    blogPages = blogs.map((blog: any) => ({
-      url: `${baseUrl}/${blog.slug}`,
-      lastModified: blog.updatedAt || blog.publishedAt || new Date(),
-      changeFrequency: 'weekly' as const,
-      priority: 0.8,
-    }))
+    const activeBlogPages: any[] = []
+    const { resolveCanonicalUrl } = require('@/lib/canonical-utils')
+
+    blogs.forEach((blog: any) => {
+      const resolved = resolveCanonicalUrl(`/${blog.slug}`)
+      // Only include blogs in sitemap that do not redirect
+      if (resolved === `/${blog.slug}`) {
+        activeBlogPages.push({
+          url: `${baseUrl}/${blog.slug}`,
+          lastModified: blog.updatedAt || blog.publishedAt || new Date(),
+          changeFrequency: 'weekly' as const,
+          priority: 0.8,
+        })
+      }
+    })
+
+    blogPages = activeBlogPages
   } catch (error) {
     console.error('Error fetching blogs for sitemap, returning static pages only:', error)
   }

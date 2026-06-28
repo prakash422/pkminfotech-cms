@@ -156,7 +156,7 @@ export function generateBlogStructuredData(blog: {
     "@type": "NewsArticle",
     "headline": blog.title,
     "description": blog.excerpt || generateMetaDescription(blog.content),
-    "image": blog.coverImage || `${baseUrl}/default-blog-image.jpg`,
+    "image": blog.coverImage ? (blog.coverImage.startsWith('http') ? blog.coverImage : `${baseUrl}${blog.coverImage.startsWith('/') ? '' : '/'}${blog.coverImage}`) : `${baseUrl}/android-chrome-512x512.png`,
     "author": {
       "@type": "Person",
       "name": blog.author?.name || "pkminfotech Team",
@@ -167,9 +167,9 @@ export function generateBlogStructuredData(blog: {
       "name": "pkminfotech",
       "logo": {
         "@type": "ImageObject",
-        "url": `${baseUrl}/favicon-32x32.png`,
-        "width": 32,
-        "height": 32
+        "url": `${baseUrl}/android-chrome-192x192.png`,
+        "width": 192,
+        "height": 192
       }
     },
     "datePublished": blog.publishedAt?.toISOString(),

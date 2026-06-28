@@ -181,6 +181,13 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
     notFound()
   }
 
+  const getAbsoluteImageUrl = (url: string | null) => {
+    const baseUrl = 'https://www.pkminfotech.com'
+    if (!url) return `${baseUrl}/android-chrome-512x512.png`
+    if (url.startsWith('http://') || url.startsWith('https://')) return url
+    return `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`
+  }
+
   // Generate proper canonical URL that resolves redirects for structured data
   const structuredDataCanonicalUrl = generateCanonicalUrl(`/${blog.slug}`)
 
@@ -189,7 +196,7 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
     "@type": "BlogPosting",
     "headline": blog.title,
     "description": blog.excerpt || blog.title,
-    "image": blog.coverImage || "/default-blog-image.jpg",
+    "image": getAbsoluteImageUrl(blog.coverImage),
     "author": {
       "@type": "Person",
       "name": "pkminfotech Team",
@@ -200,9 +207,9 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
       "name": "pkminfotech",
       "logo": {
         "@type": "ImageObject",
-        "url": generateCanonicalUrl('/favicon-32x32.png'),
-        "width": 32,
-        "height": 32
+        "url": generateCanonicalUrl('/android-chrome-192x192.png'),
+        "width": 192,
+        "height": 192
       }
     },
     "datePublished": blog.publishedAt || blog.createdAt,
@@ -368,6 +375,8 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
                       <div 
                         dangerouslySetInnerHTML={{ 
                           __html: blog.content
+                            // Convert insecure internal links to secure HTTPS
+                            .replace(/href="http:\/\/(www\.)?pkminfotech\.com/g, 'href="https://www.pkminfotech.com')
                             // Convert line breaks to HTML
                             .replace(/\n\n/g, '</p><p class="mb-4 text-gray-700 leading-relaxed">')
                             .replace(/\n/g, '<br>')
