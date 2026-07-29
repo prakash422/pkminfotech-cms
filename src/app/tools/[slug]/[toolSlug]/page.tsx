@@ -15,6 +15,8 @@ import BreadcrumbNav from "@/components/BreadcrumbNav"
 import RelatedTools from "@/components/tools/RelatedTools"
 import ContentAdBand from "@/components/ContentAdBand"
 import SideRailAds from "@/components/SideRailAds"
+import ToolSearchIntents from "@/components/tools/ToolSearchIntents"
+import { getToolSeoProfile } from "@/data/tool-seo-data"
 
 type Props = { params: Promise<{ slug: string; toolSlug: string }> }
 
@@ -39,13 +41,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug: examCategory, toolSlug } = await params
   const tool = getToolByPath(examCategory, toolSlug)
   if (!tool) return { title: "Tool not found" }
+  const seo = getToolSeoProfile(tool.slug)
   // Layout template appends " | pkminfotech" — do not include it here.
-  const title = tool.title
-  const description = tool.description
+  const title = seo?.metaTitle || tool.title
+  const description = seo?.metaDescription || tool.description
   const canonicalPath = `https://www.pkminfotech.com${tool.path}`
   return {
     title,
     description,
+    keywords: seo?.searchTerms,
     robots: { index: true, follow: true },
     alternates: { canonical: canonicalPath },
     openGraph: {
@@ -74,19 +78,77 @@ export default async function ToolsDetailNestedPage({ params }: Props) {
   const basePath = `/tools/${tool.examCategorySlug}`
   const key = getToolPageKey(examCategory, toolSlug)
   const PageContent = TOOL_PAGE_REGISTRY[key]
+  const seo = getToolSeoProfile(tool.slug)
+  const canonicalUrl = `https://www.pkminfotech.com${tool.path}`
+
+  const schemaGraph: Record<string, unknown>[] = [
+    {
+      "@type": "WebApplication",
+      "@id": `${canonicalUrl}#application`,
+      name: tool.title,
+      description: seo?.metaDescription || tool.description,
+      url: canonicalUrl,
+      applicationCategory: "UtilityApplication",
+      operatingSystem: "Any",
+      browserRequirements: "Requires JavaScript and a modern web browser",
+      isAccessibleForFree: true,
+      featureList: seo?.searchTerms,
+      offers: {
+        "@type": "Offer",
+        price: "0",
+        priceCurrency: "INR",
+      },
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${canonicalUrl}#breadcrumb`,
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: "https://www.pkminfotech.com/",
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Tools",
+          item: "https://www.pkminfotech.com/tools",
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: tool.category,
+          item: `https://www.pkminfotech.com${basePath}`,
+        },
+        {
+          "@type": "ListItem",
+          position: 4,
+          name: tool.title,
+          item: canonicalUrl,
+        },
+      ],
+    },
+  ]
+
+  if (seo?.faqs?.length) {
+    schemaGraph.push({
+      "@type": "FAQPage",
+      "@id": `${canonicalUrl}#faq`,
+      mainEntity: seo.faqs.map((faq) => ({
+        "@type": "Question",
+        name: faq.question,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: faq.answer,
+        },
+      })),
+    })
+  }
 
   const schemaJson = {
     "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    name: tool.title,
-    description: tool.description,
-    applicationCategory: "UtilityApplication",
-    operatingSystem: "All",
-    offers: {
-      "@type": "Offer",
-      price: "0",
-      priceCurrency: "INR",
-    },
+    "@graph": schemaGraph,
   }
 
   return (
@@ -109,6 +171,7 @@ export default async function ToolsDetailNestedPage({ params }: Props) {
         ) : (
           <GenericToolPlaceholder tool={tool} />
         )}
+        {seo ? <ToolSearchIntents profile={seo} /> : null}
         {/* 2nd ad — after guide content, before related tools */}
         <ContentAdBand className="tool-secondary-ad mt-3 mb-3" />
         <RelatedTools current={tool} />

@@ -1,6 +1,6 @@
 import Link from "next/link"
 import type { Metadata } from "next"
-import { notFound, redirect } from "next/navigation"
+import { notFound, permanentRedirect } from "next/navigation"
 import { ArrowRight, Calculator, Sparkles } from "lucide-react"
 import BreadcrumbNav from "@/components/BreadcrumbNav"
 import {
@@ -39,9 +39,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const tool = toolItems.find((t) => t.slug === slug)
   if (!tool) return { title: "Tool not found" }
+  // Legacy flat tool URLs permanently redirect; keep metadata minimal.
   return {
     title: tool.title,
     description: tool.description,
+    robots: { index: false, follow: true },
+    alternates: { canonical: `https://www.pkminfotech.com${tool.path}` },
   }
 }
 
@@ -149,5 +152,6 @@ export default async function ToolSlugOrCategoryPage({ params }: Props) {
 
   const tool = toolItems.find((t) => t.slug === slug)
   if (!tool) notFound()
-  redirect(tool.path)
+  // Legacy flat URLs must permanently consolidate onto nested canonical paths.
+  permanentRedirect(tool.path)
 }

@@ -99,6 +99,7 @@ export default function AgeCalculatorPage({ title, description, basePath }: { ti
           items={[
           { label: "Home", href: "/" },
           { label: "Tools", href: "/tools" },
+          { label: "Education", href: basePath },
           { label: "Age Calculator" }
         ]}
       />
@@ -134,7 +135,7 @@ export default function AgeCalculatorPage({ title, description, basePath }: { ti
             <div className="alert bg-light border-0 text-secondary small p-3 rounded-3 d-flex gap-2 align-items-start mt-2">
               <Info size={16} className="text-primary mt-1 flex-shrink-0" />
               <div>
-                Useful for checking **eligibility criteria** on official registration portals where age cutoff dates are fixed.
+                Useful for checking <strong>eligibility criteria</strong> on official registration portals where age cutoff dates are fixed.
               </div>
             </div>
           </div>
@@ -237,7 +238,7 @@ export default function AgeCalculatorPage({ title, description, basePath }: { ti
             <li>If target day is lower than birth day, the month count is reduced by one, and days of the preceding month are added to the difference.</li>
           </ul>
           <p>
-            For example, if your DOB is **June 15, 1998**, and you want to find your age on **January 1, 2026**:
+            For example, if your DOB is <strong>June 15, 1998</strong>, and you want to find your age on <strong>January 1, 2026</strong>:
           </p>
           <div className="bg-light p-3 rounded-3 border border-light-subtle font-monospace mb-3">
             Target: 2026-01-01 <br />
@@ -315,7 +316,7 @@ export default function AgeCalculatorPage({ title, description, basePath }: { ti
             <div className="mb-4">
               <h4 className="h6 fw-bold text-dark mb-1">Q1: What date of birth proof is accepted by exam boards?</h4>
               <p className="text-muted mb-0">
-                The **Matriculation (Class 10) Certificate** or Board Marksheet is considered the primary, legally binding proof of date of birth by all government agencies and boards. Aadhaar cards or birth certificates are standardly not accepted if they conflict with Class 10 records.
+                Many recruitment boards use the <strong>Matriculation (Class 10) Certificate</strong> or marksheet as the primary date-of-birth record, but accepted documents vary by authority. Follow the document list in the current official notification.
               </p>
             </div>
 

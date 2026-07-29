@@ -12,11 +12,11 @@ export default function GstCalculatorPage({ title, description, basePath }: { ti
   const [gstRate, setGstRate] = useState(18)
   const [isInclusive, setIsInclusive] = useState(false) // false = Exclusive (Add GST), true = Inclusive (Remove GST)
 
-  const [netAmount, setNetAmount] = useState(0)
-  const [gstAmount, setGstAmount] = useState(0)
-  const [totalAmount, setTotalAmount] = useState(0)
-  const [cgst, setCgst] = useState(0)
-  const [sgst, setSgst] = useState(0)
+  const [netAmount, setNetAmount] = useState(1000)
+  const [gstAmount, setGstAmount] = useState(180)
+  const [totalAmount, setTotalAmount] = useState(1180)
+  const [cgst, setCgst] = useState(90)
+  const [sgst, setSgst] = useState(90)
 
   useEffect(() => {
     const amount = parseFloat(amountInput) || 0
@@ -69,6 +69,7 @@ export default function GstCalculatorPage({ title, description, basePath }: { ti
           items={[
           { label: "Home", href: "/" },
           { label: "Tools", href: "/tools" },
+          { label: "Utility", href: basePath },
           { label: "GST Calculator" }
         ]}
       />
@@ -136,7 +137,7 @@ export default function GstCalculatorPage({ title, description, basePath }: { ti
             <div className="alert bg-light border-0 text-secondary small p-3 rounded-3 d-flex gap-2 align-items-start mt-2">
               <Info size={16} className="text-primary mt-1 flex-shrink-0" />
               <div>
-                Standard tax slabs under the Indian **Goods and Services Tax (GST)** system.
+                Standard tax slabs under the Indian <strong>Goods and Services Tax (GST)</strong> system.
               </div>
             </div>
           </div>
@@ -201,7 +202,7 @@ export default function GstCalculatorPage({ title, description, basePath }: { ti
 
         <div className="text-secondary small lh-lg">
           <p className="lead text-dark mb-4" style={{ fontSize: '1.05rem', fontWeight: 400 }}>
-            The **Goods and Services Tax (GST)**, implemented in India on July 1, 2017, is a unified, destination-based indirect tax that replaced multiple central and state taxes (such as VAT, Excise Duty, Service Tax, and Octroi). Understanding how to calculate GST is essential for small businesses, freelancers, accountants, and consumers to check transparent pricing and ensure compliance.
+            The <strong>Goods and Services Tax (GST)</strong>, implemented in India on July 1, 2017, is a unified, destination-based indirect tax that replaced multiple central and state taxes (such as VAT, Excise Duty, Service Tax, and Octroi). Understanding how to calculate GST is essential for small businesses, freelancers, accountants, and consumers to check transparent pricing and ensure compliance.
           </p>
 
           <h3 className="guide-subheading">
@@ -240,7 +241,7 @@ export default function GstCalculatorPage({ title, description, basePath }: { ti
             <li><strong>Intra-State Transactions (Within the Same State):</strong> The total GST collected is split equally between the Central Government and the State Government.
               <ul>
                 <li><strong>CGST (Central Goods and Services Tax):</strong> Half of the total GST amount goes to the central government treasury.</li>
-                <li><strong>SGST (State Goods and Services Tax):</strong> The other half goes to the respective state government treasury where the transaction occurred. (For Union Territories, this is called **UTGST**).</li>
+                <li><strong>SGST (State Goods and Services Tax):</strong> The other half goes to the respective state government treasury where the transaction occurred. (For Union Territories, this is called <strong>UTGST</strong>).</li>
               </ul>
             </li>
             <li><strong>Inter-State Transactions (Between Two Different States):</strong> The tax is collected directly by the Central government and then allocated to the destination state.
@@ -276,7 +277,7 @@ export default function GstCalculatorPage({ title, description, basePath }: { ti
             <div className="mb-4">
               <h4 className="h6 fw-bold text-dark mb-1">Q2: Do I need a GST registration for my business?</h4>
               <p className="text-muted mb-0">
-                Businesses selling goods with an annual turnover exceeding ₹40 Lakh (₹20 Lakh for North-Eastern states) must register for GST. For service providers, the registration threshold is ₹20 Lakh (₹10 Lakh for special category states).
+                Registration depends on turnover, state, supply type and compulsory-registration rules. Common threshold references are ₹40 lakh for many goods suppliers and ₹20 lakh for many service providers, with lower limits in specified states, but exceptions apply. Check the current GST portal guidance or consult a tax professional for your facts.
               </p>
             </div>
 

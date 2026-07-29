@@ -278,14 +278,14 @@ export default function PhotoCompressorPage({
 
         <div className="text-secondary small lh-lg">
           <p className="lead text-dark mb-4" style={{ fontSize: "1.05rem", fontWeight: 400 }}>
-            Applying for government jobs in India—including boards like **SSC (Staff Selection Commission)**, **UPSC (Union Public Service Commission)**, **IBPS (Banking)**, and state-level exams—requires filling out long registration forms. A very common issue candidates face is when their scanned passport photograph or signature fails to upload because the file size exceeds the strict limits (standardly **20kb to 50kb** for photos, and **10kb to 20kb** for signatures).
+            Applying for government jobs in India—including boards like <strong>SSC (Staff Selection Commission)</strong>, <strong>UPSC (Union Public Service Commission)</strong>, <strong>IBPS (Banking)</strong>, and state-level exams—requires filling out long registration forms. A very common issue candidates face is when their scanned passport photograph or signature fails to upload because the file size exceeds the strict limits (standardly <strong>20kb to 50kb</strong> for photos, and <strong>10kb to 20kb</strong> for signatures).
           </p>
 
           <h3 className="guide-subheading">
             <ShieldCheck size={18} className="text-primary" /> 1. How Client-Side Browser Compression Works
           </h3>
           <p>
-            When you use standard online compressors, your private passport photo is sent to a server over the internet. This poses security and privacy risks. Our tool uses **HTML5 Canvas technology** to process images entirely inside your browser.
+            When you use standard online compressors, your private passport photo is sent to a server over the internet. This poses security and privacy risks. Our tool uses <strong>HTML5 Canvas technology</strong> to process images entirely inside your browser.
           </p>
           <p>When you select a file:</p>
           <ol className="ps-3 mb-4">
@@ -355,7 +355,7 @@ export default function PhotoCompressorPage({
             <li><strong>Background Contrast:</strong> Portals prefer a clean, light-colored background—white or light blue are standard. Avoid dark or textured backgrounds.</li>
             <li><strong>Spectacles &amp; Eyewear:</strong> In recent years, SSC has rejected photos showing candidates wearing spectacles due to flash reflections. Take off your glasses before taking the photo. Caps, hats, and headphones are strictly forbidden.</li>
             <li><strong>Recent Capture:</strong> The photograph must be captured recently, standardly not older than 3 months from the notification date. Some portals (like UPSC) require you to write the date of capture on the lower half of the photo.</li>
-            <li><strong>Signature ink rules:</strong> Always sign on a clean white paper using a **black ink pen**. Blue ink signatures are sometimes flagged as low contrast by scanned readers.</li>
+            <li><strong>Signature ink rules:</strong> Always sign on a clean white paper using a <strong>black ink pen</strong>. Blue ink signatures are sometimes flagged as low contrast by scanned readers.</li>
           </ul>
 
           <h3 className="guide-subheading">

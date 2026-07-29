@@ -57,6 +57,7 @@ export default function SipCalculatorPage({ title, description, basePath }: { ti
           items={[
           { label: "Home", href: "/" },
           { label: "Tools", href: "/tools" },
+          { label: "Utility", href: basePath },
           { label: "SIP Calculator" }
         ]}
       />
@@ -208,7 +209,7 @@ export default function SipCalculatorPage({ title, description, basePath }: { ti
 
         <div className="text-secondary small lh-lg">
           <p className="lead text-dark mb-4" style={{ fontSize: '1.05rem', fontWeight: 400 }}>
-            Investing in Mutual Funds via a **Systematic Investment Plan (SIP)** has become the preferred vehicle for wealth generation in India. Unlike lump-sum investments that require substantial capital, a SIP allows individuals to build wealth progressively. By automating monthly contributions, you benefit from market fluctuations while mitigating risk.
+            Investing in Mutual Funds via a <strong>Systematic Investment Plan (SIP)</strong> has become the preferred vehicle for wealth generation in India. Unlike lump-sum investments that require substantial capital, a SIP allows individuals to build wealth progressively. By automating monthly contributions, you benefit from market fluctuations while mitigating risk.
           </p>
 
           <h3 className="guide-subheading">
@@ -298,8 +299,8 @@ export default function SipCalculatorPage({ title, description, basePath }: { ti
           <ul className="ps-3 mb-4">
             <li><strong>Equity-Oriented Funds:</strong>
               <ul>
-                <li><strong>Short-Term Capital Gains (STCG):</strong> Applicable if units are redeemed within 1 year. The gain is taxed at a flat rate of 15% (plus applicable surcharges).</li>
-                <li><strong>Long-Term Capital Gains (LTCG):</strong> Applicable if redeemed after 1 year. Gains up to ₹1,00,000 in a financial year are completely tax-free. Gains exceeding ₹1 Lakh are taxed at 10% without indexing benefits.</li>
+                <li><strong>Short-Term Capital Gains (STCG):</strong> For equity-oriented mutual fund units transferred on or after July 23, 2024, gains on units held for up to 12 months are generally taxed at 20%, plus applicable surcharge and cess.</li>
+                <li><strong>Long-Term Capital Gains (LTCG):</strong> For equity-oriented fund units held for more than 12 months, aggregate eligible gains above ₹1.25 lakh in a financial year are generally taxed at 12.5%, plus applicable surcharge and cess.</li>
               </ul>
             </li>
             <li><strong>Debt-Oriented Funds:</strong> Capital gains on debt funds are added directly to the individual&apos;s income and taxed according to their applicable income tax slabs, regardless of the holding period.</li>
@@ -326,7 +327,7 @@ export default function SipCalculatorPage({ title, description, basePath }: { ti
             <div className="mb-4">
               <h4 className="h6 fw-bold text-dark mb-1">Q3: Are mutual fund returns guaranteed?</h4>
               <p className="text-muted mb-0">
-                No. Mutual fund investments are subject to market risks. Unlike fixed deposits (FDs), returns are not guaranteed. However, historically, equity mutual funds in India have delivered average returns of 12% to 15% over a 5 to 10 year horizon, outperforming inflation.
+                No. Mutual fund investments are subject to market risks, and calculator projections are not guaranteed. Use multiple return assumptions and review the scheme documents before investing.
               </p>
             </div>
 

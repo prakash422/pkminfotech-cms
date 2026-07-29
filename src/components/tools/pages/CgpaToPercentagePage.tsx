@@ -90,6 +90,7 @@ export default function CgpaToPercentagePage({ title, description, basePath }: {
           items={[
           { label: "Home", href: "/" },
           { label: "Tools", href: "/tools" },
+          { label: "Education", href: basePath },
           { label: "CGPA to Percentage" }
         ]}
       />
@@ -179,14 +180,14 @@ export default function CgpaToPercentagePage({ title, description, basePath }: {
 
         <div className="text-secondary small lh-lg">
           <p className="lead text-dark mb-4" style={{ fontSize: '1.05rem', fontWeight: 400 }}>
-            Modern educational systems in India are increasingly shifting away from traditional percentage marks towards grading systems, which are computed as **CGPA (Cumulative Grade Point Average)** or **SGPA (Semester Grade Point Average)**. However, since most recruitment application forms, government job portals (like SSC, UPSC, IBPS), and university admission procedures still ask for equivalent percentage marks, students must know how to accurately calculate percentage from CGPA.
+            Modern educational systems in India are increasingly shifting away from traditional percentage marks towards grading systems, which are computed as <strong>CGPA (Cumulative Grade Point Average)</strong> or <strong>SGPA (Semester Grade Point Average)</strong>. However, since most recruitment application forms, government job portals (like SSC, UPSC, IBPS), and university admission procedures still ask for equivalent percentage marks, students must know how to accurately calculate percentage from CGPA.
           </p>
 
           <h3 className="guide-subheading">
             <Milestone size={18} className="text-primary" /> 1. The CBSE 9.5x Conversion Factor Explained
           </h3>
           <p>
-            One of the most frequently asked questions is: **Why does CBSE multiply CGPA by 9.5?** Why not a direct 10?
+            One of the most frequently asked questions is: <strong>Why does CBSE multiply CGPA by 9.5?</strong> Why not a direct 10?
           </p>
           <p>
             When CBSE introduced the CGPA system for Class 10 board exams, it studied the board results of preceding five years. By analyzing the scores, researchers mapped the average marks scored by students to their grade point distributions. Mathematically, the average percentage of marks scored by candidates corresponding to a particular grade band was found to be approximately 9.5 times the grade points.
@@ -316,7 +317,7 @@ export default function CgpaToPercentagePage({ title, description, basePath }: {
             <div className="mb-4">
               <h4 className="h6 fw-bold text-dark mb-1">Q4: Is CGPA to GPA conversion for US universities different?</h4>
               <p className="text-muted mb-0">
-                Yes. US universities evaluate candidates on a **4.0 GPA scale**. Converting a 10-point Indian CGPA to a 4-point US GPA standardly requires credential evaluation agencies like WES (World Education Services), which assess subject difficulty rather than using simple multipliers.
+                Yes. US universities evaluate candidates on a <strong>4.0 GPA scale</strong>. Converting a 10-point Indian CGPA to a 4-point US GPA standardly requires credential evaluation agencies like WES (World Education Services), which assess subject difficulty rather than using simple multipliers.
               </p>
             </div>
           </div>

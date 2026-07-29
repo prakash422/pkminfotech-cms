@@ -134,6 +134,58 @@ const nextConfig = {
         destination: '/tools/utility/photo-compressor?preset=signature',
         permanent: true,
       },
+
+      // Legacy flat tool slugs → nested canonical paths (301)
+      {
+        source: '/tools/bigha-to-kattha-converter',
+        destination: '/tools/land-area/bigha-to-kattha',
+        permanent: true,
+      },
+      {
+        source: '/tools/bigha-to-square-feet-bihar',
+        destination: '/tools/land-area/bigha-to-square-feet-bihar',
+        permanent: true,
+      },
+      {
+        source: '/tools/bigha-to-kattha-up',
+        destination: '/tools/land-area/bigha-to-kattha-up',
+        permanent: true,
+      },
+      {
+        source: '/tools/bigha-to-kattha-west-bengal',
+        destination: '/tools/land-area/bigha-to-kattha-west-bengal',
+        permanent: true,
+      },
+      {
+        source: '/tools/rent-receipt-generator',
+        destination: '/tools/utility/rent-receipt',
+        permanent: true,
+      },
+      {
+        source: '/tools/cgpa-to-percentage',
+        destination: '/tools/education/cgpa-to-percentage',
+        permanent: true,
+      },
+      {
+        source: '/tools/photo-compressor',
+        destination: '/tools/utility/photo-compressor',
+        permanent: true,
+      },
+      {
+        source: '/tools/sip-calculator',
+        destination: '/tools/utility/sip-calculator',
+        permanent: true,
+      },
+      {
+        source: '/tools/age-calculator',
+        destination: '/tools/education/age-calculator',
+        permanent: true,
+      },
+      {
+        source: '/tools/gst-calculator',
+        destination: '/tools/utility/gst-calculator',
+        permanent: true,
+      },
       
       // === PREVIOUS REDIRECTS ===
       {

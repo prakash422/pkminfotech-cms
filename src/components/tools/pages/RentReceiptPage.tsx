@@ -33,6 +33,7 @@ export default function RentReceiptPage({ title, description, basePath }: { titl
           items={[
             { label: "Home", href: "/" },
             { label: "Tools", href: "/tools" },
+            { label: "Utility", href: basePath },
             { label: "Rent Receipt Generator" }
           ]}
         />
@@ -194,7 +195,7 @@ export default function RentReceiptPage({ title, description, basePath }: { titl
 
         <div className="text-secondary small lh-lg">
           <p className="lead text-dark mb-4" style={{ fontSize: '1.05rem', fontWeight: 400 }}>
-            Availing HRA (House Rent Allowance) tax exemption is one of the most effective ways for salaried employees in India to save income tax. However, the Income Tax Department has significantly tightened verification processes, calling for proper document proof in the form of valid **Rent Receipts** and **Rent Agreements**.
+            Availing HRA (House Rent Allowance) tax exemption is one of the most effective ways for salaried employees in India to save income tax. However, the Income Tax Department has significantly tightened verification processes, calling for proper document proof in the form of valid <strong>Rent Receipts</strong> and <strong>Rent Agreements</strong>.
           </p>
 
           <h3 className="guide-subheading">
@@ -209,7 +210,7 @@ export default function RentReceiptPage({ title, description, basePath }: { titl
             <li>Actual rent paid during the year minus 10% of the Basic Salary + DA.</li>
           </ol>
           <p>
-            The final exemption granted is the **lowest of the three values** calculated above. Because the third formula takes into account the actual rent paid, rent receipts act as direct legal proof that you actually met the rental cost.
+            The final exemption granted is the <strong>lowest of the three values</strong> calculated above. Because the third formula takes into account the actual rent paid, rent receipts act as direct legal proof that you actually met the rental cost.
           </p>
 
           <h3 className="guide-subheading">
@@ -219,8 +220,8 @@ export default function RentReceiptPage({ title, description, basePath }: { titl
             The Income Tax Department has laid down two critical thresholds that tenants must comply with:
           </p>
           <ul className="ps-3 mb-4">
-            <li><strong>The ₹1 Lakh PAN Rule:</strong> If your total rent paid in a financial year exceeds ₹1,00,000 (which is ₹8,333 per month), you must declare the **PAN of your Landlord** to your employer. If the landlord does not possess a PAN, a signed declaration using Form 60 must be provided. Failing to provide this details will result in your employer refusing to compute HRA benefits, forcing you to claim it manually during ITR filing, which often invites scrutiny.</li>
-            <li><strong>The ₹5,000 Cash Revenue Stamp Rule:</strong> Under the Indian Stamp Act, if you pay rent in **Cash** and the individual receipt value exceeds ₹5,000, you must affix a **₹1 Revenue Stamp** on the receipt. The landlord must sign across the stamp to validate it. If the rent is paid electronically (via Netbanking, UPI, or Credit Card), a revenue stamp is standardly not mandatory, though a signed receipt remains necessary.</li>
+            <li><strong>The ₹1 Lakh PAN Rule:</strong> If your total rent paid in a financial year exceeds ₹1,00,000 (which is ₹8,333 per month), you must declare the <strong>PAN of your Landlord</strong> to your employer. If the landlord does not possess a PAN, a signed declaration using Form 60 must be provided. Failing to provide this details will result in your employer refusing to compute HRA benefits, forcing you to claim it manually during ITR filing, which often invites scrutiny.</li>
+            <li><strong>The ₹5,000 Cash Revenue Stamp Rule:</strong> Under the Indian Stamp Act, if you pay rent in <strong>Cash</strong> and the individual receipt value exceeds ₹5,000, you must affix a <strong>₹1 Revenue Stamp</strong> on the receipt. The landlord must sign across the stamp to validate it. If the rent is paid electronically (via Netbanking, UPI, or Credit Card), a revenue stamp is standardly not mandatory, though a signed receipt remains necessary.</li>
           </ul>
 
           <h3 className="guide-subheading">
@@ -282,7 +283,7 @@ export default function RentReceiptPage({ title, description, basePath }: { titl
             <div className="mb-4">
               <h4 className="h6 fw-bold text-dark mb-1">Q1: Can I claim HRA if I do not receive an HRA component from my employer?</h4>
               <p className="text-muted mb-0">
-                Yes. If you pay rent but do not receive HRA as part of your salary structure, you can still claim deduction under **Section 80GG** of the Income Tax Act when filing your ITR. The deduction limits under 80GG are capped at a maximum of ₹5,000 per month.
+                Yes. If you pay rent but do not receive HRA as part of your salary structure, you can still claim deduction under <strong>Section 80GG</strong> of the Income Tax Act when filing your ITR. The deduction limits under 80GG are capped at a maximum of ₹5,000 per month.
               </p>
             </div>
 
@@ -303,7 +304,7 @@ export default function RentReceiptPage({ title, description, basePath }: { titl
             <div className="mb-4">
               <h4 className="h6 fw-bold text-dark mb-1">Q4: Is it necessary to paste a revenue stamp on digital transactions?</h4>
               <p className="text-muted mb-0">
-                No. Revenue stamps are required under Article 53 of the Indian Stamp Act for receipts acknowledging money received exceeding ₹5,000 **in cash**. For bank transfers, credit card payments, or UPI, the digital transaction record serves as valid execution proof.
+                No. Revenue stamps are required under Article 53 of the Indian Stamp Act for receipts acknowledging money received exceeding ₹5,000 <strong>in cash</strong>. For bank transfers, credit card payments, or UPI, the digital transaction record serves as valid execution proof.
               </p>
             </div>
           </div>

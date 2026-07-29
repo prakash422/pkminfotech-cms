@@ -100,6 +100,7 @@ export default function BighaToKatthaPage({ title, description, basePath }: { ti
           items={[
           { label: "Home", href: "/" },
           { label: "Tools", href: "/tools" },
+          { label: "Land Area", href: basePath },
           { label: "Bigha to Kattha Converter" }
         ]}
       />
@@ -228,7 +229,7 @@ export default function BighaToKatthaPage({ title, description, basePath }: { ti
             <Scale size={18} className="text-primary" /> 1. The Origin of Bigha and Kattha: A Historical Legacy
           </h3>
           <p>
-            The concept of Bigha dates back to pre-colonial India. In medieval times, agricultural land was assessed for taxation based on actual crop yields. During Emperor Akbar&apos;s administration, his finance minister, **Raja Todar Mal**, revolutionized land surveying by introducing a standard measurement rod called the **Jarib** (made of bamboo joined by iron rings) and the **Lagga** (measurement pole).
+            The concept of Bigha dates back to pre-colonial India. In medieval times, agricultural land was assessed for taxation based on actual crop yields. During Emperor Akbar&apos;s administration, his finance minister, <strong>Raja Todar Mal</strong>, revolutionized land surveying by introducing a standard measurement rod called the <strong>Jarib</strong> (made of bamboo joined by iron rings) and the <strong>Lagga</strong> (measurement pole).
           </p>
           <p>
             A Bigha was defined as the area of land that could be cultivated by a single farmer with a pair of bullocks in a day. As local administration and ruler configurations changed across different princely states, the length of the Lagga changed. Since a Bigha and its sub-divisions (Kattha, Biswa, Dhur) are direct mathematical squares of the local Lagga size, the absolute size of 1 Bigha varied between districts.
@@ -238,7 +239,7 @@ export default function BighaToKatthaPage({ title, description, basePath }: { ti
             <Calculator size={18} className="text-primary" /> 2. The Mathematics: How Local Jarib &amp; Lagga Determine Bigha and Kattha
           </h3>
           <p>
-            To understand the calculations used in states like Bihar, Jharkhand, and Uttar Pradesh, you must understand the **Lagga** (measured in cubits or *Hath*, where 1 Hath is roughly 1.5 feet or 18 inches):
+            To understand the calculations used in states like Bihar, Jharkhand, and Uttar Pradesh, you must understand the <strong>Lagga</strong> (measured in cubits or *Hath*, where 1 Hath is roughly 1.5 feet or 18 inches):
           </p>
           <ul className="ps-3 mb-4">
             <li><strong>Dhur:</strong> The basic building block. <code>1 Dhur = (Lagga length in cubits * 1.5) ^ 2</code> square feet.</li>
@@ -246,7 +247,7 @@ export default function BighaToKatthaPage({ title, description, basePath }: { ti
             <li><strong>Bigha:</strong> 1 Bigha contains exactly 20 Kattha (or 400 Dhur). <code>1 Bigha = 20 * Kattha</code>.</li>
           </ul>
           <p>
-            Let&apos;s run a step-by-step example for **Patna, Bihar**, where a standard **Lagga of 5.5 Hath (cubits)** is used:
+            Let&apos;s run a step-by-step example for <strong>Patna, Bihar</strong>, where a standard <strong>Lagga of 5.5 Hath (cubits)</strong> is used:
           </p>
           <div className="bg-light p-3 rounded-3 border border-light-subtle font-monospace mb-4">
             1 Hath = 1.5 feet <br />
@@ -332,10 +333,10 @@ export default function BighaToKatthaPage({ title, description, basePath }: { ti
 
           <h3 className="h5 fw-bold text-dark mt-4 mb-3">4. Pucca Bigha vs. Kucha Bigha: What Buyers Must Know</h3>
           <p>
-            In western parts of Uttar Pradesh, Rajasthan, and Uttarakhand, you will frequently hear the terms **Pucca Bigha** (also known as Pukka Bigha) and **Kucha Bigha** (or raw Bigha). 
+            In western parts of Uttar Pradesh, Rajasthan, and Uttarakhand, you will frequently hear the terms <strong>Pucca Bigha</strong> (also known as Pukka Bigha) and <strong>Kucha Bigha</strong> (or raw Bigha). 
           </p>
           <p>
-            A Pucca Bigha is the official standard, equivalent to 27,225 square feet (or 3,025 square yards). A Kucha Bigha was a local measurement used by landlords for tenancy calculations and is standardly **exactly 1/3rd of a Pucca Bigha** (i.e. 9,075 square feet). When reading old mutation papers or inheritance registries, always confirm whether the property size is written in Kucha or Pucca Bighas to prevent overpaying for the plot.
+            Pucca and Kucha Bigha are local conventions rather than one nationwide legal ratio. Some regions use a Pucca Bigha near 27,225 square feet and may treat a Kucha Bigha as a smaller fraction, but the value can vary by district. When reading mutation papers or inheritance registries, confirm the recorded convention with the local revenue office or deed professional before valuing the plot.
           </p>
 
           <h3 className="guide-subheading">
@@ -350,30 +351,38 @@ export default function BighaToKatthaPage({ title, description, basePath }: { ti
             </div>
 
             <div className="mb-4">
-              <h4 className="h6 fw-bold text-dark mb-1">Q2: How many Kattha make one Acre in Bihar?</h4>
+              <h4 className="h6 fw-bold text-dark mb-1">Q2: How many Kattha make one Acre?</h4>
               <p className="text-muted mb-0">
-                Since 1 Acre contains 43,560 square feet and 1 Kattha in Bihar equals 1,361.25 square feet, dividing 43,560 by 1,361.25 gives exactly **32 Kattha**. So, 1 Acre is equivalent to 32 Kattha (or 1.6 Bigha) in Bihar.
+                It depends on the state&apos;s Kattha size. For the Bihar figure (about 32 Kattha per acre), use the{" "}
+                <Link href="/tools/land-area/bigha-to-square-feet-bihar" className="fw-semibold">
+                  Bihar Bigha to Square Feet converter
+                </Link>
+                . Compare other regions with the table above or open the matching state page.
               </p>
             </div>
 
             <div className="mb-4">
               <h4 className="h6 fw-bold text-dark mb-1">Q3: What is the relation between Bigha, Kattha, and Dhur?</h4>
               <p className="text-muted mb-0">
-                The units follow a base-20 nested multiplier system: 1 Bigha = 20 Kattha, and 1 Kattha = 20 Dhur. This means 1 Bigha contains exactly 400 Dhur.
+                In the common Bihar-style system, the units follow a base-20 nested multiplier: 1 Bigha = 20 Kattha, and 1 Kattha = 20 Dhur. This means 1 Bigha contains exactly 400 Dhur. Confirm the local convention before relying on this for deeds.
               </p>
             </div>
 
             <div className="mb-4">
               <h4 className="h6 fw-bold text-dark mb-1">Q4: How do I convert Bigha to Square Yards (Gaj)?</h4>
               <p className="text-muted mb-0">
-                First, calculate the square feet for your state. Then divide that number by 9. For example, a standard 1 Bigha in UP East is 27,225 sq ft. Dividing 27,225 by 9 gives exactly 3,025 Square Yards (or Gaj).
+                First convert Bigha to square feet for the selected state, then divide by 9. The calculator shows Gaj automatically after you choose a region.
               </p>
             </div>
 
             <div className="mb-4">
-              <h4 className="h6 fw-bold text-dark mb-1">Q5: How many Biswa is 1 Bigha in Western Uttar Pradesh?</h4>
+              <h4 className="h6 fw-bold text-dark mb-1">Q5: How do Eastern and Western UP Bigha differ?</h4>
               <p className="text-muted mb-0">
-                In UP West, 1 Bigha contains 20 Biswa. The total area of 1 Bigha is 27,000 square feet, which makes each Biswa equivalent to 1,350 square feet.
+                Both commonly use 20 Biswa per Bigha, but the square-foot base can differ. Use the{" "}
+                <Link href="/tools/land-area/bigha-to-kattha-up" className="fw-semibold">
+                  Uttar Pradesh converter
+                </Link>{" "}
+                for East vs West UP details.
               </p>
             </div>
           </div>
