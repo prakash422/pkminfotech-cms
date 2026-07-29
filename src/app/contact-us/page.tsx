@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function ContactUsPage() {
   return (
-    <div className="bg-light min-vh-100 py-4">
+    <div className="page-surface py-4">
       <div className="container" style={{ maxWidth: 960 }}>
         <BreadcrumbNav
           items={[
@@ -23,7 +23,7 @@ export default function ContactUsPage() {
 
         <div className="row g-4">
           <div className="col-12 col-md-5">
-            <div className="card border-0 shadow-sm p-4 h-100 bg-white" style={{ borderRadius: 16 }}>
+            <div className="tool-panel p-4 h-100">
               <h1 className="h3 fw-bold text-dark mb-3">Get in Touch</h1>
               <p className="text-secondary small mb-4">
                 Have questions about our tools, feedback on calculations, or partnership inquiries? Drop us an email and we will get back to you shortly.
@@ -64,7 +64,7 @@ export default function ContactUsPage() {
           </div>
 
           <div className="col-12 col-md-7">
-            <div className="card border-0 shadow-sm p-4 p-md-5 h-100 bg-white" style={{ borderRadius: 16 }}>
+            <div className="tool-panel p-4 p-md-5 h-100">
               <h2 className="h4 fw-bold text-dark mb-3">Support &amp; Advertisements</h2>
               <div className="lh-lg text-secondary small">
                 <p className="mb-3">

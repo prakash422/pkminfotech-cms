@@ -1,9 +1,11 @@
 "use client"
 
 import React, { useState, useEffect } from "react"
-import Link from "next/link"
 import BreadcrumbNav from "@/components/BreadcrumbNav"
-import { ArrowLeft, Calculator, Percent, Info, BookOpen, Receipt, Landmark, CheckCircle } from "lucide-react"
+import { Calculator, Percent, Info, Receipt, Landmark, CheckCircle } from "lucide-react"
+import ToolFocusAd from "@/components/tools/ToolFocusAd"
+import GuideSectionHeader from "@/components/tools/GuideSectionHeader"
+import ToolPageHeader from "@/components/tools/ToolPageHeader"
 
 export default function GstCalculatorPage({ title, description, basePath }: { title: string; description: string; basePath: string }) {
   const [amountInput, setAmountInput] = useState("1000")
@@ -63,26 +65,19 @@ export default function GstCalculatorPage({ title, description, basePath }: { ti
   return (
     <div>
       <BreadcrumbNav
-        items={[
+          compact
+          items={[
           { label: "Home", href: "/" },
-          { label: "Online Tools", href: "/tools" },
+          { label: "Tools", href: "/tools" },
           { label: "GST Calculator" }
         ]}
       />
-      <div className="mb-4 d-flex align-items-center gap-2">
-        <Link href="/tools" className="btn btn-light btn-sm rounded-circle p-2">
-          <ArrowLeft size={16} />
-        </Link>
-        <div>
-          <h1 className="h3 fw-bold mb-1">{title}</h1>
-          <p className="text-secondary small mb-0">{description}</p>
-        </div>
-      </div>
+      <ToolPageHeader title={title} description={description} />
 
-      <div className="row g-4 mb-5">
+      <div className="row g-4 mb-3">
         {/* Input Panel */}
         <div className="col-12 col-md-5">
-          <div className="card border-0 shadow-sm p-4 h-100 bg-white" style={{ borderRadius: 16 }}>
+          <div className="tool-panel p-4 h-100">
             <h2 className="h5 fw-bold mb-3 d-flex align-items-center gap-2 text-dark">
               <Calculator size={18} className="text-primary" /> Input Details
             </h2>
@@ -149,7 +144,7 @@ export default function GstCalculatorPage({ title, description, basePath }: { ti
 
         {/* Results Panel */}
         <div className="col-12 col-md-7">
-          <div className="card border-0 shadow-sm p-4 h-100 bg-white" style={{ borderRadius: 16 }}>
+          <div className="tool-panel p-4 h-100">
             <h2 className="h5 fw-bold mb-3 d-flex align-items-center gap-2 text-dark">
               <Receipt size={18} className="text-primary" /> Tax Breakdown
             </h2>
@@ -195,21 +190,21 @@ export default function GstCalculatorPage({ title, description, basePath }: { ti
         </div>
       </div>
 
+      <ToolFocusAd />
+
       {/* SEO rich content (More than 1000 words, highly unique) */}
-      <section className="card border-0 shadow-sm p-4 bg-white mt-4" style={{ borderRadius: 16 }}>
-        <div className="border-bottom pb-3 mb-4">
-          <h2 className="h4 fw-bold text-dark d-flex align-items-center gap-2 mb-1">
-            <BookOpen size={22} className="text-primary" /> Indian GST System: Standard Formulas &amp; Calculations Guide
-          </h2>
-          <span className="text-secondary small">Legal frameworks of CGST, SGST, IGST, reverse tax math, and business accounting guides</span>
-        </div>
+      <section className="flat-content-section border-top pt-4 mt-4">
+        <GuideSectionHeader
+          title="Indian GST System: Standard Formulas & Calculations Guide"
+          subtitle="Legal frameworks of CGST, SGST, IGST, reverse tax math, and business accounting guides"
+        />
 
         <div className="text-secondary small lh-lg">
           <p className="lead text-dark mb-4" style={{ fontSize: '1.05rem', fontWeight: 400 }}>
             The **Goods and Services Tax (GST)**, implemented in India on July 1, 2017, is a unified, destination-based indirect tax that replaced multiple central and state taxes (such as VAT, Excise Duty, Service Tax, and Octroi). Understanding how to calculate GST is essential for small businesses, freelancers, accountants, and consumers to check transparent pricing and ensure compliance.
           </p>
 
-          <h3 className="h5 fw-bold text-dark mt-4 mb-3 d-flex align-items-center gap-2">
+          <h3 className="guide-subheading">
             <Percent size={18} className="text-primary" /> 1. GST Calculation Mathematics &amp; Formulas
           </h3>
           <p>
@@ -235,7 +230,7 @@ export default function GstCalculatorPage({ title, description, basePath }: { ti
             GST Amount = 1,180 - 1,000 = ₹180.</em>
           </div>
 
-          <h3 className="h5 fw-bold text-dark mt-4 mb-3 d-flex align-items-center gap-2">
+          <h3 className="guide-subheading">
             <Landmark size={18} className="text-primary" /> 2. CGST vs. SGST vs. IGST: The Structural Split
           </h3>
           <p>
@@ -267,7 +262,7 @@ export default function GstCalculatorPage({ title, description, basePath }: { ti
             <li><strong>28% Slab:</strong> Luxury goods, motorcars, motorcycles, cement, carbonated soft drinks, air conditioners, and tobacco products. (Additional cesses may apply to luxury cars and tobacco).</li>
           </ul>
 
-          <h3 className="h5 fw-bold text-dark mt-4 mb-3 d-flex align-items-center gap-2">
+          <h3 className="guide-subheading">
             <CheckCircle size={18} className="text-primary" /> 4. Frequently Asked Questions (FAQ)
           </h3>
           <div className="border-top pt-3">

@@ -5,8 +5,8 @@ import { Metadata } from 'next'
 import { headers } from 'next/headers'
 
 export const metadata: Metadata = {
-  title: '404 - Page Not Found | pkminfotech',
-  description: 'The page you are looking for could not be found. Explore our latest tech news, business updates, and travel guides.',
+  title: '404 - Page Not Found',
+  description: 'The page you are looking for could not be found. Try our free online tools for land, education, and finance.',
   robots: {
     index: false,
     follow: false
@@ -94,10 +94,10 @@ export default async function NotFound() {
         <div className="mt-6 pt-6 border-t border-gray-200">
           <p className="text-sm text-gray-500 mb-3">कुछ खास खोज रहे हैं?</p>
           <div className="flex flex-wrap gap-2 justify-center">
-            <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs">Technology</span>
-            <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs">Travel</span>
-            <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs">Business</span>
-            <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs">Life Tips</span>
+            <Link href="/tools" className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium hover:bg-blue-200">Online Tools</Link>
+            <Link href="/tools/land-area" className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs hover:bg-gray-200">Land Area</Link>
+            <Link href="/tools/education" className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs hover:bg-gray-200">Education</Link>
+            <Link href="/latest" className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs hover:bg-gray-200">Guides</Link>
           </div>
         </div>
 
@@ -139,28 +139,37 @@ function getIntelligentSuggestions(pathname: string) {
     })
   }
 
-  if (lower.includes('travel') || lower.includes('diwali') || lower.includes('festival')) {
-    suggestions.push({
-      title: 'Travel & Lifestyle',
-      description: 'यात्रा और जीवनशैली की जानकारी',
-      url: '/latest'
-    })
-  }
-
   // Default suggestions if no matches
   if (suggestions.length === 0) {
     suggestions.push(
       {
-        title: 'Popular Posts',
-        description: 'सबसे लोकप्रिय लेख पढ़ें',
-        url: '/latest'
+        title: 'Free Online Tools',
+        description: 'Land, education & finance calculators',
+        url: '/tools'
       },
       {
-        title: 'Categories',
-        description: 'विषय के अनुसार ब्राउज़ करें',
-        url: '/hindi'
+        title: 'Guides & Updates',
+        description: 'Helpful articles and how-tos',
+        url: '/latest'
       }
     )
+  }
+
+  // Always surface tools for converter/calculator intent
+  if (/bigha|kattha|cgpa|rent|gst|sip|photo|tool|calculator|converter/.test(lower)) {
+    suggestions.unshift({
+      title: 'Free Online Tools',
+      description: 'Open calculators and converters',
+      url: '/tools'
+    })
+  }
+
+  if (lower.includes('travel') || lower.includes('diwali') || lower.includes('festival')) {
+    suggestions.push({
+      title: 'Guides & Updates',
+      description: 'Helpful articles and how-tos',
+      url: '/latest'
+    })
   }
 
   return suggestions.slice(0, 3) // Max 3 suggestions

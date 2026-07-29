@@ -7,12 +7,12 @@ import { Metadata } from "next"
 import OptimizedImage from '@/components/OptimizedImage'
 
 export const metadata: Metadata = {
-  title: 'English Blog Posts | pkminfotech - Tech News & Updates',
-  description: 'Read English blog posts about technology, business, and digital trends on pkminfotech.',
-  keywords: 'english tech blog, technology articles, business updates, digital insights',
+  title: 'English Guides & Updates',
+  description: 'English guides and updates from pkminfotech. Explore free online tools for land, education, and finance utilities.',
+  keywords: 'pkminfotech english guides, online tools, calculators India',
   openGraph: {
-    title: 'English Blog Posts | pkminfotech',
-    description: 'English articles about technology and business',
+    title: 'English Guides & Updates | pkminfotech',
+    description: 'English guides alongside free online tools from pkminfotech',
     images: [{ url: '/favicon-32x32.png', width: 32, height: 32 }],
   },
 }
@@ -76,7 +76,7 @@ export default async function EnglishBlogPage() {
   const blogs = await getEnglishBlogs()
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
+    <div className="page-surface">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
         
         {/* Main Content - Narrower Container for Auto Ads on Sides */}
@@ -97,10 +97,14 @@ export default async function EnglishBlogPage() {
 
           <div className="mb-8">
             <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              English Blog Posts
+              English Guides
             </h1>
             <p className="text-lg text-gray-600">
-              Read our English articles about technology, business insights, and digital trends.
+              English guides and updates. Need a calculator? Try our{" "}
+              <Link href="/tools" className="text-blue-600 font-semibold hover:underline">
+                free online tools
+              </Link>
+              .
             </p>
           </div>
 
@@ -114,7 +118,7 @@ export default async function EnglishBlogPage() {
           ) : (
             <div className="grid gap-8">
               {blogs.map((blog) => (
-                <article key={blog.id} className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
+                <article key={blog.id} className="border border-gray-200 rounded-lg overflow-hidden hover:border-gray-300 transition-colors bg-white">
                   <div className="md:flex">
                     {blog.coverImage && (
                       <div className="md:w-1/3">

@@ -1,13 +1,16 @@
 import { notFound, redirect } from "next/navigation"
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Calendar, User, Share2, Eye, Clock, Bookmark, ChevronRight, Wrench } from "lucide-react"
+import { Calendar, Clock, ArrowRight, Wrench } from "lucide-react"
 import { formatDate } from "@/lib/utils"
 import { Metadata } from "next"
-import OptimizedImage from '@/components/OptimizedImage'
+import OptimizedImage from "@/components/OptimizedImage"
 import { prisma } from "@/lib/prisma"
 import { generateCanonicalUrl } from "@/lib/canonical-utils"
-import { toolItems } from "@/data/tools-data"
+import { getBridgeToolsForBlog } from "@/data/tools-data"
+import { formatBlogContent } from "@/lib/blog-content"
+import ContentAdBand from "@/components/ContentAdBand"
+import SideRailAds from "@/components/SideRailAds"
+import BreadcrumbNav from "@/components/BreadcrumbNav"
 
 interface BlogPageProps {
   params: Promise<{
@@ -98,8 +101,8 @@ export async function generateMetadata({ params }: BlogPageProps): Promise<Metad
 
   if (!blog) {
     return {
-      title: 'Blog Post Not Found | pkminfotech',
-      description: 'The requested blog post could not be found.',
+      title: 'Guide Not Found',
+      description: 'The requested guide could not be found. Try our free online tools instead.',
     }
   }
 
@@ -110,9 +113,9 @@ export async function generateMetadata({ params }: BlogPageProps): Promise<Metad
   const canonicalUrl = generateCanonicalUrl(`/${blog.slug}`)
 
   return {
-    title: `${blog.title} | pkminfotech - Latest Tech News & Updates`,
-    description: blog.excerpt || `Read ${blog.title} on pkminfotech. Latest tech news, business updates, and digital insights.`,
-    keywords: `tech news, ${blog.category}, business updates, technology, digital trends, India`,
+    title: blog.title,
+    description: blog.excerpt || `Read ${blog.title} on pkminfotech — free online tools and helpful guides.`,
+    keywords: `${blog.category}, pkminfotech guides, online tools India`,
     authors: [{ name: 'pkminfotech Team' }],
     openGraph: {
       title: blog.title,
@@ -192,20 +195,13 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
   // Generate proper canonical URL that resolves redirects for structured data
   const structuredDataCanonicalUrl = generateCanonicalUrl(`/${blog.slug}`)
 
-  // Dynamic tool recommendation matching logic
-  const getRecommendedTools = (cat: string) => {
-    if (cat === 'hindi') {
-      return toolItems.filter(t => t.slug === 'bigha-to-kattha-converter' || t.slug === 'gst-calculator')
-    } else if (cat === 'current-affairs') {
-      return toolItems.filter(t => t.slug === 'age-calculator' || t.slug === 'cgpa-to-percentage-converter')
-    } else {
-      return toolItems.filter(t => t.slug === 'sip-calculator' || t.slug === 'rent-receipt-generator')
-    }
-  }
-
-  const recommendedTools = getRecommendedTools(blog.category).length > 0
-    ? getRecommendedTools(blog.category)
-    : toolItems.slice(0, 2)
+  // Soft bridge: old blog posts pass internal authority to tools
+  const recommendedTools = getBridgeToolsForBlog(
+    blog.title,
+    `${blog.excerpt || ""} ${blog.content}`,
+    blog.category,
+    2
+  )
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -240,21 +236,11 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
     "inLanguage": "en-US"
   }
 
-  const getCategoryBadgeColor = (category: string) => {
-    switch (category) {
-      case 'hindi': return 'bg-orange-100 text-orange-800 border-orange-200'
-      case 'english': return 'bg-green-100 text-green-800 border-green-200'
-      case 'latest': return 'bg-blue-100 text-blue-800 border-blue-200'
-      case 'current-affairs': return 'bg-emerald-100 text-emerald-800 border-emerald-200'
-      default: return 'bg-gray-100 text-gray-800 border-gray-200'
-    }
-  }
-
   const getCategoryLabel = (category: string) => {
     switch (category) {
       case 'hindi': return 'हिंदी ब्लॉग'
       case 'english': return 'English Blog'
-      case 'latest': return 'Latest Blog'
+      case 'latest': return 'Guides'
       case 'current-affairs': return 'Current Affairs'
       default: return category
     }
@@ -267,213 +253,217 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
 
-      <div className="auto-ads-space min-h-screen bg-gray-50">
-        <div className="bg-white">
-          <div className="container py-3" style={{ maxWidth: 1120 }}>
-            <nav aria-label="Breadcrumb">
-              <div className="sm:hidden">
-                <div className="flex items-center space-x-2 text-sm text-gray-500 mb-1">
-                  <Link href="/" className="hover:text-blue-600 transition-colors font-medium">
-                    Home
-                  </Link>
-                  <ChevronRight className="h-4 w-4" aria-hidden="true" />
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getCategoryBadgeColor(blog.category)}`}>
-                    {getCategoryLabel(blog.category)}
-                  </span>
-                </div>
-                <div className="text-gray-900 font-semibold text-sm leading-5 line-clamp-1">
-                  {blog.title}
-                </div>
+      <div className="page-surface tool-page-shell py-1 py-md-3">
+        <SideRailAds />
+        <div className="container blog-post" style={{ maxWidth: 820 }}>
+          <BreadcrumbNav
+            compact
+            items={[
+              { label: "Home", href: "/" },
+              { label: "Guides", href: "/latest" },
+              {
+                label:
+                  blog.title.length > 42
+                    ? `${blog.title.slice(0, 42).trimEnd()}…`
+                    : blog.title,
+              },
+            ]}
+          />
+
+          <article itemScope itemType="http://schema.org/BlogPosting">
+            <header className="blog-post-header">
+              <div className="blog-post-meta">
+                <span className="chip chip-active blog-post-chip">
+                  {getCategoryLabel(blog.category)}
+                </span>
+                <span className="blog-post-meta-item">
+                  <Clock size={12} aria-hidden="true" />
+                  5 min read
+                </span>
+                <time
+                  dateTime={blog.publishedAt || blog.createdAt}
+                  className="blog-post-meta-item"
+                  itemProp="datePublished"
+                >
+                  <Calendar size={12} aria-hidden="true" />
+                  {formatDate(blog.publishedAt || blog.createdAt)}
+                </time>
               </div>
 
-              <ol className="hidden sm:flex items-center space-x-2 text-sm text-gray-500 flex-wrap">
-                <li>
-                  <Link href="/" className="hover:text-blue-600 transition-colors">
-                    Home
-                  </Link>
-                </li>
-                <ChevronRight className="h-4 w-4 flex-shrink-0" aria-hidden="true" />
-                <li>
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getCategoryBadgeColor(blog.category)}`}>
-                    {getCategoryLabel(blog.category)}
-                  </span>
-                </li>
-                <ChevronRight className="h-4 w-4 flex-shrink-0" aria-hidden="true" />
-                <li className="text-gray-900 truncate max-w-md lg:max-w-lg" aria-current="page">
-                  {blog.title}
-                </li>
-              </ol>
-            </nav>
-          </div>
+              <h1 className="blog-post-title" itemProp="headline">
+                {blog.title}
+              </h1>
+            </header>
+
+            {blog.coverImage ? (
+              <div className="blog-post-cover">
+                <OptimizedImage
+                  src={blog.coverImage}
+                  alt={blog.title}
+                  width={800}
+                  height={450}
+                  className="w-100 h-100 object-fit-cover"
+                  sizes="(max-width: 768px) 100vw, 820px"
+                  priority
+                />
+              </div>
+            ) : null}
+
+            <ContentAdBand className="blog-top-ad my-2" />
+
+            <div
+              dangerouslySetInnerHTML={{ __html: formatBlogContent(blog.content) }}
+              itemProp="articleBody"
+              className="blog-article-body"
+            />
+
+            <ContentAdBand className="blog-bottom-ad my-3" />
+
+            <section className="blog-related-tools" aria-labelledby="related-tools-heading">
+              <div className="blog-related-label">
+                <Wrench size={14} aria-hidden="true" />
+                <span>Related tools</span>
+              </div>
+              <h2 id="related-tools-heading" className="blog-related-title">
+                Free calculators you may need next
+              </h2>
+              <div className="row g-2">
+                {recommendedTools.map((tool) => (
+                  <div className="col-12 col-sm-6" key={tool.slug}>
+                    <Link href={tool.path} className="blog-tool-card">
+                      <span className="blog-tool-card-title">
+                        {tool.title}
+                        <ArrowRight size={14} aria-hidden="true" />
+                      </span>
+                      <span className="blog-tool-card-desc">{tool.description}</span>
+                    </Link>
+                  </div>
+                ))}
+              </div>
+              <p className="blog-related-more">
+                <Link href="/tools">All free tools</Link>
+                {" · "}
+                <Link href="/latest">More guides</Link>
+              </p>
+            </section>
+
+            <footer className="blog-post-footer">
+              <p className="blog-post-updated mb-0">
+                Updated {formatDate(blog.updatedAt || blog.createdAt)}
+              </p>
+            </footer>
+          </article>
         </div>
-
-        {/* Main Content Container - no manual ad blocks, Google will auto-place ads */}
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="py-2 lg:py-3">
-            
-            {/* Main Content - Narrower Container for Auto Ads on Sides */}
-            <main role="main" className="max-w-4xl mx-auto">  {/* Restore max width for main content */}
-              <article itemScope itemType="http://schema.org/BlogPosting">
-                {blog.coverImage && (
-                  <div className="aspect-video w-full overflow-hidden rounded-lg lg:rounded-xl mb-6 lg:mb-8 shadow-md lg:shadow-lg">
-                    <OptimizedImage
-                      src={blog.coverImage}
-                      alt={blog.title}
-                      width={800}
-                      height={600}
-                      className="w-full h-full object-cover"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      priority={true}
-                    />
-                  </div>
-                )}
-
-                <header className="mb-8 lg:mb-12">
-                  <div className="flex items-center space-x-3 mb-4">
-                    <span className={`px-3 py-1 rounded-full text-sm font-medium border ${getCategoryBadgeColor(blog.category)}`}>
-                      {getCategoryLabel(blog.category)}
-                    </span>
-                    <div className="flex items-center text-gray-500 text-sm">
-                      <Eye className="h-4 w-4 mr-1" />
-                      <span>2.1k views</span>
-                    </div>
-                    <div className="flex items-center text-gray-500 text-sm">
-                      <Clock className="h-4 w-4 mr-1" />
-                      <span>5 min read</span>
-                    </div>
-                  </div>
-
-                  <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 lg:mb-6 leading-tight" itemProp="headline">
-                    {blog.title}
-                  </h1>
-
-                  {blog.excerpt && (
-                    <p className="text-lg sm:text-xl lg:text-2xl text-gray-600 mb-6 lg:mb-8 leading-relaxed" itemProp="description">
-                      {blog.excerpt}
-                    </p>
-                  )}
-
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 py-4 lg:py-6 border-t border-b border-gray-200">
-                    <div className="flex flex-col sm:flex-row sm:items-center text-gray-600 space-y-3 sm:space-y-0 sm:space-x-6">
-                      <div className="flex items-center" itemProp="author" itemScope itemType="http://schema.org/Person">
-                        <div className="w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center mr-3">
-                          <User className="h-5 w-5 lg:h-6 lg:w-6 text-blue-600" />
-                        </div>
-                        <div>
-                          <p className="font-medium text-gray-900 text-sm lg:text-base" itemProp="name">pkminfotech Team</p>
-                          <p className="text-xs lg:text-sm text-gray-500">Published Author</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center">
-                        <Calendar className="h-4 w-4 lg:h-5 lg:w-5 mr-2 text-gray-400" />
-                        <time dateTime={blog.publishedAt || blog.createdAt} className="text-sm lg:text-base" itemProp="datePublished">
-                          {formatDate(blog.publishedAt || blog.createdAt)}
-                        </time>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Button variant="outline" size="sm" className="flex items-center">
-                        <Bookmark className="h-4 w-4 mr-2" />
-                        Save
-                      </Button>
-                      <Button variant="outline" size="sm" className="flex items-center">
-                        <Share2 className="h-4 w-4 mr-2" />
-                        Share
-                      </Button>
-                    </div>
-                  </div>
-                </header>
-
-                {/* Article Content */}
-                <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden mb-8">
-                  <div className="p-6 lg:p-8">
-                    <div className="prose prose-lg max-w-none">
-                      <div 
-                        dangerouslySetInnerHTML={{ 
-                          __html: blog.content
-                            // Convert insecure internal links to secure HTTPS
-                            .replace(/href="http:\/\/(www\.)?pkminfotech\.com/g, 'href="https://www.pkminfotech.com')
-                            // Convert line breaks to HTML
-                            .replace(/\n\n/g, '</p><p class="mb-4 text-gray-700 leading-relaxed">')
-                            .replace(/\n/g, '<br>')
-                            // Wrap in paragraph tags
-                            .replace(/^/, '<p class="mb-4 text-gray-700 leading-relaxed">')
-                            .replace(/$/, '</p>')
-                            // Handle headings
-                            .replace(/### (.*?)(<br>|$)/g, '</p><h3 class="text-xl font-bold text-gray-900 mt-8 mb-4">$1</h3><p class="mb-4 text-gray-700 leading-relaxed">')
-                            .replace(/## (.*?)(<br>|$)/g, '</p><h2 class="text-2xl font-bold text-gray-900 mt-8 mb-6">$1</h2><p class="mb-4 text-gray-700 leading-relaxed">')
-                            .replace(/# (.*?)(<br>|$)/g, '</p><h1 class="text-3xl font-bold text-gray-900 mt-8 mb-6">$1</h1><p class="mb-4 text-gray-700 leading-relaxed">')
-                            // Handle bold text
-                            .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-gray-900">$1</strong>')
-                            // Clean up empty paragraphs
-                            .replace(/<p[^>]*><\/p>/g, '')
-                            .replace(/<p[^>]*>\s*<\/p>/g, '')
-                        }} 
-                        itemProp="articleBody" 
-                        className="text-gray-700 leading-relaxed [&>h1]:text-3xl [&>h1]:font-bold [&>h1]:text-gray-900 [&>h1]:mt-8 [&>h1]:mb-6 [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:text-gray-900 [&>h2]:mt-8 [&>h2]:mb-6 [&>h3]:text-xl [&>h3]:font-bold [&>h3]:text-gray-900 [&>h3]:mt-6 [&>h3]:mb-4 [&>p]:mb-4 [&>p]:leading-relaxed [&>div]:my-6"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Dynamic Related Tools Box (SEO Internal Linking Widget) */}
-                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100/50 mb-8">
-                  <h3 className="text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
-                    <Wrench className="h-5 w-5 text-indigo-600" />
-                    Recommended Calculators &amp; Tools
-                  </h3>
-                  <p className="text-sm text-gray-600 mb-4">
-                    Simplify your calculations and conversions instantly using our 100% free web utility tools.
-                  </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {recommendedTools.map((tool) => (
-                      <Link 
-                        key={tool.slug} 
-                        href={tool.path}
-                        className="flex flex-col p-4 bg-white hover:bg-blue-50/20 border border-gray-100 rounded-xl shadow-sm hover:shadow-md hover:border-blue-200 transition-all group"
-                      >
-                        <span className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors flex items-center justify-between text-sm sm:text-base">
-                          {tool.title}
-                          <ChevronRight className="h-4 w-4 text-gray-400 group-hover:translate-x-1 transition-transform" />
-                        </span>
-                        <span className="text-xs text-gray-500 mt-1 line-clamp-2">
-                          {tool.description}
-                        </span>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-
-                <footer className="border-t border-gray-200 pt-6 lg:pt-8">
-                  <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-                    <div className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:space-y-0 sm:space-x-4">
-                      <span className="text-sm font-medium text-gray-600">Share this article:</span>
-                      <div className="flex flex-wrap gap-2">
-                        <Button size="sm" variant="outline" className="text-blue-600 border-blue-200 hover:bg-blue-50 text-xs px-3 py-2">
-                          <Share2 className="h-3 w-3 mr-1" />
-                          Facebook
-                        </Button>
-                        <Button size="sm" variant="outline" className="text-sky-600 border-sky-200 hover:bg-sky-50 text-xs px-3 py-2">
-                          <Share2 className="h-3 w-3 mr-1" />
-                          Twitter
-                        </Button>
-                        <Button size="sm" variant="outline" className="text-blue-700 border-blue-200 hover:bg-blue-50 text-xs px-3 py-2">
-                          <Share2 className="h-3 w-3 mr-1" />
-                          LinkedIn
-                        </Button>
-                      </div>
-                    </div>
-                    <div className="text-sm text-gray-500 order-first lg:order-last">
-                      Last updated: {formatDate(blog.updatedAt || blog.createdAt)}
-                    </div>
-                  </div>
-                </footer>
-              </article>
-            </main>
-          </div>
-        </div>
-
       </div>
+
+      <style>{`
+        .blog-post-header { margin-bottom: 0.75rem; }
+        .blog-post-meta {
+          display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 8px;
+        }
+        .blog-post-chip {
+          height: 24px !important; font-size: 11px !important;
+          background: #eff6ff !important; border-color: #dbeafe !important; color: #1d4ed8 !important;
+        }
+        .blog-post-meta-item {
+          display: inline-flex; align-items: center; gap: 4px;
+          color: #94a3b8; font-size: 12px; font-weight: 500;
+        }
+        .blog-post-title {
+          margin: 0; color: #0f172a;
+          font-size: clamp(1.35rem, 4.8vw, 2rem); font-weight: 750;
+          line-height: 1.22; letter-spacing: -0.03em;
+        }
+        .blog-post-cover {
+          margin: 0.85rem 0 0.75rem; aspect-ratio: 16 / 9; overflow: hidden;
+          border-radius: 12px; background: #f1f5f9;
+        }
+        .blog-article-body { color: #334155; font-size: 0.95rem; line-height: 1.7; }
+        .blog-article-body p { margin: 0 0 1rem; }
+        .blog-article-body h2, .blog-article-body .blog-h2 {
+          margin: 1.5rem 0 0.55rem; color: #0f172a; font-size: 1.2rem;
+          font-weight: 750; line-height: 1.3; letter-spacing: -0.02em;
+        }
+        .blog-article-body h3, .blog-article-body .blog-h3,
+        .blog-article-body h4 {
+          margin: 1.2rem 0 0.45rem; color: #0f172a; font-size: 1.05rem;
+          font-weight: 700; line-height: 1.35;
+        }
+        .blog-article-body ul, .blog-article-body ol { margin: 0 0 1rem; padding-left: 1.15rem; }
+        .blog-article-body li { margin-bottom: 0.35rem; }
+        .blog-article-body li > p { margin-bottom: 0.35rem; }
+        .blog-article-body a { color: #1d4ed8; text-decoration: none; overflow-wrap: anywhere; }
+        .blog-article-body a:hover { text-decoration: underline; }
+        .blog-article-body img {
+          max-width: 100%; height: auto; margin: 0.5rem 0 1rem; border-radius: 10px;
+        }
+        .blog-article-body strong { color: #0f172a; font-weight: 700; }
+        .blog-note {
+          display: block; margin: 1.15rem 0; padding: 12px 14px;
+          border: 1px solid #fde68a; border-left: 3px solid #f59e0b;
+          border-radius: 10px; background: #fffbeb;
+        }
+        .blog-note-label {
+          display: block; margin-bottom: 4px; color: #92400e;
+          font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+        }
+        .blog-note-body p { margin: 0 0 0.5rem; color: #78350f; font-size: 0.875rem; line-height: 1.6; }
+        .blog-note-body p:last-child { margin-bottom: 0; }
+        .blog-also-read {
+          display: block; margin: 1.15rem 0; padding: 12px 14px;
+          border: 1px solid #e5e7eb; border-radius: 10px; background: #f8fafc;
+        }
+        .blog-also-read-label {
+          display: block; margin-bottom: 6px; color: #2563eb;
+          font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+        }
+        .blog-also-read ul { margin: 0; padding-left: 1.05rem; }
+        .blog-also-read li { margin-bottom: 4px; font-size: 0.875rem; line-height: 1.5; }
+        .blog-also-read li:last-child { margin-bottom: 0; }
+        .blog-also-read a { color: #1d4ed8; font-weight: 600; text-decoration: none; }
+        .blog-also-read a:hover { text-decoration: underline; }
+        .blog-article-body .blog-byline {
+          margin: 1.25rem 0 0; color: #94a3b8; font-size: 0.75rem; font-style: italic;
+        }
+        .blog-related-tools {
+          margin: 1.25rem 0 1rem; padding: 0.9rem 0 0; border-top: 1px solid #eef2f7;
+        }
+        .blog-related-label {
+          display: inline-flex; align-items: center; gap: 6px; margin-bottom: 6px;
+          color: #2563eb; font-size: 11px; font-weight: 700;
+          letter-spacing: 0.04em; text-transform: uppercase;
+        }
+        .blog-related-title {
+          margin: 0 0 0.65rem; color: #0f172a; font-size: 1.05rem;
+          font-weight: 750; letter-spacing: -0.015em;
+        }
+        .blog-tool-card {
+          display: flex; flex-direction: column; gap: 4px; height: 100%;
+          padding: 10px 12px; border: 1px solid #e5e7eb; border-radius: 10px;
+          background: #fff; text-decoration: none; transition: border-color 0.15s ease;
+        }
+        .blog-tool-card:hover { border-color: #bfdbfe; }
+        .blog-tool-card-title {
+          display: flex; align-items: center; justify-content: space-between; gap: 8px;
+          color: #0f172a; font-size: 0.9rem; font-weight: 700; line-height: 1.3;
+        }
+        .blog-tool-card:hover .blog-tool-card-title { color: #2563eb; }
+        .blog-tool-card-desc {
+          color: #64748b; font-size: 0.75rem; line-height: 1.35;
+          display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .blog-related-more { margin: 0.75rem 0 0; color: #64748b; font-size: 0.8rem; }
+        .blog-related-more a { color: #2563eb; font-weight: 600; text-decoration: none; }
+        .blog-related-more a:hover { text-decoration: underline; }
+        .blog-post-footer {
+          margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #eef2f7; padding-bottom: 1rem;
+        }
+        .blog-post-updated { color: #94a3b8; font-size: 0.75rem; }
+        @media (max-width: 575px) {
+          .blog-post-title { font-size: 1.35rem; }
+          .blog-article-body { font-size: 0.9rem; }
+        }
+      `}</style>
     </>
   )
 }

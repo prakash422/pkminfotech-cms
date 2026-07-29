@@ -11,6 +11,8 @@ import ClientScripts from '@/components/ClientScripts'
 import OptimizedImage from '@/components/OptimizedImage'
 import { generateCanonicalUrl } from "@/lib/canonical-utils"
 import { toolItems } from "@/data/tools-data"
+import ContentAdBand from "@/components/ContentAdBand"
+import SideRailAds from "@/components/SideRailAds"
 
 // Enable ISR with 60 second revalidation
 export async function generateMetadata({ searchParams }: { searchParams: Promise<{ category?: string; page?: string }> }): Promise<Metadata> {
@@ -19,12 +21,12 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
   const selectedCategory = params.category || 'all'
   
   const pageTitle = currentPage > 1 
-    ? `Latest Blogs - Page ${currentPage} | pkminfotech`
-    : 'Latest Tech News, Business Updates & Travel Guides | pkminfotech'
+    ? `Guides & Updates - Page ${currentPage}`
+    : 'Free Online Tools & Calculators for India'
   
   const pageDescription = currentPage > 1
-    ? `Browse our latest blog posts on page ${currentPage}. Discover tech news, travel guides, and business insights.`
-    : 'Your source for latest tech news, business updates, travel guides for India and worldwide destinations, and daily insights on technology and digital trends.'
+    ? `Browse helpful guides and updates on page ${currentPage} from pkminfotech.`
+    : 'Free online tools for land area conversion, CGPA to percentage, HRA rent receipts, GST/SIP calculators, and exam photo compression — plus helpful guides.'
 
   // Generate proper canonical URL that resolves redirects
   const pagePath = currentPage > 1 
@@ -36,7 +38,7 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
   return {
     title: pageTitle,
     description: pageDescription,
-    keywords: "tech news, business updates, travel guides India, technology news, digital trends, tourist places, daily news, pkminfotech",
+    keywords: "online tools, bigha to kattha, rent receipt, cgpa to percentage, photo compressor, gst calculator, sip calculator, pkminfotech",
     authors: [{ name: "pkminfotech Team" }],
     creator: "pkminfotech",
     publisher: "pkminfotech",
@@ -210,35 +212,49 @@ async function getBlogs(category?: string, page: number = 1, limit: number = 15)
 function generateStructuredData(blogs: BlogPost[]) {
   return {
     "@context": "https://schema.org",
-    "@type": "Blog",
+    "@type": "WebSite",
     "name": "pkminfotech",
-    "description": "Latest tech news, business updates & travel guides from India and worldwide",
+    "description": "Free online tools for land area, education, finance and image utilities in India — plus helpful guides",
     "url": "https://www.pkminfotech.com",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://www.pkminfotech.com/favicon.ico",
-      "width": 32,
-      "height": 32
-    },
-    "author": {
-      "@type": "Organization",
-      "name": "pkminfotech",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://www.pkminfotech.com/favicon.ico",
-        "width": 32,
-        "height": 32
-      }
-    },
     "publisher": {
       "@type": "Organization",
       "name": "pkminfotech",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://www.pkminfotech.com/favicon.ico"
+        "url": "https://www.pkminfotech.com/android-chrome-192x192.png"
       }
     },
-    "blogPost": blogs.map(blog => ({
+    "mainEntity": {
+      "@type": "ItemList",
+      "name": "Popular free tools",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Bigha to Kattha Converter",
+          "url": "https://www.pkminfotech.com/tools/land-area/bigha-to-kattha"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Rent Receipt Generator",
+          "url": "https://www.pkminfotech.com/tools/utility/rent-receipt"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "CGPA to Percentage Converter",
+          "url": "https://www.pkminfotech.com/tools/education/cgpa-to-percentage"
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "name": "Exam Photo Compressor",
+          "url": "https://www.pkminfotech.com/tools/utility/photo-compressor"
+        }
+      ]
+    },
+    "hasPart": blogs.slice(0, 4).map(blog => ({
       "@type": "BlogPosting",
       "headline": blog.title,
       "description": blog.excerpt || blog.title,
@@ -249,11 +265,7 @@ function generateStructuredData(blogs: BlogPost[]) {
         "@type": "Person",
         "name": blog.author.name || "pkminfotech Team"
       },
-      "publisher": {
-        "@type": "Organization",
-        "name": "pkminfotech"
-      },
-      "image": blog.coverImage || "/favicon.ico"
+      "image": blog.coverImage || "https://www.pkminfotech.com/favicon.ico"
     }))
   }
 }
@@ -291,32 +303,41 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
         }}
       />
 
-      <main className="bg-light pb-4 pt-2">
+      <main className="page-surface pb-4 pt-2">
+        <SideRailAds />
         <div className="container compact-home pt-0">
           <section className="card border-0 shadow-lg figma-space-24 overflow-hidden compact-hero" style={{ border: '0', borderRadius: '18px' }}>
             <div className="figma-hero-unified position-relative">
               <div className="figma-hero-content">
+                <p className="hero-eyebrow d-md-none mb-1">Free utility tools</p>
                 <h1 className="fw-bold text-white mb-2 compact-title figma-title">
-                  Free Online Tools &amp;
-                  <br className="d-none d-md-block" />
-                  <span className="text-gradient">Smart Calculators</span>
+                  <span className="d-md-none">Tools for land, study &amp; daily work</span>
+                  <span className="d-none d-md-inline">
+                    Free Online Tools for
+                    <br className="d-none d-md-block" />
+                    <span className="text-gradient">Land, Study &amp; Daily Tasks</span>
+                  </span>
                 </h1>
-                <p className="text-white-50 mb-3 compact-subtitle" style={{ fontSize: '1rem', lineHeight: '1.5' }}>
-                  Simplify your calculations, land area conversions, planning, and tasks with our simple, instant tools.
+                <p className="text-white-50 mb-3 compact-subtitle hero-sub">
+                  <span className="d-md-none">Bigha–Kattha, CGPA, rent receipt, GST &amp; photo tools — free, no login.</span>
+                  <span className="d-none d-md-inline">
+                    Bigha–Kattha converters, CGPA tools, rent receipts, GST/SIP calculators, and exam photo compression — free and instant.
+                  </span>
                 </p>
                 <div className="d-flex flex-wrap gap-2 figma-hero-cta">
                   <Link href="/tools" className="figma-btn figma-btn-primary">
                     Explore Tools <ArrowRight size={14} />
                   </Link>
-                  <Link href="/latest" className="figma-btn figma-btn-outline" style={{ background: 'transparent', color: '#fff', borderColor: 'rgba(255,255,255,0.3)' }}>
-                    Read Our Blog <ArrowRight size={14} />
+                  <Link href="/tools/land-area/bigha-to-kattha" className="figma-btn figma-btn-outline hero-secondary-cta">
+                    Try Land Converter <ArrowRight size={14} />
                   </Link>
                 </div>
-                <div className="d-flex flex-wrap gap-2 mt-3">
+                <div className="d-none d-md-flex flex-wrap gap-2 mt-3">
                   <span className="hero-chip"><BadgeCheck size={14} /> 100% Free</span>
                   <span className="hero-chip"><Clock3 size={14} /> Instant Results</span>
                   <span className="hero-chip"><Wrench size={14} /> Easy to Use</span>
                 </div>
+                <p className="hero-trust-mobile d-md-none mb-0">Free · Instant · No login needed</p>
               </div>
               <div className="figma-hero-image-floating" aria-hidden="true">
                 <Image
@@ -332,6 +353,8 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
             </div>
           </section>
 
+          <ContentAdBand className="home-hero-ad" />
+
           <section className="figma-space-24 explore-core-features">
             <div className="core-features-header text-center mb-4">
               <h2 className="core-features-title">
@@ -343,7 +366,7 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
             </div>
             <div className="row g-3 g-md-4">
               <div className="col-6 col-md-6 col-lg-3">
-                <Link href="/tools/land-area/bigha-to-kattha" className="text-decoration-none">
+                <Link href="/tools/land-area" className="text-decoration-none">
                   <div className="card h-100 border figma-card category-card p-3">
                     <div className="d-flex align-items-center gap-2 mb-2">
                       <div className="category-icon-wrap cat-indigo">
@@ -357,7 +380,7 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                 </Link>
               </div>
               <div className="col-6 col-md-6 col-lg-3">
-                <Link href="/tools/education/cgpa-to-percentage" className="text-decoration-none">
+                <Link href="/tools/education" className="text-decoration-none">
                   <div className="card h-100 border figma-card category-card p-3">
                     <div className="d-flex align-items-center gap-2 mb-2">
                       <div className="category-icon-wrap cat-emerald">
@@ -371,7 +394,7 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                 </Link>
               </div>
               <div className="col-6 col-md-6 col-lg-3">
-                <Link href="/tools/utility/rent-receipt" className="text-decoration-none">
+                <Link href="/tools/utility" className="text-decoration-none">
                   <div className="card h-100 border figma-card category-card p-3">
                     <div className="d-flex align-items-center gap-2 mb-2">
                       <div className="category-icon-wrap cat-amber">
@@ -379,8 +402,8 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                       </div>
                       <h3 className="h6 fw-bold mb-0 text-dark">Finance &amp; Tax</h3>
                     </div>
-                    <p className="small text-secondary flex-grow-1 mb-3 d-none d-md-block">HRA calculator, Old vs New tax Slab, Rent Receipt generator.</p>
-                    <span className="category-cta d-none d-md-block">Generate Receipt &rarr;</span>
+                    <p className="small text-secondary flex-grow-1 mb-3 d-none d-md-block">Rent receipts, GST calculator, and SIP planning tools.</p>
+                    <span className="category-cta d-none d-md-block">Open Finance Tools &rarr;</span>
                   </div>
                 </Link>
               </div>
@@ -439,8 +462,13 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
             </div>
           </section>
 
+          <ContentAdBand className="home-mid-ad" />
+
           <section className="figma-space-24">
-            <h2 className="text-center fw-bold mb-2 h4 figma-section-title">Latest Articles &amp; Updates</h2>
+            <h2 className="text-center fw-bold mb-2 h4 figma-section-title">Guides &amp; Updates</h2>
+            <p className="text-secondary small text-center mb-3">
+              Helpful articles from our blog — secondary to free tools, still useful for tips and how-tos.
+            </p>
             <div className="row g-3">
               {latestBlogs.length > 0 ? (
                 latestBlogs.map((blog: BlogPost) => (
@@ -458,7 +486,7 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                           />
                         ) : (
                           <div className="d-flex align-items-center justify-content-center text-secondary small" style={{ minHeight: 90 }}>
-                            Article
+                            Guide
                           </div>
                         )}
                       </div>
@@ -479,11 +507,19 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
               ) : (
                 <div className="col-12">
                   <div className="alert alert-light border text-center mb-0">
-                    Latest articles will appear here once published.
+                    Guides will appear here once published. Meanwhile explore our{" "}
+                    <Link href="/tools" className="fw-semibold">free online tools</Link>.
                   </div>
                 </div>
               )}
             </div>
+            {latestBlogs.length > 0 && (
+              <div className="text-center mt-3">
+                <Link href="/latest" className="figma-btn figma-btn-outline">
+                  View all guides <ArrowRight size={14} className="ms-1" />
+                </Link>
+              </div>
+            )}
           </section>
 
           <section>
@@ -553,13 +589,32 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
           border-radius: 18px;
         }
         .figma-hero-unified {
-          background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+          background: linear-gradient(135deg, #0b1220 0%, #0f2744 55%, #123a6b 100%);
           min-height: 340px;
           padding: 40px 32px;
           color: #ffffff;
         }
+        .hero-eyebrow {
+          font-size: 11px;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: #7dd3fc;
+          font-weight: 700;
+        }
+        .hero-secondary-cta {
+          background: transparent;
+          color: #fff;
+          border-color: rgba(255, 255, 255, 0.3);
+        }
+        .hero-trust-mobile {
+          margin-top: 12px;
+          font-size: 12px;
+          color: rgba(226, 232, 240, 0.72);
+          text-align: center;
+          letter-spacing: 0.01em;
+        }
         .text-gradient {
-          background: linear-gradient(to right, #38bdf8, #818cf8);
+          background: linear-gradient(to right, #38bdf8, #60a5fa);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
         }
@@ -874,7 +929,13 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
           }
           .figma-hero-unified {
             min-height: auto;
-            padding: 16px;
+            padding: 18px 16px 16px;
+            background: linear-gradient(165deg, #0b1220 0%, #102a4a 70%, #15407a 100%);
+            border-radius: 16px;
+          }
+          .compact-hero {
+            border-radius: 16px !important;
+            box-shadow: 0 6px 18px rgba(15, 23, 42, 0.1) !important;
           }
           .figma-hero-content {
             max-width: 100%;
@@ -882,9 +943,24 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
           .figma-hero-image-floating {
             display: none !important;
           }
+          .compact-title {
+            font-size: 1.35rem !important;
+            line-height: 1.22 !important;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px !important;
+            max-width: 100%;
+          }
+          .hero-sub,
+          .compact-subtitle {
+            font-size: 0.875rem !important;
+            line-height: 1.45 !important;
+            margin-bottom: 14px !important;
+            color: rgba(226, 232, 240, 0.84) !important;
+          }
           .figma-hero-cta {
             flex-direction: column;
             width: 100%;
+            gap: 8px;
           }
           .figma-hero-cta .figma-btn {
             width: 100%;
@@ -892,6 +968,17 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
             font-size: 14px;
             height: 44px;
             border-radius: 12px;
+          }
+          .figma-hero-cta .figma-btn-primary {
+            height: 46px;
+            box-shadow: 0 6px 16px rgba(26, 115, 232, 0.35);
+          }
+          .figma-hero-cta .hero-secondary-cta {
+            height: 40px;
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.18);
+            color: #e2e8f0;
+            font-weight: 600;
           }
           .hero-chip {
             height: 28px;
@@ -1034,8 +1121,8 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
         }}
       />
 
-      <div className="auto-ads-space min-h-screen bg-gray-50">
-        {/* Main Content Area Only - No static ad asides, let AdSense Auto Ads handle placement */}
+      <div className="page-surface">
+        {/* Manual ads only via ContentAdBand — Auto ads disabled */}
         <div className="w-full px-0">
           <div className="py-2 lg:py-3">
             {/* Main Content - Narrower Container for Auto Ads on Sides */}

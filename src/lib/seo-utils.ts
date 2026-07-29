@@ -186,7 +186,7 @@ export function generateBlogStructuredData(blog: {
       "@type": "Website",
       "@id": baseUrl,
       "name": "pkminfotech",
-      "description": "Latest tech news, business updates & travel guides"
+      "description": "Free online tools and helpful guides for India"
     }
   }
 }

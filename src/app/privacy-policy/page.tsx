@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function PrivacyPolicyPage() {
   return (
-    <div className="bg-light min-vh-100 py-4">
+    <div className="page-surface py-4">
       <div className="container" style={{ maxWidth: 900 }}>
         <BreadcrumbNav
           items={[
@@ -21,7 +21,7 @@ export default function PrivacyPolicyPage() {
           ]}
         />
 
-        <div className="card border-0 shadow-sm p-4 p-md-5 bg-white" style={{ borderRadius: 16 }}>
+        <div className="flat-content-section pb-4">
           <h1 className="h2 fw-bold text-dark mb-3">Privacy Policy</h1>
           <p className="text-secondary small mb-4">Last Updated: June 28, 2026</p>
 

@@ -11,6 +11,15 @@ GOOGLE_SITE_VERIFICATION=your-google-verification-code
 
 # Google AdSense ID (when you get approved)
 NEXT_PUBLIC_ADSENSE_ID=ca-pub-your-adsense-id
+# Prefer this name in code (same value as ADSENSE_ID):
+# NEXT_PUBLIC_ADSENSE_CLIENT=ca-pub-your-adsense-id
+
+# Manual Display ad unit slot (AdSense → Ads → By ad unit → Display ads)
+# Without this, ContentAdBand stays hidden. Auto ads should be OFF in dashboard.
+NEXT_PUBLIC_ADSENSE_SLOT_DISPLAY=2955034617
+# Desktop side rails (160x600 fixed)
+NEXT_PUBLIC_ADSENSE_SLOT_LEFT=5803870877
+NEXT_PUBLIC_ADSENSE_SLOT_RIGHT=4490789208
 
 # Database and other existing variables should remain the same
 DATABASE_URL=your-existing-database-url

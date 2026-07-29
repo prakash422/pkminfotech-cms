@@ -131,7 +131,7 @@ export default async function DailyCurrentAffairsPage({ searchParams }: PageProp
   const { blogs, pagination } = await getCurrentAffairsBlogsPaginated(currentPage)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
+    <div className="page-surface">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
         <main className="max-w-5xl mx-auto" role="main">
           <nav className="mb-6 lg:mb-8" aria-label="Breadcrumb">
@@ -170,7 +170,7 @@ export default async function DailyCurrentAffairsPage({ searchParams }: PageProp
                 {blogs.map((blog: BlogItem) => (
                   <article
                     key={blog.id}
-                    className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow flex flex-col h-full"
+                    className="border border-gray-200 rounded-lg overflow-hidden hover:border-gray-300 transition-colors bg-white flex flex-col h-full"
                   >
                     {blog.coverImage && (
                       <div className="aspect-[16/9] w-full overflow-hidden shrink-0">

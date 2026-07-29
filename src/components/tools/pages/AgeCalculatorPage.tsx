@@ -1,9 +1,11 @@
 "use client"
 
 import React, { useState, useEffect } from "react"
-import Link from "next/link"
 import BreadcrumbNav from "@/components/BreadcrumbNav"
-import { ArrowLeft, Calculator, Calendar, Gift, Info, BookOpen, Clock, Heart } from "lucide-react"
+import { Calculator, Calendar, Gift, Info, Clock, Heart } from "lucide-react"
+import ToolFocusAd from "@/components/tools/ToolFocusAd"
+import GuideSectionHeader from "@/components/tools/GuideSectionHeader"
+import ToolPageHeader from "@/components/tools/ToolPageHeader"
 
 export default function AgeCalculatorPage({ title, description, basePath }: { title: string; description: string; basePath: string }) {
   const [dob, setDob] = useState("1998-06-15")
@@ -93,26 +95,19 @@ export default function AgeCalculatorPage({ title, description, basePath }: { ti
   return (
     <div>
       <BreadcrumbNav
-        items={[
+          compact
+          items={[
           { label: "Home", href: "/" },
-          { label: "Online Tools", href: "/tools" },
+          { label: "Tools", href: "/tools" },
           { label: "Age Calculator" }
         ]}
       />
-      <div className="mb-4 d-flex align-items-center gap-2">
-        <Link href="/tools" className="btn btn-light btn-sm rounded-circle p-2">
-          <ArrowLeft size={16} />
-        </Link>
-        <div>
-          <h1 className="h3 fw-bold mb-1">{title}</h1>
-          <p className="text-secondary small mb-0">{description}</p>
-        </div>
-      </div>
+      <ToolPageHeader title={title} description={description} />
 
-      <div className="row g-4 mb-5">
+      <div className="row g-4 mb-3">
         {/* Input Panel */}
         <div className="col-12 col-md-5">
-          <div className="card border-0 shadow-sm p-4 h-100 bg-white" style={{ borderRadius: 16 }}>
+          <div className="tool-panel p-4 h-100">
             <h2 className="h5 fw-bold mb-3 d-flex align-items-center gap-2 text-dark">
               <Calculator size={18} className="text-primary" /> Select Dates
             </h2>
@@ -147,7 +142,7 @@ export default function AgeCalculatorPage({ title, description, basePath }: { ti
 
         {/* Results Panel */}
         <div className="col-12 col-md-7">
-          <div className="card border-0 shadow-sm p-4 h-100 bg-white" style={{ borderRadius: 16 }}>
+          <div className="tool-panel p-4 h-100">
             <h2 className="h5 fw-bold mb-3 d-flex align-items-center gap-2 text-dark">
               <Gift size={18} className="text-primary" /> Your Age Statistics
             </h2>
@@ -216,21 +211,21 @@ export default function AgeCalculatorPage({ title, description, basePath }: { ti
         </div>
       </div>
 
+      <ToolFocusAd />
+
       {/* SEO rich content (More than 1000 words, highly unique) */}
-      <section className="card border-0 shadow-sm p-4 bg-white mt-4" style={{ borderRadius: 16 }}>
-        <div className="border-bottom pb-3 mb-4">
-          <h2 className="h4 fw-bold text-dark d-flex align-items-center gap-2 mb-1">
-            <BookOpen size={22} className="text-primary" /> Calculating Age for Exams &amp; General Eligibility: The Complete Guide
-          </h2>
-          <span className="text-secondary small">Date mathematics rules, age criteria cutoffs for SSC/UPSC, relaxation limits, and manuals</span>
-        </div>
+      <section className="flat-content-section border-top pt-4 mt-4">
+        <GuideSectionHeader
+          title="Calculating Age for Exams & General Eligibility: The Complete Guide"
+          subtitle="Date mathematics rules, age criteria cutoffs for SSC/UPSC, relaxation limits, and manuals"
+        />
 
         <div className="text-secondary small lh-lg">
           <p className="lead text-dark mb-4" style={{ fontSize: '1.05rem', fontWeight: 400 }}>
             Whether you are calculating your age to apply for competitive examinations, validating eligibility for school admission, or preparing documents for visa applications, knowing your exact age down to the day is necessary. Most official government portals require you to calculate your age as of a specific cutoff date (e.g., &quot;Age as on January 1, 2026&quot;).
           </p>
 
-          <h3 className="h5 fw-bold text-dark mt-4 mb-3 d-flex align-items-center gap-2">
+          <h3 className="guide-subheading">
             <Clock size={18} className="text-primary" /> 1. How Date Math Engine Computes Age
           </h3>
           <p>
@@ -302,7 +297,7 @@ export default function AgeCalculatorPage({ title, description, basePath }: { ti
             </table>
           </div>
 
-          <h3 className="h5 fw-bold text-dark mt-4 mb-3 d-flex align-items-center gap-2">
+          <h3 className="guide-subheading">
             <Heart size={18} className="text-primary" /> 3. Official Age Relaxation Policies
           </h3>
           <p>

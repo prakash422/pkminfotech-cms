@@ -1,19 +1,60 @@
 "use client"
 
-import React, { useState, useRef } from "react"
-import Link from "next/link"
+import React, { useState, useRef, useEffect } from "react"
 import BreadcrumbNav from "@/components/BreadcrumbNav"
-import { ArrowLeft, Image as ImageIcon, Sparkles, Download, RefreshCw, BookOpen, ShieldCheck, HelpCircle } from "lucide-react"
+import { Image as ImageIcon, Sparkles, Download, RefreshCw, ShieldCheck, HelpCircle } from "lucide-react"
+import ToolFocusAd from "@/components/tools/ToolFocusAd"
+import GuideSectionHeader from "@/components/tools/GuideSectionHeader"
+import ToolPageHeader from "@/components/tools/ToolPageHeader"
 
-export default function PhotoCompressorPage({ title, description, basePath }: { title: string; description: string; basePath: string }) {
+const PRESETS = [
+  { id: "20kb", label: "Exam photo 20KB", kb: 20 },
+  { id: "passport", label: "Passport size 50KB", kb: 50 },
+  { id: "signature", label: "Signature 15KB", kb: 15 },
+  { id: "50kb", label: "Form photo 50KB", kb: 50 },
+] as const
+
+function resolvePresetKb(preset: string | null, fallback: number): number {
+  const match = PRESETS.find((p) => p.id === preset)
+  return match ? match.kb : fallback
+}
+
+export default function PhotoCompressorPage({
+  title,
+  description,
+  basePath,
+  defaultTargetKb = 50,
+}: {
+  title: string
+  description: string
+  basePath: string
+  defaultTargetKb?: number
+  focusLabel?: string
+}) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [compressedUrl, setCompressedUrl] = useState<string | null>(null)
   const [originalSize, setOriginalSize] = useState<number>(0)
   const [compressedSize, setCompressedSize] = useState<number>(0)
-  const [targetKb, setTargetKb] = useState<number>(50)
+  const [targetKb, setTargetKb] = useState<number>(defaultTargetKb)
+  const [activePreset, setActivePreset] = useState<string | null>(null)
   const [compressing, setCompressing] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    const preset = new URLSearchParams(window.location.search).get("preset")
+    if (!preset) return
+    setActivePreset(preset)
+    setTargetKb(resolvePresetKb(preset, defaultTargetKb))
+  }, [defaultTargetKb])
+
+  const applyPreset = (id: string, kb: number) => {
+    setActivePreset(id)
+    setTargetKb(kb)
+    const url = new URL(window.location.href)
+    url.searchParams.set("preset", id)
+    window.history.replaceState({}, "", url.toString())
+  }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -37,7 +78,6 @@ export default function PhotoCompressorPage({ title, description, basePath }: { 
       const ctx = canvas.getContext("2d")
       if (!ctx) return
 
-      // Maintain aspect ratio, set max width to 800 for web forms
       const maxW = 800
       let w = img.width
       let h = img.height
@@ -51,22 +91,16 @@ export default function PhotoCompressorPage({ title, description, basePath }: { 
       canvas.height = h
       ctx.drawImage(img, 0, 0, w, h)
 
-      // Iteratively adjust quality to hit target size under targetKb
       let quality = 0.9
       let dataUrl = ""
       let size = 0
 
-      // Run up to 6 iterations to find best quality matching size constraint
       for (let i = 0; i < 6; i++) {
         dataUrl = canvas.toDataURL("image/jpeg", quality)
-        // calculate approximate base64 size in bytes
         size = Math.round((dataUrl.length - 814) / 1.37)
         const sizeKb = size / 1024
 
-        if (sizeKb <= targetKb) {
-          // Check if we can improve quality or stop
-          break
-        }
+        if (sizeKb <= targetKb) break
         quality -= 0.15
         if (quality < 0.1) quality = 0.1
       }
@@ -85,32 +119,41 @@ export default function PhotoCompressorPage({ title, description, basePath }: { 
   return (
     <div>
       <BreadcrumbNav
-        items={[
+          compact
+          items={[
           { label: "Home", href: "/" },
-          { label: "Online Tools", href: "/tools" },
-          { label: "Exam Photo Compressor" }
+          { label: "Tools", href: "/tools" },
+          { label: "Utility", href: basePath },
+          { label: title },
         ]}
       />
-      <div className="mb-4 d-flex align-items-center gap-2">
-        <Link href="/tools" className="btn btn-light btn-sm rounded-circle p-2">
-          <ArrowLeft size={16} />
-        </Link>
-        <div>
-          <h1 className="h3 fw-bold mb-1">{title}</h1>
-          <p className="text-secondary small mb-0">{description}</p>
+      <ToolPageHeader title={title} description={description} />
+
+      <div className="mb-2 mb-md-3">
+        <p className="small text-secondary mb-1 fw-semibold">Quick presets</p>
+        <div className="chip-row mb-0">
+          {PRESETS.map((preset) => (
+            <button
+              key={preset.id}
+              type="button"
+              className={`chip ${activePreset === preset.id ? "chip-active" : ""}`}
+              onClick={() => applyPreset(preset.id, preset.kb)}
+            >
+              {preset.label}
+            </button>
+          ))}
         </div>
       </div>
 
-      <div className="row g-4 mb-5">
-        {/* Upload panel */}
+      <div className="row g-4 mb-3">
         <div className="col-12 col-md-6">
-          <div className="card border-0 shadow-sm p-4 h-100 bg-white" style={{ borderRadius: 16 }}>
+          <div className="tool-panel p-4 h-100">
             <h2 className="h5 fw-bold mb-3 d-flex align-items-center gap-2 text-dark">
               <ImageIcon size={18} className="text-primary" /> Upload Image
             </h2>
             <div
               className="border border-2 border-dashed rounded-3 p-4 text-center bg-light cursor-pointer mb-3"
-              style={{ borderColor: '#dbe7f7', cursor: 'pointer' }}
+              style={{ borderColor: "#dbe7f7", cursor: "pointer" }}
               onClick={() => fileInputRef.current?.click()}
             >
               <input
@@ -151,7 +194,10 @@ export default function PhotoCompressorPage({ title, description, basePath }: { 
                 step="5"
                 className="form-range"
                 value={targetKb}
-                onChange={(e) => setTargetKb(parseInt(e.target.value))}
+                onChange={(e) => {
+                  setActivePreset(null)
+                  setTargetKb(parseInt(e.target.value, 10))
+                }}
               />
               <div className="d-flex justify-content-between small text-secondary">
                 <span>10 KB (Form photos)</span>
@@ -177,9 +223,8 @@ export default function PhotoCompressorPage({ title, description, basePath }: { 
           </div>
         </div>
 
-        {/* Preview Panel */}
         <div className="col-12 col-md-6">
-          <div className="card border-0 shadow-sm p-4 h-100 bg-white" style={{ borderRadius: 16 }}>
+          <div className="tool-panel p-4 h-100">
             <h2 className="h5 fw-bold mb-3 d-flex align-items-center gap-2 text-dark">
               <Sparkles size={18} className="text-primary" /> Compressed Result
             </h2>
@@ -223,29 +268,26 @@ export default function PhotoCompressorPage({ title, description, basePath }: { 
         </div>
       </div>
 
-      {/* SEO rich content (More than 1000 words, highly unique) */}
-      <section className="card border-0 shadow-sm p-4 bg-white mt-4" style={{ borderRadius: 16 }}>
-        <div className="border-bottom pb-3 mb-4">
-          <h2 className="h4 fw-bold text-dark d-flex align-items-center gap-2 mb-1">
-            <BookOpen size={22} className="text-primary" /> The Ultimate Guide to Photo and Signature Compression for Indian Competitive Examinations
-          </h2>
-          <span className="text-secondary small">Image processing logic, portal specifications, and step-by-step guidance to avoid form rejections</span>
-        </div>
+      <ToolFocusAd />
+
+      <section className="flat-content-section border-top pt-4 mt-4">
+        <GuideSectionHeader
+          title="The Ultimate Guide to Photo and Signature Compression for Indian Competitive Examinations"
+          subtitle="Image processing logic, portal specifications, and step-by-step guidance to avoid form rejections"
+        />
 
         <div className="text-secondary small lh-lg">
-          <p className="lead text-dark mb-4" style={{ fontSize: '1.05rem', fontWeight: 400 }}>
+          <p className="lead text-dark mb-4" style={{ fontSize: "1.05rem", fontWeight: 400 }}>
             Applying for government jobs in India—including boards like **SSC (Staff Selection Commission)**, **UPSC (Union Public Service Commission)**, **IBPS (Banking)**, and state-level exams—requires filling out long registration forms. A very common issue candidates face is when their scanned passport photograph or signature fails to upload because the file size exceeds the strict limits (standardly **20kb to 50kb** for photos, and **10kb to 20kb** for signatures).
           </p>
 
-          <h3 className="h5 fw-bold text-dark mt-4 mb-3 d-flex align-items-center gap-2">
+          <h3 className="guide-subheading">
             <ShieldCheck size={18} className="text-primary" /> 1. How Client-Side Browser Compression Works
           </h3>
           <p>
-            When you use standard online compressors, your private passport photo is sent to a server over the internet. This poses security and privacy risks. Our tool uses **HTML5 Canvas technology** to process images entirely inside your browser. 
+            When you use standard online compressors, your private passport photo is sent to a server over the internet. This poses security and privacy risks. Our tool uses **HTML5 Canvas technology** to process images entirely inside your browser.
           </p>
-          <p>
-            When you select a file:
-          </p>
+          <p>When you select a file:</p>
           <ol className="ps-3 mb-4">
             <li>The browser reads the image file locally without uploading it to any external server.</li>
             <li>The image is drawn on a virtual canvas, scaling its overall pixel boundaries to a web-friendly size (standardly keeping aspect ratios intact).</li>
@@ -254,9 +296,7 @@ export default function PhotoCompressorPage({ title, description, basePath }: { 
           </ol>
 
           <h3 className="h5 fw-bold text-dark mt-4 mb-3">2. Official Exam Portal Photo &amp; Signature Criteria</h3>
-          <p>
-            To prevent form rejection, review the table below outlining specifications required by major government recruitment boards:
-          </p>
+          <p>To prevent form rejection, review the table below outlining specifications required by major government recruitment boards:</p>
           <div className="table-responsive">
             <table className="table table-bordered table-striped mt-2 mb-4">
               <thead>
@@ -309,9 +349,7 @@ export default function PhotoCompressorPage({ title, description, basePath }: { 
           </div>
 
           <h3 className="h5 fw-bold text-dark mt-4 mb-3">3. Crucial Rules to Avoid Application Rejections</h3>
-          <p>
-            An incorrect file size is not the only reason photographs get rejected. The automated image scanners used by portals check for several visual standards:
-          </p>
+          <p>An incorrect file size is not the only reason photographs get rejected. The automated image scanners used by portals check for several visual standards:</p>
           <ul className="ps-3 mb-4">
             <li><strong>Face Coverage:</strong> Your face must occupy at least 70% to 80% of the photograph area. The camera must look straight at your face. Avoid side profiles.</li>
             <li><strong>Background Contrast:</strong> Portals prefer a clean, light-colored background—white or light blue are standard. Avoid dark or textured backgrounds.</li>
@@ -320,7 +358,7 @@ export default function PhotoCompressorPage({ title, description, basePath }: { 
             <li><strong>Signature ink rules:</strong> Always sign on a clean white paper using a **black ink pen**. Blue ink signatures are sometimes flagged as low contrast by scanned readers.</li>
           </ul>
 
-          <h3 className="h5 fw-bold text-dark mt-4 mb-3 d-flex align-items-center gap-2">
+          <h3 className="guide-subheading">
             <HelpCircle size={18} className="text-primary" /> 4. Frequently Asked Questions (FAQ)
           </h3>
           <div className="border-top pt-3">
@@ -330,21 +368,18 @@ export default function PhotoCompressorPage({ title, description, basePath }: { 
                 Yes, our tool supports PNG uploads. However, since PNG files use lossless compression, they are standardly much heavier. To hit target limits like 20kb, the tool automatically converts the output to JPEG format, which is the exact format required by official portals anyway.
               </p>
             </div>
-
             <div className="mb-4">
               <h4 className="h6 fw-bold text-dark mb-1">Q2: Why does my photo look blurry after compression?</h4>
               <p className="text-muted mb-0">
                 If the original photo is already low-resolution, compressing it down to 20kb can make it look blurry. For best results, upload a sharp, high-resolution photo from your phone or camera, and let the tool optimize it.
               </p>
             </div>
-
             <div className="mb-4">
               <h4 className="h6 fw-bold text-dark mb-1">Q3: How do I scan my passport photo using my phone?</h4>
               <p className="text-muted mb-0">
                 Place the physical photograph on a flat surface in good lighting. Take a photo from your phone, crop out any extra table space, and upload the cropped file directly to our compressor.
               </p>
             </div>
-
             <div className="mb-4">
               <h4 className="h6 fw-bold text-dark mb-1">Q4: Is there a limit to how many images I can compress?</h4>
               <p className="text-muted mb-0">

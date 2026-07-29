@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next'
 import { prisma } from '@/lib/prisma'
-import { toolItems } from '@/data/tools-data'
+import { toolItems, toolCategories } from '@/data/tools-data'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.pkminfotech.com'
@@ -69,13 +69,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ]
 
-  // 2. Filter out exam-specific calculators (high competition)
-  const examSlugs = new Set([
-    'ssc', 'ssc-cgl', 'banking', 'rrb', 'rrb-ntpc', 'police', 'teaching', 'railway', 'upsc', 'defence', 'state-exams'
-  ])
-  const nonExamTools = toolItems.filter((tool) => !examSlugs.has(tool.examCategorySlug))
+  const categoryPages = toolCategories.map((category) => ({
+    url: `${baseUrl}/tools/${category.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.75,
+  }))
 
-  const toolPages = nonExamTools.map((tool) => ({
+  const toolPages = toolItems.map((tool) => ({
     url: `${baseUrl}${tool.path}`,
     lastModified: new Date(),
     changeFrequency: 'monthly' as const,
@@ -120,5 +121,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error('Error fetching blogs for sitemap, returning static pages only:', error)
   }
 
-  return [...staticPages, ...toolPages, ...blogPages]
+  return [...staticPages, ...categoryPages, ...toolPages, ...blogPages]
 } 

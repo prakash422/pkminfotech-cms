@@ -18,11 +18,11 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "pkminfotech - Latest Tech News, Business Updates & Travel Guides",
+    default: "pkminfotech - Free Online Tools & Calculators",
     template: "%s | pkminfotech"
   },
-  description: "Your trusted source for latest tech news, business updates, travel guides for India and worldwide destinations, and daily insights on technology and digital trends.",
-  keywords: "tech news, business updates, travel guides India, technology news, digital trends, latest news, pkminfotech, hindi news, english news",
+  description: "Free online tools for land area conversion, CGPA to percentage, HRA rent receipts, GST and SIP calculators, and exam photo compression — plus helpful guides from pkminfotech.",
+  keywords: "online tools, bigha to kattha, rent receipt generator, cgpa to percentage, photo compressor, gst calculator, sip calculator, pkminfotech",
   authors: [{ name: "pkminfotech Team", url: "https://www.pkminfotech.com" }],
   creator: "pkminfotech",
   publisher: "pkminfotech",
@@ -51,28 +51,28 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "/",
     siteName: "pkminfotech",
-    title: "pkminfotech - Latest Tech News, Business Updates & Travel Guides",
-    description: "Your trusted source for latest tech news, business updates, travel guides for India and worldwide destinations.",
+    title: "pkminfotech - Free Online Tools & Calculators",
+    description: "Free online tools for land area, education, finance and image utilities — plus helpful guides.",
     images: [
       {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "pkminfotech - Latest News and Updates"
+        alt: "pkminfotech - Free Online Tools"
       }
     ]
   },
   twitter: {
     card: "summary_large_image",
-    title: "pkminfotech - Latest Tech News & Updates",
-    description: "Your trusted source for latest tech news, business updates, and travel guides.",
+    title: "pkminfotech - Free Online Tools & Calculators",
+    description: "Free online tools for land area, education, finance and image utilities.",
     creator: "@pkminfotech",
     images: ["/og-image.jpg"]
   },
   verification: {
     google: "dRJXjKr7fX0vfOh2SUkS-udeG7DPx4XX61rp8xhb8ho",
   },
-  category: "News and Media"
+  category: "Tools"
 };
 
 export default async function RootLayout({

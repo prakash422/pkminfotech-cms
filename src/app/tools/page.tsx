@@ -2,21 +2,30 @@ import Link from "next/link"
 import type { Metadata } from "next"
 import { toolItems } from "@/data/tools-data"
 import BreadcrumbNav from "@/components/BreadcrumbNav"
-import { ArrowRight, Calculator, Sparkles } from "lucide-react"
+import { ArrowRight, Calculator } from "lucide-react"
+import ContentAdBand from "@/components/ContentAdBand"
+import SideRailAds from "@/components/SideRailAds"
 
 export const metadata: Metadata = {
-  title: "Free Online Tools & Smart Calculators | pkminfotech",
-  description: "Convert land area measurements (Bigha to Kattha), generate printable rent receipts for HRA tax claims, convert CGPA to percentage, and compress form photos locally.",
+  title: "Free Online Tools & Smart Calculators",
+  description:
+    "Convert land area measurements (Bigha to Kattha), generate printable rent receipts for HRA tax claims, convert CGPA to percentage, and compress form photos locally.",
   robots: { index: true, follow: true },
   alternates: { canonical: "https://www.pkminfotech.com/tools" },
   openGraph: {
     title: "Free Online Tools & Smart Calculators | pkminfotech",
-    description: "Convert land area measurements (Bigha to Kattha), generate printable rent receipts for HRA tax claims, convert CGPA to percentage, and compress form photos locally.",
+    description:
+      "Convert land area measurements (Bigha to Kattha), generate printable rent receipts for HRA tax claims, convert CGPA to percentage, and compress form photos locally.",
     url: "https://www.pkminfotech.com/tools",
     type: "website",
     siteName: "pkminfotech",
   },
-  twitter: { card: "summary_large_image", title: "Free Online Tools & Smart Calculators | pkminfotech", description: "Convert land area measurements, generate HRA rent receipts, convert CGPA to percentage, and compress images." },
+  twitter: {
+    card: "summary_large_image",
+    title: "Free Online Tools & Smart Calculators | pkminfotech",
+    description:
+      "Convert land area measurements, generate HRA rent receipts, convert CGPA to percentage, and compress images.",
+  },
 }
 
 export default function ToolsPage() {
@@ -25,76 +34,145 @@ export default function ToolsPage() {
     return acc
   }, {})
 
-  const iconBySlug: Record<string, React.ReactNode> = {}
-
   return (
-    <main className="bg-light py-4">
-      <div className="container" style={{ maxWidth: 1120 }}>
+    <main className="page-surface tool-page-shell py-1 py-md-3">
+      <SideRailAds />
+      <div className="container tools-hub" style={{ maxWidth: 1120 }}>
         <BreadcrumbNav
+          compact
           items={[
             { label: "Home", href: "/" },
-            { label: "Online Tools" },
+            { label: "Tools" },
           ]}
         />
-        <section className="card border-0 shadow-sm mb-3 mb-md-4">
-          <div className="card-body p-3 p-md-4">
-            <div className="d-flex align-items-start justify-content-between gap-3">
-              <div>
-                <h1 className="fw-bold mb-2">Free Online Tools</h1>
-                <p className="text-secondary mb-0">
-                  Quick and secure utility tools for land area conversion, educational grading, finance planning, and image resizing.
-                </p>
-              </div>
-              <span className="d-none d-md-inline-flex align-items-center gap-1 badge rounded-pill text-bg-primary-subtle text-primary-emphasis">
-                <Sparkles size={14} /> {toolItems.length}+ tools
-              </span>
-            </div>
-            <div className="d-flex flex-wrap gap-2 mt-3">
-              {Object.entries(categoryCounts).map(([category, count]) => (
-                <span key={category} className="badge rounded-pill text-bg-light border text-secondary-emphasis">
-                  {category} ({count})
-                </span>
-              ))}
-            </div>
-          </div>
-        </section>
 
-        <section className="row g-3">
-          {toolItems.map((tool) => (
-            <div className="col-12 col-md-6 col-lg-4" key={tool.slug}>
-              <article className="card h-100 border-0 shadow-sm tools-card">
-                <div className="card-body p-3 p-md-4 d-flex flex-column tools-card-body">
-                  <div className="d-flex align-items-center gap-2 mb-2 tools-card-head">
-                    <span
-                      className="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary-subtle tools-card-icon"
-                      style={{ width: 34, height: 34 }}
-                    >
-                      {iconBySlug[tool.slug] || <Calculator size={18} className="text-primary" />}
-                    </span>
-                    <div className="small text-primary fw-semibold tools-category-pill">{tool.category}</div>
+        <header className="tools-hub-header">
+          <div className="d-flex align-items-baseline justify-content-between gap-2">
+            <h1 className="tools-hub-title mb-0">Free Online Tools</h1>
+            <span className="tools-hub-count d-none d-sm-inline">{toolItems.length} tools</span>
+          </div>
+          <p className="tools-hub-desc">
+            Land converters, CGPA tools, rent receipts, GST/SIP calculators, and exam photo compression — free, no login.
+          </p>
+          <div className="chip-row">
+            {Object.entries(categoryCounts).map(([category, count]) => {
+              const cat = toolItems.find((t) => t.category === category)
+              const href = cat ? `/tools/${cat.examCategorySlug}` : "/tools"
+              return (
+                <Link key={category} href={href} className="chip">
+                  {category} <span className="chip-count">{count}</span>
+                </Link>
+              )
+            })}
+          </div>
+        </header>
+
+        <ContentAdBand className="tools-top-ad mb-2" />
+
+        <section className="row g-2 g-md-3 tools-hub-grid">
+          {toolItems.flatMap((tool, index) => {
+            const card = (
+              <div className="col-12 col-md-6 col-lg-4" key={tool.slug}>
+                <article className="tool-panel tools-card h-100">
+                  <div className="tools-card-body d-flex flex-column h-100">
+                    <div className="d-flex align-items-center gap-2 tools-card-head">
+                      <span className="tools-card-icon">
+                        <Calculator size={15} className="text-primary" />
+                      </span>
+                      <span className="tools-category-pill">{tool.category}</span>
+                    </div>
+                    <h2 className="tools-title">{tool.title}</h2>
+                    <p className="tools-desc flex-grow-1 mb-0">{tool.description}</p>
+                    <Link href={tool.path ?? `/tools/${tool.slug}`} className="tools-cta mt-2">
+                      Open Tool <ArrowRight size={13} />
+                    </Link>
                   </div>
-                  <h2 className="h5 fw-semibold mb-2 tools-title">{tool.title}</h2>
-                  <p className="small text-secondary mb-3 flex-grow-1 tools-desc">{tool.description}</p>
-                  <Link href={tool.path ?? `/tools/${tool.slug}`} className="align-self-start tools-cta">
-                    Open Tool <ArrowRight size={13} />
-                  </Link>
-                </div>
-              </article>
-            </div>
-          ))}
+                </article>
+              </div>
+            )
+
+            if (index !== 1) return [card]
+
+            return [
+              card,
+              <div className="col-12" key="tools-mid-ad">
+                <ContentAdBand className="tools-mid-ad my-1" />
+              </div>,
+            ]
+          })}
         </section>
       </div>
+
       <style>{`
+        .tools-hub-header {
+          margin-bottom: 0.85rem;
+          padding-bottom: 0.75rem;
+          border-bottom: 1px solid #eef2f7;
+        }
+        .tools-hub-title {
+          color: #0f172a;
+          font-size: clamp(1.28rem, 4.2vw, 1.65rem);
+          font-weight: 750;
+          letter-spacing: -0.025em;
+          line-height: 1.2;
+        }
+        .tools-hub-count {
+          color: #64748b;
+          font-size: 0.75rem;
+          font-weight: 600;
+          white-space: nowrap;
+        }
+        .tools-hub-desc {
+          margin: 6px 0 10px;
+          max-width: 36rem;
+          color: #64748b;
+          font-size: 0.875rem;
+          line-height: 1.45;
+        }
         .tools-card {
-          border-radius: 14px;
+          border-radius: 12px;
+        }
+        .tools-card-body {
+          padding: 12px 14px;
+        }
+        .tools-card-head {
+          margin-bottom: 6px;
+        }
+        .tools-card-icon {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 28px;
+          height: 28px;
+          border-radius: 8px;
+          background: #eff6ff;
+          border: 1px solid #dbeafe;
+          flex-shrink: 0;
         }
         .tools-category-pill {
           display: inline-flex;
           align-items: center;
-          height: 24px;
+          height: 22px;
           padding: 0 8px;
           border-radius: 999px;
           background: rgba(13, 110, 253, 0.08);
+          color: #0d6efd;
+          font-size: 11px;
+          font-weight: 700;
+        }
+        .tools-title {
+          margin: 0 0 4px;
+          font-size: 1.05rem;
+          font-weight: 700;
+          line-height: 1.3;
+          letter-spacing: -0.015em;
+          color: #0f172a;
+        }
+        .tools-desc {
+          margin: 0;
+          color: #64748b;
+          font-size: 0.8125rem;
+          line-height: 1.4;
         }
         .tools-cta {
           display: inline-flex;
@@ -110,43 +188,30 @@ export default function ToolsPage() {
           font-size: 12px;
           font-weight: 700;
           text-decoration: none;
-          transition: all 0.2s ease;
+          transition: all 0.15s ease;
         }
         .tools-cta:hover {
           background: #0d6efd;
           border-color: #0d6efd;
-          color: #ffffff;
-          transform: translateY(-1px);
+          color: #fff;
         }
         @media (max-width: 767px) {
-          .tools-card {
-            border: 1px solid #e7ecf4 !important;
-            box-shadow: 0 1px 6px rgba(15, 23, 42, 0.06) !important;
+          .tools-hub-desc {
+            font-size: 0.8125rem;
+            margin: 4px 0 8px;
           }
-          .tools-card-body {
-            padding: 12px !important;
-          }
-          .tools-card-icon {
-            width: 30px !important;
-            height: 30px !important;
-          }
-          .tools-title {
-            font-size: 1.15rem;
-            margin-bottom: 6px !important;
-          }
-          .tools-desc {
-            font-size: 12px !important;
-            line-height: 1.35;
-            margin-bottom: 10px !important;
+          .tools-hub-header {
+            margin-bottom: 0.7rem;
+            padding-bottom: 0.65rem;
           }
           .tools-cta {
             width: 100%;
-            height: 33px;
-            font-size: 12px;
-            justify-content: center;
           }
-          .tools-card-head {
-            margin-bottom: 8px !important;
+          .tools-hub-grid .tool-panel.h-100 {
+            height: auto !important;
+          }
+          .tools-desc.flex-grow-1 {
+            flex-grow: 0 !important;
           }
         }
       `}</style>

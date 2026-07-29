@@ -1,9 +1,11 @@
 "use client"
 
 import React, { useState, useEffect } from "react"
-import Link from "next/link"
 import BreadcrumbNav from "@/components/BreadcrumbNav"
-import { ArrowLeft, Calculator, HelpCircle, TrendingUp, DollarSign, Award, Calendar, BookOpen, Percent } from "lucide-react"
+import { Calculator, HelpCircle, TrendingUp, DollarSign, Award, Calendar, Percent } from "lucide-react"
+import ToolFocusAd from "@/components/tools/ToolFocusAd"
+import GuideSectionHeader from "@/components/tools/GuideSectionHeader"
+import ToolPageHeader from "@/components/tools/ToolPageHeader"
 
 export default function SipCalculatorPage({ title, description, basePath }: { title: string; description: string; basePath: string }) {
   const [monthlyInvestment, setMonthlyInvestment] = useState(5000)
@@ -51,26 +53,19 @@ export default function SipCalculatorPage({ title, description, basePath }: { ti
   return (
     <div>
       <BreadcrumbNav
-        items={[
+          compact
+          items={[
           { label: "Home", href: "/" },
-          { label: "Online Tools", href: "/tools" },
+          { label: "Tools", href: "/tools" },
           { label: "SIP Calculator" }
         ]}
       />
-      <div className="mb-4 d-flex align-items-center gap-2">
-        <Link href="/tools" className="btn btn-light btn-sm rounded-circle p-2">
-          <ArrowLeft size={16} />
-        </Link>
-        <div>
-          <h1 className="h3 fw-bold mb-1">{title}</h1>
-          <p className="text-secondary small mb-0">{description}</p>
-        </div>
-      </div>
+      <ToolPageHeader title={title} description={description} />
 
-      <div className="row g-4 mb-5">
+      <div className="row g-4 mb-3">
         {/* Sliders Panel */}
         <div className="col-12 col-md-6">
-          <div className="card border-0 shadow-sm p-4 h-100 bg-white" style={{ borderRadius: 16 }}>
+          <div className="tool-panel p-4 h-100">
             <h2 className="h5 fw-bold mb-4 d-flex align-items-center gap-2 text-dark">
               <Calculator size={18} className="text-primary" /> SIP Parameters
             </h2>
@@ -145,7 +140,7 @@ export default function SipCalculatorPage({ title, description, basePath }: { ti
 
         {/* Results Panel */}
         <div className="col-12 col-md-6">
-          <div className="card border-0 shadow-sm p-4 h-100 bg-white" style={{ borderRadius: 16 }}>
+          <div className="tool-panel p-4 h-100">
             <h2 className="h5 fw-bold mb-4 d-flex align-items-center gap-2 text-dark">
               <TrendingUp size={18} className="text-primary" /> Estimated Wealth
             </h2>
@@ -202,21 +197,21 @@ export default function SipCalculatorPage({ title, description, basePath }: { ti
         </div>
       </div>
 
+      <ToolFocusAd />
+
       {/* SEO rich content (More than 1000 words, highly unique) */}
-      <section className="card border-0 shadow-sm p-4 bg-white mt-4" style={{ borderRadius: 16 }}>
-        <div className="border-bottom pb-3 mb-4">
-          <h2 className="h4 fw-bold text-dark d-flex align-items-center gap-2 mb-1">
-            <BookOpen size={22} className="text-primary" /> Systematic Investment Plan (SIP) Masterclass: The Power of Compounding
-          </h2>
-          <span className="text-secondary small">Deep dive into SIP formulas, compound interest models, rupee cost averaging, and tax laws</span>
-        </div>
+      <section className="flat-content-section border-top pt-4 mt-4">
+        <GuideSectionHeader
+          title="Systematic Investment Plan (SIP) Masterclass: The Power of Compounding"
+          subtitle="Deep dive into SIP formulas, compound interest models, rupee cost averaging, and tax laws"
+        />
 
         <div className="text-secondary small lh-lg">
           <p className="lead text-dark mb-4" style={{ fontSize: '1.05rem', fontWeight: 400 }}>
             Investing in Mutual Funds via a **Systematic Investment Plan (SIP)** has become the preferred vehicle for wealth generation in India. Unlike lump-sum investments that require substantial capital, a SIP allows individuals to build wealth progressively. By automating monthly contributions, you benefit from market fluctuations while mitigating risk.
           </p>
 
-          <h3 className="h5 fw-bold text-dark mt-4 mb-3 d-flex align-items-center gap-2">
+          <h3 className="guide-subheading">
             <Percent size={18} className="text-primary" /> 1. Mathematical Formula Behind SIP Calculations
           </h3>
           <p>
@@ -241,7 +236,7 @@ export default function SipCalculatorPage({ title, description, basePath }: { ti
             <li>Estimated Capital Gains = ₹11,61,695 - ₹6,00,000 = ₹5,61,695</li>
           </ul>
 
-          <h3 className="h5 fw-bold text-dark mt-4 mb-3 d-flex align-items-center gap-2">
+          <h3 className="guide-subheading">
             <TrendingUp size={18} className="text-primary" /> 2. Core Benefits of SIP Investing
           </h3>
           <p>
@@ -310,7 +305,7 @@ export default function SipCalculatorPage({ title, description, basePath }: { ti
             <li><strong>Debt-Oriented Funds:</strong> Capital gains on debt funds are added directly to the individual&apos;s income and taxed according to their applicable income tax slabs, regardless of the holding period.</li>
           </ul>
 
-          <h3 className="h5 fw-bold text-dark mt-4 mb-3 d-flex align-items-center gap-2">
+          <h3 className="guide-subheading">
             <HelpCircle size={18} className="text-primary" /> 5. Frequently Asked Questions (FAQ)
           </h3>
           <div className="border-top pt-3">

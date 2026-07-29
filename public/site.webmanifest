@@ -1,7 +1,7 @@
 {
-  "name": "pkminfotech",
+  "name": "pkminfotech — Free Online Tools",
   "short_name": "pkminfotech",
-  "description": "Technical insights, tutorials, and latest technology trends",
+  "description": "Free online tools for land area, education, finance and exam photo utilities in India",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
@@ -24,6 +24,6 @@
   "display": "standalone",
   "start_url": "/",
   "scope": "/",
-  "categories": ["technology", "education", "blog"],
+  "categories": ["utilities", "education", "finance"],
   "lang": "en-US"
-} 
+}

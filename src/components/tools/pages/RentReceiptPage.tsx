@@ -1,9 +1,11 @@
 "use client"
 
 import React, { useState } from "react"
-import Link from "next/link"
 import BreadcrumbNav from "@/components/BreadcrumbNav"
-import { ArrowLeft, Calculator, Printer, BookOpen, Info, Scale, ShieldAlert, CheckCircle } from "lucide-react"
+import { Calculator, Printer, Info, Scale, ShieldAlert, CheckCircle } from "lucide-react"
+import ToolFocusAd from "@/components/tools/ToolFocusAd"
+import GuideSectionHeader from "@/components/tools/GuideSectionHeader"
+import ToolPageHeader from "@/components/tools/ToolPageHeader"
 
 export default function RentReceiptPage({ title, description, basePath }: { title: string; description: string; basePath: string }) {
   const [tenantName, setTenantName] = useState("")
@@ -27,27 +29,20 @@ export default function RentReceiptPage({ title, description, basePath }: { titl
     <div>
       <div className="d-print-none">
         <BreadcrumbNav
+          compact
           items={[
             { label: "Home", href: "/" },
-            { label: "Online Tools", href: "/tools" },
+            { label: "Tools", href: "/tools" },
             { label: "Rent Receipt Generator" }
           ]}
         />
-        <div className="mb-4 d-flex align-items-center gap-2">
-          <Link href="/tools" className="btn btn-light btn-sm rounded-circle p-2">
-            <ArrowLeft size={16} />
-          </Link>
-          <div>
-            <h1 className="h3 fw-bold mb-1">{title}</h1>
-            <p className="text-secondary small mb-0">{description}</p>
-          </div>
-        </div>
+        <ToolPageHeader title={title} description={description} />
       </div>
 
       <div className="row g-4">
         {/* Form panel */}
         <div className="col-12 col-lg-5 d-print-none">
-          <div className="card border-0 shadow-sm p-4 bg-white" style={{ borderRadius: 16 }}>
+          <div className="tool-panel p-4">
             <h2 className="h5 fw-bold mb-3 d-flex align-items-center gap-2 text-dark">
               <Calculator size={18} className="text-primary" /> Receipt Details
             </h2>
@@ -140,7 +135,7 @@ export default function RentReceiptPage({ title, description, basePath }: { titl
 
         {/* Receipt preview panel */}
         <div className="col-12 col-lg-7">
-          <div className="card border-0 shadow-sm p-4 bg-white rent-receipt-card h-100" style={{ borderRadius: 16, border: '1px dashed #dbe7f7' }}>
+          <div className="tool-panel p-4 rent-receipt-card h-100" style={{ borderStyle: "dashed", borderColor: "#dbe7f7" }}>
             <div className="d-flex align-items-center justify-content-between border-bottom pb-3 mb-4">
               <div>
                 <h3 className="h5 fw-bold text-primary mb-0">RENT RECEIPT</h3>
@@ -188,21 +183,21 @@ export default function RentReceiptPage({ title, description, basePath }: { titl
         </div>
       </div>
 
+      <ToolFocusAd />
+
       {/* SEO rich content (More than 1000 words, highly unique) */}
-      <section className="card border-0 shadow-sm p-4 bg-white mt-4 d-print-none" style={{ borderRadius: 16 }}>
-        <div className="border-bottom pb-3 mb-4">
-          <h2 className="h4 fw-bold text-dark d-flex align-items-center gap-2 mb-1">
-            <BookOpen size={22} className="text-primary" /> Comprehensive Guide to HRA Tax Exemption &amp; Rent Receipt Verification
-          </h2>
-          <span className="text-secondary small">Legal frameworks under Section 10(13A), PAN criteria, and safety checks to avoid IT department flags</span>
-        </div>
+      <section className="flat-content-section border-top pt-4 mt-4 d-print-none">
+        <GuideSectionHeader
+          title="Comprehensive Guide to HRA Tax Exemption & Rent Receipt Verification"
+          subtitle="Legal frameworks under Section 10(13A), PAN criteria, and safety checks to avoid IT department flags"
+        />
 
         <div className="text-secondary small lh-lg">
           <p className="lead text-dark mb-4" style={{ fontSize: '1.05rem', fontWeight: 400 }}>
             Availing HRA (House Rent Allowance) tax exemption is one of the most effective ways for salaried employees in India to save income tax. However, the Income Tax Department has significantly tightened verification processes, calling for proper document proof in the form of valid **Rent Receipts** and **Rent Agreements**.
           </p>
 
-          <h3 className="h5 fw-bold text-dark mt-4 mb-3 d-flex align-items-center gap-2">
+          <h3 className="guide-subheading">
             <Scale size={18} className="text-primary" /> 1. HRA Exemption Legality: Section 10(13A) Explained
           </h3>
           <p>
@@ -217,7 +212,7 @@ export default function RentReceiptPage({ title, description, basePath }: { titl
             The final exemption granted is the **lowest of the three values** calculated above. Because the third formula takes into account the actual rent paid, rent receipts act as direct legal proof that you actually met the rental cost.
           </p>
 
-          <h3 className="h5 fw-bold text-dark mt-4 mb-3 d-flex align-items-center gap-2">
+          <h3 className="guide-subheading">
             <ShieldAlert size={18} className="text-primary" /> 2. Critical Compliance Checks: PAN &amp; Revenue Stamps
           </h3>
           <p>
@@ -228,7 +223,7 @@ export default function RentReceiptPage({ title, description, basePath }: { titl
             <li><strong>The ₹5,000 Cash Revenue Stamp Rule:</strong> Under the Indian Stamp Act, if you pay rent in **Cash** and the individual receipt value exceeds ₹5,000, you must affix a **₹1 Revenue Stamp** on the receipt. The landlord must sign across the stamp to validate it. If the rent is paid electronically (via Netbanking, UPI, or Credit Card), a revenue stamp is standardly not mandatory, though a signed receipt remains necessary.</li>
           </ul>
 
-          <h3 className="h5 fw-bold text-dark mt-4 mb-3 d-flex align-items-center gap-2">
+          <h3 className="guide-subheading">
             <CheckCircle size={18} className="text-primary" /> 3. Documentation Requirements by Rent Slab
           </h3>
           <p>

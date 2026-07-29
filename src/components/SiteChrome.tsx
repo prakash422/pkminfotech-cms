@@ -8,8 +8,9 @@ import { Facebook, Instagram, Linkedin, Menu, Search, User, ChevronDown, X, Yout
 import { useState, useRef, useEffect } from "react"
 
 const TOP_LINKS = [
-  { label: "Blog", href: "/latest" },
   { label: "Online Tools", href: "/tools" },
+  { label: "Guides", href: "/latest" },
+  { label: "About", href: "/about-us" },
   { label: "Contact Us", href: "/contact-us" },
 ]
 
@@ -55,15 +56,21 @@ export default function SiteChrome() {
               >
                 Home
               </Link>
-              {TOP_LINKS.map((item) => (
+              {TOP_LINKS.map((item) => {
+                const active =
+                  item.href === "/tools"
+                    ? pathname === "/tools" || pathname.startsWith("/tools/")
+                    : pathname === item.href
+                return (
                 <Link
                   key={item.label}
                   href={item.href}
-                  className={`text-decoration-none px-2 py-1 rounded ${pathname === item.href ? "text-primary" : "text-dark"}`}
+                  className={`text-decoration-none px-2 py-1 rounded ${active ? "text-primary" : "text-dark"}`}
                 >
                   {item.label}
                 </Link>
-              ))}
+                )
+              })}
             </nav>
 
             <div className="d-flex align-items-center gap-2">
@@ -116,11 +123,14 @@ export default function SiteChrome() {
               <Link href="/" onClick={() => setMobileMenuOpen(false)} className={`mobile-nav-link ${pathname === "/" ? "active" : ""}`}>
                 Home
               </Link>
-              <Link href="/latest" onClick={() => setMobileMenuOpen(false)} className={`mobile-nav-link ${pathname === "/latest" ? "active" : ""}`}>
-                Blog
-              </Link>
-              <Link href="/tools" onClick={() => setMobileMenuOpen(false)} className={`mobile-nav-link ${pathname === "/tools" ? "active" : ""}`}>
+              <Link href="/tools" onClick={() => setMobileMenuOpen(false)} className={`mobile-nav-link ${pathname === "/tools" || pathname.startsWith("/tools/") ? "active" : ""}`}>
                 Online Tools
+              </Link>
+              <Link href="/latest" onClick={() => setMobileMenuOpen(false)} className={`mobile-nav-link ${pathname === "/latest" ? "active" : ""}`}>
+                Guides
+              </Link>
+              <Link href="/about-us" onClick={() => setMobileMenuOpen(false)} className={`mobile-nav-link ${pathname === "/about-us" ? "active" : ""}`}>
+                About
               </Link>
               <Link href="/contact-us" onClick={() => setMobileMenuOpen(false)} className={`mobile-nav-link ${pathname === "/contact-us" ? "active" : ""}`}>
                 Contact Us
@@ -272,16 +282,6 @@ export function SiteFooter() {
 
   return (
     <footer className="mt-4">
-      <div className="py-3 text-white" style={{ background: "linear-gradient(90deg, #072b5f, #0b3f87)" }}>
-        <div className="container" style={{ maxWidth: 1120 }}>
-          <div className="row g-2 small fw-semibold">
-            <div className="col-6 col-md-3">Free Calculators</div>
-            <div className="col-6 col-md-3">Utility Tools</div>
-            <div className="col-6 col-md-3">Daily Blog</div>
-            <div className="col-6 col-md-3">Mobile Friendly</div>
-          </div>
-        </div>
-      </div>
       <div className="py-4 text-white" style={{ background: "linear-gradient(180deg, #061731 0%, #071a36 100%)" }}>
         <div className="container" style={{ maxWidth: 1120 }}>
           <div className="row g-4">
@@ -291,14 +291,16 @@ export function SiteFooter() {
                 <span className="fw-semibold">pkminfotech</span>
               </div>
               <p className="small text-white-50 mb-0">
-                Free online tools, calculators, and helpful resources for students, professionals, and small businesses.
+                Free India utility tools since a 2019 blog — land converters, education calculators, rent receipts, and exam photo tools.
               </p>
             </div>
             <div className="col-6 col-md-2">
-              <h6 className="fw-semibold mb-2">Explore</h6>
+              <h6 className="fw-semibold mb-2">Tool categories</h6>
               <ul className="list-unstyled mb-0 small">
-                <li><Link href="/tools" className="text-white-50 text-decoration-none">Online Tools</Link></li>
-                <li><Link href="/latest" className="text-white-50 text-decoration-none">Latest Blog</Link></li>
+                <li><Link href="/tools/land-area" className="text-white-50 text-decoration-none">Land Area</Link></li>
+                <li><Link href="/tools/education" className="text-white-50 text-decoration-none">Education</Link></li>
+                <li><Link href="/tools/utility" className="text-white-50 text-decoration-none">Finance &amp; Image</Link></li>
+                <li><Link href="/tools" className="text-white-50 text-decoration-none">All Tools</Link></li>
               </ul>
             </div>
             <div className="col-6 col-md-2">
@@ -306,7 +308,7 @@ export function SiteFooter() {
               <ul className="list-unstyled mb-0 small">
                 <li><Link href="/about-us" className="text-white-50 text-decoration-none">About</Link></li>
                 <li><Link href="/contact-us" className="text-white-50 text-decoration-none">Contact</Link></li>
-                <li><Link href="/latest" className="text-white-50 text-decoration-none">Blog</Link></li>
+                <li><Link href="/latest" className="text-white-50 text-decoration-none">Guides</Link></li>
               </ul>
             </div>
             <div className="col-md-3">
@@ -335,7 +337,7 @@ export function SiteFooter() {
           </div>
           <div className="border-top border-secondary-subtle mt-3 pt-3 small text-white-50 d-flex flex-wrap justify-content-between gap-2">
             <span>&copy; {new Date().getFullYear()} pkminfotech</span>
-            <span>Free Online Tools • Calculators • Daily Blog</span>
+            <span>Free Online Tools • Land • Education • Finance</span>
           </div>
         </div>
       </div>

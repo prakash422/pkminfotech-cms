@@ -1,11 +1,11 @@
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Calendar, ChevronRight, Clock } from "lucide-react"
+import { ArrowRight, Calendar, Clock } from "lucide-react"
 import { formatDate } from "@/lib/utils"
 import { Metadata } from "next"
 import OptimizedImage from "@/components/OptimizedImage"
 import { generateCanonicalUrl } from "@/lib/canonical-utils"
 import { prisma } from "@/lib/prisma"
+import BreadcrumbNav from "@/components/BreadcrumbNav"
 
 const BLOGS_PER_PAGE = 12
 
@@ -30,21 +30,21 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
   const currentPage = Math.max(1, parseInt(params.page || "1", 10))
   const title =
     currentPage > 1
-      ? `Latest Blog Posts - Page ${currentPage} | pkminfotech`
-      : "Latest Blog Posts | pkminfotech - Tech News & Updates"
+      ? `Guides & Updates - Page ${currentPage}`
+      : "Guides & Updates"
   const canonical =
     currentPage > 1 ? `${generateCanonicalUrl("/latest")}?page=${currentPage}` : generateCanonicalUrl("/latest")
   return {
     title,
     description:
       currentPage > 1
-        ? `Browse our latest blog posts on page ${currentPage}. Tech news, business insights, and digital trends.`
-        : "Read our latest articles about technology, business insights, and digital trends on pkminfotech.",
-    keywords: "latest tech blog, technology articles, business updates, digital insights",
+        ? `Browse helpful guides and updates on page ${currentPage} from pkminfotech.`
+        : "Helpful guides and updates from pkminfotech — secondary to our free online tools for land, education, and finance.",
+    keywords: "pkminfotech guides, online tools tips, land converter guides, education calculators",
     alternates: { canonical },
     openGraph: {
-      title: currentPage > 1 ? `Latest Blog Posts - Page ${currentPage} | pkminfotech` : "Latest Blog Posts | pkminfotech",
-      description: "Latest articles about technology and business",
+      title: currentPage > 1 ? `Guides & Updates - Page ${currentPage} | pkminfotech` : "Guides & Updates | pkminfotech",
+      description: "Helpful guides alongside free online tools from pkminfotech",
       url: canonical,
       images: [{ url: "/favicon-32x32.png", width: 32, height: 32 }],
     },
@@ -63,8 +63,8 @@ async function getLatestBlogsPaginated(page: number) {
         totalPages: 0,
         totalCount: 0,
         hasNextPage: false,
-        hasPrevPage: false
-      }
+        hasPrevPage: false,
+      },
     }
   }
 
@@ -135,167 +135,303 @@ export default async function LatestBlogPage({ searchParams }: PageProps) {
   const { blogs, pagination } = await getLatestBlogsPaginated(currentPage)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
-        <main className="max-w-5xl mx-auto" role="main">
-          <nav className="mb-6 lg:mb-8" aria-label="Breadcrumb">
-            <ol className="flex items-center space-x-2 text-sm text-gray-500">
-              <li>
-                <Link href="/" className="hover:text-blue-600 transition-colors">
-                  Home
-                </Link>
-              </li>
-              <ChevronRight className="h-4 w-4" />
-              <li className="text-blue-600 font-medium" aria-current="page">
-                Latest Blog
-              </li>
-            </ol>
-          </nav>
+    <div className="page-surface tool-page-shell py-1 py-md-3">
+      <div className="container guides-hub" style={{ maxWidth: 1120 }}>
+        <BreadcrumbNav
+          compact
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Guides" },
+          ]}
+        />
 
-          <div className="mb-8">
-            <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              Latest Blog Posts
-            </h1>
-            <p className="text-lg text-gray-600">
-              Read our latest articles about technology, business insights, and digital trends.
-            </p>
+        <header className="guides-hub-header">
+          <h1 className="guides-hub-title">Guides &amp; Updates</h1>
+          <p className="guides-hub-desc">
+            Tips and how-tos from pkminfotech. Need a calculator?{" "}
+            <Link href="/tools" className="guides-hub-inline-link">
+              Free online tools
+            </Link>
+          </p>
+        </header>
+
+        {blogs.length === 0 ? (
+          <div className="text-center py-10">
+            <p className="text-secondary mb-3">No guides yet.</p>
+            <Link href="/tools" className="guide-read-link">
+              Browse tools <ArrowRight size={13} />
+            </Link>
           </div>
-
-          {blogs.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-gray-500 text-lg">No blog posts found.</p>
-              <Link href="/">
-                <Button className="mt-4">Back to Home</Button>
-              </Link>
-            </div>
-          ) : (
-            <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {blogs.map((blog: BlogItem) => (
-                  <article
-                    key={blog.id}
-                    className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow flex flex-col h-full"
-                  >
-                    {blog.coverImage && (
-                      <div className="aspect-[16/9] w-full overflow-hidden shrink-0">
-                        <Link href={`/${blog.slug}`}>
-                          <OptimizedImage
-                            src={blog.coverImage}
-                            alt={blog.title}
-                            width={400}
-                            height={225}
-                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                          />
-                        </Link>
-                      </div>
-                    )}
-                    <div className="p-3 flex flex-col flex-1 min-h-0">
-                      <div className="flex items-center flex-wrap gap-1.5 mb-1">
-                        <span
-                          className={`px-1.5 py-0.5 rounded text-[11px] font-medium border ${getCategoryBadgeClass(blog.category)}`}
-                        >
+        ) : (
+          <>
+            <div className="row g-2 g-md-3">
+              {blogs.map((blog: BlogItem) => (
+                <div className="col-12 col-md-6 col-lg-4" key={blog.id}>
+                  <article className="guide-card h-100">
+                    {blog.coverImage ? (
+                      <Link href={`/${blog.slug}`} className="guide-card-media">
+                        <OptimizedImage
+                          src={blog.coverImage}
+                          alt={blog.title}
+                          width={400}
+                          height={225}
+                          className="w-100 h-100 object-fit-cover"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        />
+                      </Link>
+                    ) : null}
+                    <div className="guide-card-body">
+                      <div className="guide-card-meta">
+                        <span className={`guide-card-badge ${getCategoryBadgeClass(blog.category)}`}>
                           {getCategoryLabel(blog.category)}
                         </span>
-                        <span className="flex items-center text-gray-500 text-[11px]">
-                          <Clock className="h-3 w-3 mr-0.5" />
-                          5 min read
+                        <span className="guide-card-readtime">
+                          <Clock size={11} /> 5 min
                         </span>
                       </div>
-
-                      <h2 className="mb-1.5 line-clamp-2 leading-tight" style={{ fontSize: "0.9125rem", fontWeight: 600 }}>
-                        <Link
-                          href={`/${blog.slug}`}
-                          className="no-underline transition-colors !text-gray-600 hover:!text-gray-900"
-                          style={{ fontSize: "0.9125rem" }}
-                        >
-                          {blog.title}
-                        </Link>
+                      <h2 className="guide-card-title">
+                        <Link href={`/${blog.slug}`}>{blog.title}</Link>
                       </h2>
-
-                      {blog.excerpt && (
-                        <p className="text-gray-600 text-xs line-clamp-2 mb-2 flex-1 leading-snug">
-                          {blog.excerpt}
-                        </p>
-                      )}
-
-                      <div className="flex items-center justify-between mt-auto pt-2 border-t border-gray-100">
+                      {blog.excerpt ? (
+                        <p className="guide-card-excerpt">{blog.excerpt}</p>
+                      ) : null}
+                      <div className="guide-card-footer">
                         <time
                           dateTime={blog.publishedAt?.toISOString() || blog.createdAt.toISOString()}
-                          className="flex items-center text-gray-500 text-[11px]"
+                          className="guide-card-date"
                         >
-                          <Calendar className="h-3 w-3 mr-0.5" />
+                          <Calendar size={11} />
                           {formatDate(blog.publishedAt || blog.createdAt)}
                         </time>
-                        <Link href={`/${blog.slug}`}>
-                          <Button variant="outline" size="sm" className="text-[11px] h-7 px-2">
-                            Read More
-                          </Button>
+                        <Link href={`/${blog.slug}`} className="guide-read-link">
+                          Read <ArrowRight size={13} />
                         </Link>
                       </div>
                     </div>
                   </article>
-                ))}
-              </div>
+                </div>
+              ))}
+            </div>
 
-              {/* Pagination */}
-              {pagination.totalPages > 1 && (
-                <nav
-                  className="mt-12 flex justify-center items-center gap-2 flex-wrap"
-                  aria-label="Blog pagination"
-                >
-                  {pagination.hasPrevPage ? (
+            {pagination.totalPages > 1 && (
+              <nav className="guides-pagination" aria-label="Guides pagination">
+                {pagination.hasPrevPage ? (
+                  <Link
+                    href={pagination.currentPage === 2 ? "/latest" : `/latest?page=${pagination.currentPage - 1}`}
+                    className="guides-page-btn"
+                  >
+                    Previous
+                  </Link>
+                ) : (
+                  <span className="guides-page-btn is-disabled">Previous</span>
+                )}
+
+                {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
+                  const startPage = Math.max(1, pagination.currentPage - 2)
+                  const pageNum = startPage + i
+                  if (pageNum > pagination.totalPages) return null
+                  const isCurrent = pageNum === pagination.currentPage
+                  return (
                     <Link
-                      href={pagination.currentPage === 2 ? "/latest" : `/latest?page=${pagination.currentPage - 1}`}
-                      className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                      key={pageNum}
+                      href={pageNum === 1 ? "/latest" : `/latest?page=${pageNum}`}
+                      className={`guides-page-btn ${isCurrent ? "is-active" : ""}`}
+                      aria-current={isCurrent ? "page" : undefined}
                     >
-                      Previous
+                      {pageNum}
                     </Link>
-                  ) : (
-                    <span className="px-3 py-2 text-sm font-medium text-gray-400 bg-gray-100 border border-gray-200 rounded-md cursor-not-allowed">
-                      Previous
-                    </span>
-                  )}
+                  )
+                })}
 
-                  {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
-                    const startPage = Math.max(1, pagination.currentPage - 2)
-                    const pageNum = startPage + i
-                    if (pageNum > pagination.totalPages) return null
-                    const isCurrent = pageNum === pagination.currentPage
-                    return (
-                      <Link
-                        key={pageNum}
-                        href={pageNum === 1 ? "/latest" : `/latest?page=${pageNum}`}
-                        className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                          isCurrent
-                            ? "bg-blue-600 text-white border border-blue-600"
-                            : "text-gray-700 bg-white border border-gray-300 hover:bg-gray-50"
-                        }`}
-                        aria-current={isCurrent ? "page" : undefined}
-                      >
-                        {pageNum}
-                      </Link>
-                    )
-                  })}
-
-                  {pagination.hasNextPage ? (
-                    <Link
-                      href={`/latest?page=${pagination.currentPage + 1}`}
-                      className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-                    >
-                      Next
-                    </Link>
-                  ) : (
-                    <span className="px-3 py-2 text-sm font-medium text-gray-400 bg-gray-100 border border-gray-200 rounded-md cursor-not-allowed">
-                      Next
-                    </span>
-                  )}
-                </nav>
-              )}
-            </>
-          )}
-        </main>
+                {pagination.hasNextPage ? (
+                  <Link href={`/latest?page=${pagination.currentPage + 1}`} className="guides-page-btn">
+                    Next
+                  </Link>
+                ) : (
+                  <span className="guides-page-btn is-disabled">Next</span>
+                )}
+              </nav>
+            )}
+          </>
+        )}
       </div>
+
+      <style>{`
+        .guides-hub-header {
+          margin-bottom: 0.85rem;
+          padding-bottom: 0.7rem;
+          border-bottom: 1px solid #eef2f7;
+        }
+        .guides-hub-title {
+          margin: 0 0 4px;
+          color: #0f172a;
+          font-size: clamp(1.28rem, 4.2vw, 1.65rem);
+          font-weight: 750;
+          letter-spacing: -0.025em;
+          line-height: 1.2;
+        }
+        .guides-hub-desc {
+          margin: 0;
+          max-width: 36rem;
+          color: #64748b;
+          font-size: 0.875rem;
+          line-height: 1.45;
+        }
+        .guides-hub-inline-link {
+          color: #2563eb;
+          font-weight: 600;
+          text-decoration: none;
+        }
+        .guides-hub-inline-link:hover {
+          text-decoration: underline;
+        }
+        .guide-card {
+          display: flex;
+          flex-direction: column;
+          border: 1px solid #e5e7eb;
+          border-radius: 12px;
+          background: #fff;
+          overflow: hidden;
+          transition: border-color 0.15s ease;
+        }
+        .guide-card:hover {
+          border-color: #cbd5e1;
+        }
+        .guide-card-media {
+          display: block;
+          aspect-ratio: 16 / 9;
+          overflow: hidden;
+          background: #f1f5f9;
+        }
+        .guide-card-body {
+          display: flex;
+          flex-direction: column;
+          flex: 1;
+          padding: 10px 12px 12px;
+          min-height: 0;
+        }
+        .guide-card-meta {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 6px;
+        }
+        .guide-card-badge {
+          display: inline-flex;
+          align-items: center;
+          height: 20px;
+          padding: 0 7px;
+          border-radius: 999px;
+          border: 1px solid transparent;
+          font-size: 10px;
+          font-weight: 700;
+          line-height: 1;
+        }
+        .guide-card-readtime {
+          display: inline-flex;
+          align-items: center;
+          gap: 3px;
+          color: #94a3b8;
+          font-size: 11px;
+          font-weight: 500;
+        }
+        .guide-card-title {
+          margin: 0 0 4px;
+          font-size: 0.95rem;
+          font-weight: 700;
+          line-height: 1.3;
+          letter-spacing: -0.015em;
+        }
+        .guide-card-title a {
+          color: #0f172a;
+          text-decoration: none;
+        }
+        .guide-card-title a:hover {
+          color: #2563eb;
+        }
+        .guide-card-excerpt {
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          margin: 0 0 8px;
+          color: #64748b;
+          font-size: 0.78rem;
+          line-height: 1.4;
+          flex: 1;
+        }
+        .guide-card-footer {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 8px;
+          margin-top: auto;
+          padding-top: 8px;
+          border-top: 1px solid #f1f5f9;
+        }
+        .guide-card-date {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          color: #94a3b8;
+          font-size: 11px;
+        }
+        .guide-read-link {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          color: #2563eb;
+          font-size: 12px;
+          font-weight: 700;
+          text-decoration: none;
+          line-height: 1;
+        }
+        .guide-read-link:hover {
+          color: #1d4ed8;
+        }
+        .guides-pagination {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 6px;
+          margin-top: 1.25rem;
+          margin-bottom: 0.5rem;
+        }
+        .guides-page-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          min-width: 36px;
+          height: 34px;
+          padding: 0 10px;
+          border-radius: 8px;
+          border: 1px solid #e2e8f0;
+          background: #fff;
+          color: #334155;
+          font-size: 13px;
+          font-weight: 600;
+          text-decoration: none;
+        }
+        .guides-page-btn.is-active {
+          background: #2563eb;
+          border-color: #2563eb;
+          color: #fff;
+        }
+        .guides-page-btn.is-disabled {
+          color: #94a3b8;
+          background: #f8fafc;
+          cursor: not-allowed;
+        }
+        @media (max-width: 575px) {
+          .guides-hub-header {
+            margin-bottom: 0.7rem;
+            padding-bottom: 0.55rem;
+          }
+          .guides-hub-desc {
+            font-size: 0.8125rem;
+          }
+        }
+      `}</style>
     </div>
   )
 }

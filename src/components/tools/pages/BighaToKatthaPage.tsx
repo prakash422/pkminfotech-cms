@@ -3,7 +3,10 @@
 import React, { useState, useEffect } from "react"
 import Link from "next/link"
 import BreadcrumbNav from "@/components/BreadcrumbNav"
-import { ArrowLeft, Globe2, Calculator, Info, BookOpen, Scale, Award, HelpCircle } from "lucide-react"
+import { Globe2, Calculator, Info, Scale, Award, HelpCircle } from "lucide-react"
+import ToolFocusAd from "@/components/tools/ToolFocusAd"
+import GuideSectionHeader from "@/components/tools/GuideSectionHeader"
+import ToolPageHeader from "@/components/tools/ToolPageHeader"
 
 interface StateConfig {
   name: string
@@ -93,25 +96,36 @@ export default function BighaToKatthaPage({ title, description, basePath }: { ti
   return (
     <div>
       <BreadcrumbNav
-        items={[
+          compact
+          items={[
           { label: "Home", href: "/" },
-          { label: "Online Tools", href: "/tools" },
+          { label: "Tools", href: "/tools" },
           { label: "Bigha to Kattha Converter" }
         ]}
       />
-      <div className="mb-4 d-flex align-items-center gap-2">
-        <Link href="/tools" className="btn btn-light btn-sm rounded-circle p-2">
-          <ArrowLeft size={16} />
+      <ToolPageHeader title={title} description={description} />
+
+      <div className="chip-row">
+        <span className="chip chip-active">All states</span>
+        <Link href="/tools/land-area/bigha-to-square-feet-bihar" className="chip">
+          Bihar
         </Link>
-        <div>
-          <h1 className="h3 fw-bold mb-1">{title}</h1>
-          <p className="text-secondary small mb-0">{description}</p>
-        </div>
+        <Link href="/tools/land-area/bigha-to-kattha-up" className="chip">
+          <span className="d-md-none">UP</span>
+          <span className="d-none d-md-inline">Uttar Pradesh</span>
+        </Link>
+        <Link href="/tools/land-area/bigha-to-kattha-west-bengal" className="chip">
+          <span className="d-md-none">WB</span>
+          <span className="d-none d-md-inline">West Bengal</span>
+        </Link>
+        <Link href="/tools/land-area" className="chip chip-muted">
+          All land tools
+        </Link>
       </div>
 
-      <div className="row g-4 mb-5">
+      <div className="row g-4 mb-3">
         <div className="col-12 col-md-6">
-          <div className="card border-0 shadow-sm p-4 h-100 bg-white" style={{ borderRadius: 16 }}>
+          <div className="tool-panel p-4 h-100">
             <h2 className="h5 fw-bold mb-3 d-flex align-items-center gap-2 text-dark">
               <Calculator size={18} className="text-primary" /> Input Details
             </h2>
@@ -150,7 +164,7 @@ export default function BighaToKatthaPage({ title, description, basePath }: { ti
         </div>
 
         <div className="col-12 col-md-6">
-          <div className="card border-0 shadow-sm p-4 h-100 bg-white" style={{ borderRadius: 16 }}>
+          <div className="tool-panel p-4 h-100">
             <h2 className="h5 fw-bold mb-3 d-flex align-items-center gap-2 text-dark">
               <Globe2 size={18} className="text-primary" /> Conversion Results
             </h2>
@@ -196,21 +210,21 @@ export default function BighaToKatthaPage({ title, description, basePath }: { ti
         </div>
       </div>
 
+      <ToolFocusAd />
+
       {/* High-quality Comprehensive SEO Article (>1000 words, highly unique) */}
-      <section className="card border-0 shadow-sm p-4 bg-white mt-4" style={{ borderRadius: 16 }}>
-        <div className="border-bottom pb-3 mb-4">
-          <h2 className="h4 fw-bold text-dark d-flex align-items-center gap-2 mb-1">
-            <BookOpen size={22} className="text-primary" /> The Ultimate Guide to Bigha &amp; Kattha Conversion in Indian Real Estate
-          </h2>
-          <span className="text-secondary small">Deep Historical Analysis, State-wise Calculations, and Mathematical Formulations</span>
-        </div>
+      <section className="flat-content-section border-top pt-4 mt-4">
+        <GuideSectionHeader
+          title="The Ultimate Guide to Bigha & Kattha Conversion in Indian Real Estate"
+          subtitle="Deep Historical Analysis, State-wise Calculations, and Mathematical Formulations"
+        />
 
         <div className="text-secondary small lh-lg">
           <p className="lead text-dark mb-4" style={{ fontSize: '1.05rem', fontWeight: 400 }}>
             If you are buying agricultural land, checking ancestry registry maps (Khesra/Khata books), or dealing with local property transactions in Northern, Eastern, and Western India, you will immediately face traditional units like <strong>Bigha</strong>, <strong>Kattha</strong>, and <strong>Biswa</strong>. Understanding these units is challenging because a Bigha in Bihar is completely different from a Bigha in Uttar Pradesh or West Bengal.
           </p>
 
-          <h3 className="h5 fw-bold text-dark mt-4 mb-3 d-flex align-items-center gap-2">
+          <h3 className="guide-subheading">
             <Scale size={18} className="text-primary" /> 1. The Origin of Bigha and Kattha: A Historical Legacy
           </h3>
           <p>
@@ -220,7 +234,7 @@ export default function BighaToKatthaPage({ title, description, basePath }: { ti
             A Bigha was defined as the area of land that could be cultivated by a single farmer with a pair of bullocks in a day. As local administration and ruler configurations changed across different princely states, the length of the Lagga changed. Since a Bigha and its sub-divisions (Kattha, Biswa, Dhur) are direct mathematical squares of the local Lagga size, the absolute size of 1 Bigha varied between districts.
           </p>
 
-          <h3 className="h5 fw-bold text-dark mt-4 mb-3 d-flex align-items-center gap-2">
+          <h3 className="guide-subheading">
             <Calculator size={18} className="text-primary" /> 2. The Mathematics: How Local Jarib &amp; Lagga Determine Bigha and Kattha
           </h3>
           <p>
@@ -245,7 +259,7 @@ export default function BighaToKatthaPage({ title, description, basePath }: { ti
             However, in districts like Gaya or Munger, the local Lagga can be 6 Hath or 7 Hath, meaning a local Kattha there can exceed 1,600 square feet. This is why our tool provides state-standardized configurations to clear local ambiguity.
           </p>
 
-          <h3 className="h5 fw-bold text-dark mt-4 mb-3 d-flex align-items-center gap-2">
+          <h3 className="guide-subheading">
             <Award size={18} className="text-primary" /> 3. Regional Classification Table: How States Compare
           </h3>
           <p>
@@ -324,7 +338,7 @@ export default function BighaToKatthaPage({ title, description, basePath }: { ti
             A Pucca Bigha is the official standard, equivalent to 27,225 square feet (or 3,025 square yards). A Kucha Bigha was a local measurement used by landlords for tenancy calculations and is standardly **exactly 1/3rd of a Pucca Bigha** (i.e. 9,075 square feet). When reading old mutation papers or inheritance registries, always confirm whether the property size is written in Kucha or Pucca Bighas to prevent overpaying for the plot.
           </p>
 
-          <h3 className="h5 fw-bold text-dark mt-4 mb-3 d-flex align-items-center gap-2">
+          <h3 className="guide-subheading">
             <HelpCircle size={18} className="text-primary" /> 5. Frequently Asked Questions (FAQ)
           </h3>
           <div className="border-top pt-3">

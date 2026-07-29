@@ -6,12 +6,12 @@ import { Metadata } from "next"
 import OptimizedImage from '@/components/OptimizedImage'
 
 export const metadata: Metadata = {
-  title: 'हिंदी ब्लॉग | pkminfotech - टेक न्यूज़ और अपडेट्स',
-  description: 'pkminfotech पर हिंदी में टेक्नोलॉजी, बिजनेस और डिजिटल ट्रेंड्स के बारे में पढ़ें।',
-  keywords: 'हिंदी टेक ब्लॉग, टेक्नोलॉजी न्यूज़, बिजनेस अपडेट्स, डिजिटल इनसाइट्स',
+  title: 'हिंदी गाइड्स और अपडेट्स',
+  description: 'pkminfotech पर हिंदी गाइड्स। लैंड कन्वर्टर, शिक्षा और फाइनेंस टूल्स भी मुफ़्त उपलब्ध हैं।',
+  keywords: 'pkminfotech हिंदी गाइड, ऑनलाइन टूल्स, कैलकुलेटर',
   openGraph: {
-    title: 'हिंदी ब्लॉग | pkminfotech',
-    description: 'हिंदी में टेक्नोलॉजी और बिजनेस के बारे में आर्टिकल',
+    title: 'हिंदी गाइड्स और अपडेट्स | pkminfotech',
+    description: 'हिंदी गाइड्स के साथ मुफ़्त ऑनलाइन टूल्स',
     images: [{ url: '/favicon-32x32.png', width: 32, height: 32 }],
   },
 }
@@ -59,7 +59,7 @@ export default async function HindiBlogPage() {
   const blogs = await getHindiBlogs()
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
+    <div className="page-surface">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
         
         {/* Main Content - Narrower Container for Auto Ads on Sides */}
@@ -80,10 +80,14 @@ export default async function HindiBlogPage() {
 
           <div className="mb-8">
             <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              हिंदी ब्लॉग पोस्ट्स
+              हिंदी गाइड्स
             </h1>
             <p className="text-lg text-gray-600">
-              टेक्नोलॉजी, बिजनेस और डिजिटल ट्रेंड्स के बारे में हिंदी में पढ़ें।
+              हिंदी गाइड्स और अपडेट्स। कैलकुलेटर चाहिए? हमारे{" "}
+              <Link href="/tools" className="text-blue-600 font-semibold hover:underline">
+                मुफ़्त ऑनलाइन टूल्स
+              </Link>{" "}
+              देखें।
             </p>
           </div>
 
@@ -97,7 +101,7 @@ export default async function HindiBlogPage() {
           ) : (
             <div className="grid gap-8">
               {blogs.map((blog) => (
-                <article key={blog.id} className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
+                <article key={blog.id} className="border border-gray-200 rounded-lg overflow-hidden hover:border-gray-300 transition-colors bg-white">
                   <div className="md:flex">
                     {blog.coverImage && (
                       <div className="md:w-1/3">

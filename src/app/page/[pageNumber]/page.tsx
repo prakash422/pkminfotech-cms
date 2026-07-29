@@ -48,8 +48,8 @@ export async function generateMetadata({ params, searchParams }: PageProps) {
   const currentPage = parseInt(pageNumber, 10)
   const selectedCategory = category || 'all'
   
-  const pageTitle = `Latest Blogs - Page ${currentPage} | pkminfotech`
-  const pageDescription = `Browse our latest blog posts on page ${currentPage}. Discover tech news, travel guides, and business insights.`
+  const pageTitle = `Guides & Updates - Page ${currentPage}`
+  const pageDescription = `Browse helpful guides and updates on page ${currentPage} from pkminfotech.`
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.pkminfotech.com'
   const canonicalUrl = `${baseUrl}/page/${currentPage}${selectedCategory !== 'all' ? `?category=${selectedCategory}` : ''}`
@@ -57,7 +57,7 @@ export async function generateMetadata({ params, searchParams }: PageProps) {
   return {
     title: pageTitle,
     description: pageDescription,
-    keywords: "tech news, business updates, travel guides India, technology news, digital trends, tourist places, daily news, pkminfotech",
+    keywords: "pkminfotech guides, online tools tips, calculators India",
     authors: [{ name: "pkminfotech Team" }],
     creator: "pkminfotech",
     publisher: "pkminfotech",

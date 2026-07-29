@@ -117,6 +117,23 @@ const nextConfig = {
       { source: '/ssc-previous-year-question', destination: '/tools', permanent: true },
       { source: '/ssc-current-affairs', destination: '/daily-current-affairs', permanent: true },
       { source: '/current-affairs', destination: '/daily-current-affairs', permanent: true },
+
+      // Photo tool variants → single canonical compressor (avoid thin/duplicate pages)
+      {
+        source: '/tools/utility/exam-photo-20kb',
+        destination: '/tools/utility/photo-compressor?preset=20kb',
+        permanent: true,
+      },
+      {
+        source: '/tools/utility/passport-size-photo',
+        destination: '/tools/utility/photo-compressor?preset=passport',
+        permanent: true,
+      },
+      {
+        source: '/tools/utility/signature-resize',
+        destination: '/tools/utility/photo-compressor?preset=signature',
+        permanent: true,
+      },
       
       // === PREVIOUS REDIRECTS ===
       {
