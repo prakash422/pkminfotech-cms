@@ -25,6 +25,34 @@ export interface ToolCategory {
 
 export const toolCategories: ToolCategory[] = [
   {
+    slug: "ssc",
+    name: "SSC Exam Calculators",
+    shortName: "SSC Tools",
+    description:
+      "Free score calculators, rank predictors, and normalization tools for SSC CGL, CHSL, MTS & GD exams.",
+  },
+  {
+    slug: "railway",
+    name: "Railway Exam Tools",
+    shortName: "Railway Tools",
+    description:
+      "RRB NTPC, Group D score calculators and normalization estimators across multiple shifts.",
+  },
+  {
+    slug: "banking",
+    name: "Banking Exam Calculators",
+    shortName: "Banking Tools",
+    description:
+      "IBPS PO/Clerk, SBI and RRB score calculators and 80:20 final merit calculators.",
+  },
+  {
+    slug: "eligibility",
+    name: "Exam Eligibility & Criteria",
+    shortName: "Eligibility Tools",
+    description:
+      "Check age limits, physical height requirements, and CTET qualifying marks for government exams.",
+  },
+  {
     slug: "land-area",
     name: "Land Area Converters",
     shortName: "Land Area",
@@ -230,5 +258,165 @@ export const toolItems: ToolItem[] = [
     examCategorySlug: "utility",
     toolSlug: "gst-calculator",
     path: "/tools/utility/gst-calculator",
+  },
+  {
+    slug: "ssc-cgl-tier-1-marks-calculator",
+    title: "SSC CGL Tier 1 Marks Calculator",
+    description:
+      "Calculate your raw score, positive marks and negative penalty for SSC CGL Tier 1 exam based on answer key attempts.",
+    category: "SSC",
+    examCategorySlug: "ssc",
+    toolSlug: "ssc-cgl-tier-1-marks-calculator",
+    path: "/tools/ssc/ssc-cgl-tier-1-marks-calculator",
+  },
+  {
+    slug: "ssc-cgl-tier-2-marks-calculator",
+    title: "SSC CGL Tier 2 Marks Calculator",
+    description:
+      "Estimate your SSC CGL Tier 2 Paper 1 score across Math, Reasoning, English, General Awareness and Computer modules.",
+    category: "SSC",
+    examCategorySlug: "ssc",
+    toolSlug: "ssc-cgl-tier-2-marks-calculator",
+    path: "/tools/ssc/ssc-cgl-tier-2-marks-calculator",
+  },
+  {
+    slug: "ssc-cgl-final-score-calculator",
+    title: "SSC CGL Final Merit Score Calculator",
+    description:
+      "Combine your Tier 1 and Tier 2 weighted marks to compute your total merit aggregate and post preference readiness.",
+    category: "SSC",
+    examCategorySlug: "ssc",
+    toolSlug: "ssc-cgl-final-score-calculator",
+    path: "/tools/ssc/ssc-cgl-final-score-calculator",
+  },
+  {
+    slug: "ssc-cgl-cutoff-predictor",
+    title: "SSC CGL Expected Cutoff Predictor",
+    description:
+      "Predict safe qualifying score and expected category cutoffs for ASO, Excise Inspector, Auditor and Tax Assistant posts.",
+    category: "SSC",
+    examCategorySlug: "ssc",
+    toolSlug: "ssc-cgl-cutoff-predictor",
+    path: "/tools/ssc/ssc-cgl-cutoff-predictor",
+  },
+  {
+    slug: "ssc-cgl-rank-predictor",
+    title: "SSC CGL Rank Predictor",
+    description:
+      "Estimate your expected All-India Category and Overall rank from your raw score and shift difficulty percentile.",
+    category: "SSC",
+    examCategorySlug: "ssc",
+    toolSlug: "ssc-cgl-rank-predictor",
+    path: "/tools/ssc/ssc-cgl-rank-predictor",
+  },
+  {
+    slug: "ssc-cgl-age-limit-calculator",
+    title: "SSC CGL Age Limit & Eligibility Calculator",
+    description:
+      "Check your exact age eligibility for 18-27, 20-30, and up to 32 years SSC posts with category relaxation rules.",
+    category: "SSC",
+    examCategorySlug: "ssc",
+    toolSlug: "ssc-cgl-age-limit-calculator",
+    path: "/tools/ssc/ssc-cgl-age-limit-calculator",
+  },
+  {
+    slug: "ssc-eligibility-checker",
+    title: "SSC Combined Exams Eligibility Checker",
+    description:
+      "Check your eligibility for SSC CGL, CHSL, MTS, CPO, and GD Constable exams based on age and educational qualification.",
+    category: "SSC",
+    examCategorySlug: "ssc",
+    toolSlug: "ssc-eligibility-checker",
+    path: "/tools/ssc/ssc-eligibility-checker",
+  },
+  {
+    slug: "rrb-ntpc-normalization-calculator",
+    title: "RRB NTPC Normalization Marks Calculator",
+    description:
+      "Estimate your normalized score for RRB NTPC CBT 1 and CBT 2 exams across hard and easy shift percentiles.",
+    category: "Railway",
+    examCategorySlug: "railway",
+    toolSlug: "rrb-ntpc-normalization-calculator",
+    path: "/tools/railway/rrb-ntpc-normalization-calculator",
+  },
+  {
+    slug: "ibps-score-calculator",
+    title: "IBPS PO & Clerk Score Calculator",
+    description:
+      "Calculate your sectional score and total marks for IBPS PO, Clerk, and RRB Prelims / Mains exams.",
+    category: "Banking",
+    examCategorySlug: "banking",
+    toolSlug: "ibps-score-calculator",
+    path: "/tools/banking/ibps-score-calculator",
+  },
+  {
+    slug: "bank-final-score-predictor",
+    title: "Bank 80:20 Final Merit Score Calculator",
+    description:
+      "Combine your Banking Mains written exam (80%) and Interview marks (20%) into a normalized 100-point merit score.",
+    category: "Banking",
+    examCategorySlug: "banking",
+    toolSlug: "bank-final-score-predictor",
+    path: "/tools/banking/bank-final-score-predictor",
+  },
+  {
+    slug: "ctet-qualifying-marks",
+    title: "CTET Qualifying Marks & Eligibility Calculator",
+    description:
+      "Check whether your CTET Paper 1 or Paper 2 score meets the minimum qualifying cutoffs (60% General / 55% Reserved).",
+    category: "Eligibility",
+    examCategorySlug: "eligibility",
+    toolSlug: "ctet-qualifying-marks",
+    path: "/tools/eligibility/ctet-qualifying-marks",
+  },
+  {
+    slug: "police-height-eligibility",
+    title: "Police Constable & SI Height Eligibility Checker",
+    description:
+      "Check physical height and chest measurement eligibility for UP Police, Bihar Police, Delhi Police & SSC GD Constable.",
+    category: "Eligibility",
+    examCategorySlug: "eligibility",
+    toolSlug: "police-height-eligibility",
+    path: "/tools/eligibility/police-height-eligibility",
+  },
+  {
+    slug: "7th-pay-salary-calculator",
+    title: "7th Pay Commission Salary Calculator (In-Hand & Allowances)",
+    description:
+      "Calculate your exact monthly in-hand salary, 50% DA, HRA (X, Y, Z city), TA, and NPS deductions for Central Government Pay Levels 1 to 10.",
+    category: "SSC",
+    examCategorySlug: "ssc",
+    toolSlug: "7th-pay-salary-calculator",
+    path: "/tools/ssc/7th-pay-salary-calculator",
+  },
+  {
+    slug: "gaj-to-square-feet",
+    title: "Gaj to Square Feet Converter & Plot Cost Calculator",
+    description:
+      "Convert Gaj (Square Yard) to Square Feet and Square Meters instantly. Calculate plot dimensions, boundary wall length, and registry costs with 100% precision.",
+    category: "Land Area",
+    examCategorySlug: "land-area",
+    toolSlug: "gaj-to-square-feet",
+    path: "/tools/land-area/gaj-to-square-feet",
+  },
+  {
+    slug: "signature-resizer-10-to-20-kb",
+    title: "Govt Exam Signature & Photo Resizer (10KB to 20KB)",
+    description:
+      "Resize and compress signatures, thumb impressions, and admit card photos to strictly 10KB–20KB or 20KB–50KB directly in your browser. 100% private.",
+    category: "Utility",
+    examCategorySlug: "utility",
+    toolSlug: "signature-resizer-10-to-20-kb",
+    path: "/tools/utility/signature-resizer-10-to-20-kb",
+  },
+  {
+    slug: "typing-speed-test",
+    title: "SSC & Court Typing Speed & Accuracy Test (Net WPM)",
+    description:
+      "Practice 1, 5, 10, and 15-minute exam typing tests for SSC CGL, CHSL, and High Court with official Net WPM, accuracy, and error evaluation formulas.",
+    category: "SSC",
+    examCategorySlug: "ssc",
+    toolSlug: "typing-speed-test",
+    path: "/tools/ssc/typing-speed-test",
   },
 ]

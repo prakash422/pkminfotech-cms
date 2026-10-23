@@ -13,6 +13,10 @@ import { generateCanonicalUrl } from "@/lib/canonical-utils"
 import { toolItems } from "@/data/tools-data"
 import ContentAdBand from "@/components/ContentAdBand"
 import SideRailAds from "@/components/SideRailAds"
+import ModernLightHero from "@/components/home/ModernLightHero"
+import ModernToolCategories from "@/components/home/ModernToolCategories"
+import ModernPopularTools from "@/components/home/ModernPopularTools"
+import ModernTrustStrip from "@/components/home/ModernTrustStrip"
 
 // Enable ISR with 60 second revalidation
 export async function generateMetadata({ searchParams }: { searchParams: Promise<{ category?: string; page?: string }> }): Promise<Metadata> {
@@ -284,13 +288,22 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
   const currentAffairsData = await getBlogs('current-affairs', 1, 4)
   const currentAffairsBlogs = currentAffairsData.blogs
   const toolCards = [
-    { title: "Bigha to Kattha Converter", href: "/tools/land-area/bigha-to-kattha", text: "Convert regional land measurements like Bigha, Kattha, Biswa to Square Feet.", icon: Globe2, tone: "tool-tone-1" as const },
-    { title: "Rent Receipt Generator", href: "/tools/utility/rent-receipt", text: "Generate HRA rent receipts in PDF format instantly for tax claims.", icon: Calculator, tone: "tool-tone-2" as const },
-    { title: "CGPA/SGPA to Percentage", href: "/tools/education/cgpa-to-percentage", text: "Convert CGPA and SGPA into percentage formats for various Indian Universities.", icon: GraduationCap, tone: "tool-tone-3" as const },
-    { title: "Exam Photo Compressor", href: "/tools/utility/photo-compressor", text: "Compress and resize passport-size photos below 20kb/50kb for online applications.", icon: Smartphone, tone: "tool-tone-4" as const },
-    { title: "SIP Calculator", href: "/tools/utility/sip-calculator", text: "Calculate expected future wealth and returns from your monthly SIP investments.", icon: TrendingUp, tone: "tool-tone-1" as const },
-    { title: "Age Calculator", href: "/tools/education/age-calculator", text: "Calculate your exact age in years, months, and days from your Date of Birth.", icon: Calendar, tone: "tool-tone-2" as const },
-    { title: "GST Calculator", href: "/tools/utility/gst-calculator", text: "Calculate inclusive/exclusive GST (5%, 12%, 18%, 28%) for invoices.", icon: Receipt, tone: "tool-tone-3" as const },
+    { title: "7th Pay Salary Calculator", href: "/tools/ssc/7th-pay-salary-calculator", text: "Calculate exact monthly in-hand salary, 50% DA, revised HRA and NPS deductions.", icon: Calculator, tone: "tool-tone-1" as const },
+    { title: "Gaj to Square Feet & Plot Cost", href: "/tools/land-area/gaj-to-square-feet", text: "Convert Gaj to Sq Ft, calculate plot front/depth dimensions and estimated registry price.", icon: Globe2, tone: "tool-tone-2" as const },
+    { title: "Signature & Photo Resizer", href: "/tools/utility/signature-resizer-10-to-20-kb", text: "Compress signatures to 10–20 KB (140x60px) and photos to 20–50 KB for SSC/UPSC.", icon: Smartphone, tone: "tool-tone-3" as const },
+    { title: "SSC & Court Typing Speed Test", href: "/tools/ssc/typing-speed-test", text: "Practice 1, 5, 10, 15 min typing tests with official Net WPM and accuracy formulas.", icon: MonitorCheck, tone: "tool-tone-4" as const },
+    { title: "SSC CGL Tier 1 Calculator", href: "/tools/ssc/ssc-cgl-tier-1-marks-calculator", text: "Calculate raw marks and negative penalties directly from answer key responses.", icon: Trophy, tone: "tool-tone-1" as const },
+    { title: "SSC CGL Tier 2 Calculator", href: "/tools/ssc/ssc-cgl-tier-2-marks-calculator", text: "Estimate your 390 marks merit score across Math, Reasoning, English & GA.", icon: MonitorCheck, tone: "tool-tone-2" as const },
+    { title: "RRB NTPC Normalization", href: "/tools/railway/rrb-ntpc-normalization-calculator", text: "Calculate shift-wise normalized CBT marks using the official Railway formula.", icon: TrendingUp, tone: "tool-tone-3" as const },
+    { title: "Police Height Eligibility", href: "/tools/eligibility/police-height-eligibility", text: "Check physical height and chest criteria for UP, Bihar, Delhi Police & SSC GD.", icon: HeartPulse, tone: "tool-tone-4" as const },
+    { title: "CTET Qualifying Calculator", href: "/tools/eligibility/ctet-qualifying-marks", text: "Check passing eligibility for CTET Paper 1 & 2 (General 60% / Reserved 55%).", icon: GraduationCap, tone: "tool-tone-1" as const },
+    { title: "Bigha to Kattha Converter", href: "/tools/land-area/bigha-to-kattha", text: "Convert regional land measurements like Bigha, Kattha, Biswa to Square Feet.", icon: Globe2, tone: "tool-tone-2" as const },
+    { title: "Rent Receipt Generator", href: "/tools/utility/rent-receipt", text: "Generate HRA rent receipts in PDF format instantly for tax claims.", icon: Calculator, tone: "tool-tone-3" as const },
+    { title: "CGPA/SGPA to Percentage", href: "/tools/education/cgpa-to-percentage", text: "Convert CGPA and SGPA into percentage formats for various Indian Universities.", icon: GraduationCap, tone: "tool-tone-4" as const },
+    { title: "Exam Photo Compressor", href: "/tools/utility/photo-compressor", text: "Compress and resize passport-size photos below 20kb/50kb for online applications.", icon: Smartphone, tone: "tool-tone-1" as const },
+    { title: "Bank 80:20 Merit Calculator", href: "/tools/banking/bank-final-score-predictor", text: "Compute combined 80% Mains + 20% Interview aggregate for IBPS & SBI.", icon: Trophy, tone: "tool-tone-2" as const },
+    { title: "Age Calculator", href: "/tools/education/age-calculator", text: "Calculate your exact age in years, months, and days from your Date of Birth.", icon: Calendar, tone: "tool-tone-3" as const },
+    { title: "GST Calculator", href: "/tools/utility/gst-calculator", text: "Calculate inclusive/exclusive GST (5%, 12%, 18%, 28%) for invoices.", icon: Receipt, tone: "tool-tone-4" as const },
   ]
 
   if (process.env.NEXT_PUBLIC_HOMEPAGE_LAYOUT !== "legacy") {
@@ -305,170 +318,26 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
 
       <main className="page-surface pb-4 pt-2">
         <SideRailAds />
-        <div className="container compact-home pt-0">
-          <section className="card border-0 shadow-lg figma-space-24 overflow-hidden compact-hero" style={{ border: '0', borderRadius: '18px' }}>
-            <div className="figma-hero-unified position-relative">
-              <div className="figma-hero-content">
-                <p className="hero-eyebrow d-md-none mb-1">Free utility tools</p>
-                <h1 className="fw-bold text-white mb-2 compact-title figma-title">
-                  <span className="d-md-none">Tools for land, study &amp; daily work</span>
-                  <span className="d-none d-md-inline">
-                    Free Online Tools for
-                    <br className="d-none d-md-block" />
-                    <span className="text-gradient">Land, Study &amp; Daily Tasks</span>
-                  </span>
-                </h1>
-                <p className="text-white-50 mb-3 compact-subtitle hero-sub">
-                  <span className="d-md-none">Bigha–Kattha, CGPA, rent receipt, GST &amp; photo tools — free, no login.</span>
-                  <span className="d-none d-md-inline">
-                    Bigha–Kattha converters, CGPA tools, rent receipts, GST/SIP calculators, and exam photo compression — free and instant.
-                  </span>
-                </p>
-                <div className="d-flex flex-wrap gap-2 figma-hero-cta">
-                  <Link href="/tools" className="figma-btn figma-btn-primary">
-                    Explore Tools <ArrowRight size={14} />
-                  </Link>
-                  <Link href="/tools/land-area/bigha-to-kattha" className="figma-btn figma-btn-outline hero-secondary-cta">
-                    Try Land Converter <ArrowRight size={14} />
-                  </Link>
-                </div>
-                <div className="d-none d-md-flex flex-wrap gap-2 mt-3">
-                  <span className="hero-chip"><BadgeCheck size={14} /> 100% Free</span>
-                  <span className="hero-chip"><Clock3 size={14} /> Instant Results</span>
-                  <span className="hero-chip"><Wrench size={14} /> Easy to Use</span>
-                </div>
-                <p className="hero-trust-mobile d-md-none mb-0">Free · Instant · No login needed</p>
-              </div>
-              <div className="figma-hero-image-floating" aria-hidden="true">
-                <Image
-                  src="/home/herobanner.jpeg"
-                  alt="pkminfotech hero banner"
-                  width={860}
-                  height={480}
-                  priority
-                  className="w-100 h-auto"
-                  sizes="(max-width: 991px) 100vw, 46vw"
-                />
-              </div>
-            </div>
-          </section>
+        <div className="container compact-home pt-0" style={{ maxWidth: 1120 }}>
+          {/* Modern Light Hero with 3D Illustration & Badges */}
+          <ModernLightHero />
 
-          <ContentAdBand className="home-hero-ad" />
+          {/* Explore Tool Categories */}
+          <ModernToolCategories />
 
-          <section className="figma-space-24 explore-core-features">
-            <div className="core-features-header text-center mb-4">
-              <h2 className="core-features-title">
-                Explore Tool Categories
-              </h2>
-              <p className="core-features-subtitle text-secondary mb-0 mt-2">
-                Find the right tools and converters for your daily needs.
+          {/* Popular Tools */}
+          <ModernPopularTools />
+
+          <ContentAdBand className="home-mid-ad my-3" />
+
+          {/* Section 3: Official Guides & Knowledge Base */}
+          <section className="figma-space-24 mt-4">
+            <div className="text-center mb-3">
+              <h2 className="fw-bold h5 text-dark mb-1">Official Guides &amp; Knowledge Base</h2>
+              <p className="text-secondary small mb-0">
+                Helpful reference articles on exam marking schemes, state land measurement rules, and tax deductions.
               </p>
             </div>
-            <div className="row g-3 g-md-4">
-              <div className="col-6 col-md-6 col-lg-3">
-                <Link href="/tools/land-area" className="text-decoration-none">
-                  <div className="card h-100 border figma-card category-card p-3">
-                    <div className="d-flex align-items-center gap-2 mb-2">
-                      <div className="category-icon-wrap cat-indigo">
-                        <Globe2 size={18} />
-                      </div>
-                      <h3 className="h6 fw-bold mb-0 text-dark">Land Area</h3>
-                    </div>
-                    <p className="small text-secondary flex-grow-1 mb-3 d-none d-md-block">Bigha to Kattha, Gaj to Biswa, and regional land converters.</p>
-                    <span className="category-cta d-none d-md-block">Try Converter &rarr;</span>
-                  </div>
-                </Link>
-              </div>
-              <div className="col-6 col-md-6 col-lg-3">
-                <Link href="/tools/education" className="text-decoration-none">
-                  <div className="card h-100 border figma-card category-card p-3">
-                    <div className="d-flex align-items-center gap-2 mb-2">
-                      <div className="category-icon-wrap cat-emerald">
-                        <GraduationCap size={18} />
-                      </div>
-                      <h3 className="h6 fw-bold mb-0 text-dark">Education</h3>
-                    </div>
-                    <p className="small text-secondary flex-grow-1 mb-3 d-none d-md-block">SGPA/CGPA to percentage, grade converters and board calculators.</p>
-                    <span className="category-cta d-none d-md-block">Try Converter &rarr;</span>
-                  </div>
-                </Link>
-              </div>
-              <div className="col-6 col-md-6 col-lg-3">
-                <Link href="/tools/utility" className="text-decoration-none">
-                  <div className="card h-100 border figma-card category-card p-3">
-                    <div className="d-flex align-items-center gap-2 mb-2">
-                      <div className="category-icon-wrap cat-amber">
-                        <Calculator size={18} />
-                      </div>
-                      <h3 className="h6 fw-bold mb-0 text-dark">Finance &amp; Tax</h3>
-                    </div>
-                    <p className="small text-secondary flex-grow-1 mb-3 d-none d-md-block">Rent receipts, GST calculator, and SIP planning tools.</p>
-                    <span className="category-cta d-none d-md-block">Open Finance Tools &rarr;</span>
-                  </div>
-                </Link>
-              </div>
-              <div className="col-6 col-md-6 col-lg-3">
-                <Link href="/tools/utility/photo-compressor" className="text-decoration-none">
-                  <div className="card h-100 border figma-card category-card p-3">
-                    <div className="d-flex align-items-center gap-2 mb-2">
-                      <div className="category-icon-wrap cat-rose">
-                        <Smartphone size={18} />
-                      </div>
-                      <h3 className="h6 fw-bold mb-0 text-dark">Image resizer</h3>
-                    </div>
-                    <p className="small text-secondary flex-grow-1 mb-3 d-none d-md-block">Compress exam photos, crop signature, resize jpeg images instantly.</p>
-                    <span className="category-cta d-none d-md-block">Compress Photo &rarr;</span>
-                  </div>
-                </Link>
-              </div>
-            </div>
-          </section>
-
-          <section className="figma-space-24">
-            <h2 className="text-center fw-bold mb-3 h4 figma-section-title">Popular Free Tools</h2>
-            <div className="d-flex align-items-center gap-2 mb-2 tools-nav-line">
-              <button className="figma-arrow-btn" aria-label="Previous tools">
-                <ChevronLeft size={14} />
-              </button>
-              <div className="flex-grow-1 border-top border-secondary-subtle" />
-              <button className="figma-arrow-btn" aria-label="Next tools">
-                <ChevronRight size={14} />
-              </button>
-            </div>
-            <div className="row g-3">
-              {toolCards.slice(0, 4).map((tool) => (
-                <div key={tool.title} className="col-12 col-md-6 col-lg-3">
-                  <div className="card h-100 figma-card tool-card">
-                    <div className="card-body p-3 tool-card-body">
-                      <div className="d-flex align-items-center mb-2">
-                        <div className={`d-inline-flex align-items-center justify-content-center rounded-circle me-2 tool-icon-wrap ${tool.tone}`}>
-                          <tool.icon size={14} className="text-primary" />
-                        </div>
-                        <h3 className="h6 fw-semibold mb-0 tool-card-title">{tool.title}</h3>
-                      </div>
-                      <p className="small text-secondary mb-2 tool-card-text">{tool.text}</p>
-                      <Link href={tool.href} className="figma-btn figma-btn-sm tool-cta-btn">
-                        Use Now <ArrowRight size={12} />
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="text-center mt-3">
-              <Link href="/tools" className="figma-btn figma-btn-outline">
-                View All <ArrowRight size={14} className="ms-1" />
-              </Link>
-            </div>
-          </section>
-
-          <ContentAdBand className="home-mid-ad" />
-
-          <section className="figma-space-24">
-            <h2 className="text-center fw-bold mb-2 h4 figma-section-title">Guides &amp; Updates</h2>
-            <p className="text-secondary small text-center mb-3">
-              Helpful articles from our blog — secondary to free tools, still useful for tips and how-tos.
-            </p>
             <div className="row g-3">
               {latestBlogs.length > 0 ? (
                 latestBlogs.map((blog: BlogPost) => (
@@ -522,57 +391,15 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
             )}
           </section>
 
-          <section>
-            <h2 className="text-center fw-bold mb-3 h4 figma-section-title">Why Choose Us?</h2>
-            <p className="text-center text-secondary small mb-3">
-              Designed for ease and efficiency: fast tools, zero configuration, and accurate results.
-            </p>
-            <div className="row g-3">
-              <div className="col-sm-6 col-lg-3">
-                <div className="card border figma-card h-100 why-card">
-                  <div className="card-body text-center p-3">
-                    <span className="why-icon-box mb-2">
-                      <Clock3 className="text-primary" size={22} />
-                    </span>
-                    <h3 className="h6 fw-semibold">Trusted Since 2019</h3>
-                    <p className="small text-secondary mb-0">Starting as a resource platform, we have evolved into a lightweight hub of online utility converters and calculators.</p>
-                  </div>
-                </div>
-              </div>
-              <div className="col-sm-6 col-lg-3">
-                <div className="card border figma-card h-100 why-card">
-                  <div className="card-body text-center p-3">
-                    <span className="why-icon-box mb-2">
-                      <BadgeCheck className="text-primary" size={22} />
-                    </span>
-                    <h3 className="h6 fw-semibold">No Login Required</h3>
-                    <p className="small text-secondary mb-0">Use all calculations and area converters completely free without creating any account or storing private data.</p>
-                  </div>
-                </div>
-              </div>
-              <div className="col-sm-6 col-lg-3">
-                <div className="card border figma-card h-100 why-card">
-                  <div className="card-body text-center p-3">
-                    <span className="why-icon-box mb-2">
-                      <Smartphone className="text-primary" size={22} />
-                    </span>
-                    <h3 className="h6 fw-semibold">Fast &amp; Mobile Friendly</h3>
-                    <p className="small text-secondary mb-0">Built using server-side rendering for lightning-fast speeds and high usability on mobile devices.</p>
-                  </div>
-                </div>
-              </div>
-              <div className="col-sm-6 col-lg-3">
-                <div className="card border figma-card h-100 why-card">
-                  <div className="card-body text-center p-3">
-                    <span className="why-icon-box mb-2">
-                      <Wrench className="text-primary" size={22} />
-                    </span>
-                    <h3 className="h6 fw-semibold">Formula Accurate</h3>
-                    <p className="small text-secondary mb-0">Our calculations follow official formulas (such as tax codes and standard area measurements) to give reliable results.</p>
-                  </div>
-                </div>
-              </div>
+          {/* Why Choose Us Section with Trust Strip */}
+          <section className="my-4">
+            <div className="text-center mb-3">
+              <h2 className="fw-bold h5 text-dark mb-1">Why Choose Us?</h2>
+              <p className="text-secondary small mb-0">
+                Designed for ease and efficiency: fast tools, zero configuration, and accurate results.
+              </p>
             </div>
+            <ModernTrustStrip />
           </section>
 
         </div>

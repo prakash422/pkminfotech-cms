@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next'
 import { prisma } from '@/lib/prisma'
 import { toolItems, toolCategories } from '@/data/tools-data'
+import { resolveCanonicalUrl } from '@/lib/canonical-utils'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.pkminfotech.com'
@@ -101,7 +102,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })
 
     const activeBlogPages: any[] = []
-    const { resolveCanonicalUrl } = require('@/lib/canonical-utils')
 
     blogs.forEach((blog: any) => {
       const resolved = resolveCanonicalUrl(`/${blog.slug}`)
@@ -121,5 +121,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error('Error fetching blogs for sitemap, returning static pages only:', error)
   }
 
-  return [...staticPages, ...categoryPages, ...toolPages, ...blogPages]
+  return [...staticPages, ...toolPages, ...blogPages]
 } 

@@ -3,29 +3,25 @@ import { cloudinary } from '@/lib/cloudinary'
 
 export async function GET(request: NextRequest) {
   try {
-    // Test Cloudinary configuration
     const result = await cloudinary.api.ping()
     
     return NextResponse.json({
       success: true,
       message: 'Cloudinary connection successful!',
-      cloudName: process.env.CLOUDINARY_CLOUD_NAME || 'dt5fhzlcv',
-      apiKey: process.env.CLOUDINARY_API_KEY || '762481177423999',
+      hasCloudName: !!process.env.CLOUDINARY_CLOUD_NAME,
+      hasApiKey: !!process.env.CLOUDINARY_API_KEY,
       hasApiSecret: !!process.env.CLOUDINARY_API_SECRET,
-      apiSecret: process.env.CLOUDINARY_API_SECRET || 'Is4kP38ahm2lJaURbXJdoEYEaZA',
       result
     })
-    
   } catch (error) {
     console.error('Cloudinary test error:', error)
     
     return NextResponse.json({
       success: false,
       error: error instanceof Error ? error.message : 'Connection failed',
-      cloudName: process.env.CLOUDINARY_CLOUD_NAME || 'dt5fhzlcv',
-      apiKey: process.env.CLOUDINARY_API_KEY || '762481177423999',
+      hasCloudName: !!process.env.CLOUDINARY_CLOUD_NAME,
+      hasApiKey: !!process.env.CLOUDINARY_API_KEY,
       hasApiSecret: !!process.env.CLOUDINARY_API_SECRET,
-      apiSecret: process.env.CLOUDINARY_API_SECRET || 'Is4kP38ahm2lJaURbXJdoEYEaZA'
     }, { status: 500 })
   }
 }

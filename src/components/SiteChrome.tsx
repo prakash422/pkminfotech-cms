@@ -8,7 +8,9 @@ import { Facebook, Instagram, Linkedin, Menu, Search, User, ChevronDown, X, Yout
 import { useState, useRef, useEffect } from "react"
 
 const TOP_LINKS = [
-  { label: "Online Tools", href: "/tools" },
+  { label: "All Tools", href: "/tools" },
+  { label: "SSC Calculators", href: "/tools?category=ssc" },
+  { label: "Land Converters", href: "/tools?category=land-area" },
   { label: "Guides", href: "/latest" },
   { label: "About", href: "/about-us" },
   { label: "Contact Us", href: "/contact-us" },
@@ -39,7 +41,7 @@ export default function SiteChrome() {
 
   return (
     <>
-      <header className="bg-white border-bottom sticky-top z-3">
+      <header className="bg-white border-bottom sticky-top z-3 d-print-none">
         <div className="container py-2" style={{ maxWidth: 1120 }}>
           <div className="d-flex align-items-center justify-content-between gap-3">
             <Link href="/" className="d-flex align-items-center text-decoration-none text-dark">
@@ -281,7 +283,7 @@ export function SiteFooter() {
   if (hideFooter) return null
 
   return (
-    <footer className="mt-4">
+    <footer className="mt-4 d-print-none">
       <div className="py-4 text-white" style={{ background: "linear-gradient(180deg, #061731 0%, #071a36 100%)" }}>
         <div className="container" style={{ maxWidth: 1120 }}>
           <div className="row g-4">
@@ -297,9 +299,9 @@ export function SiteFooter() {
             <div className="col-6 col-md-2">
               <h6 className="fw-semibold mb-2">Tool categories</h6>
               <ul className="list-unstyled mb-0 small">
-                <li><Link href="/tools/land-area" className="text-white-50 text-decoration-none">Land Area</Link></li>
-                <li><Link href="/tools/education" className="text-white-50 text-decoration-none">Education</Link></li>
-                <li><Link href="/tools/utility" className="text-white-50 text-decoration-none">Finance &amp; Image</Link></li>
+                <li><Link href="/tools?category=land-area" className="text-white-50 text-decoration-none">Land Area</Link></li>
+                <li><Link href="/tools?category=education" className="text-white-50 text-decoration-none">Education</Link></li>
+                <li><Link href="/tools?category=utility" className="text-white-50 text-decoration-none">Finance &amp; Image</Link></li>
                 <li><Link href="/tools" className="text-white-50 text-decoration-none">All Tools</Link></li>
               </ul>
             </div>

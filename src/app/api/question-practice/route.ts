@@ -205,7 +205,7 @@ export async function POST(request: NextRequest) {
         subjectId: readString(input.subjectId),
         topicId: readString(input.topicId),
         practiceSetId,
-        isActive: input.isActive ?? true,
+        isActive: Boolean(input.isActive ?? true),
       }
     }
 
@@ -221,7 +221,7 @@ export async function POST(request: NextRequest) {
             name,
             slug: await getUniqueSlug("state", readString(data.slug) || name, "state"),
             code: readString(data.code),
-            isActive: data.isActive ?? true,
+            isActive: Boolean(data.isActive ?? true),
           },
         })
         return NextResponse.json({ data: state }, { status: 201 })
@@ -238,7 +238,7 @@ export async function POST(request: NextRequest) {
             slug: await getUniqueSlug("exam", readString(data.slug) || name, "exam"),
             description: readString(data.description),
             stateId: readString(data.stateId),
-            isActive: data.isActive ?? true,
+            isActive: Boolean(data.isActive ?? true),
           },
         })
         return NextResponse.json({ data: exam }, { status: 201 })
@@ -253,7 +253,7 @@ export async function POST(request: NextRequest) {
           data: {
             name,
             slug: await getUniqueSlug("subject", readString(data.slug) || name, "subject"),
-            isActive: data.isActive ?? true,
+            isActive: Boolean(data.isActive ?? true),
           },
         })
         return NextResponse.json({ data: subject }, { status: 201 })
@@ -273,7 +273,7 @@ export async function POST(request: NextRequest) {
             name,
             slug: await getUniqueSlug("topic", readString(data.slug) || name, "topic"),
             subjectId,
-            isActive: data.isActive ?? true,
+            isActive: Boolean(data.isActive ?? true),
           },
         })
         return NextResponse.json({ data: topic }, { status: 201 })
@@ -300,7 +300,7 @@ export async function POST(request: NextRequest) {
             examId,
             subjectId: readString(data.subjectId),
             topicId: readString(data.topicId),
-            isActive: data.isActive ?? true,
+            isActive: Boolean(data.isActive ?? true),
           },
         })
         return NextResponse.json({ data: set }, { status: 201 })
@@ -543,7 +543,7 @@ export async function POST(request: NextRequest) {
             examId: setExamId,
             subjectId: setSubjectId,
             topicId: readString(setInput.topicId),
-            isActive: setInput.isActive ?? true,
+            isActive: Boolean(setInput.isActive ?? true),
           },
         })
 

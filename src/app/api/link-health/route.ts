@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { PrismaClient } from '@prisma/client'
-
-const prisma = new PrismaClient()
+import { prisma } from '@/lib/prisma'
 
 // Mapping of broken URLs to their correct destinations based on Ahrefs data
-const LINK_FIXES = {
+const LINK_FIXES: Record<string, string> = {
   // 404 errors - pages that don't exist
   '/tribal-culture-in-india': '/latest',
   '/rajasthani-culture': '/latest', 
@@ -200,14 +198,16 @@ async function fixBrokenLinks() {
           })
         } catch (error) {
           errorCount++
-          errors.push(`Failed to update ${blog.title}: ${error.message}`)
+          const msg = error instanceof Error ? error.message : String(error)
+          errors.push(`Failed to update ${blog.title}: ${msg}`)
         }
       }
     }
     
   } catch (error) {
     console.error('Error fixing broken links:', error)
-    errors.push(`System error: ${error.message}`)
+    const msg = error instanceof Error ? error.message : String(error)
+    errors.push(`System error: ${msg}`)
   }
   
   return {

@@ -1,36 +1,24 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
-import bcrypt from "bcryptjs"
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth"
 
 export async function GET() {
+  if (process.env.NODE_ENV === "production") {
+    return NextResponse.json({ error: "Debug endpoint disabled in production" }, { status: 403 })
+  }
+
+  const session = await getServerSession(authOptions)
+  if (!session?.user?.email || session.user.role !== "admin") {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  }
+
   try {
-    // Find the user
-    const user = await prisma.user.findUnique({
-      where: {
-        email: "pkminfotech048@gmail.com"
-      }
-    })
-
-    if (!user) {
-      return NextResponse.json({ 
-        error: "User not found",
-        email: "pkminfotech048@gmail.com"
-      })
-    }
-
-    // Test password
-    const testPassword = "Pass@123"
-    const isPasswordValid = await bcrypt.compare(testPassword, user.password)
-
+    const userCount = await prisma.user.count()
     return NextResponse.json({
-      userExists: true,
-      userId: user.id,
-      userEmail: user.email,
-      userName: user.name,
-      userRole: user.role,
-      passwordHashLength: user.password.length,
-      testPasswordResult: isPasswordValid,
-      testPassword: testPassword
+      status: "ok",
+      userCount,
+      environment: process.env.NODE_ENV
     })
   } catch (error) {
     console.error("Debug user error:", error)
@@ -39,4 +27,4 @@ export async function GET() {
       { status: 500 }
     )
   }
-} 
+}

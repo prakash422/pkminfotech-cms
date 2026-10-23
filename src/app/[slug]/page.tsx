@@ -39,7 +39,7 @@ interface Blog {
 }
 
 async function getBlogBySlug(slug: string): Promise<Blog | null> {
-  if (!process.env.DATABASE_URL || process.env.DATABASE_URL.includes("localhost:27017")) {
+  if (!process.env.DATABASE_URL) {
     return null
   }
 

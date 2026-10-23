@@ -53,25 +53,32 @@ export default function OptimizedImage({
   }
 
   // Auto-optimize Cloudinary URLs
-  const optimizeCloudinaryUrl = (url: string): string => {
+  const optimizeCloudinaryUrl = (url: string, targetWidth?: number): string => {
     if (!isValidUrl(url)) return '/favicon-32x32.png'
     
     if (url.includes('res.cloudinary.com')) {
-      // Add auto format and quality optimizations
+      // Add auto format, eco quality, and responsive width
       const parts = url.split('/upload/')
       if (parts.length === 2) {
-        return `${parts[0]}/upload/f_auto,q_auto:eco,c_limit,w_1200/${parts[1]}`
+        let rest = parts[1]
+        // Strip any existing transformation segment if present
+        if (/^(?:[a-z]_[a-zA-Z0-9_.:]+,?)+\//.test(rest)) {
+          rest = rest.replace(/^(?:[a-z]_[a-zA-Z0-9_.:]+,?)+\//, '')
+        }
+        // Scale to 1.5x for mobile retina displays, capped reasonably
+        const w = targetWidth ? Math.min(Math.round(targetWidth * 1.5), 1200) : 600
+        return `${parts[0]}/upload/f_auto,q_auto:eco,c_limit,w_${w}/${rest}`
       }
     }
     return url
   }
 
   // Auto-optimize other URLs (add WebP/AVIF support)
-  const optimizeImageUrl = (url: string): string => {
+  const optimizeImageUrl = (url: string, targetWidth?: number): string => {
     if (!isValidUrl(url)) return '/favicon-32x32.png'
     
     // First try Cloudinary optimization
-    const cloudinaryOptimized = optimizeCloudinaryUrl(url)
+    const cloudinaryOptimized = optimizeCloudinaryUrl(url, targetWidth)
     if (cloudinaryOptimized !== url) {
       return cloudinaryOptimized
     }
@@ -89,7 +96,7 @@ export default function OptimizedImage({
     )
   }
 
-  const optimizedSrc = optimizeImageUrl(src)
+  const optimizedSrc = optimizeImageUrl(src, width)
   const isCloudinary = optimizedSrc.includes('res.cloudinary.com')
   // Bypass Next.js image optimizer for Cloudinary to avoid 500s; Cloudinary already serves optimized images
   const unoptimized = isCloudinary

@@ -1,304 +1,405 @@
 "use client"
 
+import React, { useState, useMemo } from "react"
 import Link from "next/link"
-import { useState, useMemo } from "react"
-import { HelpCircle, CheckCircle, XCircle, Minus, Info, ChevronDown, ChevronRight } from "lucide-react"
-
-// Tier 1 defaults
-const T1_TOTAL = 100
-const T1_MARKS = 2
-const T1_NEG = 0.5
-// Tier 2 defaults
-const T2_TOTAL = 100
-const T2_MARKS = 3
-const T2_NEG = 1
-
-const step = (val: number, delta: number, min: number, max: number) =>
-  Math.max(min, Math.min(max, Math.round((val + delta) * 100) / 100))
+import { 
+  CheckCircle2, 
+  RotateCcw, 
+  Share2, 
+  Copy, 
+  Check, 
+  Award,
+  Sparkles,
+  Trophy,
+  Layers,
+  Calculator,
+  Percent
+} from "lucide-react"
 
 type Props = { basePath?: string }
-const DEFAULT_BASE_PATH = "/ssc-cgl"
 
-const clamp = (v: number, max: number) => Math.min(max, Math.max(0, v))
+export default function SscCglFinalScoreCalculatorCard({ basePath = "/tools/ssc" }: Props) {
+  // Tier 1: 100 Qs, +2 / -0.5
+  const [t1Correct, setT1Correct] = useState<number>(76)
+  const [t1Incorrect, setT1Incorrect] = useState<number>(12)
 
-export default function SscCglFinalScoreCalculatorCard({ basePath = DEFAULT_BASE_PATH }: Props) {
-  const [t1TotalStr, setT1TotalStr] = useState(String(T1_TOTAL))
-  const [t1CorrectStr, setT1CorrectStr] = useState("0")
-  const [t1IncorrectStr, setT1IncorrectStr] = useState("0")
-  const [t1Marks, setT1Marks] = useState(T1_MARKS)
-  const [t1Neg, setT1Neg] = useState(T1_NEG)
+  // Tier 2: 130 Qs, +3 / -1
+  const [t2Correct, setT2Correct] = useState<number>(98)
+  const [t2Incorrect, setT2Incorrect] = useState<number>(16)
 
-  const [t2TotalStr, setT2TotalStr] = useState(String(T2_TOTAL))
-  const [t2CorrectStr, setT2CorrectStr] = useState("0")
-  const [t2IncorrectStr, setT2IncorrectStr] = useState("0")
-  const [t2Marks, setT2Marks] = useState(T2_MARKS)
-  const [t2Neg, setT2Neg] = useState(T2_NEG)
+  const [copied, setCopied] = useState<boolean>(false)
 
-  const [expanded, setExpanded] = useState(false)
-  const [submitted, setSubmitted] = useState(false)
+  // Tier 1 calculation
+  const t1ClampedC = Math.min(100, Math.max(0, t1Correct))
+  const t1ClampedI = Math.min(100 - t1ClampedC, Math.max(0, t1Incorrect))
+  const t1Positive = t1ClampedC * 2
+  const t1Negative = Math.round(t1ClampedI * 0.5 * 100) / 100
+  const tier1Score = Math.max(0, Math.round((t1Positive - t1Negative) * 100) / 100)
 
-  const t1Total = useMemo(() => Math.max(1, parseInt(t1TotalStr, 10) || T1_TOTAL), [t1TotalStr])
-  const t1Correct = useMemo(() => clamp(parseInt(t1CorrectStr, 10) || 0, t1Total), [t1CorrectStr, t1Total])
-  const t1Incorrect = useMemo(() => clamp(parseInt(t1IncorrectStr, 10) || 0, t1Total), [t1IncorrectStr, t1Total])
-  const t2Total = useMemo(() => Math.max(1, parseInt(t2TotalStr, 10) || T2_TOTAL), [t2TotalStr])
-  const t2Correct = useMemo(() => clamp(parseInt(t2CorrectStr, 10) || 0, t2Total), [t2CorrectStr, t2Total])
-  const t2Incorrect = useMemo(() => clamp(parseInt(t2IncorrectStr, 10) || 0, t2Total), [t2IncorrectStr, t2Total])
+  // Tier 2 calculation
+  const t2ClampedC = Math.min(130, Math.max(0, t2Correct))
+  const t2ClampedI = Math.min(130 - t2ClampedC, Math.max(0, t2Incorrect))
+  const t2Positive = t2ClampedC * 3
+  const t2Negative = t2ClampedI * 1
+  const tier2Score = Math.max(0, Math.round((t2Positive - t2Negative) * 100) / 100)
 
-  const tier1Score = useMemo(() => {
-    const g = t1Correct * t1Marks
-    const d = t1Incorrect * t1Neg
-    return Math.max(0, Math.round((g - d) * 10) / 10)
-  }, [t1Correct, t1Incorrect, t1Marks, t1Neg])
+  // Final Combined Aggregate
+  const finalScore = Math.round((tier1Score + tier2Score) * 100) / 100
+  const maxAggregate = 590
+  const totalPositive = t1Positive + t2Positive
+  const totalNegative = Math.round((t1Negative + t2Negative) * 100) / 100
+  const combinedPct = Math.round((finalScore / maxAggregate) * 100)
 
-  const tier2Score = useMemo(() => {
-    const g = t2Correct * t2Marks
-    const d = t2Incorrect * t2Neg
-    return Math.max(0, Math.round((g - d) * 10) / 10)
-  }, [t2Correct, t2Incorrect, t2Marks, t2Neg])
+  const meritStatus = useMemo(() => {
+    if (tier2Score >= 315) return { label: "Top Inspector Grade (4600 GP Safe)", color: "#10b981", bg: "rgba(16, 185, 129, 0.15)" }
+    if (tier2Score >= 285) return { label: "Auditor / TA Grade Safe", color: "#3b82f6", bg: "rgba(59, 130, 246, 0.15)" }
+    if (tier2Score >= 250) return { label: "Competitive Merit Band", color: "#f59e0b", bg: "rgba(245, 158, 11, 0.15)" }
+    return { label: "Borderline Score", color: "#ef4444", bg: "rgba(239, 68, 68, 0.15)" }
+  }, [tier2Score])
 
-  const finalScore = useMemo(() => Math.round((tier1Score + tier2Score) * 10) / 10, [tier1Score, tier2Score])
+  const handleReset = () => {
+    setT1Correct(76)
+    setT1Incorrect(12)
+    setT2Correct(98)
+    setT2Incorrect(16)
+  }
 
-  const hasScore = tier1Score > 0 || tier2Score > 0
-  const negMarksT1 = t1Incorrect * t1Neg
-  const negMarksT2 = t2Incorrect * t2Neg
+  const handleCopySummary = () => {
+    const text = `🎯 *My SSC CGL Combined Merit Score:*
+• Tier 1 Score: ${tier1Score} / 200 Marks
+• Tier 2 Score: ${tier2Score} / 390 Marks
+• Combined Aggregate: ${finalScore} / 590 Marks (${combinedPct}%)
+• Post Assessment: ${meritStatus.label}
+Calculate yours at: https://www.pkminfotech.com/tools/ssc/ssc-cgl-final-score-calculator`
+    navigator.clipboard.writeText(text)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
 
   return (
-    <div className="card border-0 shadow-sm ssc-cgl-calc-card">
-      <div className="card-body p-2 p-md-4 ssc-cgl-calc-card-body">
-        {/* Select Tier tabs */}
-        <div className="d-flex align-items-center gap-1 gap-md-2 mb-2 mb-md-4">
-          <span className="small fw-semibold text-secondary d-none d-md-inline">Select Tier</span>
-          <div className="d-flex rounded overflow-hidden border border-secondary-subtle">
-            <Link href={`${basePath}/tier-1-marks-calculator`} className="px-2 py-1_5 px-md-3 py-md-2 small fw-semibold bg-light text-secondary text-decoration-none">
-              Tier 1
-            </Link>
-            <Link href={`${basePath}/tier-2-marks-calculator`} className="px-2 py-1_5 px-md-3 py-md-2 small fw-semibold bg-light text-secondary text-decoration-none">
-              Tier 2
-            </Link>
-            <span className="px-2 py-1_5 px-md-3 py-md-2 small fw-semibold bg-primary text-white">Final Score</span>
+    <div className="tool-console-card card border-0 shadow-sm rounded-4 overflow-hidden mb-4 bg-white">
+      {/* Top Mode Switcher Bar */}
+      <div className="p-2.5 p-md-3 bg-light border-bottom d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center justify-content-between gap-2">
+        <div className="d-flex align-items-center gap-2">
+          <div 
+            className="rounded-circle d-flex align-items-center justify-content-center bg-primary bg-opacity-10 flex-shrink-0"
+            style={{ width: 28, height: 28 }}
+          >
+            <Layers size={14} className="text-primary" />
+          </div>
+          <span className="fw-semibold text-secondary small" style={{ fontSize: "0.78rem" }}>
+            Aggregate Merit: <strong>Tier 1 (Qualifying) + Tier 2 (390 Marks)</strong>
+          </span>
+        </div>
+
+        <div className="d-flex align-items-center justify-content-between justify-content-sm-end gap-2 flex-shrink-0">
+          <span className="badge rounded-pill bg-success-subtle text-success border border-success-subtle px-2.5 py-1 small fw-semibold d-inline-flex align-items-center gap-1">
+            <span className="spinner-grow spinner-grow-sm" style={{ width: 8, height: 8 }} />
+            Live Calculation
+          </span>
+          <button
+            type="button"
+            onClick={handleReset}
+            className="btn btn-sm btn-outline-secondary rounded-pill px-2.5 py-1 d-inline-flex align-items-center gap-1"
+            title="Reset to defaults"
+          >
+            <RotateCcw size={13} />
+            <span className="small">Reset</span>
+          </button>
+        </div>
+      </div>
+
+      <div className="p-3 p-md-4">
+        {/* Main Two-Column Split */}
+        <div className="row g-3 g-md-4 align-items-stretch">
+          {/* Left Column: Tier 1 + Tier 2 Controls */}
+          <div className="col-12 col-lg-6 d-flex flex-column justify-content-between">
+            <div className="d-flex flex-column gap-3">
+              {/* Tier 1 Box */}
+              <div className="p-3 rounded-3 border bg-light-subtle">
+                <div className="d-flex align-items-center justify-content-between mb-2">
+                  <span className="fw-bold small text-dark d-flex align-items-center gap-1.5">
+                    <span className="badge bg-primary text-white rounded-pill px-2 py-0.5">Tier 1</span>
+                    <span>100 Qs / 200 Max Marks (+2 / -0.5)</span>
+                  </span>
+                  <span className="fw-bold text-primary small">
+                    Score: {tier1Score} M
+                  </span>
+                </div>
+                <div className="row g-2">
+                  <div className="col-6">
+                    <label className="form-label small text-secondary mb-1">Correct (+2M)</label>
+                    <input
+                      type="number"
+                      min={0}
+                      max={100}
+                      inputMode="numeric"
+                      className="form-control form-control-sm fw-bold border-secondary-subtle"
+                      value={t1ClampedC}
+                      onChange={(e) => setT1Correct(Number(e.target.value) || 0)}
+                    />
+                  </div>
+                  <div className="col-6">
+                    <label className="form-label small text-secondary mb-1">Wrong (-0.5M)</label>
+                    <input
+                      type="number"
+                      min={0}
+                      max={100 - t1ClampedC}
+                      inputMode="numeric"
+                      className="form-control form-control-sm fw-bold border-secondary-subtle"
+                      value={t1ClampedI}
+                      onChange={(e) => setT1Incorrect(Number(e.target.value) || 0)}
+                    />
+                  </div>
+                </div>
+                <div 
+                  className="d-flex align-items-center gap-1.5 mt-2 overflow-x-auto text-nowrap no-scrollbar"
+                  style={{ WebkitOverflowScrolling: "touch", scrollbarWidth: "none" }}
+                >
+                  <span className="small text-secondary flex-shrink-0" style={{ fontSize: "0.72rem" }}>Presets:</span>
+                  {[60, 72, 80, 88].map(v => (
+                    <button
+                      key={v}
+                      type="button"
+                      className={`btn btn-xs rounded-pill px-2 py-0.2 small fw-semibold flex-shrink-0 ${t1ClampedC === v ? 'btn-primary' : 'btn-light border text-secondary'}`}
+                      style={{ fontSize: "0.72rem", whiteSpace: "nowrap" }}
+                      onClick={() => setT1Correct(v)}
+                    >
+                      {v}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Tier 2 Box */}
+              <div className="p-3 rounded-3 border bg-light-subtle">
+                <div className="d-flex align-items-center justify-content-between mb-2">
+                  <span className="fw-bold small text-dark d-flex align-items-center gap-1.5">
+                    <span className="badge bg-indigo text-white rounded-pill px-2 py-0.5" style={{ background: "#4f46e5" }}>Tier 2</span>
+                    <span>130 Qs / 390 Max Marks (+3 / -1.0)</span>
+                  </span>
+                  <span className="fw-bold text-indigo small" style={{ color: "#4f46e5" }}>
+                    Score: {tier2Score} M
+                  </span>
+                </div>
+                <div className="row g-2">
+                  <div className="col-6">
+                    <label className="form-label small text-secondary mb-1">Correct (+3M)</label>
+                    <input
+                      type="number"
+                      min={0}
+                      max={130}
+                      inputMode="numeric"
+                      className="form-control form-control-sm fw-bold border-secondary-subtle"
+                      value={t2ClampedC}
+                      onChange={(e) => setT2Correct(Number(e.target.value) || 0)}
+                    />
+                  </div>
+                  <div className="col-6">
+                    <label className="form-label small text-secondary mb-1">Wrong (-1.0M)</label>
+                    <input
+                      type="number"
+                      min={0}
+                      max={130 - t2ClampedC}
+                      inputMode="numeric"
+                      className="form-control form-control-sm fw-bold border-secondary-subtle"
+                      value={t2ClampedI}
+                      onChange={(e) => setT2Incorrect(Number(e.target.value) || 0)}
+                    />
+                  </div>
+                </div>
+                <div 
+                  className="d-flex align-items-center gap-1.5 mt-2 overflow-x-auto text-nowrap no-scrollbar"
+                  style={{ WebkitOverflowScrolling: "touch", scrollbarWidth: "none" }}
+                >
+                  <span className="small text-secondary flex-shrink-0" style={{ fontSize: "0.72rem" }}>Presets:</span>
+                  {[85, 95, 105, 115].map(v => (
+                    <button
+                      key={v}
+                      type="button"
+                      className={`btn btn-xs rounded-pill px-2 py-0.2 small fw-semibold flex-shrink-0 ${t2ClampedC === v ? 'btn-dark text-white' : 'btn-light border text-secondary'}`}
+                      style={{ fontSize: "0.72rem", whiteSpace: "nowrap" }}
+                      onClick={() => setT2Correct(v)}
+                    >
+                      {v}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="p-2.5 rounded-3 bg-light border text-secondary small d-flex align-items-center justify-content-between mt-3">
+              <span>Final Merit Basis: <strong>Tier 2 (390 Marks)</strong></span>
+              <span className="small text-muted">Tier 1 is qualifying for final rank</span>
+            </div>
+          </div>
+
+          {/* Right Column: Hero Gradient Box */}
+          <div className="col-12 col-lg-6">
+            <div
+              className="h-100 rounded-4 p-4 text-white d-flex flex-column justify-content-between shadow"
+              style={{
+                background: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%)",
+                minHeight: 310
+              }}
+            >
+              <div>
+                <div className="d-flex align-items-center justify-content-between gap-2 mb-2">
+                  <span className="small text-uppercase tracking-wider opacity-80 fw-bold" style={{ fontSize: "0.75rem", letterSpacing: "0.06em" }}>
+                    TOTAL COMBINED SCORE
+                  </span>
+                  <span
+                    className="badge rounded-pill fw-bold px-2.5 py-1"
+                    style={{ background: meritStatus.bg, color: meritStatus.color, fontSize: "0.75rem" }}
+                  >
+                    ● {meritStatus.label}
+                  </span>
+                </div>
+
+                <div className="d-flex align-items-baseline gap-2 mb-2">
+                  <span className="fw-bold lh-1 text-break" style={{ fontSize: "clamp(2rem, 7vw, 3rem)" }}>{finalScore}</span>
+                  <span className="fs-6 fs-sm-5 opacity-75">/ {maxAggregate} Marks</span>
+                </div>
+
+                <div
+                  className="rounded-3 p-2 mb-3 small d-inline-flex align-items-center gap-1.5"
+                  style={{ background: "rgba(255, 255, 255, 0.12)", backdropFilter: "blur(4px)" }}
+                >
+                  <Sparkles size={14} className="text-warning" />
+                  <span className="small">Tier 2 Merit Score: <strong>{tier2Score} / 390 Marks</strong></span>
+                </div>
+              </div>
+
+              {/* Real-time detailed table */}
+              <div
+                className="rounded-3 p-3"
+                style={{ background: "rgba(0, 0, 0, 0.2)", backdropFilter: "blur(6px)" }}
+              >
+                <div className="row g-2 small">
+                  <div className="col-6 d-flex justify-content-between">
+                    <span className="opacity-75">Tier 1 Raw:</span>
+                    <strong>{tier1Score} / 200 M</strong>
+                  </div>
+                  <div className="col-6 d-flex justify-content-between">
+                    <span className="opacity-75">Tier 2 Raw:</span>
+                    <strong>{tier2Score} / 390 M</strong>
+                  </div>
+                  <div className="col-6 d-flex justify-content-between">
+                    <span className="opacity-75">Total Positive:</span>
+                    <strong className="text-success">+{totalPositive} M</strong>
+                  </div>
+                  <div className="col-6 d-flex justify-content-between">
+                    <span className="opacity-75">Negative Penalty:</span>
+                    <strong className="text-warning">-{totalNegative} M</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="row g-2 g-md-4 align-items-start">
-          {/* Left: Enter Your Responses - Tier 1 & Tier 2 blocks (scrollable so score stays visible) */}
-          <div className="col-md-6 ssc-cgl-final-left-col">
-            <h3 className="h6 fw-semibold mb-2 mb-md-3">Enter Your Responses</h3>
-            <div className="ssc-cgl-final-scroll">
-            {/* Tier 1 block */}
-            <div className="mb-3 mb-md-4">
-              <span className="badge rounded-pill bg-primary mb-1 mb-md-2">Tier 1</span>
-              <div className="mb-1 mb-md-2">
-                <label className="form-label small mb-0 mb-md-1">Total Questions</label>
-                <div className="d-flex align-items-center gap-1 gap-md-2">
-                  <input type="text" inputMode="numeric" pattern="[0-9]*" className="form-control form-control-sm" value={t1TotalStr} onChange={(e) => setT1TotalStr(e.target.value.replace(/\D/g, "").slice(0, 3) || "")} />
-                  <span className="d-flex align-items-center justify-content-center rounded-circle bg-secondary-subtle text-secondary ssc-cgl-input-icon"><HelpCircle size={14} /></span>
-                </div>
+        {/* 4 KPI Metric Cards */}
+        <div className="row g-2 g-md-3 mt-3">
+          <div className="col-6 col-md-3">
+            <div className="card border rounded-3 p-3 bg-light text-center h-100">
+              <div className="small text-secondary mb-1 fw-semibold">Tier 1 Score</div>
+              <div className="fs-4 fw-bold text-dark">{tier1Score} M</div>
+              <div className="text-secondary" style={{ fontSize: "0.72rem" }}>
+                {Math.round((tier1Score/200)*100)}% of 200 Marks
               </div>
-              <div className="mb-1 mb-md-2">
-                <label className="form-label small mb-0 mb-md-1">Correct Answers</label>
-                <div className="d-flex align-items-center gap-1 gap-md-2">
-                  <input type="text" inputMode="numeric" pattern="[0-9]*" className="form-control form-control-sm" value={t1CorrectStr} onChange={(e) => setT1CorrectStr(e.target.value.replace(/\D/g, "").slice(0, 3) || "")} />
-                  <span className="d-flex align-items-center justify-content-center rounded-circle text-success ssc-cgl-icon-green ssc-cgl-input-icon"><CheckCircle size={14} /></span>
-                </div>
+            </div>
+          </div>
+
+          <div className="col-6 col-md-3">
+            <div className="card border rounded-3 p-3 bg-light text-center h-100">
+              <div className="small text-secondary mb-1 fw-semibold">Tier 2 Merit</div>
+              <div className="fs-4 fw-bold text-primary">{tier2Score} M</div>
+              <div className="text-secondary" style={{ fontSize: "0.72rem" }}>
+                {Math.round((tier2Score/390)*100)}% of 390 Marks
               </div>
-              <div className="mb-1 mb-md-2">
-                <label className="form-label small mb-0 mb-md-1">Incorrect Answers</label>
-                <div className="d-flex align-items-center gap-1 gap-md-2">
-                  <input type="text" inputMode="numeric" pattern="[0-9]*" className="form-control form-control-sm" value={t1IncorrectStr} onChange={(e) => setT1IncorrectStr(e.target.value.replace(/\D/g, "").slice(0, 3) || "")} />
-                  <span className="d-flex align-items-center justify-content-center rounded-circle text-danger ssc-cgl-icon-red ssc-cgl-input-icon"><XCircle size={14} /></span>
-                </div>
+            </div>
+          </div>
+
+          <div className="col-6 col-md-3">
+            <div className="card border rounded-3 p-3 bg-light text-center h-100">
+              <div className="small text-secondary mb-1 fw-semibold">Combined %</div>
+              <div className="fs-4 fw-bold text-success">{combinedPct}%</div>
+              <div className="text-secondary" style={{ fontSize: "0.72rem" }}>
+                Of 590 Aggregate
               </div>
-              <div className="mb-2">
-                <label className="form-label small mb-0 mb-md-1">Marks Per Correct Answer</label>
-                <div className="d-flex align-items-center gap-1 gap-md-2">
-                  <input type="number" className="form-control form-control-sm flex-grow-1" step={0.25} min={0.25} max={10} value={t1Marks} onChange={(e) => { const v = parseFloat(e.target.value); if (!Number.isNaN(v)) setT1Marks(step(v, 0, 0.25, 10)) }} />
-                  <span className="ssc-cgl-input-icon flex-shrink-0" aria-hidden="true" />
-                </div>
+            </div>
+          </div>
+
+          <div className="col-6 col-md-3">
+            <div className="card border rounded-3 p-3 bg-light text-center h-100">
+              <div className="small text-secondary mb-1 fw-semibold">Total Penalty</div>
+              <div className="fs-4 fw-bold text-danger">-{totalNegative} M</div>
+              <div className="text-secondary" style={{ fontSize: "0.72rem" }}>
+                Negative Marks Lost
               </div>
-              <div className="mb-0">
-                <label className="form-label small mb-0 mb-md-1">Negative Marking</label>
-                <div className="d-flex align-items-center gap-1 gap-md-2">
-                  <input type="number" className="form-control form-control-sm flex-grow-1" step={0.25} min={0} max={2} value={t1Neg} onChange={(e) => { const v = parseFloat(e.target.value); if (!Number.isNaN(v)) setT1Neg(step(v, 0, 0, 2)) }} />
-                  <span className="ssc-cgl-input-icon flex-shrink-0" aria-hidden="true" />
-                </div>
-              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Premium Action Toolbar */}
+        <div className="pt-3 mt-3 border-top" style={{ borderColor: "#f1f5f9" }}>
+          <div className="row g-2">
+            <div className="col-6">
+              <a
+                href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
+                  `My SSC CGL Combined Score is ${finalScore}/590 (Tier 2: ${tier2Score}/390 M). Check yours: https://www.pkminfotech.com/tools/ssc/ssc-cgl-final-score-calculator`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn w-100 text-white d-flex align-items-center justify-content-center gap-1.5 text-decoration-none shadow-xs"
+                style={{
+                  backgroundColor: "#25D366",
+                  borderRadius: "10px",
+                  padding: "10px 12px",
+                  fontSize: "0.82rem",
+                  fontWeight: 600,
+                  border: "none",
+                  boxShadow: "0 2px 8px rgba(37, 211, 102, 0.2)"
+                }}
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" className="flex-shrink-0">
+                  <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+                </svg>
+                <span className="text-nowrap">WhatsApp</span>
+              </a>
             </div>
 
-            {/* Tier 2 block */}
-            <div>
-              <span className="badge rounded-pill bg-primary mb-1 mb-md-2">Tier 2</span>
-              <div className="mb-1 mb-md-2">
-                <label className="form-label small mb-0 mb-md-1">Total Questions</label>
-                <div className="d-flex align-items-center gap-1 gap-md-2">
-                  <input type="text" inputMode="numeric" pattern="[0-9]*" className="form-control form-control-sm" value={t2TotalStr} onChange={(e) => setT2TotalStr(e.target.value.replace(/\D/g, "").slice(0, 3) || "")} />
-                  <span className="d-flex align-items-center justify-content-center rounded-circle bg-secondary-subtle text-secondary ssc-cgl-input-icon"><HelpCircle size={14} /></span>
-                </div>
-              </div>
-              <div className="mb-1 mb-md-2">
-                <label className="form-label small mb-0 mb-md-1">Correct Answers</label>
-                <div className="d-flex align-items-center gap-1 gap-md-2">
-                  <input type="text" inputMode="numeric" pattern="[0-9]*" className="form-control form-control-sm" value={t2CorrectStr} onChange={(e) => setT2CorrectStr(e.target.value.replace(/\D/g, "").slice(0, 3) || "")} />
-                  <span className="d-flex align-items-center justify-content-center rounded-circle text-success ssc-cgl-icon-green ssc-cgl-input-icon"><CheckCircle size={14} /></span>
-                </div>
-              </div>
-              <div className="mb-1 mb-md-2">
-                <label className="form-label small mb-0 mb-md-1">Incorrect Answers</label>
-                <div className="d-flex align-items-center gap-1 gap-md-2">
-                  <input type="text" inputMode="numeric" pattern="[0-9]*" className="form-control form-control-sm" value={t2IncorrectStr} onChange={(e) => setT2IncorrectStr(e.target.value.replace(/\D/g, "").slice(0, 3) || "")} />
-                  <span className="d-flex align-items-center justify-content-center rounded-circle text-danger ssc-cgl-icon-red ssc-cgl-input-icon"><XCircle size={14} /></span>
-                </div>
-              </div>
-              <div className="mb-2">
-                <label className="form-label small mb-0 mb-md-1">Marks Per Correct Answer</label>
-                <div className="d-flex align-items-center gap-1 gap-md-2">
-                  <input type="number" className="form-control form-control-sm flex-grow-1" step={0.25} min={0.25} max={10} value={t2Marks} onChange={(e) => { const v = parseFloat(e.target.value); if (!Number.isNaN(v)) setT2Marks(step(v, 0, 0.25, 10)) }} />
-                  <span className="ssc-cgl-input-icon flex-shrink-0" aria-hidden="true" />
-                </div>
-              </div>
-              <div className="mb-0">
-                <label className="form-label small mb-0 mb-md-1">Negative Marking</label>
-                <div className="d-flex align-items-center gap-1 gap-md-2">
-                  <input type="number" className="form-control form-control-sm flex-grow-1" step={0.25} min={0} max={2} value={t2Neg} onChange={(e) => { const v = parseFloat(e.target.value); if (!Number.isNaN(v)) setT2Neg(step(v, 0, 0, 2)) }} />
-                  <span className="ssc-cgl-input-icon flex-shrink-0" aria-hidden="true" />
-                </div>
-              </div>
-            </div>
-            </div>
-
-            {/* How are marks calculated - outside scroll, always visible */}
-            <div className="mt-3 pt-3 border-top border-secondary-subtle">
-              <button type="button" className="btn btn-link p-0 text-primary text-decoration-none d-flex align-items-center gap-2 small fw-semibold" onClick={() => setExpanded(!expanded)} aria-expanded={expanded}>
-                <Info size={16} className="flex-shrink-0" />
-                How are marks calculated? {expanded ? <ChevronDown size={16} /> : "Expand >"}
+            <div className="col-6">
+              <button
+                type="button"
+                onClick={handleCopySummary}
+                className="btn w-100 d-flex align-items-center justify-content-center gap-1.5 shadow-xs"
+                style={{
+                  backgroundColor: "#f8fafc",
+                  border: "1px solid #e2e8f0",
+                  color: "#334155",
+                  borderRadius: "10px",
+                  padding: "10px 12px",
+                  fontSize: "0.82rem",
+                  fontWeight: 600
+                }}
+              >
+                {copied ? (
+                  <>
+                    <Check size={14} className="text-success flex-shrink-0" />
+                    <span className="text-success text-nowrap">Copied!</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy size={14} className="text-secondary flex-shrink-0" />
+                    <span className="text-nowrap">Copy Merit</span>
+                  </>
+                )}
               </button>
             </div>
           </div>
-
-          {/* Right: Your Final Calculated Score – only after Calculate click */}
-          <div className="col-md-6">
-            {!submitted ? (
-              <>
-                <p className="small text-secondary mb-3">Enter Tier 1 and Tier 2 responses on the left, then click Calculate Score to see your combined marks.</p>
-                <button
-                  type="button"
-                  className="btn btn-primary ssc-cgl-calc-btn"
-                  onClick={() => setSubmitted(true)}
-                >
-                  Calculate Score <ChevronRight size={12} className="ms-1" />
-                </button>
-              </>
-            ) : (
-              <>
-                <h3 className="h6 fw-semibold mb-2 d-flex align-items-center gap-2">
-                  <CheckCircle size={18} className="text-success" />
-                  Your Final Calculated Score
-                </h3>
-                <div className="rounded-3 p-3 mb-2 fw-semibold small ssc-cgl-result-msg">
-                  {hasScore ? "Congratulations!" : "Enter Tier 1 & Tier 2 responses"}
-                </div>
-                <p className="small text-secondary mb-1">Tier 1 + Tier 2 Marks</p>
-                <p className="display-5 fw-bold text-dark mb-1">{finalScore}</p>
-                <p className="small text-secondary mb-2">Tier 1 + Tier 2 Marks</p>
-                <button
-                  type="button"
-                  className="btn btn-outline-primary btn-sm mb-3"
-                  onClick={() => setSubmitted(false)}
-                >
-                  Recalculate
-                </button>
-                <div className="pt-3 border-top border-secondary-subtle">
-                  <p className="small fw-semibold text-secondary mb-2">Detailed Results:</p>
-                  <table className="table table-sm small mb-0 ssc-cgl-detail-table">
-                    <thead>
-                      <tr>
-                        <th className="border-0 py-1 pe-2 text-secondary fw-normal"></th>
-                        <th className="border-0 py-1 text-end fw-semibold">Tier 1:</th>
-                        <th className="border-0 py-1 text-end fw-semibold">Tier 2:</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td className="border-0 py-1 pe-2 text-secondary">
-                          <CheckCircle size={14} className="text-success me-1 align-middle" /> Correct Answers:
-                        </td>
-                        <td className="border-0 py-1 text-end"><strong>{t1Correct}</strong></td>
-                        <td className="border-0 py-1 text-end"><strong>{t2Correct}</strong></td>
-                      </tr>
-                      <tr>
-                        <td className="border-0 py-1 pe-2 text-secondary">
-                          <XCircle size={14} className="text-danger me-1 align-middle" /> Incorrect Answers:
-                        </td>
-                        <td className="border-0 py-1 text-end"><strong>{t1Incorrect}</strong></td>
-                        <td className="border-0 py-1 text-end"><strong>{t2Incorrect}</strong></td>
-                      </tr>
-                      <tr>
-                        <td className="border-0 py-1 pe-2 text-secondary">
-                          <Minus size={14} className="me-1 align-middle" /> Negative Marks:
-                        </td>
-                        <td className="border-0 py-1 text-end"><strong>-{negMarksT1.toFixed(1)}</strong></td>
-                        <td className="border-0 py-1 text-end"><strong>-{negMarksT2.toFixed(1)}</strong></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </>
-            )}
-          </div>
         </div>
-
-        {/* Expanded content - full width below */}
-        {expanded && (
-          <div className="mt-4 pt-3 border-top border-secondary-subtle small text-secondary ssc-cgl-calc-expanded">
-            <p className="fw-semibold text-dark mb-2">Formula</p>
-            <p className="mb-2">Tier 1: (Correct × {t1Marks}) − (Incorrect × {t1Neg}). Tier 2: (Correct × {t2Marks}) − (Incorrect × {t2Neg}). Final = Tier 1 score + Tier 2 score.</p>
-            <p className="fw-semibold text-dark mb-2">Negative marking</p>
-            <p className="mb-2">Tier 1: +{t1Marks} per correct, −{t1Neg} per wrong. Tier 2: +{t2Marks} per correct, −{t2Neg} per wrong. Unattempted: no negative.</p>
-            <p className="fw-semibold text-dark mb-2">FAQ</p>
-            <p className="mb-1"><strong>Final merit?</strong> SSC may use normalized scores and weightage (e.g. 1:3). Check notification.</p>
-            <p className="mb-0"><strong>Exact formula?</strong> See SSC CGL notification on ssc.gov.in for that year.</p>
-          </div>
-        )}
       </div>
-      <style dangerouslySetInnerHTML={{ __html: `
-        .ssc-cgl-calc-card { border-radius: 12px; }
-        .ssc-cgl-calc-card-body .px-2.py-1_5 { padding: 0.35rem 0.5rem !important; }
-        @media (min-width: 768px) {
-          .ssc-cgl-calc-card-body .px-2.py-1_5 { padding: 0.5rem 0.75rem !important; }
-        }
-        .ssc-cgl-input-icon { display: inline-block; width: 22px; height: 22px; min-width: 22px; flex-shrink: 0; }
-        @media (min-width: 768px) {
-          .ssc-cgl-input-icon { width: 24px; height: 24px; }
-        }
-        .ssc-cgl-calc-btn {
-          background: #2563eb !important;
-          color: #fff !important;
-          border: none !important;
-          box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
-          padding: 0 0.65rem;
-          height: 28px;
-          line-height: 1;
-          font-size: 0.8rem;
-          display: inline-flex;
-          align-items: center;
-          width: fit-content;
-          border-radius: 8px;
-        }
-        .ssc-cgl-calc-btn:hover {
-          background: #1d4ed8 !important;
-          color: #fff !important;
-          transform: translateY(-1px);
-        }
-        .ssc-cgl-calc-expanded { line-height: 1.6; }
-        .ssc-cgl-result-msg { background: rgba(25, 135, 84, 0.12); color: #198754; }
-        .ssc-cgl-icon-green { background: rgba(25, 135, 84, 0.15); }
-        .ssc-cgl-icon-red { background: rgba(220, 53, 69, 0.15); }
-        .ssc-cgl-detail-table { font-size: 0.875rem; }
-        .ssc-cgl-final-left-col { display: flex; flex-direction: column; }
-        .ssc-cgl-final-scroll { max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding-right: 4px; }
-        .ssc-cgl-final-scroll::-webkit-scrollbar { width: 6px; }
-        .ssc-cgl-final-scroll::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 3px; }
-        .ssc-cgl-final-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
-      `}} />
     </div>
   )
 }

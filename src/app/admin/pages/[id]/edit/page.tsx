@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useParams } from 'next/navigation'
 import AdminLayout from '@/components/admin/admin-layout'
 import RichTextEditor from '@/components/editor/rich-text-editor'
 
@@ -18,12 +18,10 @@ interface PageFormData {
   pageType: 'static' | 'about' | 'contact' | 'privacy' | 'disclaimers'
 }
 
-interface EditPageProps {
-  params: { id: string }
-}
-
-export default function EditPage({ params }: EditPageProps) {
+export default function EditPage({ params }: { params?: Promise<{ id: string }> }) {
   const router = useRouter()
+  const routeParams = useParams()
+  const pageId = (routeParams?.id as string) || ''
   const [loading, setLoading] = useState(false)
   const [fetching, setFetching] = useState(true)
   const [formData, setFormData] = useState<PageFormData>({
@@ -40,12 +38,14 @@ export default function EditPage({ params }: EditPageProps) {
   })
 
   useEffect(() => {
-    fetchPage()
-  }, [])
+    if (pageId) {
+      fetchPage()
+    }
+  }, [pageId])
 
   const fetchPage = async () => {
     try {
-      const response = await fetch(`/api/pages/${params.id}`)
+      const response = await fetch(`/api/pages/${pageId}`)
       if (response.ok) {
         const data = await response.json()
         const page = data.page
@@ -101,7 +101,7 @@ export default function EditPage({ params }: EditPageProps) {
     setLoading(true)
 
     try {
-      const response = await fetch(`/api/pages/${params.id}`, {
+      const response = await fetch(`/api/pages/${pageId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

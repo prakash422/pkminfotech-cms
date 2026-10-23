@@ -459,6 +459,529 @@ export const TOOL_SEO_PROFILES: Record<string, ToolSeoProfile> = {
       },
     ],
   },
+  "ssc-cgl-tier-1-marks-calculator": {
+    metaTitle: "SSC CGL Tier 1 Marks Calculator — Raw Score & Negative Marking",
+    metaDescription:
+      "Calculate your SSC CGL Tier 1 raw marks and accuracy instantly from your answer key responses (+2 correct, -0.50 negative marking).",
+    searchTerms: [
+      "ssc cgl tier 1 marks calculator",
+      "ssc cgl answer key score calculator",
+      "calculate ssc cgl tier 1 marks",
+      "ssc cgl raw marks calculator",
+      "ssc cgl negative marking calculation",
+    ],
+    intentTitle: "SSC CGL Tier 1 Scoring Questions",
+    intentIntro:
+      "SSC CGL Tier 1 consists of 100 questions carrying 200 marks across 4 sections. Enter your correct and wrong attempts below.",
+    intents: [
+      {
+        query: "What is the negative marking in SSC CGL Tier 1?",
+        answer: "For every incorrect response, 0.50 marks (25% penalty) are deducted from the total score.",
+      },
+      {
+        query: "Are Tier 1 marks counted in final merit?",
+        answer: "No, SSC CGL Tier 1 is qualifying in nature. Final merit is determined strictly by Tier 2 marks.",
+      },
+    ],
+    faqs: [
+      {
+        question: "What is a good raw score in SSC CGL Tier 1?",
+        answer: "A raw score of 135–150+ in moderate shifts is generally considered safe for qualifying Tier 1 in the UR category.",
+      },
+      {
+        question: "How does normalization affect Tier 1 marks?",
+        answer: "SSC applies mathematical formula normalization to equalize difficulty across multiple exam shifts.",
+      },
+    ],
+  },
+  "ssc-cgl-tier-2-marks-calculator": {
+    metaTitle: "SSC CGL Tier 2 Marks Calculator — Paper 1 (390 Marks)",
+    metaDescription:
+      "Calculate your SSC CGL Tier 2 Paper 1 merit marks (Maths, Reasoning, English, GA) with +3 for correct and -1 negative penalty.",
+    searchTerms: [
+      "ssc cgl tier 2 marks calculator",
+      "ssc cgl tier 2 score calculator",
+      "cgl tier 2 390 marks calculation",
+      "ssc cgl tier 2 negative marking",
+    ],
+    intentTitle: "SSC CGL Tier 2 Merit Scoring",
+    intentIntro:
+      "Tier 2 Paper 1 has 130 questions for 390 marks (+3 correct, -1 negative). Computer Knowledge and Typing are qualifying.",
+    intents: [
+      {
+        query: "What is the marking scheme for SSC CGL Tier 2 Paper 1?",
+        answer: "Each question carries 3 marks, and 1 mark is deducted for every incorrect attempt.",
+      },
+      {
+        query: "What is the total marks for SSC CGL Tier 2 final merit?",
+        answer: "Final merit list is prepared out of 390 marks (Section 1: 180 marks + Section 2: 210 marks).",
+      },
+    ],
+    faqs: [
+      {
+        question: "Are Computer module marks added to the 390 total?",
+        answer: "No, Section 3 Computer Knowledge (60 marks) is qualifying in nature with higher cutoff standards for CPT posts.",
+      },
+      {
+        question: "What is a safe score in SSC CGL Tier 2 for 4600 GP posts?",
+        answer: "Generally, 315–335+ marks out of 390 are required for top posts like ASO (MEA, CSS) and GST Inspector.",
+      },
+    ],
+  },
+  "ssc-cgl-final-score-calculator": {
+    metaTitle: "SSC CGL Final Merit Score & Rank Calculator",
+    metaDescription:
+      "Compute your overall SSC CGL aggregate marks and check your post preference eligibility based on Tier 2 performance.",
+    searchTerms: [
+      "ssc cgl final score calculator",
+      "ssc cgl total marks calculator",
+      "ssc cgl post preference score",
+      "cgl merit list marks calculator",
+    ],
+    intentTitle: "Final Selection & Merit Calculation",
+    intentIntro:
+      "Enter your normalized or raw marks across sections to see your total score out of 390 and post readiness.",
+    intents: [
+      {
+        query: "How is SSC CGL final merit prepared?",
+        answer: "Final merit ranking is based solely on Section 1 and Section 2 scores in Paper 1 of Tier 2 (390 marks).",
+      },
+    ],
+    faqs: [
+      {
+        question: "Is there an interview in SSC CGL?",
+        answer: "No, interviews were discontinued for Group B and C non-gazetted posts by the Government of India.",
+      },
+    ],
+  },
+  "ssc-cgl-cutoff-predictor": {
+    metaTitle: "SSC CGL Expected Cutoff Predictor — Safe Score by Category",
+    metaDescription:
+      "Predict expected SSC CGL cutoff scores for UR, OBC, EWS, SC, ST across 4600, 4200, 2800, and 2400 Grade Pay vacancies.",
+    searchTerms: [
+      "ssc cgl cutoff predictor",
+      "expected cutoff ssc cgl",
+      "safe score ssc cgl tier 2",
+      "ssc cgl category wise cutoff",
+    ],
+    intentTitle: "Expected Cutoff & Safe Score Analysis",
+    intentIntro:
+      "Cutoffs depend on total vacancies, shift difficulty, and student score distributions across tiers.",
+    intents: [
+      {
+        query: "What is expected safe score for General category in SSC CGL?",
+        answer: "For a 2400/2800 GP post, 280–295+ is typically required; for 4600 GP posts, 315+ is safe.",
+      },
+    ],
+    faqs: [
+      {
+        question: "How accurate are SSC CGL cutoff predictors?",
+        answer: "Predictors use historical normalization patterns and vacancy data to give an estimated target range.",
+      },
+    ],
+  },
+  "ssc-cgl-rank-predictor": {
+    metaTitle: "SSC CGL Rank Predictor — Estimate All-India & Category Rank",
+    metaDescription:
+      "Estimate your All-India Rank (AIR) and category ranking based on your Tier 2 score and shift difficulty percentile.",
+    searchTerms: [
+      "ssc cgl rank predictor",
+      "expected rank in ssc cgl",
+      "cgl rank vs marks",
+      "calculate ssc cgl air rank",
+    ],
+    intentTitle: "SSC CGL Rank Estimation",
+    intentIntro:
+      "Check where you stand compared to thousands of aspirants based on your marks.",
+    intents: [
+      {
+        query: "What marks are needed for top 1000 rank in SSC CGL?",
+        answer: "Historically, marks above 330–340 out of 390 place candidates comfortably within the top 1000 All-India ranks.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Does normalization change candidate rank significantly?",
+        answer: "Yes, candidates from tougher shifts can gain 15–25 marks through normalization, shifting their ranks upward.",
+      },
+    ],
+  },
+  "ssc-cgl-age-limit-calculator": {
+    metaTitle: "SSC CGL Age Limit Calculator — Check DOB Eligibility",
+    metaDescription:
+      "Verify your exact age eligibility for 18–27, 20–30, and 18–32 years SSC CGL posts with OBC/SC/ST/PwD age relaxations.",
+    searchTerms: [
+      "ssc cgl age limit calculator",
+      "ssc cgl age criteria dob",
+      "am i eligible for ssc cgl",
+      "ssc cgl age relaxation obc sc st",
+    ],
+    intentTitle: "Age Criteria & Crucial Date Eligibility",
+    intentIntro:
+      "Enter your Date of Birth and category to see which SSC CGL posts and Grade Pays you can apply for.",
+    intents: [
+      {
+        query: "What is the crucial date for age calculation in SSC CGL?",
+        answer: "The crucial date is specified in the official notification, usually 1st January or 1st August of the exam year.",
+      },
+    ],
+    faqs: [
+      {
+        question: "How much age relaxation is provided for OBC in SSC?",
+        answer: "OBC candidates receive 3 years of upper age relaxation, while SC/ST candidates receive 5 years.",
+      },
+    ],
+  },
+  "ssc-eligibility-checker": {
+    metaTitle: "SSC Exams Eligibility Checker — CGL, CHSL, MTS, GD, CPO",
+    metaDescription:
+      "Find which SSC exams (10th, 12th, or Graduate level) you qualify for based on your qualification, age, and category.",
+    searchTerms: [
+      "ssc eligibility checker",
+      "which ssc exam can i give",
+      "ssc qualification eligibility",
+      "ssc chsl vs cgl eligibility",
+    ],
+    intentTitle: "Complete SSC Exam Eligibility Guide",
+    intentIntro:
+      "Check your eligibility across all major Staff Selection Commission competitive recruitment tests.",
+    intents: [
+      {
+        query: "Can final year college students apply for SSC CGL?",
+        answer: "Yes, provided they acquire the essential degree qualification on or before the crucial date in the notification.",
+      },
+    ],
+    faqs: [
+      {
+        question: "What is minimum qualification for SSC MTS?",
+        answer: "Candidates must have passed 10th Standard (Matriculation) from a recognized board.",
+      },
+    ],
+  },
+  "rrb-ntpc-normalization-calculator": {
+    metaTitle: "RRB NTPC Normalization Marks Calculator — Shift Percentile",
+    metaDescription:
+      "Calculate your normalized score for Railway RRB NTPC CBT 1 and CBT 2 using the official Railway normalization formula.",
+    searchTerms: [
+      "rrb ntpc normalization calculator",
+      "railway score normalization formula",
+      "rrb ntpc cbt marks calculator",
+      "rrb group d normalization marks",
+    ],
+    intentTitle: "Railway Normalization Process",
+    intentIntro:
+      "Indian Railways uses percentile-based or standard deviation normalization across multiple examination sessions.",
+    intents: [
+      {
+        query: "Why do marks increase or decrease after RRB normalization?",
+        answer: "If your shift average was lower than the base shift, your marks increase to balance the harder test paper.",
+      },
+    ],
+    faqs: [
+      {
+        question: "What is the negative marking penalty in RRB NTPC?",
+        answer: "One-third (1/3rd) of the marks assigned to that question is deducted for every incorrect response.",
+      },
+    ],
+  },
+  "ibps-score-calculator": {
+    metaTitle: "IBPS PO & Clerk Score Calculator — Sectional & Overall",
+    metaDescription:
+      "Calculate your raw marks and sectional cutoff clearance for IBPS PO, Clerk, and RRB banking preliminary & main exams.",
+    searchTerms: [
+      "ibps score calculator",
+      "ibps po marks calculator",
+      "ibps clerk negative marking calculator",
+      "banking exam score calculator",
+    ],
+    intentTitle: "Banking Exam Marks & Sectional Cutoff",
+    intentIntro:
+      "IBPS deducts 0.25 (1/4th) marks for wrong answers. Candidates must clear both sectional and overall cutoffs.",
+    intents: [
+      {
+        query: "What is negative marking in IBPS exams?",
+        answer: "A penalty of 0.25 marks is deducted for each question answered incorrectly.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Do IBPS exams have sectional cutoffs?",
+        answer: "Yes, candidates must pass each section individually (Quantitative, Reasoning, English) as well as the total cutoff.",
+      },
+    ],
+  },
+  "bank-final-score-predictor": {
+    metaTitle: "Bank Final Score Calculator — 80:20 Merit Weightage",
+    metaDescription:
+      "Convert your IBPS / SBI PO Mains score (80%) and Interview marks (20%) into a final 100-point merit list aggregate.",
+    searchTerms: [
+      "bank final score predictor",
+      "ibps po 80 20 calculator",
+      "mains and interview score calculator bank",
+      "bank final merit score calculation",
+    ],
+    intentTitle: "80:20 Weightage Formula for Banking",
+    intentIntro:
+      "Calculate your final score out of 100: (Mains Marks / 225) * 80 + (Interview Marks / 100) * 20.",
+    intents: [
+      {
+        query: "How is the 80:20 weightage calculated in IBPS PO?",
+        answer: "Mains written score is scaled down to 80 points, and Interview marks are scaled to 20 points, totaling 100.",
+      },
+    ],
+    faqs: [
+      {
+        question: "What is minimum qualifying interview marks in IBPS?",
+        answer: "Minimum qualifying marks in interview is 40% (35% for SC/ST/OBC/PwD candidates).",
+      },
+    ],
+  },
+  "ctet-qualifying-marks": {
+    metaTitle: "CTET Qualifying Marks Calculator — General vs Reserved Cutoffs",
+    metaDescription:
+      "Check if your CTET Paper 1 or Paper 2 score qualifies for teaching eligibility (60% / 90 marks General, 55% / 82 marks Reserved).",
+    searchTerms: [
+      "ctet qualifying marks calculator",
+      "ctet pass marks general obc sc st",
+      "how much marks required to clear ctet",
+      "ctet paper 1 qualifying marks",
+    ],
+    intentTitle: "CTET Passing Criteria (CBSE Standard)",
+    intentIntro:
+      "CTET has 150 questions for 150 marks with no negative marking. Check passing eligibility instantly.",
+    intents: [
+      {
+        query: "Is there negative marking in CTET?",
+        answer: "No, there is no negative marking in Central Teacher Eligibility Test (CTET).",
+      },
+    ],
+    faqs: [
+      {
+        question: "What is the validity period of CTET certificate?",
+        answer: "CTET qualifying certificate validity is for lifetime across all categories.",
+      },
+    ],
+  },
+  "police-height-eligibility": {
+    metaTitle: "Police Height Eligibility Checker — Constable & SI Criteria",
+    metaDescription:
+      "Check your height and chest measurements against official physical requirements for UP Police, Bihar Police, Delhi Police & SSC GD.",
+    searchTerms: [
+      "police height eligibility checker",
+      "up police constable height criteria",
+      "bihar police height for female obc",
+      "ssc gd physical height requirements",
+    ],
+    intentTitle: "Physical Standards Test (PST) Eligibility",
+    intentIntro:
+      "Select your state, gender, and category to check whether you meet the mandatory physical recruitment cutoff.",
+    intents: [
+      {
+        query: "What is the minimum height for female candidates in UP Police?",
+        answer: "General, OBC, and SC female candidates require 152 cm minimum height (147 cm for ST female candidates).",
+      },
+    ],
+    faqs: [
+      {
+        question: "Is there chest expansion requirement for female candidates?",
+        answer: "No, chest measurement criteria is only applicable to male candidates in police recruitment.",
+      },
+    ],
+  },
+  "7th-pay-salary-calculator": {
+    metaTitle: "7th Pay Commission Salary Calculator — In-Hand, 50% DA & HRA",
+    metaDescription:
+      "Calculate your exact monthly in-hand salary for 7th Pay Commission Levels 1 to 10 with 50% DA, revised HRA (30%, 20%, 10%), TA, and NPS deductions.",
+    searchTerms: [
+      "7th pay commission salary calculator",
+      "7th cpc salary calculator with 50 da",
+      "ssc cgl salary after 7th pay commission",
+      "level 7 in hand salary ssc cgl aso",
+      "level 4 in hand salary tax assistant",
+      "central government salary calculator 2024 2025",
+      "x y z city hra rates central government",
+    ],
+    intentTitle: "7th CPC Central Salary & Allowance Rules",
+    intentIntro:
+      "Select your Pay Level (1 to 10) and posting city category (X, Y, Z) to see your complete monthly salary breakdown.",
+    intents: [
+      {
+        query: "How is in-hand salary calculated under 7th Pay Commission?",
+        answer: "In-hand salary = Gross Salary (Basic Pay + DA + HRA + TA + DA on TA) minus mandatory deductions (NPS 10%, CGHS, and CGEGIS).",
+      },
+      {
+        query: "What are the revised HRA rates after DA reached 50%?",
+        answer: "When DA touched 50%, HRA rates automatically revised upward to 30% for X Cities (Metros), 20% for Y Cities (Tier 2), and 10% for Z Cities (Rural/Small Towns).",
+      },
+      {
+        query: "What is Level 7 Grade Pay 4600 in-hand salary in Delhi (X City)?",
+        answer: "For Level 7 (Basic ₹44,900), monthly gross salary is approx ₹84,270 and net monthly in-hand is approx ₹74,500 after NPS and CGHS deductions.",
+      },
+      {
+        query: "How much is deducted for NPS from central government employees?",
+        answer: "The employee contributes 10% of (Basic Pay + DA) towards NPS, while the Central Government adds a matching 14% contribution into the employee pension account.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Did HRA increase to 30%, 20%, and 10% when DA touched 50%?",
+        answer:
+          "Yes, as per official Department of Expenditure guidelines, when DA crossed 50%, HRA rates automatically revised from 27%/18%/9% to 30%/20%/10% for X, Y, and Z class cities.",
+      },
+      {
+        question: "What is the difference between Gross Salary and In-Hand Salary?",
+        answer:
+          "Gross salary includes Basic Pay + DA + HRA + TA. In-hand (net) salary is the actual amount credited to your bank account after mandatory deductions for Employee NPS, CGHS, and CGEGIS.",
+      },
+      {
+        question: "How much does the Government contribute to NPS?",
+        answer:
+          "The Central Government contributes 14% of (Basic Pay + DA) towards the employee's NPS Tier-1 account, while 10% is deducted from the employee's monthly pay.",
+      },
+    ],
+  },
+  "gaj-to-square-feet": {
+    metaTitle: "Gaj to Square Feet Calculator — 100 Gaj, 50 Gaj & Plot Dimensions",
+    metaDescription:
+      "Convert Gaj (Square Yard) to Square Feet and Square Meters instantly. Calculate plot dimensions, boundary wall length, and registry costs with 100% precision.",
+    searchTerms: [
+      "gaj to square feet",
+      "gaj to sq ft",
+      "100 gaj in square feet",
+      "50 gaj in square feet",
+      "60 gaj in square feet",
+      "square feet to gaj",
+      "plot size calculator in gaj",
+      "gaj to square meter",
+      "plot cost calculator by gaj",
+      "1 gaj kitna square feet hota hai",
+    ],
+    intentTitle: "Gaj to Square Feet & Plot Size Conversions",
+    intentIntro:
+      "Convert any plot area in Gaj to Square Feet and calculate length, width, and property registry charges instantly.",
+    intents: [
+      {
+        query: "1 Gaj me kitne square feet hote hain?",
+        answer: "1 Gaj (Square Yard) me exactly 9 Square Feet hote hain. Length 3 feet aur breadth 3 feet hone par 3 × 3 = 9 sq ft banta hai.",
+      },
+      {
+        query: "100 Gaj me kitne square feet hote hain aur plot size kya hota hai?",
+        answer: "100 Gaj = 900 Square Feet. Iska sabse standard residential plot dimension 20 feet front × 45 feet depth (lambai) ya 18 × 50 feet hota hai.",
+      },
+      {
+        query: "50 Gaj plot size in square feet and dimensions",
+        answer: "50 Gaj = 450 Square Feet. Iska most popular dimension 15 feet front × 30 feet depth hota hai, jo 1 BHK ya budget ghar ke liye best hai.",
+      },
+      {
+        query: "How to calculate plot cost from Gaj and rate?",
+        answer: "Total Plot Cost = Total Gaj × Rate per Gaj. Example: 100 Gaj plot at ₹25,000/gaj costs ₹25,00,000 + state stamp duty (approx 5%-7%).",
+      },
+    ],
+    faqs: [
+      {
+        question: "Is Gaj equal to Square Yard?",
+        answer:
+          "Yes, in Indian real estate terminology, Gaj is the colloquial Hindi term for Square Yard (sq yd). 1 Gaj = 1 Sq Yard = 9 Sq Ft = 0.8361 Square Meters.",
+      },
+      {
+        question: "How many Gaj are in 1 Bigha?",
+        answer:
+          "In Punjab and Haryana, 1 Bigha = 1,000 Gaj (9,000 sq ft). In Eastern UP and Bihar, 1 Pucca Bigha = 3,025 Gaj (27,225 sq ft). In Rajasthan, 1 Bigha = 1,936 Gaj.",
+      },
+      {
+        question: "How many Gaj are in 1 Acre?",
+        answer: "1 Acre always equals exactly 4,840 Gaj (43,560 Square Feet).",
+      },
+    ],
+  },
+  "signature-resizer-10-to-20-kb": {
+    metaTitle: "Govt Exam Signature & Photo Resizer — 10KB to 20KB & 20KB to 50KB",
+    metaDescription:
+      "Resize signatures to 10KB–20KB (140x60 px) and photos to 20KB–50KB for SSC CGL, CHSL, MTS, UPSC, and IBPS online forms. 100% free and private.",
+    searchTerms: [
+      "signature resizer 10 to 20 kb",
+      "signature resize online 10 to 20 kb",
+      "ssc signature resizer 10 to 20 kb",
+      "upsc signature resize 10 to 20 kb",
+      "photo and signature resizer for govt exams",
+      "signature 140x60 px converter",
+      "thumb impression resizer 20 to 50 kb",
+      "reduce signature size below 20 kb",
+    ],
+    intentTitle: "Government Exam Signature & Photo Resizing Guidelines",
+    intentIntro:
+      "Choose your exam preset below to automatically compress and resize your signature or photo strictly within the required KB range.",
+    intents: [
+      {
+        query: "How to resize signature to 10KB–20KB for SSC?",
+        answer: "Upload your signature photo, select the SSC Signature preset (140x60 px), and our client-side tool will compress it to ~15 KB in JPG format instantly.",
+      },
+      {
+        query: "What are the official SSC CGL signature specifications?",
+        answer: "SSC requires signature file size strictly between 10.0 KB and 20.0 KB, image dimensions 140 width × 60 height pixels (4.0 cm × 2.0 cm), and JPG/JPEG format.",
+      },
+      {
+        query: "What are IBPS thumb impression and declaration requirements?",
+        answer: "IBPS requires Left Thumb Impression between 20 KB and 50 KB (240x240 px) and Handwritten Declaration between 50 KB and 100 KB.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Why do SSC portals reject signatures as 'file size not within limits'?",
+        answer:
+          "SSC validation code strictly rejects any image smaller than 10.00 KB or larger than 20.00 KB. Our resizer uses binary-search canvas compression to guarantee the exact byte range.",
+      },
+      {
+        question: "Is my signature photo secure and private?",
+        answer:
+          "Yes, 100%. Processing takes place entirely within your browser on your device using the HTML5 Canvas API. The image is never uploaded to any external server.",
+      },
+    ],
+  },
+  "typing-speed-test": {
+    metaTitle: "SSC & Court Typing Speed Test Online — 1, 5, 10, 15 Min Practice",
+    metaDescription:
+      "Practice free typing tests for SSC CGL Tier 2, CHSL, and High Court exams with official Net WPM, accuracy %, and KDPH error evaluation formula.",
+    searchTerms: [
+      "ssc typing test online",
+      "ssc chsl typing test 35 wpm",
+      "ssc cgl tier 2 typing test dest",
+      "court typing speed test 35 wpm",
+      "typing test 10 minutes online",
+      "typing test net wpm calculation ssc",
+      "free typing test with backspace allowed",
+      "key depressions per hour kdph calculator",
+    ],
+    intentTitle: "Official Typing Test Speed & Evaluation Criteria",
+    intentIntro:
+      "Select your test duration and practice real exam paragraphs modeled after SSC CHSL, CGL DEST, and High Court clerk tests.",
+    intents: [
+      {
+        query: "What is the typing speed requirement for SSC CHSL?",
+        answer: "SSC CHSL requires 35 Words Per Minute (WPM) in English or 30 WPM in Hindi in a 10-minute test with permissible error limit of 5% to 7%.",
+      },
+      {
+        query: "What is the typing speed requirement for SSC CGL Tier 2?",
+        answer: "SSC CGL DEST requires 2,000 Key Depressions in 15 minutes (approx 27 WPM) with maximum 5% errors for UR and 7% for reserved categories.",
+      },
+      {
+        query: "How is Net WPM calculated in government typing tests?",
+        answer: "Net WPM = Gross WPM - (Errors / Test Duration in Minutes), where 1 Standard Word equals 5 keystrokes including spacebar.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Is backspace allowed in the official SSC typing exam?",
+        answer:
+          "Yes, SSC typing software allows candidates to use backspace to edit and rectify mistakes before the test timer expires.",
+      },
+      {
+        question: "What is KDPH in typing tests?",
+        answer:
+          "KDPH stands for Key Depressions Per Hour. For SSC CGL, 2,000 key depressions in 15 minutes equals 8,000 KDPH.",
+      },
+    ],
+  },
 }
 
 export function getToolSeoProfile(slug: string): ToolSeoProfile | undefined {

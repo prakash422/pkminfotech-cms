@@ -28,79 +28,40 @@ export const metadata: Metadata = {
   },
 }
 
-export default function ToolsPage() {
-  const categoryCounts = toolItems.reduce<Record<string, number>>((acc, tool) => {
-    acc[tool.category] = (acc[tool.category] || 0) + 1
-    return acc
-  }, {})
+import React, { Suspense } from "react"
+import ToolsDirectoryClient from "@/components/tools/ToolsDirectoryClient"
+
+type Props = {
+  searchParams?: Promise<{ category?: string }>
+}
+
+export default async function ToolsPage({ searchParams }: Props) {
+  const resolvedParams = searchParams ? await searchParams : undefined
+  const initialCategory = resolvedParams?.category || "all"
 
   return (
-    <main className="page-surface tool-page-shell py-1 py-md-3">
+    <main className="page-surface tool-page-shell py-2 py-md-3">
       <SideRailAds />
       <div className="container tools-hub" style={{ maxWidth: 1120 }}>
-        <BreadcrumbNav
-          compact
-          items={[
-            { label: "Home", href: "/" },
-            { label: "Tools" },
-          ]}
-        />
-
-        <header className="tools-hub-header">
-          <div className="d-flex align-items-baseline justify-content-between gap-2">
-            <h1 className="tools-hub-title mb-0">Free Online Tools</h1>
-            <span className="tools-hub-count d-none d-sm-inline">{toolItems.length} tools</span>
+        <header className="mb-3">
+          <div className="d-flex align-items-center justify-content-between gap-2">
+            <h1 className="h4 fw-bold text-dark mb-1" style={{ letterSpacing: "-0.02em" }}>
+              Free Online Tools &amp; Calculators
+            </h1>
+            <span className="badge bg-primary-subtle text-primary rounded-pill px-3 py-1 fw-semibold small">
+              {toolItems.length} Tools
+            </span>
           </div>
-          <p className="tools-hub-desc">
-            Land converters, CGPA tools, rent receipts, GST/SIP calculators, and exam photo compression — free, no login.
+          <p className="text-secondary small mb-0" style={{ maxWidth: 640 }}>
+            Instant calculators for land measurements, 7th Pay salary, exam marking schemes, typing speed tests, and photo resizing — free with no registration required.
           </p>
-          <div className="chip-row">
-            {Object.entries(categoryCounts).map(([category, count]) => {
-              const cat = toolItems.find((t) => t.category === category)
-              const href = cat ? `/tools/${cat.examCategorySlug}` : "/tools"
-              return (
-                <Link key={category} href={href} className="chip">
-                  {category} <span className="chip-count">{count}</span>
-                </Link>
-              )
-            })}
-          </div>
         </header>
 
         <ContentAdBand className="tools-top-ad mb-2" />
 
-        <section className="row g-2 g-md-3 tools-hub-grid">
-          {toolItems.flatMap((tool, index) => {
-            const card = (
-              <div className="col-12 col-md-6 col-lg-4" key={tool.slug}>
-                <article className="tool-panel tools-card h-100">
-                  <div className="tools-card-body d-flex flex-column h-100">
-                    <div className="d-flex align-items-center gap-2 tools-card-head">
-                      <span className="tools-card-icon">
-                        <Calculator size={15} className="text-primary" />
-                      </span>
-                      <span className="tools-category-pill">{tool.category}</span>
-                    </div>
-                    <h2 className="tools-title">{tool.title}</h2>
-                    <p className="tools-desc flex-grow-1 mb-0">{tool.description}</p>
-                    <Link href={tool.path ?? `/tools/${tool.slug}`} className="tools-cta mt-2">
-                      Open Tool <ArrowRight size={13} />
-                    </Link>
-                  </div>
-                </article>
-              </div>
-            )
-
-            if (index !== 1) return [card]
-
-            return [
-              card,
-              <div className="col-12" key="tools-mid-ad">
-                <ContentAdBand className="tools-mid-ad my-1" />
-              </div>,
-            ]
-          })}
-        </section>
+        <Suspense fallback={<div className="card border-0 shadow-sm rounded-4 p-5 text-center bg-white my-3"><p className="text-secondary small mb-0">Loading tools...</p></div>}>
+          <ToolsDirectoryClient tools={toolItems} initialCategory={initialCategory} />
+        </Suspense>
       </div>
 
       <style>{`

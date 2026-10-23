@@ -5,8 +5,8 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   typescript: {
-    // Temporarily ignore TypeScript errors during builds
-    ignoreBuildErrors: true,
+    // Type errors fixed - strict check enabled
+    ignoreBuildErrors: false,
   },
   images: {
     domains: ['localhost', 'images.unsplash.com', 'via.placeholder.com', 'res.cloudinary.com'],
@@ -21,6 +21,10 @@ const nextConfig = {
   },
   // Enable static exports for better performance
   output: 'standalone',
+  compress: true,
+  experimental: {
+    optimizePackageImports: ['lucide-react'],
+  },
   
   // Comprehensive redirect handling
   async redirects() {

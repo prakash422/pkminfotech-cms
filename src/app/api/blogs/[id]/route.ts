@@ -4,17 +4,18 @@ import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 // GET /api/blogs/[id] - Get single blog
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
+    const { id } = await params
     const blog = await prisma.blog.findUnique({
       where: {
-        id: params.id
+        id
       },
       include: {
         author: {
@@ -47,6 +48,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 // PUT /api/blogs/[id] - Update blog
 export async function PUT(request: NextRequest, { params }: RouteParams) {
   try {
+    const { id } = await params
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
       return NextResponse.json(
@@ -68,7 +70,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 
     // Check if blog exists
     const existingBlog = await prisma.blog.findUnique({
-      where: { id: params.id }
+      where: { id }
     })
 
     if (!existingBlog) {
@@ -83,7 +85,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       const slugExists = await prisma.blog.findFirst({
         where: {
           slug,
-          id: { not: params.id }
+          id: { not: id }
         }
       })
       
@@ -116,7 +118,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 
     const blog = await prisma.blog.update({
       where: {
-        id: params.id
+        id
       },
       data: updateData,
       include: {
@@ -143,6 +145,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 // PATCH /api/blogs/[id] - Partial update (e.g., status change)
 export async function PATCH(request: NextRequest, { params }: RouteParams) {
   try {
+    const { id } = await params
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
       return NextResponse.json(
@@ -155,7 +158,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     
     // Get existing blog
     const existingBlog = await prisma.blog.findUnique({
-      where: { id: params.id }
+      where: { id }
     })
 
     if (!existingBlog) {
@@ -176,7 +179,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 
     const blog = await prisma.blog.update({
       where: {
-        id: params.id
+        id
       },
       data: updateData,
       include: {
@@ -203,6 +206,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 // DELETE /api/blogs/[id] - Delete blog
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
+    const { id } = await params
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
       return NextResponse.json(
@@ -212,7 +216,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     }
 
     const blog = await prisma.blog.findUnique({
-      where: { id: params.id }
+      where: { id }
     })
 
     if (!blog) {
@@ -224,7 +228,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
 
     await prisma.blog.delete({
       where: {
-        id: params.id
+        id
       }
     })
 

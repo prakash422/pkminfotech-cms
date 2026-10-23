@@ -16,44 +16,70 @@ const ADSENSE_CLIENT =
 
 /**
  * Loads AdSense for MANUAL units only.
- * Auto / page-level ads are explicitly disabled in code.
- * Also turn Auto ads OFF in AdSense dashboard (Ads → By site → Auto ads),
- * especially Vignette + Anchor formats — those cause the most drop-offs.
+ * Defers injection until after main-thread idle or first user interaction
+ * so it never blocks initial paint, LCP, or hydration.
  */
 export default function ClientScripts() {
   useEffect(() => {
-    const hostname = typeof window !== "undefined" ? window.location.hostname : "server"
-    const isAdminPage = typeof window !== "undefined" && window.location.pathname.startsWith("/admin")
-
-    if (isAdminPage) return
     if (typeof window === "undefined") return
     if (window.__adsenseScriptLoaded) return
 
-    window.__adsenseScriptLoaded = true
-    window.adsbygoogle = window.adsbygoogle || []
+    const isAdminPage = window.location.pathname.startsWith("/admin")
+    if (isAdminPage) return
 
-    // Disable page-level / Auto ads injection from this site code path
-    try {
-      window.adsbygoogle.push({
-        google_ad_client: ADSENSE_CLIENT,
-        enable_page_level_ads: false,
-        overlays: { bottom: false },
+    const loadAdSense = () => {
+      cleanup()
+
+      if (window.__adsenseScriptLoaded) return
+      window.__adsenseScriptLoaded = true
+      window.adsbygoogle = window.adsbygoogle || []
+
+      const existingScript = document.querySelector('script[src*="adsbygoogle.js"]')
+      if (existingScript) return
+
+      const script = document.createElement("script")
+      script.async = true
+      script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`
+      script.crossOrigin = "anonymous"
+      script.onerror = () => {
+        window.__adsenseScriptLoaded = false
+      }
+      document.head.appendChild(script)
+    }
+
+    const events = ["scroll", "touchstart", "mousemove", "keydown"]
+    const onUserInteraction = () => {
+      loadAdSense()
+    }
+
+    const cleanup = () => {
+      events.forEach((evt) => {
+        window.removeEventListener(evt, onUserInteraction, { capture: true })
       })
-    } catch {
-      // ignore
     }
 
-    const existingScript = document.querySelector('script[src*="adsbygoogle.js"]')
-    if (existingScript) return
+    events.forEach((evt) => {
+      window.addEventListener(evt, onUserInteraction, { capture: true, once: true, passive: true })
+    })
 
-    const script = document.createElement("script")
-    script.async = true
-    script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`
-    script.crossOrigin = "anonymous"
-    script.onerror = () => {
-      window.__adsenseScriptLoaded = false
+    let idleId: number | undefined
+    let timerId: ReturnType<typeof setTimeout> | undefined
+
+    if ("requestIdleCallback" in window) {
+      idleId = (window as any).requestIdleCallback(loadAdSense, { timeout: 2500 })
+    } else {
+      timerId = setTimeout(loadAdSense, 1500)
     }
-    document.head.appendChild(script)
+
+    return () => {
+      cleanup()
+      if (idleId && "cancelIdleCallback" in window) {
+        (window as any).cancelIdleCallback(idleId)
+      }
+      if (timerId) {
+        clearTimeout(timerId)
+      }
+    }
   }, [])
 
   return null

@@ -16,6 +16,8 @@ export default function SideRailAds({
   leftSlot = process.env.NEXT_PUBLIC_ADSENSE_SLOT_LEFT || "",
   rightSlot = process.env.NEXT_PUBLIC_ADSENSE_SLOT_RIGHT || "",
 }: SideRailAdsProps) {
+  // In development, AdSense cannot serve ads on localhost — suppress empty gray wireframes
+  if (process.env.NODE_ENV === "development") return null
   if (!leftSlot && !rightSlot) return null
 
   return (

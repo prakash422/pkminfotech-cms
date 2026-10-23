@@ -10,12 +10,12 @@ export default function ToolSearchIntents({ profile }: { profile: ToolSeoProfile
       </div>
       <p className="small text-secondary mb-3">{profile.intentIntro}</p>
 
-      <div className="row g-2">
+      <div className="row g-3">
         {profile.intents.map((intent) => (
-          <div className="col-12 col-md-4" key={intent.query}>
+          <div className="col-12 col-md-6 col-lg-4" key={intent.query}>
             <div className="tool-intent-item h-100">
-              <h3 className="h6 fw-bold text-dark mb-1">{intent.query}</h3>
-              <p className="small text-secondary mb-0">{intent.answer}</p>
+              <h3 className="h6 fw-bold text-dark mb-1.5">{intent.query}</h3>
+              <p className="text-secondary mb-0">{intent.answer}</p>
             </div>
           </div>
         ))}

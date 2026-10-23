@@ -14,6 +14,7 @@ export default function ContentAdBand({
   className?: string
   slot?: string
 }) {
+  if (process.env.NODE_ENV === "development") return null
   const resolvedSlot = slot || process.env.NEXT_PUBLIC_ADSENSE_SLOT_DISPLAY || ""
   if (!resolvedSlot) return null
 
@@ -28,7 +29,7 @@ export default function ContentAdBand({
           <span className="content-ad-label">Advertisement</span>
         </div>
         <div className="content-ad-frame">
-          <AdSenseAd slot={resolvedSlot} format="auto" minHeight={100} />
+          <AdSenseAd slot={resolvedSlot} format="auto" minHeight={250} />
         </div>
       </div>
     </aside>

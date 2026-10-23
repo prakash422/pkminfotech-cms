@@ -16,21 +16,75 @@ import RelatedTools from "@/components/tools/RelatedTools"
 import ContentAdBand from "@/components/ContentAdBand"
 import SideRailAds from "@/components/SideRailAds"
 import ToolSearchIntents from "@/components/tools/ToolSearchIntents"
+import ToolSidebar from "@/components/tools/ToolSidebar"
 import { getToolSeoProfile } from "@/data/tool-seo-data"
 
+import ExamToolCardPage from "@/components/tools/pages/ExamToolCardPage"
+import SscCglTier1CalculatorCard from "@/components/tools/SscCglTier1CalculatorCard"
+import SscCglTier2CalculatorCard from "@/components/tools/SscCglTier2CalculatorCard"
+import SscCglFinalScoreCalculatorCard from "@/components/tools/SscCglFinalScoreCalculatorCard"
+import SscCglCutoffPredictorCard from "@/components/tools/SscCglCutoffPredictorCard"
+import SscCglRankPredictorCard from "@/components/tools/SscCglRankPredictorCard"
+import SscCglAgeLimitCalculatorCard from "@/components/tools/SscCglAgeLimitCalculatorCard"
+import SscEligibilityCheckerCard from "@/components/tools/SscEligibilityCheckerCard"
+import RrbNtpcNormalizationCalculatorCard from "@/components/tools/RrbNtpcNormalizationCalculatorCard"
+import IbpsScoreCalculatorCard from "@/components/tools/IbpsScoreCalculatorCard"
+import BankFinalScorePredictorCard from "@/components/tools/BankFinalScorePredictorCard"
+import CtetQualifyingMarksCard from "@/components/tools/CtetQualifyingMarksCard"
+import PoliceHeightEligibilityCard from "@/components/tools/PoliceHeightEligibilityCard"
+import SeventhPaySalaryCalculatorCard from "@/components/tools/SeventhPaySalaryCalculatorCard"
+import GajToSquareFeetPage from "@/components/tools/pages/GajToSquareFeetPage"
+import SignatureResizerPage from "@/components/tools/pages/SignatureResizerPage"
+import TypingSpeedTestPage from "@/components/tools/pages/TypingSpeedTestPage"
+
 type Props = { params: Promise<{ slug: string; toolSlug: string }> }
+
+const createExamPage = (CardComponent: React.ComponentType<{ basePath?: string }>, badgeText?: string) => {
+  return function ExamPageComponent(props: any) {
+    return (
+      <ExamToolCardPage
+        title={props.title}
+        description={props.description}
+        basePath={props.basePath}
+        currentPath={props.currentPath}
+        CardComponent={CardComponent}
+        badgeText={badgeText}
+      />
+    )
+  }
+}
 
 const TOOL_PAGE_REGISTRY: Record<string, React.ComponentType<any>> = {
   "land-area/bigha-to-kattha": BighaToKatthaPage,
   "land-area/bigha-to-square-feet-bihar": StateLandConverterPage,
   "land-area/bigha-to-kattha-up": StateLandConverterPage,
   "land-area/bigha-to-kattha-west-bengal": StateLandConverterPage,
+  "land-area/gaj-to-square-feet": GajToSquareFeetPage,
   "utility/rent-receipt": RentReceiptPage,
   "education/cgpa-to-percentage": CgpaToPercentagePage,
   "utility/photo-compressor": PhotoCompressorPage,
+  "utility/signature-resizer-10-to-20-kb": SignatureResizerPage,
   "utility/sip-calculator": SipCalculatorPage,
   "education/age-calculator": AgeCalculatorPage,
   "utility/gst-calculator": GstCalculatorPage,
+  // SSC Calculators & Tests
+  "ssc/ssc-cgl-tier-1-marks-calculator": createExamPage(SscCglTier1CalculatorCard, "Official Marking Pattern (200 M)"),
+  "ssc/ssc-cgl-tier-2-marks-calculator": createExamPage(SscCglTier2CalculatorCard, "Official Marking Pattern (390 M)"),
+  "ssc/ssc-cgl-final-score-calculator": createExamPage(SscCglFinalScoreCalculatorCard, "Merit Aggregate Formula"),
+  "ssc/ssc-cgl-cutoff-predictor": createExamPage(SscCglCutoffPredictorCard, "Safe Cutoff Predictor"),
+  "ssc/ssc-cgl-rank-predictor": createExamPage(SscCglRankPredictorCard, "Rank Percentile Estimator"),
+  "ssc/ssc-cgl-age-limit-calculator": createExamPage(SscCglAgeLimitCalculatorCard, "Post-wise Age Limits"),
+  "ssc/ssc-eligibility-checker": createExamPage(SscEligibilityCheckerCard, "Qualification & Age Rules"),
+  "ssc/7th-pay-salary-calculator": createExamPage(SeventhPaySalaryCalculatorCard, "7th CPC Matrix (50% DA)"),
+  "ssc/typing-speed-test": TypingSpeedTestPage,
+  // Railway Normalization
+  "railway/rrb-ntpc-normalization-calculator": createExamPage(RrbNtpcNormalizationCalculatorCard, "Multi-Shift Normalization"),
+  // Banking Scores
+  "banking/ibps-score-calculator": createExamPage(IbpsScoreCalculatorCard, "Sectional & Overall Scoring"),
+  "banking/bank-final-score-predictor": createExamPage(BankFinalScorePredictorCard, "80:20 Final Merit Formula"),
+  // Eligibility & Physical Checkers
+  "eligibility/ctet-qualifying-marks": createExamPage(CtetQualifyingMarksCard, "Qualifying Marks Criteria"),
+  "eligibility/police-height-eligibility": createExamPage(PoliceHeightEligibilityCard, "Physical Standards (PST)"),
 }
 
 function getToolPageKey(examCategory: string, toolSlug: string): string {
@@ -151,30 +205,91 @@ export default async function ToolsDetailNestedPage({ params }: Props) {
     "@graph": schemaGraph,
   }
 
+  const PAGES_WITH_INTERNAL_SIDEBAR = new Set([
+    "land-area/bigha-to-kattha",
+    "land-area/bigha-to-square-feet-bihar",
+    "land-area/bigha-to-kattha-up",
+    "land-area/bigha-to-kattha-west-bengal",
+    "land-area/gaj-to-square-feet",
+    "ssc/ssc-cgl-tier-1-marks-calculator",
+    "ssc/ssc-cgl-tier-2-marks-calculator",
+    "ssc/ssc-cgl-final-score-calculator",
+    "ssc/ssc-cgl-cutoff-predictor",
+    "ssc/ssc-cgl-rank-predictor",
+    "ssc/ssc-cgl-age-limit-calculator",
+    "ssc/ssc-eligibility-checker",
+    "ssc/7th-pay-salary-calculator",
+    "ssc/typing-speed-test",
+    "railway/rrb-ntpc-normalization-calculator",
+    "banking/ibps-score-calculator",
+    "banking/bank-final-score-predictor",
+    "eligibility/ctet-qualifying-marks",
+    "eligibility/police-height-eligibility",
+    "utility/rent-receipt",
+    "education/cgpa-to-percentage",
+    "utility/photo-compressor",
+    "utility/signature-resizer-10-to-20-kb",
+    "utility/sip-calculator",
+    "education/age-calculator",
+    "utility/gst-calculator",
+  ])
+
+  const hasInternalSidebar = PageContent && PAGES_WITH_INTERNAL_SIDEBAR.has(key)
+
   return (
     <main className="page-surface tool-page-shell py-1 py-md-3">
-      <SideRailAds />
+      <div className="d-print-none">
+        <SideRailAds />
+      </div>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaJson) }}
       />
-      <div className="container" style={{ maxWidth: 900 }}>
-        {PageContent ? (
-          <PageContent
-            title={tool.title}
-            description={tool.description}
-            basePath={basePath}
-            defaultTargetKb={tool.defaultTargetKb}
-            focusLabel={tool.focusLabel}
-            pageKey={tool.slug}
-          />
+      <div className="container tool-shell-container" style={{ maxWidth: 1140 }}>
+        {hasInternalSidebar ? (
+          <>
+            <PageContent
+              title={tool.title}
+              description={tool.description}
+              basePath={basePath}
+              currentPath={tool.path}
+              defaultTargetKb={tool.defaultTargetKb}
+              focusLabel={tool.focusLabel}
+              pageKey={tool.slug}
+            />
+            {seo ? <div className="d-print-none"><ToolSearchIntents profile={seo} /></div> : null}
+            <ContentAdBand className="tool-secondary-ad mt-3 mb-3 d-print-none" />
+          </>
         ) : (
-          <GenericToolPlaceholder tool={tool} />
+          <div className="row g-4 align-items-start">
+            <div className="col-12 col-lg-8">
+              {PageContent ? (
+                <PageContent
+                  title={tool.title}
+                  description={tool.description}
+                  basePath={basePath}
+                  currentPath={tool.path}
+                  defaultTargetKb={tool.defaultTargetKb}
+                  focusLabel={tool.focusLabel}
+                  pageKey={tool.slug}
+                />
+              ) : (
+                <GenericToolPlaceholder tool={tool} />
+              )}
+              {seo ? <div className="d-print-none"><ToolSearchIntents profile={seo} /></div> : null}
+              <ContentAdBand className="tool-secondary-ad mt-3 mb-3 d-print-none" />
+            </div>
+            <div className="col-12 col-lg-4">
+              <div className="sticky-lg-top" style={{ top: 90 }}>
+                <ToolSidebar
+                  categorySlug={tool.examCategorySlug}
+                  categoryName={tool.category}
+                  currentPath={tool.path}
+                />
+              </div>
+            </div>
+          </div>
         )}
-        {seo ? <ToolSearchIntents profile={seo} /> : null}
-        {/* 2nd ad — after guide content, before related tools */}
-        <ContentAdBand className="tool-secondary-ad mt-3 mb-3" />
-        <RelatedTools current={tool} />
       </div>
       <style
         dangerouslySetInnerHTML={{
@@ -193,13 +308,6 @@ export default async function ToolsDetailNestedPage({ params }: Props) {
 function GenericToolPlaceholder({ tool }: { tool: ToolItem }) {
   return (
     <>
-      <BreadcrumbNav
-        items={[
-          { label: "Home", href: "/" },
-          { label: "Online Tools", href: "/tools" },
-          { label: tool.title },
-        ]}
-      />
       <h1 className="fw-bold mb-2">{tool.title}</h1>
       <p className="text-secondary mb-4">{tool.description}</p>
       <section className="card border-0 shadow-sm mb-4">

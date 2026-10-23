@@ -13,10 +13,9 @@ declare global {
 
 export default function Analytics() {
   const pathname = usePathname()
-  const GA_ID = process.env.NEXT_PUBLIC_GA_ID
+  const GA_ID = process.env.NEXT_PUBLIC_GA_ID || "G-Z8Y32YRBS6"
 
   useEffect(() => {
-   
     if (GA_ID && typeof window !== 'undefined') {
       // Initialize dataLayer and gtag
       window.dataLayer = window.dataLayer || []
@@ -30,7 +29,6 @@ export default function Analytics() {
       gtag('config', GA_ID, {
         page_title: document.title,
         page_location: window.location.href,
-        debug_mode: true
       })
     }
   }, [GA_ID])
@@ -50,12 +48,6 @@ export default function Analytics() {
     <Script
       strategy="afterInteractive"
       src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-      onLoad={() => {
-        console.log('GA Script loaded successfully')
-      }}
-      onError={(e) => {
-        console.error('GA Script failed to load:', e)
-      }}
     />
   )
 } 

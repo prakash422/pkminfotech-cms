@@ -6,7 +6,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { slug, userAgent, referer } = body
     
-    const headersList = headers()
+    const headersList = await headers()
     const realIP = headersList.get('x-real-ip') || 
                    headersList.get('x-forwarded-for') || 
                    'unknown'

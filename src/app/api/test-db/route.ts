@@ -1,11 +1,8 @@
 import { NextResponse } from 'next/server'
-import { PrismaClient } from '@prisma/client'
-
-const prisma = new PrismaClient()
+import { prisma } from '@/lib/prisma'
 
 export async function GET() {
   try {
-    // Simple test - just count users
     const userCount = await prisma.user.count()
     
     return NextResponse.json({ 
@@ -23,7 +20,5 @@ export async function GET() {
       environment: process.env.NODE_ENV,
       hasDatabase: !!process.env.DATABASE_URL
     }, { status: 500 })
-  } finally {
-    await prisma.$disconnect()
   }
 } 

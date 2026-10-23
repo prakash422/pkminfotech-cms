@@ -1,22 +1,33 @@
+"use client"
+
+import React from "react"
+import ToolHeaderHero, { FilterChip } from "@/components/tools/ToolHeaderHero"
+
 type ToolPageHeaderProps = {
   title: string
   description: string
+  badgeText?: string
+  badgeVariant?: string
+  chips?: FilterChip[]
   className?: string
 }
 
-/**
- * Tool page title + short description.
- * Back navigation lives in breadcrumb (avoids duplicate “All tools” row).
- */
 export default function ToolPageHeader({
   title,
   description,
+  badgeText = "Free Online Tool",
+  chips,
   className = "",
 }: ToolPageHeaderProps) {
   return (
-    <header className={`tool-page-header ${className}`.trim()}>
-      <h1 className="tool-page-title">{title}</h1>
-      <p className="tool-page-desc">{description}</p>
-    </header>
+    <div className={`tool-page-header-unified ${className}`.trim()}>
+      <ToolHeaderHero
+        title={title}
+        description={description}
+        badgeText={badgeText}
+        chips={chips}
+      />
+    </div>
   )
 }
+

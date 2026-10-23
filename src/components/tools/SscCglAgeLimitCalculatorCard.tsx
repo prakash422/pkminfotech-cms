@@ -1,200 +1,412 @@
 "use client"
 
-import { useState, useMemo } from "react"
-import { CheckCircle, XCircle, ChevronDown, Calendar, Info } from "lucide-react"
+import React, { useState, useMemo } from "react"
+import Link from "next/link"
+import { 
+  Calendar, 
+  RotateCcw, 
+  Share2, 
+  Copy, 
+  Check, 
+  Award,
+  Sparkles,
+  SlidersHorizontal,
+  CheckCircle2,
+  XCircle,
+  ShieldCheck,
+  UserCheck
+} from "lucide-react"
 
 const REFERENCE_YEAR = new Date().getFullYear()
-const REFERENCE_DATE = new Date(REFERENCE_YEAR, 0, 1) // 1 Jan of current year
+// Crucial cutoff date per official SSC notification is 1st August of the notification year
+const CRUCIAL_DATE = new Date(REFERENCE_YEAR, 7, 1)
 
-const CATEGORIES: { value: string; label: string; defaultUpperAge: number }[] = [
-  { value: "general", label: "General (UR)", defaultUpperAge: 30 },
-  { value: "obc", label: "OBC", defaultUpperAge: 33 },
-  { value: "sc", label: "SC", defaultUpperAge: 35 },
-  { value: "st", label: "ST", defaultUpperAge: 35 },
-  { value: "ews", label: "EWS", defaultUpperAge: 30 },
-  { value: "obc-ncl", label: "OBC (NCL)", defaultUpperAge: 33 },
-  { value: "pwbd", label: "PwBD (with relaxation)", defaultUpperAge: 35 },
+const CATEGORIES = [
+  { value: "ur", label: "General (UR / EWS)", relaxation: 0 },
+  { value: "obc", label: "OBC (NCL)", relaxation: 3 },
+  { value: "sc", label: "SC / ST", relaxation: 5 },
+  { value: "pwbd-gen", label: "PwBD (General)", relaxation: 10 },
+  { value: "pwbd-obc", label: "PwBD (OBC)", relaxation: 13 },
+  { value: "pwbd-sc", label: "PwBD (SC/ST)", relaxation: 15 },
+  { value: "esm", label: "Ex-Servicemen (ESM)", relaxation: 3 },
 ]
 
-const UPPER_AGE_OPTIONS = [27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 38, 40]
+const POST_GROUPS = [
+  { id: "group-27", name: "18 to 27 Years Posts", baseMax: 27, examples: "Tax Assistant, Auditor, UDC, Sub-Inspector in CBI" },
+  { id: "group-30", name: "18 to 30 Years Posts", baseMax: 30, examples: "Inspector (GST, Excise, IT), ASO (CSS, MEA, IB)" },
+  { id: "group-32", name: "18 to 32 Years Posts", baseMax: 32, examples: "Junior Statistical Officer (JSO), Statistical Investigator" },
+]
 
-function getAgeAsOnDate(dob: Date, refDate: Date): number {
-  let age = refDate.getFullYear() - dob.getFullYear()
-  const m = refDate.getMonth() - dob.getMonth()
-  if (m < 0 || (m === 0 && refDate.getDate() < dob.getDate())) age--
-  return Math.max(0, age)
-}
+function calculateDetailedAge(dob: Date, refDate: Date) {
+  let y = refDate.getFullYear() - dob.getFullYear()
+  let m = refDate.getMonth() - dob.getMonth()
+  let d = refDate.getDate() - dob.getDate()
 
-function formatDateForInput(d: Date): string {
-  const y = d.getFullYear()
-  const m = String(d.getMonth() + 1).padStart(2, "0")
-  const day = String(d.getDate()).padStart(2, "0")
-  return `${y}-${m}-${day}`
+  if (d < 0) {
+    m--
+    const prevMonthDays = new Date(refDate.getFullYear(), refDate.getMonth(), 0).getDate()
+    d += prevMonthDays
+  }
+  if (m < 0) {
+    y--
+    m += 12
+  }
+  return { years: Math.max(0, y), months: Math.max(0, m), days: Math.max(0, d) }
 }
 
 type Props = { basePath?: string }
 
-export default function SscCglAgeLimitCalculatorCard({ basePath }: Props) {
-  const [category, setCategory] = useState("general")
-  const [dobInput, setDobInput] = useState("1998-12-31")
-  const [upperAgeLimit, setUpperAgeLimit] = useState(30)
-  const [submitted, setSubmitted] = useState(false)
-  const [criteriaExpanded, setCriteriaExpanded] = useState(false)
+export default function SscCglAgeLimitCalculatorCard({ basePath = "/tools/ssc" }: Props) {
+  const [dob, setDob] = useState<string>("1998-05-15")
+  const [categoryKey, setCategoryKey] = useState<string>("ur")
+  const currentCategory = useMemo(() => CATEGORIES.find(c => c.value === categoryKey) || CATEGORIES[0], [categoryKey])
+  const [copied, setCopied] = useState<boolean>(false)
 
-  const dobDate = useMemo(() => {
-    const [y, m, d] = dobInput.split("-").map(Number)
-    if (!y || !m || !d) return null
-    const date = new Date(y, m - 1, d)
-    if (isNaN(date.getTime())) return null
-    return date
-  }, [dobInput])
+  const parsedDob = useMemo(() => {
+    if (!dob) return new Date(1998, 4, 15)
+    const [y, m, d] = dob.split("-").map(Number)
+    return new Date(y, (m || 1) - 1, d || 1)
+  }, [dob])
 
-  const ageAsOnRef = useMemo(() => (dobDate ? getAgeAsOnDate(dobDate, REFERENCE_DATE) : null), [dobDate])
+  const age = useMemo(() => calculateDetailedAge(parsedDob, CRUCIAL_DATE), [parsedDob])
+  const ageDecimal = Math.round((age.years + age.months / 12) * 10) / 10
 
-  const isEligible = useMemo(() => {
-    if (ageAsOnRef === null) return null
-    return ageAsOnRef >= 18 && ageAsOnRef <= upperAgeLimit
-  }, [ageAsOnRef, upperAgeLimit])
+  // Post Group eligibility
+  const groupResults = useMemo(() => {
+    return POST_GROUPS.map(pg => {
+      const maxAllowed = pg.baseMax + currentCategory.relaxation
+      const isEligible = age.years < maxAllowed || (age.years === maxAllowed && age.months === 0 && age.days === 0)
+      const isUnderAge = age.years < 18
+      const status = isUnderAge ? "Underage (< 18)" : isEligible ? "Eligible" : "Overage"
+      return { ...pg, maxAllowed, isEligible: isEligible && !isUnderAge, status }
+    })
+  }, [age, currentCategory])
 
-  const handleCategoryChange = (val: string) => {
-    setCategory(val)
-    const cat = CATEGORIES.find((c) => c.value === val)
-    if (cat) setUpperAgeLimit(cat.defaultUpperAge)
+  const eligibleCount = groupResults.filter(g => g.isEligible).length
+  const isOverallEligible = eligibleCount > 0
+
+  const handleReset = () => {
+    setDob("1998-05-15")
+    setCategoryKey("ur")
   }
 
-  const handleCheck = () => setSubmitted(true)
+  const handleCopy = () => {
+    const text = `📅 *My SSC CGL Age Eligibility Check:*
+• Date of Birth: ${dob}
+• Crucial Date: 01-August-${REFERENCE_YEAR}
+• Exact Age: ${age.years} Years, ${age.months} Months, ${age.days} Days
+• Category: ${currentCategory.label} (+${currentCategory.relaxation} Yrs Relaxation)
+• Eligible Post Groups: ${eligibleCount} / 3 Groups
+Check your age eligibility: https://www.pkminfotech.com/tools/ssc/ssc-cgl-age-limit-calculator`
+    navigator.clipboard.writeText(text)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
 
   return (
-    <>
-    <div className="card border-0 shadow-sm ssc-cgl-calc-card">
-      <div className="card-body p-2 p-md-4">
-        <div className="row g-2 g-md-4">
-          <div className="col-md-6 col-lg-5">
-            <h3 className="h6 fw-semibold mb-2 mb-md-3">Enter Your Details</h3>
-            <div className="mb-2 mb-md-3">
-              <label className="form-label small mb-0 mb-md-1">
-                Select Your Category <span className="text-danger">*</span>
-              </label>
-              <select
-                className="form-select form-select-sm"
-                value={category}
-                onChange={(e) => handleCategoryChange(e.target.value)}
-              >
-                {CATEGORIES.map((c) => (
-                  <option key={c.value} value={c.value}>
-                    {c.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="mb-2 mb-md-3">
-              <label className="form-label small mb-0 mb-md-1">
-                Date of Birth <span className="text-danger">*</span>
-              </label>
-              <div className="input-group input-group-sm">
-                <span className="input-group-text bg-white">
-                  <Calendar size={16} className="text-secondary" />
-                </span>
-                <input
-                  type="date"
-                  className="form-control"
-                  value={dobInput}
-                  onChange={(e) => setDobInput(e.target.value)}
-                  max={formatDateForInput(new Date())}
-                />
+    <div className="tool-console-card card border-0 shadow-sm rounded-4 overflow-hidden mb-4 bg-white">
+      {/* Top Mode Switcher Bar */}
+      <div className="p-2.5 p-md-3 bg-light border-bottom d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center justify-content-between gap-2">
+        <div 
+          className="d-flex rounded-3 p-1 bg-white border border-light-subtle gap-1 overflow-x-auto text-nowrap no-scrollbar"
+          style={{ WebkitOverflowScrolling: "touch", scrollbarWidth: "none" }}
+        >
+          <span className="btn btn-sm btn-primary fw-semibold px-2.5 px-sm-3 py-1.5 rounded-2 d-inline-flex align-items-center gap-1.5 shadow-sm flex-shrink-0" style={{ fontSize: "0.8rem", whiteSpace: "nowrap" }}>
+            <Calendar size={15} />
+            <span>Age Limit Calculator</span>
+          </span>
+          <Link
+            href="/tools/ssc/ssc-eligibility-checker"
+            className="btn btn-sm btn-light text-secondary fw-semibold px-2.5 px-sm-3 py-1.5 rounded-2 d-inline-flex align-items-center gap-1.5 hover:bg-light flex-shrink-0"
+            style={{ fontSize: "0.8rem", whiteSpace: "nowrap" }}
+          >
+            <ShieldCheck size={15} />
+            <span>Eligibility Checker</span>
+          </Link>
+          <Link
+            href="/tools/ssc/7th-pay-salary-calculator"
+            className="btn btn-sm btn-light text-secondary fw-semibold px-2.5 px-sm-3 py-1.5 rounded-2 d-inline-flex align-items-center gap-1.5 hover:bg-light flex-shrink-0"
+            style={{ fontSize: "0.8rem", whiteSpace: "nowrap" }}
+          >
+            <UserCheck size={15} />
+            <span>7th Pay Salary</span>
+          </Link>
+        </div>
+
+        <div className="d-flex align-items-center justify-content-between justify-content-sm-end gap-2 flex-shrink-0">
+          <span className="badge rounded-pill bg-success-subtle text-success border border-success-subtle px-2.5 py-1 small fw-semibold d-inline-flex align-items-center gap-1">
+            <span className="spinner-grow spinner-grow-sm" style={{ width: 8, height: 8 }} />
+            Live Calculation
+          </span>
+          <button
+            type="button"
+            onClick={handleReset}
+            className="btn btn-sm btn-outline-secondary rounded-pill px-2.5 py-1 d-inline-flex align-items-center gap-1"
+            title="Reset to defaults"
+          >
+            <RotateCcw size={13} />
+            <span className="small">Reset</span>
+          </button>
+        </div>
+      </div>
+
+      <div className="p-3 p-md-4">
+        {/* Main Two-Column Split */}
+        <div className="row g-3 g-md-4 align-items-stretch">
+          {/* Left Column: DOB + Category Selection */}
+          <div className="col-12 col-lg-6 d-flex flex-column justify-content-between">
+            <div>
+              {/* DOB Input */}
+              <div className="mb-3.5">
+                <label className="form-label small fw-bold text-dark mb-1.5 d-flex align-items-center justify-content-between">
+                  <span>Enter Date of Birth (DOB):</span>
+                  <span className="small text-muted">As per 10th Certificate</span>
+                </label>
+                <div className="input-group input-group-lg rounded-3 overflow-hidden border border-secondary-subtle shadow-xs">
+                  <input
+                    type="date"
+                    className="form-control fw-bold fs-5 text-dark border-0 px-3"
+                    value={dob}
+                    onChange={(e) => setDob(e.target.value)}
+                  />
+                  <span className="input-group-text bg-light text-secondary border-0 px-3 fw-bold small">
+                    DOB
+                  </span>
+                </div>
+
+                {/* Quick Year Presets */}
+                <div className="d-flex align-items-center gap-1.5 mt-2 flex-wrap">
+                  <span className="small text-secondary me-1" style={{ fontSize: "0.75rem" }}>Birth Year:</span>
+                  {[1996, 1998, 2000, 2002, 2004].map((year) => (
+                    <button
+                      key={year}
+                      type="button"
+                      className={`btn btn-xs rounded-pill px-2.5 py-0.5 fw-semibold ${
+                        dob.startsWith(String(year)) ? "btn-primary" : "btn-light border text-secondary"
+                      }`}
+                      style={{ fontSize: "0.75rem" }}
+                      onClick={() => setDob(`${year}-07-15`)}
+                    >
+                      {year}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Category Dropdown */}
+              <div className="mb-3">
+                <label className="form-label small fw-bold text-dark mb-1.5">
+                  Select Reservation Category (for Age Relaxation):
+                </label>
+                <select
+                  className="form-select border-secondary-subtle rounded-3 py-2 fw-semibold text-dark"
+                  value={categoryKey}
+                  onChange={(e) => setCategoryKey(e.target.value)}
+                  style={{ fontSize: "0.875rem" }}
+                >
+                  {CATEGORIES.map((c) => (
+                    <option key={c.value} value={c.value}>
+                      {c.label} {c.relaxation > 0 ? `(+${c.relaxation} Years Relaxation)` : "(No Relaxation)"}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Post Groups Breakdown */}
+              <div className="border rounded-3 p-3 bg-light">
+                <div className="small fw-bold text-dark mb-2">Post Group Eligibility Breakdown:</div>
+                <div className="d-flex flex-column gap-2">
+                  {groupResults.map(g => (
+                    <div key={g.id} className="d-flex align-items-center justify-content-between p-2 rounded-2 bg-white border small">
+                      <div>
+                        <div className="fw-semibold text-dark">{g.name}</div>
+                        <div className="text-secondary" style={{ fontSize: "0.72rem" }}>Max Age: {g.maxAllowed} Yrs ({g.examples.slice(0, 30)}...)</div>
+                      </div>
+                      <span className={`badge rounded-pill fw-bold ${g.isEligible ? "bg-success text-white" : "bg-danger text-white"}`}>
+                        {g.status}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
-            <div className="mb-2 mb-md-4">
-              <label className="form-label small mb-0 mb-md-1">Upper Age Limit for SSC CGL ({REFERENCE_YEAR})</label>
-              <select
-                className="form-select form-select-sm"
-                value={upperAgeLimit}
-                onChange={(e) => setUpperAgeLimit(Number(e.target.value))}
-              >
-                {UPPER_AGE_OPTIONS.map((n) => (
-                  <option key={n} value={n}>
-                    {n} years
-                  </option>
-                ))}
-              </select>
+
+            <div className="p-2.5 rounded-3 bg-light border text-secondary small d-flex align-items-center justify-content-between mt-3">
+              <span>Official Crucial Date: <strong>01 August {REFERENCE_YEAR}</strong></span>
+              <span>Category Bonus: <strong>+{currentCategory.relaxation} Yrs</strong></span>
             </div>
-            <button type="button" className="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2" onClick={handleCheck}>
-              Check Eligibility <span aria-hidden>→</span>
-            </button>
           </div>
-          <div className="col-md-6 col-lg-7">
-            <div className="h-100 d-flex flex-column justify-content-center">
-              {!submitted ? (
-                <div className="text-center text-secondary py-4">
-                  <p className="mb-0 small">Enter your details and click <strong>Check Eligibility</strong> to see if you meet the age limit for SSC CGL.</p>
+
+          {/* Right Column: Hero Gradient Result Box */}
+          <div className="col-12 col-lg-6">
+            <div
+              className="h-100 rounded-4 p-4 text-white d-flex flex-column justify-content-between shadow"
+              style={{
+                background: isOverallEligible ? "linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%)" : "linear-gradient(135deg, #7f1d1d 0%, #dc2626 100%)",
+                minHeight: 290
+              }}
+            >
+              <div>
+                <div className="d-flex align-items-center justify-content-between gap-2 mb-2">
+                  <span className="small text-uppercase tracking-wider opacity-80 fw-bold" style={{ fontSize: "0.75rem", letterSpacing: "0.06em" }}>
+                    SSC CGL AGE EVALUATION
+                  </span>
+                  <span
+                    className="badge rounded-pill fw-bold px-2.5 py-1"
+                    style={{ background: isOverallEligible ? "rgba(16, 185, 129, 0.25)" : "rgba(255, 255, 255, 0.25)", color: "#ffffff", fontSize: "0.75rem" }}
+                  >
+                    ● {isOverallEligible ? `Eligible for ${eligibleCount}/3 Post Groups` : "Overage for General Posts"}
+                  </span>
                 </div>
-              ) : ageAsOnRef === null ? (
-                <div className="text-center text-warning py-4">
-                  <p className="mb-0 small">Please enter a valid date of birth.</p>
+
+                <div className="d-flex align-items-baseline gap-2 mb-1">
+                  <span className="fw-bold lh-1 text-break" style={{ fontSize: "clamp(1.75rem, 6vw, 2.5rem)" }}>{age.years} Yrs {age.months} Mo</span>
                 </div>
-              ) : (
-                <div className="card border-0 shadow-sm bg-white rounded-3 overflow-hidden align-self-start w-100">
-                  <div className={`px-3 py-2 d-flex align-items-center gap-2 ${isEligible ? "bg-success bg-opacity-10" : "bg-danger bg-opacity-10"}`}>
-                    {isEligible ? (
-                      <>
-                        <CheckCircle size={22} className="text-success flex-shrink-0" />
-                        <span className="fw-semibold text-dark">You are Eligible!</span>
-                      </>
-                    ) : (
-                      <>
-                        <XCircle size={22} className="text-danger flex-shrink-0" />
-                        <span className="fw-semibold text-dark">You are not eligible by age</span>
-                      </>
-                    )}
+                <div className="opacity-75 small mb-3">Exact age as on 01-Aug-{REFERENCE_YEAR} (Crucial Date)</div>
+
+                <div
+                  className="rounded-3 p-2 mb-3 small d-inline-flex align-items-center gap-1.5"
+                  style={{ background: "rgba(255, 255, 255, 0.12)", backdropFilter: "blur(4px)" }}
+                >
+                  <Sparkles size={14} className="text-warning" />
+                  <span className="small">
+                    Days: <strong>{age.days} Days</strong> | Category: <strong>{currentCategory.label}</strong>
+                  </span>
+                </div>
+              </div>
+
+              {/* Real-time detailed table */}
+              <div
+                className="rounded-3 p-3"
+                style={{ background: "rgba(0, 0, 0, 0.2)", backdropFilter: "blur(6px)" }}
+              >
+                <div className="row g-2 small">
+                  <div className="col-6 d-flex justify-content-between">
+                    <span className="opacity-75">18-27 Posts:</span>
+                    <strong className={groupResults[0].isEligible ? "text-success" : "text-warning"}>{groupResults[0].status}</strong>
                   </div>
-                  <div className="card-body p-3 p-md-4">
-                    <p className="text-secondary small mb-1">Age as of January 1, {REFERENCE_YEAR}:</p>
-                    <p className="fs-2 fw-bold text-dark mb-1">{ageAsOnRef} Years</p>
-                    <p className="small text-secondary mb-3">Tier 1 + Tier 2 Marks</p>
-                    <div className={`rounded-2 p-3 small mb-0 ${isEligible ? "bg-success text-white" : "bg-danger bg-opacity-10 text-danger"}`}>
-                      {isEligible
-                        ? "Congrats! You meet the age limit criteria for SSC CGL."
-                        : `Your age (${ageAsOnRef} years) is outside the allowed range (18 – ${upperAgeLimit} years). Check the official notification for relaxations.`}
-                    </div>
+                  <div className="col-6 d-flex justify-content-between">
+                    <span className="opacity-75">18-30 Posts:</span>
+                    <strong className={groupResults[1].isEligible ? "text-success" : "text-warning"}>{groupResults[1].status}</strong>
+                  </div>
+                  <div className="col-6 d-flex justify-content-between">
+                    <span className="opacity-75">18-32 (JSO):</span>
+                    <strong className={groupResults[2].isEligible ? "text-success" : "text-warning"}>{groupResults[2].status}</strong>
+                  </div>
+                  <div className="col-6 d-flex justify-content-between">
+                    <span className="opacity-75">Age Relaxation:</span>
+                    <strong className="text-info">+{currentCategory.relaxation} Years</strong>
                   </div>
                 </div>
-              )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 4 KPI Metric Cards */}
+        <div className="row g-2 g-md-3 mt-3">
+          <div className="col-6 col-md-3">
+            <div className="card border rounded-3 p-3 bg-light text-center h-100">
+              <div className="small text-secondary mb-1 fw-semibold">Your Exact Age</div>
+              <div className="fs-4 fw-bold text-dark">{age.years} Yrs {age.months} M</div>
+              <div className="text-secondary" style={{ fontSize: "0.72rem" }}>
+                And {age.days} Days
+              </div>
+            </div>
+          </div>
+
+          <div className="col-6 col-md-3">
+            <div className="card border rounded-3 p-3 bg-light text-center h-100">
+              <div className="small text-secondary mb-1 fw-semibold">Max Age (with Quota)</div>
+              <div className="fs-4 fw-bold text-primary">{30 + currentCategory.relaxation} Yrs</div>
+              <div className="text-secondary" style={{ fontSize: "0.72rem" }}>
+                For Inspector (4600 GP)
+              </div>
+            </div>
+          </div>
+
+          <div className="col-6 col-md-3">
+            <div className="card border rounded-3 p-3 bg-light text-center h-100">
+              <div className="small text-secondary mb-1 fw-semibold">Category Relaxation</div>
+              <div className="fs-4 fw-bold text-success">+{currentCategory.relaxation} Yrs</div>
+              <div className="text-secondary" style={{ fontSize: "0.72rem" }}>
+                {currentCategory.label}
+              </div>
+            </div>
+          </div>
+
+          <div className="col-6 col-md-3">
+            <div className="card border rounded-3 p-3 bg-light text-center h-100">
+              <div className="small text-secondary mb-1 fw-semibold">Eligible Posts</div>
+              <div className={`fs-4 fw-bold ${isOverallEligible ? "text-success" : "text-danger"}`}>
+                {eligibleCount} / 3 Groups
+              </div>
+              <div className="text-secondary" style={{ fontSize: "0.72rem" }}>
+                Qualification verified
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Premium Action Toolbar */}
+        <div className="pt-3 mt-3 border-top" style={{ borderColor: "#f1f5f9" }}>
+          <div className="row g-2">
+            <div className="col-6">
+              <a
+                href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
+                  `My SSC CGL Age as on 01-Aug-${REFERENCE_YEAR} is ${age.years} Yrs ${age.months} M (Eligible: ${eligibleCount}/3 Post Groups). Check yours: https://www.pkminfotech.com/tools/ssc/ssc-cgl-age-limit-calculator`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn w-100 text-white d-flex align-items-center justify-content-center gap-1.5 text-decoration-none shadow-xs"
+                style={{
+                  backgroundColor: "#25D366",
+                  borderRadius: "10px",
+                  padding: "10px 12px",
+                  fontSize: "0.82rem",
+                  fontWeight: 600,
+                  border: "none",
+                  boxShadow: "0 2px 8px rgba(37, 211, 102, 0.2)"
+                }}
+                title="Share on WhatsApp"
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" className="flex-shrink-0">
+                  <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+                </svg>
+                <span className="text-nowrap">WhatsApp</span>
+              </a>
+            </div>
+            <div className="col-6">
+              <button
+                type="button"
+                onClick={handleCopy}
+                className="btn w-100 d-flex align-items-center justify-content-center gap-1.5 shadow-xs"
+                style={{
+                  backgroundColor: "#f8fafc",
+                  border: "1px solid #e2e8f0",
+                  color: "#334155",
+                  borderRadius: "10px",
+                  padding: "10px 12px",
+                  fontSize: "0.82rem",
+                  fontWeight: 600
+                }}
+              >
+                {copied ? (
+                  <>
+                    <Check size={14} className="text-success flex-shrink-0" />
+                    <span className="text-success text-nowrap">Copied!</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy size={14} className="text-secondary flex-shrink-0" />
+                    <span className="text-nowrap">Copy Status</span>
+                  </>
+                )}
+              </button>
             </div>
           </div>
         </div>
       </div>
     </div>
-
-    <section className="card border-0 shadow-sm mt-3 criteria-expand-card border-start border-primary border-3">
-      <div className="card-body p-0 bg-primary bg-opacity-10">
-        <button
-          type="button"
-          className="btn btn-link w-100 text-start d-flex align-items-center gap-2 px-4 py-3 text-decoration-none text-dark criteria-expand-btn"
-          onClick={() => setCriteriaExpanded((e) => !e)}
-          aria-expanded={criteriaExpanded}
-        >
-          <span className="d-flex align-items-center justify-content-center rounded-circle bg-primary bg-opacity-10 flex-shrink-0" style={{ width: 36, height: 36 }}>
-            <Info size={20} className="text-primary" />
-          </span>
-          <span className="flex-grow-1 fw-semibold">What are the age criteria for SSC CGL?</span>
-          {criteriaExpanded ? <ChevronDown size={20} className="flex-shrink-0 text-primary" /> : <span className="flex-shrink-0 badge bg-primary bg-opacity-10 text-primary">Expand &gt;</span>}
-        </button>
-        {criteriaExpanded && (
-          <div className="px-4 pb-4 pt-0 border-top border-primary border-opacity-25">
-            <div className="pt-3 p-3 bg-white rounded-2 small text-secondary shadow-sm">
-              <p className="mb-1">Age is calculated as on <strong>1st January {REFERENCE_YEAR}</strong>. Minimum age is usually 18 years. Upper age limit varies by category and post:</p>
-              <ul className="mb-0 ps-3">
-                <li>General (UR) / EWS: 18–30 years</li>
-                <li>OBC: 18–33 years</li>
-                <li>SC / ST: 18–35 years</li>
-                <li>PwBD may get relaxation as per notification.</li>
-              </ul>
-              <p className="mt-2 mb-0">Always refer to the official SSC CGL notification on ssc.gov.in for the exact criteria for your year and post.</p>
-            </div>
-          </div>
-        )}
-      </div>
-    </section>
-  </>
   )
 }

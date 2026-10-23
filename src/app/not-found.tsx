@@ -95,8 +95,8 @@ export default async function NotFound() {
           <p className="text-sm text-gray-500 mb-3">कुछ खास खोज रहे हैं?</p>
           <div className="flex flex-wrap gap-2 justify-center">
             <Link href="/tools" className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium hover:bg-blue-200">Online Tools</Link>
-            <Link href="/tools/land-area" className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs hover:bg-gray-200">Land Area</Link>
-            <Link href="/tools/education" className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs hover:bg-gray-200">Education</Link>
+            <Link href="/tools?category=land-area" className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs hover:bg-gray-200">Land Area</Link>
+            <Link href="/tools?category=education" className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs hover:bg-gray-200">Education</Link>
             <Link href="/latest" className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs hover:bg-gray-200">Guides</Link>
           </div>
         </div>
